@@ -17,7 +17,23 @@ class LaporanController extends Controller
     return response()->json([
       'status' => 'success', 
       'code' => '200', 
-      'data' => $result
+      'result' => $result
     ]);
+  }
+
+  public function getLaporanProgressKegiatanTerbaru() {
+
+    $result = DB::table('master_laporan_harian as master')
+              ->select(DB::raw('kegiatan, SUM(volume) as persen'))
+              ->groupBy('kegiatan')
+              ->limit(5)
+              ->get();
+
+    return response()->json([ 
+      'status' => 'success', 
+      'code' => '200', 
+      'result' => $result
+    ]);
+
   }
 }

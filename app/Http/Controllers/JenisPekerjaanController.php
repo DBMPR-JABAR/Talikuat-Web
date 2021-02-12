@@ -14,8 +14,23 @@ class JenisPekerjaanController extends Controller
     return response()->json([
       'status' => 'success', 
       'code' => '200', 
-      'data' => $result
+      'result' => $result
     ]);
+  }
+
+  public function getLatestJenisPekerjaan() {
+
+    $result = DB::table('master_jenis_pekerjaan')
+                ->limit(5)
+                ->orderBy('id', 'desc')
+                ->get();
+
+    return response()->json([
+      'status' => 'success', 
+      'code' => '200', 
+      'result' => $result
+    ]);
+    
   }
 
   public function getJenisPekerjaanById($id) {
@@ -25,7 +40,23 @@ class JenisPekerjaanController extends Controller
     return response()->json([
       'status' => 'success', 
       'code' => '200', 
-      'data' => $result
+      'result' => $result
+    ]);
+  }
+
+  public function getJenisPekerjaanByKeyword(Request $request) {
+
+    $keyword = $request->query("keyword");
+
+    $result = DB::table('master_jenis_pekerjaan')
+                ->where('jenis_pekerjaan', 'like', '%'.$keyword.'%')
+                ->orWhere('satuan', 'like', '%'.$keyword.'%')
+                ->paginate(15);
+
+    return response()->json([
+      'status' => 'success', 
+      'code' => '200', 
+      'result' => $result
     ]);
   }
 }
