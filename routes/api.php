@@ -27,10 +27,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+  return $request->user();
 });
 
-Route::prefix('/user')->group(function() {
+Route::prefix('/user')->group(function () {
 
   Route::get('/getAllUser', [UserController::class, 'getAllUser']);
 
@@ -41,10 +41,9 @@ Route::prefix('/user')->group(function() {
   Route::get('/getLatestUser', [UserController::class, 'getLatestUser']);
 
   Route::get('/getUserByKeyword', [UserController::class, 'getUserByKeyword']);
-
 });
 
-Route::prefix('/kontraktor')->group(function() {
+Route::prefix('/kontraktor')->group(function () {
 
   Route::get('/getTotalKontraktor', [KontraktorController::class, 'getTotalKontraktor']);
 
@@ -56,9 +55,10 @@ Route::prefix('/kontraktor')->group(function() {
 
   Route::get('/getKontraktorByKeyword', [KontraktorController::class, 'getKontraktorByKeyword']);
 
+  Route::post('/insertKontraktor', [KontraktorController::class, 'insertKontraktor']);
 });
 
-Route::prefix('/konsultan')->group(function() {
+Route::prefix('/konsultan')->group(function () {
 
   Route::get('/getAllKonsultan', [KonsultanController::class, 'getAllKonsultan']);
 
@@ -70,9 +70,10 @@ Route::prefix('/konsultan')->group(function() {
 
   Route::get('/getKonsultanByKeyword', [KonsultanController::class, 'getKonsultanByKeyword']);
 
+  Route::post('/insertKonsultan', [KonsultanController::class, 'insertKonsultan']);
 });
 
-Route::prefix('/ppk')->group(function() {
+Route::prefix('/ppk')->group(function () {
 
   Route::get('/getAllPpk', [PpkController::class, 'getAllPpk']);
 
@@ -84,19 +85,19 @@ Route::prefix('/ppk')->group(function() {
 
   Route::get('/getPpkByKeyword', [PpkController::class, 'getPpkByKeyword']);
 
+  Route::post('/insertPpk', [PpkController::class, 'insertPpk']);
 });
 
-Route::prefix('/paket')->group(function() {
+Route::prefix('/paket')->group(function () {
 
   Route::get('/getAllPaket', [PaketController::class, 'getAllPaket']);
 
   Route::get('/getPaketById/{id}', [PaketController::class, 'getPaketById']);
 
   Route::get('/getTotalPaket', [PaketController::class, 'getTotalPaket']);
-
 });
 
-Route::prefix('/jenis-pekerjaan')->group(function() {
+Route::prefix('/jenis-pekerjaan')->group(function () {
 
   Route::get('/getAllJenisPekerjaan', [JenisPekerjaanController::class, 'getAllJenisPekerjaan']);
 
@@ -106,9 +107,10 @@ Route::prefix('/jenis-pekerjaan')->group(function() {
 
   Route::get('/getJenisPekerjaanByKeyword', [JenisPekerjaanController::class, 'getJenisPekerjaanByKeyword']);
 
+  Route::post('/insertJenisPekerjaan', [JenisPekerjaanController::class, 'insertJenisPekerjaan']);
 });
 
-Route::prefix('/jadual')->group(function() {
+Route::prefix('/jadual')->group(function () {
 
   Route::get('/getAllJadual', [JadualController::class, 'getAllJadual']);
 
@@ -117,31 +119,27 @@ Route::prefix('/jadual')->group(function() {
   Route::get('/getLatestJadual', [JadualController::class, 'getLatestJadual']);
 
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
-
 });
 
-Route::prefix('/permintaan')->group(function() {
+Route::prefix('/permintaan')->group(function () {
 
   Route::get('/getAllPermintaan', [PermintaanController::class, 'getAllPermintaan']);
 
   Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);
 
   Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
-
 });
 
-Route::prefix('laporan')->group(function() {
+Route::prefix('laporan')->group(function () {
 
   Route::get('/getAllLaporanHarian', [LaporanController::class, 'getAllLaporanHarian']);
 
   Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
-
 });
 
-Route::prefix('data-umum')->group(function() {
+Route::prefix('data-umum')->group(function () {
 
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
   Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);
-
 });
