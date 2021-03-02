@@ -10,6 +10,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
+use App\Http\Controllers\RuasJalanController;
 use App\Http\Controllers\UserController;
 
 use Illuminate\Http\Request;
@@ -142,4 +143,9 @@ Route::prefix('data-umum')->group(function () {
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
   Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);
+});
+
+Route::prefix('ruas-jalan')->group(function () {
+
+  Route::get('/getRuasJalanByKeyword', [RuasJalanController::class, 'getRuasJalanByKeyword']);
 });
