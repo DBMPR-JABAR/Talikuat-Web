@@ -11,6 +11,7 @@ use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
 use App\Http\Controllers\RuasJalanController;
+use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UserController;
 
 use Illuminate\Http\Request;
@@ -148,4 +149,9 @@ Route::prefix('data-umum')->group(function () {
 Route::prefix('ruas-jalan')->group(function () {
 
   Route::get('/getRuasJalanByKeyword', [RuasJalanController::class, 'getRuasJalanByKeyword']);
+});
+
+Route::prefix('unor')->group(function () {
+
+  Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
 });
