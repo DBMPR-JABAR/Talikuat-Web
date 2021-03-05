@@ -144,6 +144,10 @@ Route::prefix('data-umum')->group(function () {
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
   Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);
+
+  Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
+
+  Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
