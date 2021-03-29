@@ -17,8 +17,9 @@ class DataUmumController extends Controller
   {
 
     $result = DB::table('data_umum')
-      ->selectRaw('aksi, data_umum.id, konsultan_supervisi, lat_akhir, lat_awal, long_akhir, long_awal, nama_gs, nama_kegiatan, nama_ppk, ruas_jalan, nama_se, nilai_kontrak, no_kontrak, no_spmk, opd, panjang, pemda, penyedia_jasa, pk, ppk, rab, rab1, rab2, rab3, GROUP_CONCAT(ruas_jalan) as ruas_jalan_concat, satuan_panjang, satuan_waktu, data_umum_ruas.segmen_jalan, sk, sm, tgl_input, tgl_kontrak, tgl_spmk, tgl_update, ul_jadual, ul_jaminan, ul_rencana, ul_spek, ul_spkmp, ul_spl, ul_spmk, ul_sppbj, unit, unor, user, waktu_pelaksanaan, wp')
+      ->selectRaw('aksi, data_umum.id, konsultan_supervisi, lat_akhir, lat_awal, long_akhir, long_awal, nama_gs, nama_kegiatan, nama_ppk, ruas_jalan, nama_se, nilai_kontrak, no_kontrak, no_spmk, opd, panjang, pemda, penyedia_jasa, pk, ppk, rab, rab1, rab2, rab3, GROUP_CONCAT(ruas_jalan) as ruas_jalan_concat, satuan_panjang, satuan_waktu, data_umum_ruas.segmen_jalan, sk, sm, tgl_input, tgl_kontrak, tgl_spmk, tgl_update, ul_jadual, ul_jaminan, ul_rencana, ul_spek, ul_spkmp, ul_spl, ul_spmk, ul_sppbj, unit, kantor.nama_kantor as unor, data_umum.user as user, waktu_pelaksanaan, wp')
       ->join('data_umum_ruas', 'data_umum.id', '=', 'data_umum_ruas.id')
+      ->join('kantor', 'data_umum.unor', '=', 'kantor.id_kantor')
       ->groupBy('data_umum.id')
       ->orderBy('data_umum.id', 'desc')
       ->limit(5)
@@ -37,8 +38,9 @@ class DataUmumController extends Controller
     $keyword = $request->query("keyword");
 
     $result = DB::table('data_umum')
-      ->selectRaw('aksi, data_umum.id, konsultan_supervisi, lat_akhir, lat_awal, long_akhir, long_awal, nama_gs, nama_kegiatan, nama_ppk, ruas_jalan, nama_se, nilai_kontrak, no_kontrak, no_spmk, opd, panjang, pemda, penyedia_jasa, pk, ppk, rab, rab1, rab2, rab3, GROUP_CONCAT(ruas_jalan) as ruas_jalan_concat, satuan_panjang, satuan_waktu, data_umum_ruas.segmen_jalan, sk, sm, tgl_input, tgl_kontrak, tgl_spmk, tgl_update, ul_jadual, ul_jaminan, ul_rencana, ul_spek, ul_spkmp, ul_spl, ul_spmk, ul_sppbj, unit, unor, user, waktu_pelaksanaan, wp')
+      ->selectRaw('aksi, data_umum.id, konsultan_supervisi, lat_akhir, lat_awal, long_akhir, long_awal, nama_gs, nama_kegiatan, nama_ppk, ruas_jalan, nama_se, nilai_kontrak, no_kontrak, no_spmk, opd, panjang, pemda, penyedia_jasa, pk, ppk, rab, rab1, rab2, rab3, GROUP_CONCAT(ruas_jalan) as ruas_jalan_concat, satuan_panjang, satuan_waktu, data_umum_ruas.segmen_jalan, sk, sm, tgl_input, tgl_kontrak, tgl_spmk, tgl_update, ul_jadual, ul_jaminan, ul_rencana, ul_spek, ul_spkmp, ul_spl, ul_spmk, ul_sppbj, unit, kantor.nama_kantor as unor, data_umum.user as user, waktu_pelaksanaan, wp')
       ->join('data_umum_ruas', 'data_umum.id', '=', 'data_umum_ruas.id')
+      ->join('kantor', 'data_umum.unor', '=', 'kantor.id_kantor')
       ->groupBy('data_umum.id')
       ->having('data_umum.nama_kegiatan', 'like', '%' . $keyword . '%')
       ->orHaving('ruas_jalan_concat', 'like', '%' . $keyword . '%')
@@ -226,6 +228,28 @@ class DataUmumController extends Controller
       'status' => 'success',
       'code' => '200',
       'result' => $data
+    ]);
+  }
+
+  public function getDataUmumRuasById(Request $request)
+  {
+
+    $result = DB::table('data_umum_ruas')
+      ->where('id', '=', $request->input("id_data_umum"))
+      ->where(function ($query) use ($request) {
+        $query->where('ruas_jalan', 'like', '%' . $request->input('keyword') . '%')
+          ->orWhere('segmen_jalan', 'like', '%' . $request->input('keyword') . '%');
+      })
+      ->paginate(15);
+
+    foreach ($result as $key => $value) {
+      $value->id = $key + 1;
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $result
     ]);
   }
 }

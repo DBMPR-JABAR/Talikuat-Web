@@ -121,6 +121,8 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/getLatestJadual', [JadualController::class, 'getLatestJadual']);
 
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
+
+  Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -148,6 +150,8 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
 
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
+
+  Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\JadualImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class JadualController extends Controller
 {
@@ -63,6 +66,25 @@ class JadualController extends Controller
       'status' => 'success',
       'code' => '200',
       'result' => $result
+    ]);
+  }
+
+  public function parseJadualExcelFile(Request $request)
+  {
+
+    $file = $request->file('jadual_excel_file');
+
+    $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
+
+    foreach ($list_jadual as $key => $jadual) {
+      $jadual['id'] = $key + 1;
+      $jadual['tanggal'] = date("d F Y", Date::excelToTimestamp($jadual['tanggal']));
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $list_jadual
     ]);
   }
 }
