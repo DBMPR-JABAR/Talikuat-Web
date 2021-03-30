@@ -76,8 +76,7 @@ class JadualController extends Controller
 
     $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
 
-    foreach ($list_jadual as $key => $jadual) {
-      $jadual['id'] = $key + 1;
+    foreach ($list_jadual as $jadual) {
       $jadual['tanggal'] = date("d F Y", Date::excelToTimestamp($jadual['tanggal']));
     }
 
