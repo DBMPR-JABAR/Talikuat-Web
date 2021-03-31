@@ -10,6 +10,8 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
+use App\Http\Controllers\RuasJalanController;
+use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UserController;
 
 use Illuminate\Http\Request;
@@ -119,6 +121,14 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/getLatestJadual', [JadualController::class, 'getLatestJadual']);
 
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
+
+  Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
+<<<<<<< HEAD
+
+  Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
+=======
+  Route::post('/exceltodata', [JadualController::class, 'excelToData']);
+>>>>>>> d0b732eb28793c8ca10c897cfb30fc9530bc632b
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -142,4 +152,20 @@ Route::prefix('data-umum')->group(function () {
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
   Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);
+
+  Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
+
+  Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
+
+  Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
+});
+
+Route::prefix('ruas-jalan')->group(function () {
+
+  Route::get('/getRuasJalanByKeyword', [RuasJalanController::class, 'getRuasJalanByKeyword']);
+});
+
+Route::prefix('unor')->group(function () {
+
+  Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
 });
