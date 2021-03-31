@@ -123,6 +123,8 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
 
   Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
+
+  Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
 });
 
 Route::prefix('/permintaan')->group(function () {

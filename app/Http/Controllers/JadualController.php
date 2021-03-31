@@ -86,4 +86,13 @@ class JadualController extends Controller
       'result' => $list_jadual
     ]);
   }
+
+  public function insertJadual(Request $request)
+  {
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $request->all()
+    ]);
+  }
 }
