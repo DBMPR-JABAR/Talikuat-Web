@@ -86,4 +86,22 @@ class JadualController extends Controller
       'result' => $list_jadual
     ]);
   }
+  public function excelToData(Request $request)
+  {
+
+    $file = $request->file('jadual_excel_file');
+
+    $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
+
+    foreach ($list_jadual as $jadual) {
+      $jadual['tanggal'] = date("j -n- Y", Date::excelToTimestamp($jadual['tanggal']));
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $list_jadual
+    ]);
+  }
 }
+
