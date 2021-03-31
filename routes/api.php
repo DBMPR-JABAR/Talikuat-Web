@@ -123,7 +123,7 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
 
   Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
-  Route::post('/exceltodata', [JadualController::class, 'exceltodata/']);
+  Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
 
   Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
 });
@@ -160,6 +160,7 @@ Route::prefix('data-umum')->group(function () {
 Route::prefix('ruas-jalan')->group(function () {
 
   Route::get('/getRuasJalanByKeyword', [RuasJalanController::class, 'getRuasJalanByKeyword']);
+  Route::get('/getRuasjalanByUnor/{id}', [RuasJalanController::class, 'getRuasjalanByUnor']);
 });
 
 Route::prefix('unor')->group(function () {
