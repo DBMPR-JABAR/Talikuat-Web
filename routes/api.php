@@ -13,6 +13,8 @@ use App\Http\Controllers\PpkController;
 use App\Http\Controllers\RuasJalanController;
 use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UploadController;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -155,6 +157,7 @@ Route::prefix('data-umum')->group(function () {
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
+  Route::post('/upload/dkh', [UploadController::class, 'uploadFileDkh']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {

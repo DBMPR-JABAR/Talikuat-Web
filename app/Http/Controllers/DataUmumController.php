@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -68,48 +66,32 @@ class DataUmumController extends Controller
   }
 
   public function insertDataUmum(Request $request)
+  // cek lagi untuk mobile ada yang di ganti :)              <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   {
+    date_default_timezone_set('Asia/Jakarta');
     $validator = Validator::make($request->all(), [
       // Data Umum
       "pemda" => "required",
       "opd" => "required",
       "unor" => "required",
+      "nm_paket"=>"required",
       "kategori" => "required",
-      "nama_kegiatan" => "required",
       "no_kontrak" => "required",
       "tgl_kontrak" => "required",
       "nilai_kontrak" => "required",
       "no_spmk" => "required",
       "tgl_spmk" => "required",
       "panjang" => "required",
-      "waktu_pelaksanaan" => "required",
+      "lama_waktu" => "required",
       "ppk_kegiatan" => "required",
-      "penyedia_jasa" => "required",
+      "penyedia" => "required",
       "konsultan" => "required",
       "nama_ppk" => "required",
       "nama_se" => "required",
       "nama_gs" => "required",
 
       // List Data Umum Ruas
-      "list_data_umum_ruas" => "required|json",
-
-      // File
-      "file_dkh" => "required",
-      "file_perjanjian_kontrak" => "required",
-      "file_spmk" => "required",
-      "file_syarat_umum" => "required",
-      "file_syarat_khusus" => "required",
-      "file_jadual_pelaksanaan" => "required",
-      "file_gambar_rencana" => "required",
-      "file_sppbj" => "required",
-      "file_spl" => "required",
-      "file_spesifikasi_umum" => "required",
-      "file_jaminan" => "required",
-      "file_spkmp" => "required",
-
-      // Informasi Tambahan
-      "user" => "required",
-      "tgl_input" => "required",
+      // "list_data_umum_ruas" => "required|json",
     ]);
 
     if ($validator->fails()) {
@@ -120,7 +102,36 @@ class DataUmumController extends Controller
       ], Response::HTTP_BAD_REQUEST);
     }
 
+    $data = [
+      // Data Umum
+      'pemda' => $request->input("pemda"),
+      "opd" => $request->input("opd"),
+      "unor" => $request->input("unor"),
+      "kategori" => $request->input("kategori"),
+      "nm_paket" => $request->input("nm_paket"),
+      "no_kontrak" => $request->input("no_kontrak"),
+      "tgl_kontrak" => $request->input("tgl_kontrak"),
+      "nilai_kontrak" => $request->input("nilai_kontrak"),
+      "no_spmk" => $request->input("no_spmk"),
+      "tgl_spmk" => $request->input("tgl_spmk"),
+      "panjang_km" => $request->input("panjang"),
+      "lama_waktu" => $request->input("lama_waktu"),
+      "ppk" => $request->input("ppk_kegiatan"),
+      "penyedia" => $request->input("penyedia"),
+      "konsultan" => $request->input("konsultan"),
+      "nm_ppk" => $request->input("nama_ppk"),
+      "nm_se" => $request->input("nama_se"),
+      "nm_gs" => $request->input("nama_gs"),
+      "is_adendum"=>0,
+      "created_at"=>\Carbon\Carbon::now()
+    ];
+
+    $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
+
+
+
     // List Ruas Jalan
+    if($request->list_data_umum_ruas){
     $listDataUmumRuas = json_decode($request->input('list_data_umum_ruas'));
 
     foreach ($listDataUmumRuas as $dataUmumRuas) {
@@ -139,95 +150,46 @@ class DataUmumController extends Controller
         ], Response::HTTP_BAD_REQUEST);
       }
     }
-
-    // File-File Upload
-    $fileDkh = $request->file('file_dkh');
-    $filePerjanjianKontrak = $request->file('file_perjanjian_kontrak');
-    $fileSpmk = $request->file('file_spmk');
-    $fileSyaratUmum = $request->file('file_syarat_umum');
-    $fileSyaratKhusus = $request->file('file_syarat_khusus');
-    $fileJadualPelaksanaan = $request->file('file_jadual_pelaksanaan');
-    $fileGambarRencana = $request->file('file_gambar_rencana');
-    $fileSppbj = $request->file('file_sppbj');
-    $fileSpl = $request->file('file_spl');
-    $fileSpesifikasiUmum = $request->file('file_spesifikasi_umum');
-    $fileJaminan = $request->file('file_jaminan');
-    $fileSpkmp = $request->file('file_spkmp');
-
-    $fileDkh->move($this->PATH_FILE_DOCUMENTS, $fileDkh->getClientOriginalName());
-    $filePerjanjianKontrak->move($this->PATH_FILE_DOCUMENTS, $filePerjanjianKontrak->getClientOriginalName());
-    $fileSpmk->move($this->PATH_FILE_DOCUMENTS, $fileSpmk->getClientOriginalName());
-    $fileSyaratUmum->move($this->PATH_FILE_DOCUMENTS, $fileSyaratUmum->getClientOriginalName());
-    $fileSyaratKhusus->move($this->PATH_FILE_DOCUMENTS, $fileSyaratKhusus->getClientOriginalName());
-    $fileJadualPelaksanaan->move($this->PATH_FILE_DOCUMENTS, $fileJadualPelaksanaan->getClientOriginalName());
-    $fileGambarRencana->move($this->PATH_FILE_DOCUMENTS, $fileGambarRencana->getClientOriginalName());
-    $fileSppbj->move($this->PATH_FILE_DOCUMENTS, $fileSppbj->getClientOriginalName());
-    $fileSpl->move($this->PATH_FILE_DOCUMENTS, $fileSpl->getClientOriginalName());
-    $fileSpesifikasiUmum->move($this->PATH_FILE_DOCUMENTS, $fileSpesifikasiUmum->getClientOriginalName());
-    $fileJaminan->move($this->PATH_FILE_DOCUMENTS, $fileJaminan->getClientOriginalName());
-    $fileSpkmp->move($this->PATH_FILE_DOCUMENTS, $fileSpkmp->getClientOriginalName());
-
-    $data = [
-      // Data Umum
-      'pemda' => $request->input("pemda"),
-      "opd" => $request->input("opd"),
-      "unor" => $request->input("unor"),
-      "kategori" => $request->input("kategori"),
-      "nama_kegiatan" => $request->input("nama_kegiatan"),
-      "no_kontrak" => $request->input("no_kontrak"),
-      "tgl_kontrak" => $request->input("tgl_kontrak"),
-      "nilai_kontrak" => $request->input("nilai_kontrak"),
-      "no_spmk" => $request->input("no_spmk"),
-      "tgl_spmk" => $request->input("tgl_spmk"),
-      "panjang" => $request->input("panjang"),
-      "waktu_pelaksanaan" => $request->input("waktu_pelaksanaan"),
-      "ppk" => $request->input("ppk_kegiatan"),
-      "penyedia_jasa" => $request->input("penyedia_jasa"),
-      "konsultan_supervisi" => $request->input("konsultan"),
-      "nama_ppk" => $request->input("nama_ppk"),
-      "nama_se" => $request->input("nama_se"),
-      "nama_gs" => $request->input("nama_gs"),
-
-      // File
-      "rab" => $fileDkh->getClientOriginalName(),
-      "pk" => $filePerjanjianKontrak->getClientOriginalName(),
-      "sk" => $fileSyaratKhusus->getClientOriginalName(),
-      "sm" => $fileSyaratUmum->getClientOriginalName(),
-      "ul_spmk" => $fileSpmk->getClientOriginalName(),
-      "ul_jadual" => $fileJadualPelaksanaan->getClientOriginalName(),
-      "ul_rencana" => $fileGambarRencana->getClientOriginalName(),
-      "ul_sppbj" => $fileSppbj->getClientOriginalName(),
-      "ul_spl" => $fileSpl->getClientOriginalName(),
-      "ul_spek" => $fileSpesifikasiUmum->getClientOriginalName(),
-      "ul_jaminan" => $fileJadualPelaksanaan->getClientOriginalName(),
-      "ul_spkmp" => $fileSpkmp->getClientOriginalName(),
-
-      // Informasi Tambahan
-      "user" => $request->input("user"),
-      "tgl_input" => $request->input("tgl_input"),
-    ];
-
-    $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
+ 
 
     foreach ($listDataUmumRuas as $dataUmumRuas) {
       DB::table('data_umum_ruas')->insert([
-        "id" => $insertedDataUmumId,
+        "id_data_umum" => $insertedDataUmumId, // diganti sesuai DB
         "ruas_jalan" => $dataUmumRuas->ruas_jalan,
         "segmen_jalan" => $dataUmumRuas->segmen_jalan,
         "lat_awal" => $dataUmumRuas->lat_awal,
         "long_awal" => $dataUmumRuas->long_awal,
         "lat_akhir" => $dataUmumRuas->lat_akhir,
-        "long_akhir" => $dataUmumRuas->long_akhir
+        "long_akhir" => $dataUmumRuas->long_akhir,
+        "created_at"=>\Carbon\Carbon::now()
       ]);
     }
-
-    $data['id'] = $insertedDataUmumId;
-    $data['list_data_umum_ruas'] = $listDataUmumRuas;
-
     return response()->json([
       'status' => 'success',
       'code' => '200',
       'result' => $data
+    ]);
+ }else{
+   for ($i=0; $i <count($request->ruas_jalan) ; $i++) { 
+     DB::table("data_umum_ruas")->insert([
+      "id_data_umum"=>$insertedDataUmumId,
+      "ruas_jalan"=>$request->ruas_jalan[$i],
+      "segment_jalan"=>$request->segmen_jalan[$i],
+      "lat_awal"=>$request->lat_awal[$i],
+      "long_awal"=>$request->long_awal[$i],
+      "lat_akhir"=>$request->lat_akhir[$i],
+      "long_akhir"=>$request->long_akhir[$i],
+      "created_at"=>\Carbon\Carbon::now()
+     ]);
+   }
+ }
+    $data['id'] = $insertedDataUmumId;
+    // $data['list_data_umum_ruas'] = $listDataUmumRuas;
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $insertedDataUmumId
     ]);
   }
 
