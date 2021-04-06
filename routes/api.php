@@ -157,7 +157,20 @@ Route::prefix('data-umum')->group(function () {
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
-  Route::post('/upload/dkh', [UploadController::class, 'uploadFileDkh']);
+  Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
+  Route::post('/upload/filepk', [UploadController::class, 'uploadFilePk']);
+  Route::post('/upload/fileSpmk', [UploadController::class, 'uploadFileSpmk']);
+  Route::post('/upload/fileSyaratUmum', [UploadController::class, 'uploadFileSyaratUmum']);
+  Route::post('/upload/fileSyaratKhusus', [UploadController::class, 'uploadFileSyaratKhusus']);
+  Route::post('/upload/fileJpp', [UploadController::class, 'uploadFileJpp']);
+  Route::post('/upload/fileRencana', [UploadController::class, 'uploadFileRencana']);
+  Route::post('/upload/fileSppbj', [UploadController::class, 'uploadFileSppbj']);
+  Route::post('/upload/fileSpl', [UploadController::class, 'uploadFileSpl']);
+  Route::post('/upload/fileSpekUmum', [UploadController::class, 'uploadFileSpekUmum']);
+  Route::post('/upload/fileJaminan', [UploadController::class, 'uploadFileJaminan']);
+  Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
+
+  Route::post('/mergeall', [UploadController::class, 'mergeAll']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
