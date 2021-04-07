@@ -309,15 +309,23 @@ class UploadController extends Controller
 
     }
     public function mergeAll(Request $req){
-        // DB::table('file_dkh')
+        $valid = validator::make($req->all(),[
+            'id'=>'required'
+        ]);
+        if($valid->fails()){
+            return response()->json(["Gagal Save File"],400);
+        }
+         $get_file = DB::table('file_dkh')->where("id_data_umum","=",$req->id)->get();
 
+         dd(count($get_file));
+        
+         $pdf = new \Jurosh\PDFMerge\PDFMerger;
+        foreach ($get_file as $file) {
+            $pdf->addPDF(public_path($file->dkh), 'all');
+        }
+         //merge PDF ke path file
+         $pdf->merge('file', public_path("file_merge\\DKH.pdf"));
 
-        $pdf = new \Jurosh\PDFMerge\PDFMerger;
-        $pdf->addPDF(public_path("file_unmerge\\1.pdf"), 'all')
-            ->addPDF(public_path("file_unmerge\\2.pdf"), 'all');
-
-
-        //merge PDF ke path file
-        $pdf->merge('file', public_path("file_merge\\DKH.pdf"));
+         return response()->file(public_path("file_merge\\DKH.pdf"));
     }
 }
