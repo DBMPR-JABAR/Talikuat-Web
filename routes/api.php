@@ -7,6 +7,7 @@ use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
 use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
@@ -170,7 +171,7 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/upload/fileJaminan', [UploadController::class, 'uploadFileJaminan']);
   Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
 
-  Route::post('/mergeall', [UploadController::class, 'mergeAll']);
+  Route::post('/mergeDkh', [UploadController::class, 'mergeDkh']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
@@ -182,4 +183,10 @@ Route::prefix('ruas-jalan')->group(function () {
 Route::prefix('unor')->group(function () {
 
   Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
+});
+
+Route::prefix('merge')->group(function(){
+
+  Route::post('file',[MergePdf::class,'merge']);
+
 });
