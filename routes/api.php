@@ -129,6 +129,9 @@ Route::prefix('/jadual')->group(function () {
   Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
 
   Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
+  Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
+  Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
+
 });
 
 Route::prefix('/permintaan')->group(function () {
