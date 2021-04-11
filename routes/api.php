@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DataUmumController;
+use App\Http\Controllers\GetFile;
 use App\Http\Controllers\JadualController;
 use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
@@ -159,6 +160,9 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
 
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
+  Route::post('/updateDataUmum',[DataUmumController::class, 'updateDataUmum']);
+  Route::post('/updateAdendum',[DataUmumController::class, 'addAdendum']);
+  Route::post('/addnewadendum',[DataUmumController::class, 'AddNewAdendum']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
   Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
@@ -191,5 +195,6 @@ Route::prefix('unor')->group(function () {
 Route::prefix('merge')->group(function(){
 
   Route::post('file',[MergePdf::class,'merge']);
+  Route::get('/file/{id}',[MergePdf::class,'getFile']);
 
 });
