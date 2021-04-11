@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DataUmumController;
+use App\Http\Controllers\GetFile;
 use App\Http\Controllers\JadualController;
 use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
 use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
@@ -128,6 +130,9 @@ Route::prefix('/jadual')->group(function () {
   Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
 
   Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
+  Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
+  Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
+
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -155,6 +160,9 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
 
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
+  Route::post('/updateDataUmum',[DataUmumController::class, 'updateDataUmum']);
+  Route::post('/updateAdendum',[DataUmumController::class, 'addAdendum']);
+  Route::post('/addnewadendum',[DataUmumController::class, 'AddNewAdendum']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
   Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
@@ -170,7 +178,7 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/upload/fileJaminan', [UploadController::class, 'uploadFileJaminan']);
   Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
 
-  Route::post('/mergeall', [UploadController::class, 'mergeAll']);
+  Route::post('/mergeDkh', [UploadController::class, 'mergeDkh']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
@@ -182,4 +190,11 @@ Route::prefix('ruas-jalan')->group(function () {
 Route::prefix('unor')->group(function () {
 
   Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
+});
+
+Route::prefix('merge')->group(function(){
+
+  Route::post('file',[MergePdf::class,'merge']);
+  Route::get('/file/{id}',[MergePdf::class,'getFile']);
+
 });
