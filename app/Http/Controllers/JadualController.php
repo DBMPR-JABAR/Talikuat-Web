@@ -129,6 +129,7 @@ class JadualController extends Controller
 
     $waktu = str_replace(" Hari","",$req->waktu);
     $panjang = str_replace(" Km","",$req->panjang);
+    $volume = array_sum($req->volume);
     $get_id = DB::table('jadual')->insertGetId([
       "id_data_umum"=>$req->id_data_umum,
       "nmp"=>$req->nmp[0],
@@ -147,7 +148,7 @@ class JadualController extends Controller
         "nmp"=>$req->nmp[0],
         "satuan"=>$req->satuan[0],
         "harga_satuan"=>$req->harga_satuan[0],
-        "volume"=>$req->volume[0],
+        "volume"=>$volume,
         "jumlah_harga"=>$req->jumlah_harga[0],
         "bobot"=>$req->bobot[0],
         "created_at"=>\Carbon\Carbon::now()
@@ -222,4 +223,43 @@ class JadualController extends Controller
       'result' => "oke"
     ]);
   }
+
+  public function updateJadual(Request $req)
+  {
+    $volume = array_sum($req->volume);
+    DB::table('jadual')->where('id','=',$req->id_jadual)->update([
+      "volume"=>$volume
+    ]);
+    date_default_timezone_set('Asia/Jakarta');
+    for ($i=0; $i <count($req->nmp) ; $i++) { 
+      DB::table('detail_jadual')->where([
+        ['id_jadual','=',$req->id_jadual],
+        ['nmp','=',$req->id_nmp]
+        ])->delete();
+    }
+      $arr = array();
+      for ($i=0; $i <count($req->nmp) ; $i++) { 
+        $arr[]=array(
+          "id_jadual"=>$req->id_jadual,
+          "tgl"=>$req->tgl[$i],
+          "nmp"=>$req->nmp[$i],
+          "uraian"=>$req->uraian[$i],
+          "satuan"=>$req->satuan[$i],
+          "harga_satuan"=>$req->harga_satuan[$i],
+          "volume"=>$req->volume[$i],
+          "jumlah_harga"=>$req->jumlah_harga[$i],
+          "bobot"=>$req->bobot[$i],
+          "koefisien"=>$req->koefisien[$i],
+          "nilai"=>$req->nilai[$i],
+          "created_at"=>\Carbon\Carbon::now()
+        );
+      }
+
+      DB::table('detail_jadual')->insert($arr);
+    return response()->json([
+      "code"=>200
+    ]);
+  }
+
+
 }

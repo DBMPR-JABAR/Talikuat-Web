@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\GetFile;
 use App\Http\Controllers\JadualController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
+use App\Http\Controllers\RequestControllers;
 use App\Http\Controllers\RuasJalanController;
 use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UserController;
@@ -133,6 +135,8 @@ Route::prefix('/jadual')->group(function () {
   Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
   Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
 
+  Route::post('/updatejadual',[JadualController::class,'updateJadual']);
+
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -197,4 +201,13 @@ Route::prefix('merge')->group(function(){
   Route::post('file',[MergePdf::class,'merge']);
   Route::get('/file/{id}',[MergePdf::class,'getFile']);
 
+});
+
+Route::prefix('adendum')->group(function(){
+
+  Route::post('updatedata',[DataUmumAdendum::class,'updateAdendum']);
+});
+
+Route::prefix('request')->group(function(){
+  Route::post('/buatrequest',[RequestControllers::class,'buatRequest']);
 });
