@@ -145,13 +145,12 @@ class JadualController extends Controller
       "nilai_kontrak"=>$req->nilai_kontrak,
       "panjang_km"=>$panjang,
       "created_at"=>\Carbon\Carbon::now(),
-        "nmp"=>$req->nmp[0],
         "satuan"=>$req->satuan[0],
         "harga_satuan"=>$req->harga_satuan[0],
         "volume"=>$volume,
         "jumlah_harga"=>$req->jumlah_harga[0],
         "bobot"=>$req->bobot[0],
-        "created_at"=>\Carbon\Carbon::now()
+        "uraian"=>$req->uraian[0]
     ]);
 
 

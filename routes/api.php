@@ -13,7 +13,6 @@ use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
-use App\Http\Controllers\RequestControllers;
 use App\Http\Controllers\RuasJalanController;
 use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UserController;
@@ -146,6 +145,9 @@ Route::prefix('/permintaan')->group(function () {
   Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);
 
   Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
+  Route::post('/buatrequest',[PermintaanController::class,'buatRequest']);
+  Route::post('/updaterequest',[PermintaanController::class,'updateRequest']);
+  Route::post('/sendrequest',[PermintaanController::class,'sendReq']);
 });
 
 Route::prefix('laporan')->group(function () {
@@ -208,6 +210,3 @@ Route::prefix('adendum')->group(function(){
   Route::post('updatedata',[DataUmumAdendum::class,'updateAdendum']);
 });
 
-Route::prefix('request')->group(function(){
-  Route::post('/buatrequest',[RequestControllers::class,'buatRequest']);
-});
