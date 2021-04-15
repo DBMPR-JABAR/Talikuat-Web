@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2393e519a1008194b730df641c5a0ff4",
+    "content-hash": "22d6a60c492e879f4e5b1fa45a329653",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -948,17 +948,66 @@
             "time": "2021-03-21T16:25:00+00:00"
         },
         {
-            "name": "laravel/framework",
-            "version": "v8.35.1",
+            "name": "jurosh/pdf-merge",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laravel/framework.git",
-                "reference": "d118c0df39e7524131176aaf76493eae63a8a602"
+                "url": "https://github.com/jurosh/php-pdf-merge.git",
+                "reference": "89ba3446c9f38c573e3b8bf577d2f22993494130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d118c0df39e7524131176aaf76493eae63a8a602",
-                "reference": "d118c0df39e7524131176aaf76493eae63a8a602",
+                "url": "https://api.github.com/repos/jurosh/php-pdf-merge/zipball/89ba3446c9f38c573e3b8bf577d2f22993494130",
+                "reference": "89ba3446c9f38c573e3b8bf577d2f22993494130",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.20",
+                "setasign/fpdf": "^1.8",
+                "setasign/fpdi": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/Jurosh/PDFMerge/PDFMerger.php",
+                    "src/Jurosh/PDFMerge/PDFObject.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Juraj Husar",
+                    "email": "jurosh@jurosh.com",
+                    "homepage": "http://jurosh.com"
+                }
+            ],
+            "description": "PHP PDF Merger",
+            "homepage": "https://github.com/jurosh/php-pdf-merge",
+            "keywords": [
+                "merge",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/jurosh/php-pdf-merge/issues",
+                "source": "https://github.com/jurosh/php-pdf-merge/tree/remove"
+            },
+            "time": "2021-03-28T19:57:14+00:00"
+        },
+        {
+            "name": "laravel/framework",
+            "version": "v8.36.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "91c454715b81b9a39f718651d4e2f8104d45e7c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/91c454715b81b9a39f718651d4e2f8104d45e7c2",
+                "reference": "91c454715b81b9a39f718651d4e2f8104d45e7c2",
                 "shasum": ""
             },
             "require": {
@@ -1113,7 +1162,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-03-30T21:34:17+00:00"
+            "time": "2021-04-06T21:14:06+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -1437,16 +1486,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.29",
+            "version": "3.1.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "1e567e6e19a04fd65b5876d5bc92f4015f09fab4"
+                "reference": "aa5d2e4d25c5c8218ea0a15103da95f5f8728953"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/1e567e6e19a04fd65b5876d5bc92f4015f09fab4",
-                "reference": "1e567e6e19a04fd65b5876d5bc92f4015f09fab4",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/aa5d2e4d25c5c8218ea0a15103da95f5f8728953",
+                "reference": "aa5d2e4d25c5c8218ea0a15103da95f5f8728953",
                 "shasum": ""
             },
             "require": {
@@ -1499,7 +1548,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Maatwebsite/Laravel-Excel/issues",
-                "source": "https://github.com/Maatwebsite/Laravel-Excel/tree/3.1.29"
+                "source": "https://github.com/Maatwebsite/Laravel-Excel/tree/3.1.30"
             },
             "funding": [
                 {
@@ -1511,7 +1560,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-16T11:56:39+00:00"
+            "time": "2021-04-06T17:17:02+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -2944,6 +2993,120 @@
                 }
             ],
             "time": "2020-08-18T17:17:46+00:00"
+        },
+        {
+            "name": "setasign/fpdf",
+            "version": "1.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/FPDF.git",
+                "reference": "d77904018090c17dc9f3ab6e944679a7a47e710a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/d77904018090c17dc9f3ab6e944679a7a47e710a",
+                "reference": "d77904018090c17dc9f3ab6e944679a7a47e710a",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fpdf.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Olivier Plathey",
+                    "email": "oliver@fpdf.org",
+                    "homepage": "http://fpdf.org/"
+                }
+            ],
+            "description": "FPDF is a PHP class which allows to generate PDF files with pure PHP. F from FPDF stands for Free: you may use it for any kind of usage and modify it to suit your needs.",
+            "homepage": "http://www.fpdf.org",
+            "keywords": [
+                "fpdf",
+                "pdf"
+            ],
+            "support": {
+                "source": "https://github.com/Setasign/FPDF/tree/1.8.2"
+            },
+            "time": "2019-12-08T10:32:10+00:00"
+        },
+        {
+            "name": "setasign/fpdi",
+            "version": "v2.3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/FPDI.git",
+                "reference": "6231e315f73e4f62d72b73f3d6d78ff0eed93c31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/6231e315f73e4f62d72b73f3d6d78ff0eed93c31",
+                "reference": "6231e315f73e4f62d72b73f3d6d78ff0eed93c31",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zlib": "*",
+                "php": "^5.6 || ^7.0 || ^8.0"
+            },
+            "conflict": {
+                "setasign/tfpdf": "<1.31"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.7",
+                "setasign/fpdf": "~1.8",
+                "setasign/tfpdf": "1.31",
+                "squizlabs/php_codesniffer": "^3.5",
+                "tecnickcom/tcpdf": "~6.2"
+            },
+            "suggest": {
+                "setasign/fpdf": "FPDI will extend this class but as it is also possible to use TCPDF or tFPDF as an alternative. There's no fixed dependency configured."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "setasign\\Fpdi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Slabon",
+                    "email": "jan.slabon@setasign.com",
+                    "homepage": "https://www.setasign.com"
+                },
+                {
+                    "name": "Maximilian Kresse",
+                    "email": "maximilian.kresse@setasign.com",
+                    "homepage": "https://www.setasign.com"
+                }
+            ],
+            "description": "FPDI is a collection of PHP classes facilitating developers to read pages from existing PDF documents and use them as templates in FPDF. Because it is also possible to use FPDI with TCPDF, there are no fixed dependencies defined. Please see suggestions for packages which evaluates the dependencies automatically.",
+            "homepage": "https://www.setasign.com/fpdi",
+            "keywords": [
+                "fpdf",
+                "fpdi",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/Setasign/FPDI/issues",
+                "source": "https://github.com/Setasign/FPDI/tree/v2.3.6"
+            },
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/setasign/fpdi",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-02-11T11:37:01+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

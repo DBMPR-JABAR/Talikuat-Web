@@ -1,18 +1,23 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
+use App\Http\Controllers\GetFile;
 use App\Http\Controllers\JadualController;
 use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
 use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
 use App\Http\Controllers\RuasJalanController;
 use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UploadController;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -123,9 +128,14 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
 
   Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
-  Route::post('/exceltodata', [JadualController::class, 'exceltodata/']);
+  Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
 
   Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
+  Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
+  Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
+
+  Route::post('/updatejadual',[JadualController::class,'updateJadual']);
+
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -135,6 +145,9 @@ Route::prefix('/permintaan')->group(function () {
   Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);
 
   Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
+  Route::post('/buatrequest',[PermintaanController::class,'buatRequest']);
+  Route::post('/updaterequest',[PermintaanController::class,'updateRequest']);
+  Route::post('/sendrequest',[PermintaanController::class,'sendReq']);
 });
 
 Route::prefix('laporan')->group(function () {
@@ -153,16 +166,47 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
 
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
+  Route::post('/updateDataUmum',[DataUmumController::class, 'updateDataUmum']);
+  Route::post('/updateAdendum',[DataUmumController::class, 'addAdendum']);
+  Route::post('/addnewadendum',[DataUmumController::class, 'AddNewAdendum']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
+  Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
+  Route::post('/upload/filepk', [UploadController::class, 'uploadFilePk']);
+  Route::post('/upload/fileSpmk', [UploadController::class, 'uploadFileSpmk']);
+  Route::post('/upload/fileSyaratUmum', [UploadController::class, 'uploadFileSyaratUmum']);
+  Route::post('/upload/fileSyaratKhusus', [UploadController::class, 'uploadFileSyaratKhusus']);
+  Route::post('/upload/fileJpp', [UploadController::class, 'uploadFileJpp']);
+  Route::post('/upload/fileRencana', [UploadController::class, 'uploadFileRencana']);
+  Route::post('/upload/fileSppbj', [UploadController::class, 'uploadFileSppbj']);
+  Route::post('/upload/fileSpl', [UploadController::class, 'uploadFileSpl']);
+  Route::post('/upload/fileSpekUmum', [UploadController::class, 'uploadFileSpekUmum']);
+  Route::post('/upload/fileJaminan', [UploadController::class, 'uploadFileJaminan']);
+  Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
+
+  Route::post('/mergeDkh', [UploadController::class, 'mergeDkh']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
 
   Route::get('/getRuasJalanByKeyword', [RuasJalanController::class, 'getRuasJalanByKeyword']);
+  Route::get('/getRuasjalanByUnor/{id}', [RuasJalanController::class, 'getRuasjalanByUnor']);
 });
 
 Route::prefix('unor')->group(function () {
 
   Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
 });
+
+Route::prefix('merge')->group(function(){
+
+  Route::post('file',[MergePdf::class,'merge']);
+  Route::get('/file/{id}',[MergePdf::class,'getFile']);
+
+});
+
+Route::prefix('adendum')->group(function(){
+
+  Route::post('updatedata',[DataUmumAdendum::class,'updateAdendum']);
+});
+

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -17,11 +16,6 @@ class DataUmumController extends Controller
   {
 
     $result = DB::table('data_umum')
-      ->selectRaw('aksi, data_umum.id, konsultan_supervisi, lat_akhir, lat_awal, long_akhir, long_awal, nama_gs, nama_kegiatan, nama_ppk, ruas_jalan, nama_se, nilai_kontrak, no_kontrak, no_spmk, opd, panjang, pemda, penyedia_jasa, pk, ppk, rab, rab1, rab2, rab3, GROUP_CONCAT(ruas_jalan) as ruas_jalan_concat, satuan_panjang, satuan_waktu, data_umum_ruas.segmen_jalan, sk, sm, tgl_input, tgl_kontrak, tgl_spmk, tgl_update, ul_jadual, ul_jaminan, ul_rencana, ul_spek, ul_spkmp, ul_spl, ul_spmk, ul_sppbj, unit, kantor.nama_kantor as unor, data_umum.user as user, waktu_pelaksanaan, wp')
-      ->join('data_umum_ruas', 'data_umum.id', '=', 'data_umum_ruas.id')
-      ->join('kantor', 'data_umum.unor', '=', 'kantor.id_kantor')
-      ->groupBy('data_umum.id')
-      ->orderBy('data_umum.id', 'desc')
       ->limit(5)
       ->get();
 
@@ -38,14 +32,8 @@ class DataUmumController extends Controller
     $keyword = $request->query("keyword");
 
     $result = DB::table('data_umum')
-      ->selectRaw('aksi, data_umum.id, konsultan_supervisi, lat_akhir, lat_awal, long_akhir, long_awal, nama_gs, nama_kegiatan, nama_ppk, ruas_jalan, nama_se, nilai_kontrak, no_kontrak, no_spmk, opd, panjang, pemda, penyedia_jasa, pk, ppk, rab, rab1, rab2, rab3, GROUP_CONCAT(ruas_jalan) as ruas_jalan_concat, satuan_panjang, satuan_waktu, data_umum_ruas.segmen_jalan, sk, sm, tgl_input, tgl_kontrak, tgl_spmk, tgl_update, ul_jadual, ul_jaminan, ul_rencana, ul_spek, ul_spkmp, ul_spl, ul_spmk, ul_sppbj, unit, kantor.nama_kantor as unor, data_umum.user as user, waktu_pelaksanaan, wp')
-      ->join('data_umum_ruas', 'data_umum.id', '=', 'data_umum_ruas.id')
-      ->join('kantor', 'data_umum.unor', '=', 'kantor.id_kantor')
-      ->groupBy('data_umum.id')
-      ->having('data_umum.nama_kegiatan', 'like', '%' . $keyword . '%')
-      ->orHaving('ruas_jalan_concat', 'like', '%' . $keyword . '%')
-      ->orHaving('unor', 'like', '%' . $keyword . '%')
-      ->orHaving('data_umum.id', $keyword)
+      ->where('nm_paket', 'like', '%' . $keyword . '%')
+      ->orWhere('unor', 'like', '%' . $keyword . '%')
       ->paginate(15);
 
     return response()->json([
@@ -68,48 +56,32 @@ class DataUmumController extends Controller
   }
 
   public function insertDataUmum(Request $request)
+  // cek lagi untuk mobile ada yang di ganti :)              <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   {
+    date_default_timezone_set('Asia/Jakarta');
     $validator = Validator::make($request->all(), [
       // Data Umum
       "pemda" => "required",
       "opd" => "required",
       "unor" => "required",
+      "nm_paket" => "required",
       "kategori" => "required",
-      "nama_kegiatan" => "required",
       "no_kontrak" => "required",
       "tgl_kontrak" => "required",
       "nilai_kontrak" => "required",
       "no_spmk" => "required",
       "tgl_spmk" => "required",
       "panjang" => "required",
-      "waktu_pelaksanaan" => "required",
+      "lama_waktu" => "required",
       "ppk_kegiatan" => "required",
-      "penyedia_jasa" => "required",
+      "penyedia" => "required",
       "konsultan" => "required",
       "nama_ppk" => "required",
       "nama_se" => "required",
       "nama_gs" => "required",
 
       // List Data Umum Ruas
-      "list_data_umum_ruas" => "required|json",
-
-      // File
-      "file_dkh" => "required",
-      "file_perjanjian_kontrak" => "required",
-      "file_spmk" => "required",
-      "file_syarat_umum" => "required",
-      "file_syarat_khusus" => "required",
-      "file_jadual_pelaksanaan" => "required",
-      "file_gambar_rencana" => "required",
-      "file_sppbj" => "required",
-      "file_spl" => "required",
-      "file_spesifikasi_umum" => "required",
-      "file_jaminan" => "required",
-      "file_spkmp" => "required",
-
-      // Informasi Tambahan
-      "user" => "required",
-      "tgl_input" => "required",
+      // "list_data_umum_ruas" => "required|json",
     ]);
 
     if ($validator->fails()) {
@@ -120,114 +92,92 @@ class DataUmumController extends Controller
       ], Response::HTTP_BAD_REQUEST);
     }
 
-    // List Ruas Jalan
-    $listDataUmumRuas = json_decode($request->input('list_data_umum_ruas'));
-
-    foreach ($listDataUmumRuas as $dataUmumRuas) {
-      if (
-        !isNotNullOrBlank($dataUmumRuas->ruas_jalan) ||
-        !isNotNullOrBlank($dataUmumRuas->segmen_jalan) ||
-        !isNotNullOrBlank($dataUmumRuas->lat_awal) ||
-        !isNotNullOrBlank($dataUmumRuas->long_awal) ||
-        !isNotNullOrBlank($dataUmumRuas->lat_akhir) ||
-        !isNotNullOrBlank($dataUmumRuas->long_akhir)
-      ) {
-        return response()->json([
-          'status' => 'failed',
-          'code' => '400',
-          'error' => 'Data Umum Ruas Ada Yang Kosong Atau Null'
-        ], Response::HTTP_BAD_REQUEST);
-      }
-    }
-
-    // File-File Upload
-    $fileDkh = $request->file('file_dkh');
-    $filePerjanjianKontrak = $request->file('file_perjanjian_kontrak');
-    $fileSpmk = $request->file('file_spmk');
-    $fileSyaratUmum = $request->file('file_syarat_umum');
-    $fileSyaratKhusus = $request->file('file_syarat_khusus');
-    $fileJadualPelaksanaan = $request->file('file_jadual_pelaksanaan');
-    $fileGambarRencana = $request->file('file_gambar_rencana');
-    $fileSppbj = $request->file('file_sppbj');
-    $fileSpl = $request->file('file_spl');
-    $fileSpesifikasiUmum = $request->file('file_spesifikasi_umum');
-    $fileJaminan = $request->file('file_jaminan');
-    $fileSpkmp = $request->file('file_spkmp');
-
-    $fileDkh->move($this->PATH_FILE_DOCUMENTS, $fileDkh->getClientOriginalName());
-    $filePerjanjianKontrak->move($this->PATH_FILE_DOCUMENTS, $filePerjanjianKontrak->getClientOriginalName());
-    $fileSpmk->move($this->PATH_FILE_DOCUMENTS, $fileSpmk->getClientOriginalName());
-    $fileSyaratUmum->move($this->PATH_FILE_DOCUMENTS, $fileSyaratUmum->getClientOriginalName());
-    $fileSyaratKhusus->move($this->PATH_FILE_DOCUMENTS, $fileSyaratKhusus->getClientOriginalName());
-    $fileJadualPelaksanaan->move($this->PATH_FILE_DOCUMENTS, $fileJadualPelaksanaan->getClientOriginalName());
-    $fileGambarRencana->move($this->PATH_FILE_DOCUMENTS, $fileGambarRencana->getClientOriginalName());
-    $fileSppbj->move($this->PATH_FILE_DOCUMENTS, $fileSppbj->getClientOriginalName());
-    $fileSpl->move($this->PATH_FILE_DOCUMENTS, $fileSpl->getClientOriginalName());
-    $fileSpesifikasiUmum->move($this->PATH_FILE_DOCUMENTS, $fileSpesifikasiUmum->getClientOriginalName());
-    $fileJaminan->move($this->PATH_FILE_DOCUMENTS, $fileJaminan->getClientOriginalName());
-    $fileSpkmp->move($this->PATH_FILE_DOCUMENTS, $fileSpkmp->getClientOriginalName());
-
     $data = [
       // Data Umum
       'pemda' => $request->input("pemda"),
       "opd" => $request->input("opd"),
       "unor" => $request->input("unor"),
       "kategori" => $request->input("kategori"),
-      "nama_kegiatan" => $request->input("nama_kegiatan"),
+      "nm_paket" => $request->input("nm_paket"),
       "no_kontrak" => $request->input("no_kontrak"),
       "tgl_kontrak" => $request->input("tgl_kontrak"),
       "nilai_kontrak" => $request->input("nilai_kontrak"),
       "no_spmk" => $request->input("no_spmk"),
       "tgl_spmk" => $request->input("tgl_spmk"),
-      "panjang" => $request->input("panjang"),
-      "waktu_pelaksanaan" => $request->input("waktu_pelaksanaan"),
+      "panjang_km" => $request->input("panjang"),
+      "lama_waktu" => $request->input("lama_waktu"),
       "ppk" => $request->input("ppk_kegiatan"),
-      "penyedia_jasa" => $request->input("penyedia_jasa"),
-      "konsultan_supervisi" => $request->input("konsultan"),
-      "nama_ppk" => $request->input("nama_ppk"),
-      "nama_se" => $request->input("nama_se"),
-      "nama_gs" => $request->input("nama_gs"),
-
-      // File
-      "rab" => $fileDkh->getClientOriginalName(),
-      "pk" => $filePerjanjianKontrak->getClientOriginalName(),
-      "sk" => $fileSyaratKhusus->getClientOriginalName(),
-      "sm" => $fileSyaratUmum->getClientOriginalName(),
-      "ul_spmk" => $fileSpmk->getClientOriginalName(),
-      "ul_jadual" => $fileJadualPelaksanaan->getClientOriginalName(),
-      "ul_rencana" => $fileGambarRencana->getClientOriginalName(),
-      "ul_sppbj" => $fileSppbj->getClientOriginalName(),
-      "ul_spl" => $fileSpl->getClientOriginalName(),
-      "ul_spek" => $fileSpesifikasiUmum->getClientOriginalName(),
-      "ul_jaminan" => $fileJadualPelaksanaan->getClientOriginalName(),
-      "ul_spkmp" => $fileSpkmp->getClientOriginalName(),
-
-      // Informasi Tambahan
-      "user" => $request->input("user"),
-      "tgl_input" => $request->input("tgl_input"),
+      "penyedia" => $request->input("penyedia"),
+      "konsultan" => $request->input("konsultan"),
+      "nm_ppk" => $request->input("nama_ppk"),
+      "nm_se" => $request->input("nama_se"),
+      "nm_gs" => $request->input("nama_gs"),
+      "is_adendum" => 0,
+      "created_at" => \Carbon\Carbon::now()
     ];
 
     $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
 
-    foreach ($listDataUmumRuas as $dataUmumRuas) {
-      DB::table('data_umum_ruas')->insert([
-        "id" => $insertedDataUmumId,
-        "ruas_jalan" => $dataUmumRuas->ruas_jalan,
-        "segmen_jalan" => $dataUmumRuas->segmen_jalan,
-        "lat_awal" => $dataUmumRuas->lat_awal,
-        "long_awal" => $dataUmumRuas->long_awal,
-        "lat_akhir" => $dataUmumRuas->lat_akhir,
-        "long_akhir" => $dataUmumRuas->long_akhir
-      ]);
-    }
+    // List Ruas Jalan
+    if ($request->list_data_umum_ruas) {
+      $listDataUmumRuas = json_decode($request->input('list_data_umum_ruas'));
 
+      foreach ($listDataUmumRuas as $dataUmumRuas) {
+        if (
+          !isNotNullOrBlank($dataUmumRuas->ruas_jalan) ||
+          !isNotNullOrBlank($dataUmumRuas->segmen_jalan) ||
+          !isNotNullOrBlank($dataUmumRuas->lat_awal) ||
+          !isNotNullOrBlank($dataUmumRuas->long_awal) ||
+          !isNotNullOrBlank($dataUmumRuas->lat_akhir) ||
+          !isNotNullOrBlank($dataUmumRuas->long_akhir)
+        ) {
+          return response()->json([
+            'status' => 'failed',
+            'code' => '400',
+            'error' => 'Data Umum Ruas Ada Yang Kosong Atau Null'
+          ], Response::HTTP_BAD_REQUEST);
+        }
+      }
+
+
+      foreach ($listDataUmumRuas as $dataUmumRuas) {
+        DB::table('data_umum_ruas')->insert([
+          "id_data_umum" => $insertedDataUmumId, // diganti sesuai DB
+          "ruas_jalan" => $dataUmumRuas->ruas_jalan,
+          "segmen_jalan" => $dataUmumRuas->segmen_jalan,
+          "lat_awal" => $dataUmumRuas->lat_awal,
+          "long_awal" => $dataUmumRuas->long_awal,
+          "lat_akhir" => $dataUmumRuas->lat_akhir,
+          "long_akhir" => $dataUmumRuas->long_akhir,
+          "created_at" => \Carbon\Carbon::now()
+        ]);
+      }
+      return response()->json([
+        'status' => 'success',
+        'code' => '200',
+        'result' => $data
+      ]);
+    } else {
+      for ($i = 0; $i < count($request->ruas_jalan); $i++) {
+        DB::table("data_umum_ruas")->insert([
+          "id_data_umum" => $insertedDataUmumId,
+          "ruas_jalan" => $request->ruas_jalan[$i],
+          "segment_jalan" => $request->segmen_jalan[$i],
+          "lat_awal" => $request->lat_awal[$i],
+          "long_awal" => $request->long_awal[$i],
+          "lat_akhir" => $request->lat_akhir[$i],
+          "long_akhir" => $request->long_akhir[$i],
+          "created_at" => \Carbon\Carbon::now()
+        ]);
+      }
+    }
     $data['id'] = $insertedDataUmumId;
-    $data['list_data_umum_ruas'] = $listDataUmumRuas;
+    // $data['list_data_umum_ruas'] = $listDataUmumRuas;
 
     return response()->json([
       'status' => 'success',
       'code' => '200',
-      'result' => $data
+      'result' => $insertedDataUmumId
     ]);
   }
 
@@ -251,5 +201,160 @@ class DataUmumController extends Controller
       'code' => '200',
       'result' => $result
     ]);
+  }
+
+  public function updateDataUmum(Request $req)
+  {
+
+    date_default_timezone_set('Asia/Jakarta');
+    $data = [
+      // Data Umum
+      'pemda' => $req->input("pemda"),
+      "opd" => $req->input("opd"),
+      "unor" => $req->input("unor"),
+      "kategori" => $req->input("kategori"),
+      "nm_paket" => $req->input("nm_paket"),
+      "no_kontrak" => $req->input("no_kontrak"),
+      "tgl_kontrak" => $req->input("tgl_kontrak"),
+      "nilai_kontrak" => $req->input("nilai_kontrak"),
+      "no_spmk" => $req->input("no_spmk"),
+      "tgl_spmk" => $req->input("tgl_spmk"),
+      "panjang_km" => $req->input("panjang_km"),
+      "lama_waktu" => $req->input("lama_waktu"),
+      "ppk" => $req->input("ppk"),
+      "penyedia" => $req->input("penyedia"),
+      "konsultan" => $req->input("konsultan"),
+      "nm_ppk" => $req->input("nm_ppk"),
+      "nm_se" => $req->input("nm_se"),
+      "nm_gs" => $req->input("nm_gs"),
+      "is_adendum" => 0,
+      "updated_at" => \Carbon\Carbon::now()
+    ];
+    DB::table('data_umum')->where('id', $req->id)->update($data);
+    DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
+    for ($i = 0; $i < count($req->ruas_jalan); $i++) {
+      DB::table("data_umum_ruas")->insert([
+        "id_data_umum" => $req->id,
+        "ruas_jalan" => $req->ruas_jalan[$i],
+        "segment_jalan" => $req->segmen_jalan[$i],
+        "lat_awal" => $req->lat_awal[$i],
+        "long_awal" => $req->long_awal[$i],
+        "lat_akhir" => $req->lat_akhir[$i],
+        "long_akhir" => $req->long_akhir[$i],
+        "created_at" => \Carbon\Carbon::now()
+      ]);
+    }
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => "oke"
+    ]);
+  }
+  public function addAdendum(Request $req)
+  {
+    $get_data = DB::table('data_umum')->where('id', $req->id)->first();
+    $data = [
+      // Data Umum
+      'id_data_umum' => $req->id,
+      'pemda' => $get_data->pemda,
+      "opd" => $get_data->opd,
+      "unor" => $get_data->unor,
+      "kategori" => $get_data->kategori,
+      "nm_paket" => $get_data->nm_paket,
+      "no_kontrak" => $get_data->no_kontrak,
+      "tgl_kontrak" => $get_data->tgl_kontrak,
+      "nilai_kontrak" => $get_data->nilai_kontrak,
+      "no_spmk" => $get_data->no_spmk,
+      "tgl_spmk" => $get_data->tgl_spmk,
+      "panjang_km" => $get_data->panjang_km,
+      "lama_waktu" => $get_data->lama_waktu,
+      "ppk" => $get_data->ppk,
+      "penyedia" => $get_data->penyedia,
+      "konsultan" => $get_data->konsultan,
+      "nm_ppk" => $get_data->nm_ppk,
+      "nm_se" => $get_data->nm_se,
+      "nm_gs" => $get_data->nm_gs,
+      "adendum" => "Adendum 1",
+      "created_at" => \Carbon\Carbon::now()
+    ];
+    DB::table('data_umum_adendum')->insert($data);
+    DB::table('data_umum')->where("id", $req->id)->update([
+      "is_adendum" => 1
+    ]);
+
+    $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
+
+    foreach ($get_data_ruas as $data) {
+      DB::table('data_umum_ruas_adendum')->insert([
+        "id_data_umum_adendum" => $data->id_data_umum,
+        "ruas_jalan" => $data->ruas_jalan,
+        "segment_jalan" => $data->segment_jalan,
+        "lat_awal" => $data->lat_awal,
+        "long_awal" => $data->long_awal,
+        "lat_akhir" => $data->lat_akhir,
+        "long_akhir" => $data->long_akhir,
+        "adendum" => "Adendum 1",
+        "created_at" => \Carbon\Carbon::now()
+      ]);
+    }
+
+    return response()->json([
+      "code" => 200
+    ], 200);
+  }
+
+
+  public function AddNewAdendum(Request $req)
+  {
+    $get_data = DB::table('data_umum_adendum')->where('id_data_umum', $req->id)->get();
+    DB::table('data_umum_adendum')->where([
+      ["is_adendum", null],
+      ["id_data_umum", "=", $req->id]
+    ])->update([
+      "is_adendum" => 1
+    ]);
+    $data = [
+      // Data Umum
+      'id_data_umum' => $req->id,
+      'adendum' => "Adendum " . count($get_data) + 1,
+      'pemda' => $get_data[0]->pemda,
+      "opd" => $get_data[0]->opd,
+      "unor" => $get_data[0]->unor,
+      "kategori" => $get_data[0]->kategori,
+      "nm_paket" => $get_data[0]->nm_paket,
+      "no_kontrak" => $get_data[0]->no_kontrak,
+      "tgl_kontrak" => $get_data[0]->tgl_kontrak,
+      "nilai_kontrak" => $get_data[0]->nilai_kontrak,
+      "no_spmk" => $get_data[0]->no_spmk,
+      "tgl_spmk" => $get_data[0]->tgl_spmk,
+      "panjang_km" => $get_data[0]->panjang_km,
+      "lama_waktu" => $get_data[0]->lama_waktu,
+      "ppk" => $get_data[0]->ppk,
+      "penyedia" => $get_data[0]->penyedia,
+      "konsultan" => $get_data[0]->konsultan,
+      "nm_ppk" => $get_data[0]->nm_ppk,
+      "nm_se" => $get_data[0]->nm_se,
+      "nm_gs" => $get_data[0]->nm_gs,
+      "created_at" => \Carbon\Carbon::now()
+    ];
+    DB::table('data_umum_adendum')->insert($data);
+    $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
+
+    foreach ($get_data_ruas as $data) {
+      DB::table('data_umum_ruas_adendum')->insert([
+        "id_data_umum_adendum" => $data->id_data_umum,
+        "ruas_jalan" => $data->ruas_jalan,
+        "segment_jalan" => $data->segment_jalan,
+        "lat_awal" => $data->lat_awal,
+        "long_awal" => $data->long_awal,
+        "lat_akhir" => $data->lat_akhir,
+        "long_akhir" => $data->long_akhir,
+        "adendum" => "Adendum " . count($get_data) + 1,
+        "created_at" => \Carbon\Carbon::now()
+      ]);
+    }
+    return response()->json([
+      "code" => 200
+    ], 200);
   }
 }
