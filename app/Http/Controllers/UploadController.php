@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
-    private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/rp.png";
+    private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_merge/rp.png";
     public function UploadFileDkh(Request $req){
         return response()->file($this->PATH_FILE_DOCUMENTS);
 
