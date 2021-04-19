@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
-    private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_merge/rp.png";
+    private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_merge/";
+    private $PATH_FILE_DB ="/lampiran/file_merge/";
     public function UploadFileDkh(Request $req){
-        return response()->file($this->PATH_FILE_DOCUMENTS);
-
         $valid = validator::make($req->all(),[
             'file_dkh'=>'required|mimes:pdf,xlx,xls|max:5048'
         ]);
@@ -24,7 +23,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_dkh')->insert([
             "id_data_umum"=>$req->id,
-            "dkh"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "dkh"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -49,7 +48,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_kontrak')->insert([
             "id_data_umum"=>$req->id,
-            "kontrak"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "kontrak"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -73,7 +72,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_spmk')->insert([
             "id_data_umum"=>$req->id,
-            "spmk"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "spmk"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -98,7 +97,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_syarat_umum')->insert([
             "id_data_umum"=>$req->id,
-            "syarat_umum"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "syarat_umum"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -123,7 +122,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_syarat_khusus')->insert([
             "id_data_umum"=>$req->id,
-            "syarat_khusus"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "syarat_khusus"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -148,7 +147,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_jpp')->insert([
             "id_data_umum"=>$req->id,
-            "jpp"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "jpp"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -172,7 +171,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_rencana')->insert([
             "id_data_umum"=>$req->id,
-            "rencana"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "rencana"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -197,7 +196,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_sppbj')->insert([
             "id_data_umum"=>$req->id,
-            "sppbj"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "sppbj"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -222,7 +221,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_spl')->insert([
             "id_data_umum"=>$req->id,
-            "spl"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "spl"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -247,7 +246,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_spek_umum')->insert([
             "id_data_umum"=>$req->id,
-            "spek_umum"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "spek_umum"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -272,7 +271,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_jaminan')->insert([
             "id_data_umum"=>$req->id,
-            "jaminan"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "jaminan"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
@@ -297,7 +296,7 @@ class UploadController extends Controller
         $name = time()."_".$file->getClientOriginalName();
         DB::table('file_spkmp')->insert([
             "id_data_umum"=>$req->id,
-            "spkmp"=>$this->PATH_FILE_DOCUMENTS."\\".$name
+            "spkmp"=>$this->PATH_FILE_DB.$name
         ]);
         $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
