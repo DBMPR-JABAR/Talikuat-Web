@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
-    private $PATH_FILE_DOCUMENTS = "file_unmerge";
+    private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/rp.png";
     public function UploadFileDkh(Request $req){
-   
+        return response()->file($this->PATH_FILE_DOCUMENTS);
 
         $valid = validator::make($req->all(),[
             'file_dkh'=>'required|mimes:pdf,xlx,xls|max:5048'
