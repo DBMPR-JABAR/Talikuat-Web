@@ -148,6 +148,9 @@ Route::prefix('/permintaan')->group(function () {
   Route::post('/buatrequest',[PermintaanController::class,'buatRequest']);
   Route::post('/updaterequest',[PermintaanController::class,'updateRequest']);
   Route::post('/sendrequest',[PermintaanController::class,'sendReq']);
+  Route::post('/konsultan/updaterequest',[PermintaanController::class,'updateReqKonsultan']);
+  Route::post('/updaterequest/revisi',[PermintaanController::class,'revisiRequest']);
+
 });
 
 Route::prefix('laporan')->group(function () {
