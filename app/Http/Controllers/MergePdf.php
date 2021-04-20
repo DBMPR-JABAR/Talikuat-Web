@@ -12,35 +12,48 @@ class MergePdf extends Controller
     {
 
         switch ($req->file) {
+
             case "file_dkh":
+
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->dkh;
+
+                    $nameFile = $get_file[0]->dkh;
+
                     DB::table('file_dkh_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_dkh_update" => $nameFIle
+                        "file_dkh_update" => $nameFile
                     ]);
-                    DB::table('file_dkh')->where('dkh', "=", $nameFIle)->delete();
+
+                    DB::table('file_dkh')->where('dkh', "=", $nameFile)->delete();
+
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
                     ]);
                 } else {
+
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
+
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->dkh, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->dkh, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_DKH.pdf";
+
+                    $nameFile = "lampiran/file_merge/" . time() . "_DKH.pdf";
+
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
 
                     DB::table('file_dkh_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_dkh_update" => $nameFIle
+                        "file_dkh_update" => $nameFile
                     ]);
+
                     foreach ($get_file as $file) {
                         DB::table('file_dkh')->where('dkh', "=", $file->dkh)->delete();
                     }
+
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -52,12 +65,12 @@ class MergePdf extends Controller
             case "file_kontrak":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->kontrak;
+                    $nameFile = $get_file[0]->kontrak;
                     DB::table('file_kontrak_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_kontrak_update" => $nameFIle
+                        "file_kontrak_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('kontrak', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('kontrak', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -65,14 +78,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->kontrak, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->kontrak, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_Kontrak.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_Kontrak.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_kontrak_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_kontrak_update" => $nameFIle
+                        "file_kontrak_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('kontrak', "=", $file->kontrak)->delete();
@@ -89,12 +102,12 @@ class MergePdf extends Controller
             case "file_spmk":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->spmk;
+                    $nameFile = $get_file[0]->spmk;
                     DB::table('file_spmk_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spmk_update" => $nameFIle
+                        "file_spmk_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('spmk', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('spmk', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -102,15 +115,15 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->spmk, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->spmk, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_spmk.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_spmk.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
 
                     DB::table('file_spmk_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spmk_update" => $nameFIle
+                        "file_spmk_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('spmk', "=", $file->spmk)->delete();
@@ -126,13 +139,13 @@ class MergePdf extends Controller
             case "file_syarat_umum":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->syarat_umum;
+                    $nameFile = $get_file[0]->syarat_umum;
 
                     DB::table('file_syarat_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_umum_update" => $nameFIle
+                        "file_syarat_umum_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('syarat_umum', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('syarat_umum', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -140,14 +153,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->syarat_umum, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->syarat_umum, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_syarat_umum.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_syarat_umum.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_syarat_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_umum_update" => $nameFIle
+                        "file_syarat_umum_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('syarat_umum', "=", $file->syarat_umum)->delete();
@@ -162,13 +175,13 @@ class MergePdf extends Controller
             case "file_syarat_khusus":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->syarat_khusus;
+                    $nameFile = $get_file[0]->syarat_khusus;
 
                     DB::table('file_syarat_khusus_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_khusus_update" => $nameFIle
+                        "file_syarat_khusus_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('syarat_khusus', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('syarat_khusus', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -176,14 +189,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->syarat_khusus, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->syarat_khusus, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_syarat_khusus.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_syarat_khusus.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_syarat_khusus_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_khusus_update" => $nameFIle
+                        "file_syarat_khusus_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('syarat_khusus', "=", $file->syarat_khusus)->delete();
@@ -198,13 +211,13 @@ class MergePdf extends Controller
             case "file_jpp":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->jpp;
+                    $nameFile = $get_file[0]->jpp;
 
                     DB::table('file_jpp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jpp_update" => $nameFIle
+                        "file_jpp_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('jpp', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('jpp', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -212,14 +225,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->jpp, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->jpp, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_jpp.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_jpp.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_jpp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jpp_update" => $nameFIle
+                        "file_jpp_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('jpp', "=", $file->jpp)->delete();
@@ -234,12 +247,12 @@ class MergePdf extends Controller
             case "file_rencana":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->rencana;
+                    $nameFile = $get_file[0]->rencana;
                     DB::table('file_rencana_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_rencana_update" => $nameFIle
+                        "file_rencana_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('rencana', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('rencana', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -247,14 +260,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->rencana, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->rencana, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_rencana.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_rencana.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_rencana_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_rencana_update" => $nameFIle
+                        "file_rencana_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('rencana', "=", $file->rencana)->delete();
@@ -270,12 +283,12 @@ class MergePdf extends Controller
             case "file_sppbj":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->sppbj;
+                    $nameFile = $get_file[0]->sppbj;
                     DB::table('file_sppbj_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_sppbj_update" => $nameFIle
+                        "file_sppbj_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('sppbj', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('sppbj', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -283,14 +296,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->sppbj, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->sppbj, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_sppbj.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_sppbj.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_sppbj_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_sppbj_update" => $nameFIle
+                        "file_sppbj_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('sppbj', "=", $file->sppbj)->delete();
@@ -307,12 +320,12 @@ class MergePdf extends Controller
             case "file_spl":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->spl;
+                    $nameFile = $get_file[0]->spl;
                     DB::table('file_spl_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spl_update" => $nameFIle
+                        "file_spl_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('spl', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('spl', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -320,14 +333,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->spl, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->spl, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_spl.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_spl.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_spl_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spl_update" => $nameFIle
+                        "file_spl_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('spl', "=", $file->spl)->delete();
@@ -343,12 +356,12 @@ class MergePdf extends Controller
             case "file_spek_umum":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->spek_umum;
+                    $nameFile = $get_file[0]->spek_umum;
                     DB::table('file_spek_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spek_umum_update" => $nameFIle
+                        "file_spek_umum_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('spek_umum', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('spek_umum', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -356,14 +369,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->spek_umum, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->spek_umum, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_spek_umum.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_spek_umum.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_spek_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spek_umum_update" => $nameFIle
+                        "file_spek_umum_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('spek_umum', "=", $file->spek_umum)->delete();
@@ -379,12 +392,12 @@ class MergePdf extends Controller
             case "file_jaminan":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->jaminan;
+                    $nameFile = $get_file[0]->jaminan;
                     DB::table('file_jaminan_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jaminan_update" => $nameFIle
+                        "file_jaminan_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('jaminan', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('jaminan', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -392,14 +405,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->jaminan, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->jaminan, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_jaminan.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_jaminan.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_jaminan_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jaminan_update" => $nameFIle
+                        "file_jaminan_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('jaminan', "=", $file->jaminan)->delete();
@@ -415,12 +428,12 @@ class MergePdf extends Controller
             case "file_spkmp":
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
                 if (count($get_file) == 1) {
-                    $nameFIle = $get_file[0]->spkmp;
+                    $nameFile = $get_file[0]->spkmp;
                     DB::table('file_spkmp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spkmp_update" => $nameFIle
+                        "file_spkmp_update" => $nameFile
                     ]);
-                    DB::table($req->file)->where('spkmp', "=", $nameFIle)->delete();
+                    DB::table($req->file)->where('spkmp', "=", $nameFile)->delete();
                     return response()->json([
                         'status' => 'success',
                         'code' => "200"
@@ -428,14 +441,14 @@ class MergePdf extends Controller
                 } else {
                     $pdf = new \Jurosh\PDFMerge\PDFMerger;
                     foreach ($get_file as $file) {
-                        $pdf->addPDF("/home/www/talikuat/".$file->spkmp, 'all');
+                        $pdf->addPDF("/home/www/talikuat/" . $file->spkmp, 'all');
                     }
-                    $nameFIle = "lampiran/file_merge/" . time() . "_spkmp.pdf";
+                    $nameFile = "lampiran/file_merge/" . time() . "_spkmp.pdf";
                     //merge PDF ke path file
-                    $pdf->merge('file', "/home/www/talikuat/".$nameFIle);
+                    $pdf->merge('file', "/home/www/talikuat/" . $nameFile);
                     DB::table('file_spkmp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spkmp_update" => $nameFIle
+                        "file_spkmp_update" => $nameFile
                     ]);
                     foreach ($get_file as $file) {
                         DB::table($req->file)->where('spkmp', "=", $file->spkmp)->delete();

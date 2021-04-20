@@ -188,29 +188,51 @@ Route::prefix('data-umum')->group(function () {
 
   Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
 
+  Route::delete('/fileDkh/{id}', [UploadController::class, 'DeleteFileDkh']);
+
   Route::post('/upload/filepk', [UploadController::class, 'uploadFilePk']);
+
+  Route::delete('/filePk/{id}', [UploadController::class, 'DeleteFilePk']);
 
   Route::post('/upload/fileSpmk', [UploadController::class, 'uploadFileSpmk']);
 
+  Route::delete('/fileSpmk/{id}', [UploadController::class, 'DeleteFileSpmk']);
+
   Route::post('/upload/fileSyaratUmum', [UploadController::class, 'uploadFileSyaratUmum']);
+
+  Route::delete('/fileSyaratUmum/{id}', [UploadController::class, 'DeleteFileSyaratUmum']);
 
   Route::post('/upload/fileSyaratKhusus', [UploadController::class, 'uploadFileSyaratKhusus']);
 
+  Route::delete('/fileSyaratKhusus/{id}', [UploadController::class, 'DeleteFileSyaratKhusus']);
+
   Route::post('/upload/fileJpp', [UploadController::class, 'uploadFileJpp']);
+
+  Route::delete('/fileJpp/{id}', [UploadController::class, 'DeleteFileJpp']);
 
   Route::post('/upload/fileRencana', [UploadController::class, 'uploadFileRencana']);
 
+  Route::delete('/fileRencana/{id}', [UploadController::class, 'DeleteFileRencana']);
+
   Route::post('/upload/fileSppbj', [UploadController::class, 'uploadFileSppbj']);
+
+  Route::delete('/fileSppbj/{id}', [UploadController::class, 'DeleteFileSppbj']);
 
   Route::post('/upload/fileSpl', [UploadController::class, 'uploadFileSpl']);
 
+  Route::delete('/fileSpl/{id}', [UploadController::class, 'DeleteFileSpl']);
+
   Route::post('/upload/fileSpekUmum', [UploadController::class, 'uploadFileSpekUmum']);
+
+  Route::delete('/fileSpekUmum/{id}', [UploadController::class, 'DeleteFileSpekUmum']);
 
   Route::post('/upload/fileJaminan', [UploadController::class, 'uploadFileJaminan']);
 
+  Route::delete('/fileJaminan/{id}', [UploadController::class, 'DeleteFileJaminan']);
+
   Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
 
-  Route::post('/mergeDkh', [UploadController::class, 'mergeDkh']);
+  Route::delete('/fileSpkmp/{id}', [UploadController::class, 'DeleteFileSpkmp']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
