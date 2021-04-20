@@ -168,6 +168,8 @@ Route::prefix('laporan')->group(function () {
 
 Route::prefix('data-umum')->group(function () {
 
+  Route::get('/getFileDkh', [UploadController::class, 'getFileDkh']);
+
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
   Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);

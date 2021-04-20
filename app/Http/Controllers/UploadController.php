@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
-    private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_unmerge/";
+
+    // private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_unmerge/";
     private $PATH_FILE_DB = "/lampiran/file_unmerge/";
 
     public function UploadFileDkh(Request $req)
@@ -31,7 +33,9 @@ class UploadController extends Controller
             "dkh" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -59,7 +63,9 @@ class UploadController extends Controller
             "kontrak" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -87,7 +93,9 @@ class UploadController extends Controller
             "spmk" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -115,7 +123,9 @@ class UploadController extends Controller
             "syarat_umum" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -143,7 +153,9 @@ class UploadController extends Controller
             "syarat_khusus" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -171,7 +183,9 @@ class UploadController extends Controller
             "jpp" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -199,7 +213,9 @@ class UploadController extends Controller
             "rencana" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -227,7 +243,9 @@ class UploadController extends Controller
             "sppbj" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -255,7 +273,9 @@ class UploadController extends Controller
             "spl" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -283,7 +303,9 @@ class UploadController extends Controller
             "spek_umum" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -304,11 +326,15 @@ class UploadController extends Controller
         }
         $file = $req->file('file_jaminan');
         $name = time() . "_" . $file->getClientOriginalName();
+
         DB::table('file_jaminan')->insert([
             "id_data_umum" => $req->id,
             "jaminan" => $this->PATH_FILE_DB . $name
         ]);
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
@@ -336,7 +362,9 @@ class UploadController extends Controller
             "spkmp" => $this->PATH_FILE_DB . $name
         ]);
 
-        $file->move($this->PATH_FILE_DOCUMENTS, $name);
+        Storage::putFileAs("public/lampiran/file_unmerge", $file, $name);
+
+        // $file->move($this->PATH_FILE_DOCUMENTS, $name);
 
         return response()->json([
             'status' => 'success',
