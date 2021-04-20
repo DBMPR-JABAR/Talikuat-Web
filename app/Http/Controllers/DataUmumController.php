@@ -120,16 +120,17 @@ class DataUmumController extends Controller
 
     // List Ruas Jalan
     if ($request->list_data_umum_ruas) {
-      $listDataUmumRuas = json_decode($request->input('list_data_umum_ruas'));
+
+      $listDataUmumRuas = $request->input('list_data_umum_ruas');
 
       foreach ($listDataUmumRuas as $dataUmumRuas) {
         if (
-          !isNotNullOrBlank($dataUmumRuas->ruas_jalan) ||
-          !isNotNullOrBlank($dataUmumRuas->segmen_jalan) ||
-          !isNotNullOrBlank($dataUmumRuas->lat_awal) ||
-          !isNotNullOrBlank($dataUmumRuas->long_awal) ||
-          !isNotNullOrBlank($dataUmumRuas->lat_akhir) ||
-          !isNotNullOrBlank($dataUmumRuas->long_akhir)
+          !isNotNullOrBlank($dataUmumRuas["ruas_jalan"]) ||
+          !isNotNullOrBlank($dataUmumRuas["segment_jalan"]) ||
+          !isNotNullOrBlank($dataUmumRuas["lat_awal"]) ||
+          !isNotNullOrBlank($dataUmumRuas["long_awal"]) ||
+          !isNotNullOrBlank($dataUmumRuas["lat_akhir"]) ||
+          !isNotNullOrBlank($dataUmumRuas["long_akhir"])
         ) {
           return response()->json([
             'status' => 'failed',
@@ -143,15 +144,18 @@ class DataUmumController extends Controller
       foreach ($listDataUmumRuas as $dataUmumRuas) {
         DB::table('data_umum_ruas')->insert([
           "id_data_umum" => $insertedDataUmumId, // diganti sesuai DB
-          "ruas_jalan" => $dataUmumRuas->ruas_jalan,
-          "segmen_jalan" => $dataUmumRuas->segmen_jalan,
-          "lat_awal" => $dataUmumRuas->lat_awal,
-          "long_awal" => $dataUmumRuas->long_awal,
-          "lat_akhir" => $dataUmumRuas->lat_akhir,
-          "long_akhir" => $dataUmumRuas->long_akhir,
+          "ruas_jalan" => $dataUmumRuas["ruas_jalan"],
+          "segment_jalan" => $dataUmumRuas["segment_jalan"],
+          "lat_awal" => $dataUmumRuas["lat_awal"],
+          "long_awal" => $dataUmumRuas["long_awal"],
+          "lat_akhir" => $dataUmumRuas["lat_akhir"],
+          "long_akhir" => $dataUmumRuas["long_akhir"],
           "created_at" => \Carbon\Carbon::now()
         ]);
       }
+
+      $data['id'] = $insertedDataUmumId;
+
       return response()->json([
         'status' => 'success',
         'code' => '200',

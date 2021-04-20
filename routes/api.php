@@ -134,8 +134,7 @@ Route::prefix('/jadual')->group(function () {
   Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
   Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
 
-  Route::post('/updatejadual',[JadualController::class,'updateJadual']);
-
+  Route::post('/updatejadual', [JadualController::class, 'updateJadual']);
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -145,9 +144,9 @@ Route::prefix('/permintaan')->group(function () {
   Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);
 
   Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
-  Route::post('/buatrequest',[PermintaanController::class,'buatRequest']);
-  Route::post('/updaterequest',[PermintaanController::class,'updateRequest']);
-  Route::post('/sendrequest',[PermintaanController::class,'sendReq']);
+  Route::post('/buatrequest', [PermintaanController::class, 'buatRequest']);
+  Route::post('/updaterequest', [PermintaanController::class, 'updateRequest']);
+  Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
 });
 
 Route::prefix('laporan')->group(function () {
@@ -166,9 +165,9 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
 
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
-  Route::post('/updateDataUmum',[DataUmumController::class, 'updateDataUmum']);
-  Route::post('/updateAdendum',[DataUmumController::class, 'addAdendum']);
-  Route::post('/addnewadendum',[DataUmumController::class, 'AddNewAdendum']);
+  Route::post('/updateDataUmum', [DataUmumController::class, 'updateDataUmum']);
+  Route::post('/updateAdendum', [DataUmumController::class, 'addAdendum']);
+  Route::post('/addnewadendum', [DataUmumController::class, 'AddNewAdendum']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
   Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
@@ -190,6 +189,9 @@ Route::prefix('data-umum')->group(function () {
 Route::prefix('ruas-jalan')->group(function () {
 
   Route::get('/getRuasJalanByKeyword', [RuasJalanController::class, 'getRuasJalanByKeyword']);
+
+  Route::get('/getRuasJalanByUnorAndKeyword/{id}', [RuasJalanController::class, 'getRuasJalanByUnorAndKeyword']);
+
   Route::get('/getRuasjalanByUnor/{id}', [RuasJalanController::class, 'getRuasjalanByUnor']);
 });
 
@@ -198,15 +200,13 @@ Route::prefix('unor')->group(function () {
   Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
 });
 
-Route::prefix('merge')->group(function(){
+Route::prefix('merge')->group(function () {
 
-  Route::post('file',[MergePdf::class,'merge']);
-  Route::get('/file/{id}',[MergePdf::class,'getFile']);
-
+  Route::post('file', [MergePdf::class, 'merge']);
+  Route::get('/file/{id}', [MergePdf::class, 'getFile']);
 });
 
-Route::prefix('adendum')->group(function(){
+Route::prefix('adendum')->group(function () {
 
-  Route::post('updatedata',[DataUmumAdendum::class,'updateAdendum']);
+  Route::post('updatedata', [DataUmumAdendum::class, 'updateAdendum']);
 });
-
