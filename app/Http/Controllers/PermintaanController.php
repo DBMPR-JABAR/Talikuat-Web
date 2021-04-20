@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PermintaanController extends Controller
 {
-  private $PATH_FILE_DOCUMENTS = "file_req";
+  private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_req";
+  private $PATH_FILE_DB = "/lampiran/file_req";
   public function getAllPermintaan() {
 
     $result = DB::table('request')->get();
@@ -104,7 +105,7 @@ class PermintaanController extends Controller
       "nama_kontraktor"=>$req->penyedia_jasa,
       "nama_direksi"=>$req->konsultan,
       "nama_ppk"=>$req->nm_ppk,
-      "sketsa"=>$this->PATH_FILE_DOCUMENTS."\\".$name,
+      "sketsa"=>$this->PATH_FILE_DB."\\".$name,
       "id_jadual"=>$req->id_jadual,
       "tgl_input"=>\Carbon\Carbon::now() 
     ]);
@@ -158,7 +159,7 @@ class PermintaanController extends Controller
       "nama_kontraktor"=>$req->penyedia_jasa,
       "nama_direksi"=>$req->konsultan,
       "nama_ppk"=>$req->nama_ppk,
-      "sketsa"=>$this->PATH_FILE_DOCUMENTS."\\".$name,
+      "sketsa"=>$this->PATH_FILE_DB."\\".$name,
       "tgl_update"=>\Carbon\Carbon::now() 
     ]);
     $file->move($this->PATH_FILE_DOCUMENTS, $name);
