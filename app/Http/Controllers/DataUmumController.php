@@ -79,6 +79,7 @@ class DataUmumController extends Controller
       "nama_ppk" => "required",
       "nama_se" => "required",
       "nama_gs" => "required",
+      "segment_jalan"=>"required"
 
       // List Data Umum Ruas
       // "list_data_umum_ruas" => "required|json",

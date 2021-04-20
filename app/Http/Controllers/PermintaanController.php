@@ -140,6 +140,29 @@ class PermintaanController extends Controller
 
   public function updateRequest(Request $req)
   {
+      if($req->file('sketsa')){
+        $file = $req->file('sketsa');
+    $name = time()."_".$file->getClientOriginalName();
+
+    DB::table('request')->where('id',$req->id)->update([
+      "nama_kegiatan"=>$req->kegiatan,
+      "unor"=>$req->unor,
+      "jenis_pekerjaan"=>$req->jenis_pekerjaan,
+      "diajukan_tgl"=>$req->diajukan_tgl,
+      "lokasi_sta"=>$req->lokasi_sta,
+      "volume"=>$req->perkiraan_volume,
+      "satuan"=>$req->satuan,
+      "pelaksanaan_tgl"=>$req->pelaksanaan_tgl,
+      "ci"=>$req->ci,
+      "qe"=>$req->qe,
+      "nama_kontraktor"=>$req->penyedia_jasa,
+      "nama_direksi"=>$req->konsultan,
+      "nama_ppk"=>$req->nama_ppk,
+      "sketsa"=>$this->PATH_FILE_DOCUMENTS."\\".$name,
+      "tgl_update"=>\Carbon\Carbon::now() 
+    ]);
+    $file->move($this->PATH_FILE_DOCUMENTS, $name);
+      }else{
     DB::table('request')->where('id',$req->id)->update([
       "nama_kegiatan"=>$req->kegiatan,
       "unor"=>$req->unor,
@@ -156,7 +179,7 @@ class PermintaanController extends Controller
       "nama_ppk"=>$req->nama_ppk,
       "tgl_update"=>\Carbon\Carbon::now() 
     ]);
-    
+      }
     for ($i=0; $i <count($req->bahan) ; $i++) { 
       DB::table('detail_request_bahan')->where('id_request',$req->id)->delete();
     }
@@ -203,18 +226,162 @@ class PermintaanController extends Controller
     DB::table('request')->where('id',$req->id)->update([
       "status"=>1,
       "kontraktor"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Sudah di Setujui">&nbsp;</span></a>',
-      "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
-      "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>'
+      "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
     ]);
     DB::table('history_request')->insert([
       "username"=>$req->username,
       "id_request"=>$req->id,
-      "user_id"=>$req->user_id,
+      "user_id"=>$req->userId,
       "keterangan"=>"Request Telah Dikirim Oleh ".$req->username,
+      "class"=>"kirim",
       "created_at"=>\Carbon\Carbon::now()
     ]);
     return response()->json([
       "code"=>200
     ]);
+  }
+
+  public function updateReqKonsultan(Request $req)
+  {
+    date_default_timezone_set('Asia/Jakarta');
+    $validator = Validator::make($req->all(), [
+      // Data Umum
+      "laporan" => "required",
+    ]);
+    if ($validator->fails()) {
+        return response()->json([
+          'status' => 'failed',
+          'code' => '400',
+          'error' => $validator->getMessageBag()->getMessages()
+        ],400);
+      }
+
+
+      if ($req->laporan == 1) {
+        DB::table('request')->where('id',$req->id)->update([
+          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+          "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+          "status"=> 2
+        ]);
+        DB::table('history_request')->insert([
+          "username"=>$req->username,
+          "id_request"=>$req->id,
+          "user_id"=>$req->userId,
+          "class"=>"sukses",
+          "keterangan"=>"Request Telah Disetujui Oleh Admin ".$req->konsultan,
+          "created_at"=>\Carbon\Carbon::now()
+        ]);
+        return response()->json([
+          'code'=>200
+         ]);
+      } else {
+        DB::table('request')->where('id',$req->id)->update([
+          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
+          "catatan_konsultan"=>$req->catatan,
+          "status"=>1
+        ]);
+        DB::table('history_request')->insert([
+          "username"=>$req->konsultan,
+          "id_request"=>$req->id,
+          "user_id"=>$req->userId,
+          "class"=>"reject",
+          "keterangan"=>"Request Telah Ditolak Oleh Admin ".$req->konsultan,
+          "created_at"=>\Carbon\Carbon::now()
+        ]);
+        return response()->json([
+          'code'=>200,
+         ]);
+      }
+      
+  }
+
+  public function revisiRequest(Request $req)
+  {
+    date_default_timezone_set('Asia/Jakarta');
+    if($req->file('sketsa')){
+      $file = $req->file('sketsa');
+  $name = time()."_".$file->getClientOriginalName();
+
+  DB::table('request')->where('id',$req->id)->update([
+    "nama_kegiatan"=>$req->kegiatan,
+    "unor"=>$req->unor,
+    "jenis_pekerjaan"=>$req->jenis_pekerjaan,
+    "diajukan_tgl"=>$req->diajukan_tgl,
+    "lokasi_sta"=>$req->lokasi_sta,
+    "volume"=>$req->perkiraan_volume,
+    "satuan"=>$req->satuan,
+    "pelaksanaan_tgl"=>$req->pelaksanaan_tgl,
+    "ci"=>$req->ci,
+    "qe"=>$req->qe,
+    "nama_kontraktor"=>$req->penyedia_jasa,
+    "nama_direksi"=>$req->konsultan,
+    "nama_ppk"=>$req->nama_ppk,
+    "sketsa"=>$this->PATH_FILE_DOCUMENTS."\\".$name,
+    "tgl_update"=>\Carbon\Carbon::now() 
+  ]);
+  $file->move($this->PATH_FILE_DOCUMENTS, $name);
+    }else{
+  DB::table('request')->where('id',$req->id)->update([
+    "nama_kegiatan"=>$req->kegiatan,
+    "unor"=>$req->unor,
+    "jenis_pekerjaan"=>$req->jenis_pekerjaan,
+    "diajukan_tgl"=>$req->diajukan_tgl,
+    "lokasi_sta"=>$req->lokasi_sta,
+    "volume"=>$req->perkiraan_volume,
+    "satuan"=>$req->satuan,
+    "pelaksanaan_tgl"=>$req->pelaksanaan_tgl,
+    "ci"=>$req->ci,
+    "qe"=>$req->qe,
+    "nama_kontraktor"=>$req->penyedia_jasa,
+    "nama_direksi"=>$req->konsultan,
+    "nama_ppk"=>$req->nama_ppk,
+    "tgl_update"=>\Carbon\Carbon::now() 
+  ]);
+    }
+  for ($i=0; $i <count($req->bahan) ; $i++) { 
+    DB::table('detail_request_bahan')->where('id_request',$req->id)->delete();
+  }
+  for ($i=0; $i <count($req->jenis_peralatan) ; $i++) { 
+    DB::table('detail_request_peralatan')->where('id_request',$req->id)->delete();
+  }
+  for ($i=0; $i <count($req->tenaga_kerja) ; $i++) { 
+    DB::table('detail_request_tkerja')->where('id_request',$req->id)->delete();
+  }
+  for ($i=0; $i <count($req->jenis_peralatan) ; $i++) { 
+    DB::table('detail_request_peralatan')->insert([
+      "id_request"=>$req->id,
+      "jenis_peralatan"=>$req->jenis_peralatan[$i],
+      "jumlah"=>$req->jumlah_peralatan[$i],
+      "satuan"=>$req->satuan_peralatan[$i]
+    ]);
+  }
+  for ($i=0; $i <count($req->bahan) ; $i++) { 
+    DB::table('detail_request_bahan')->insert([
+      "id_request"=>$req->id,
+      "bahan"=>$req->bahan[$i],
+      "volume"=>$req->volume_bahan[$i],
+      "satuan"=>$req->satuan_bahan[$i]
+    ]);
+  }
+  for ($i=0; $i <count($req->tenaga_kerja) ; $i++) { 
+      DB::table('detail_request_tkerja')->insert([
+        "id_request"=>$req->id,
+        "tenaga_kerja"=>$req->tenaga_kerja[$i],
+        "jumlah"=>$req->jumlah_tk[$i],
+      ]);
+  }
+  DB::table('history_request')->insert([
+    "username"=>$req->konsultan,
+    "id_request"=>$req->id,
+    "user_id"=>$req->userId,
+    "class"=>"revisi",
+    "keterangan"=>"Request Telah Direvisi Oleh Admin ".$req->username,
+    "created_at"=>\Carbon\Carbon::now()
+  ]);
+    
+
+ return response()->json([
+  'code'=>200
+ ]);
   }
 }

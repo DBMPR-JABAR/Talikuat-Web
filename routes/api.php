@@ -128,10 +128,13 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/getJadualByKeyword', [JadualController::class, 'getJadualByKeyword']);
 
   Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
+
   Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
 
   Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
+
   Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
+
   Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
 
   Route::post('/updatejadual', [JadualController::class, 'updateJadual']);
@@ -144,9 +147,16 @@ Route::prefix('/permintaan')->group(function () {
   Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);
 
   Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
+
   Route::post('/buatrequest', [PermintaanController::class, 'buatRequest']);
+
   Route::post('/updaterequest', [PermintaanController::class, 'updateRequest']);
+
   Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
+
+  Route::post('/konsultan/updaterequest', [PermintaanController::class, 'updateReqKonsultan']);
+
+  Route::post('/updaterequest/revisi', [PermintaanController::class, 'revisiRequest']);
 });
 
 Route::prefix('laporan')->group(function () {
@@ -165,22 +175,37 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
 
   Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
+
   Route::post('/updateDataUmum', [DataUmumController::class, 'updateDataUmum']);
+
   Route::post('/updateAdendum', [DataUmumController::class, 'addAdendum']);
+
   Route::post('/addnewadendum', [DataUmumController::class, 'AddNewAdendum']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
+
   Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
+
   Route::post('/upload/filepk', [UploadController::class, 'uploadFilePk']);
+
   Route::post('/upload/fileSpmk', [UploadController::class, 'uploadFileSpmk']);
+
   Route::post('/upload/fileSyaratUmum', [UploadController::class, 'uploadFileSyaratUmum']);
+
   Route::post('/upload/fileSyaratKhusus', [UploadController::class, 'uploadFileSyaratKhusus']);
+
   Route::post('/upload/fileJpp', [UploadController::class, 'uploadFileJpp']);
+
   Route::post('/upload/fileRencana', [UploadController::class, 'uploadFileRencana']);
+
   Route::post('/upload/fileSppbj', [UploadController::class, 'uploadFileSppbj']);
+
   Route::post('/upload/fileSpl', [UploadController::class, 'uploadFileSpl']);
+
   Route::post('/upload/fileSpekUmum', [UploadController::class, 'uploadFileSpekUmum']);
+
   Route::post('/upload/fileJaminan', [UploadController::class, 'uploadFileJaminan']);
+
   Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
 
   Route::post('/mergeDkh', [UploadController::class, 'mergeDkh']);
@@ -203,6 +228,7 @@ Route::prefix('unor')->group(function () {
 Route::prefix('merge')->group(function () {
 
   Route::post('file', [MergePdf::class, 'merge']);
+
   Route::get('/file/{id}', [MergePdf::class, 'getFile']);
 });
 
