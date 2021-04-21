@@ -224,11 +224,21 @@ class PermintaanController extends Controller
   public function sendReq(Request $req)
   {
     date_default_timezone_set('Asia/Jakarta');
-    DB::table('request')->where('id',$req->id)->update([
-      "status"=>1,
-      "kontraktor"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Sudah di Setujui">&nbsp;</span></a>',
-      "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
-    ]);
+    $get_data = DB::table('request')->where('id',$req->id)->first();
+    if ($get_data->ditolak == 1) {
+      DB::table('request')->where('id',$req->id)->update([
+        "status"=>1,
+        "ditolak"=>0,
+        "kontraktor"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Sudah di Setujui">&nbsp;</span></a>',
+        "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+      ]);
+    }else{
+      DB::table('request')->where('id',$req->id)->update([
+        "kontraktor"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Sudah di Setujui">&nbsp;</span></a>',
+        "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+      ]);
+    }
+    
     DB::table('history_request')->insert([
       "username"=>$req->username,
       "id_request"=>$req->id,
