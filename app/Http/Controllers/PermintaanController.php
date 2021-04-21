@@ -279,7 +279,8 @@ class PermintaanController extends Controller
         DB::table('request')->where('id',$req->id)->update([
           "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
           "catatan_konsultan"=>$req->catatan,
-          "status"=>1
+          "status"=>1,
+          "ditolak"=>1
         ]);
         DB::table('history_request')->insert([
           "username"=>$req->konsultan,
