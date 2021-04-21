@@ -30,7 +30,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_dkh')->insertGetId([
             "id_data_umum" => $req->id,
-            "dkh" => $this->PATH_FILE_DB . $name
+            "dkh" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -88,7 +89,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_kontrak')->insertGetId([
             "id_data_umum" => $req->id,
-            "kontrak" => $this->PATH_FILE_DB . $name
+            "kontrak" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -146,7 +148,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spmk')->insertGetId([
             "id_data_umum" => $req->id,
-            "spmk" => $this->PATH_FILE_DB . $name
+            "spmk" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -204,7 +207,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_syarat_umum')->insertGetId([
             "id_data_umum" => $req->id,
-            "syarat_umum" => $this->PATH_FILE_DB . $name
+            "syarat_umum" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -262,7 +266,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_syarat_khusus')->insertGetId([
             "id_data_umum" => $req->id,
-            "syarat_khusus" => $this->PATH_FILE_DB . $name
+            "syarat_khusus" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -320,7 +325,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_jpp')->insertGetId([
             "id_data_umum" => $req->id,
-            "jpp" => $this->PATH_FILE_DB . $name
+            "jpp" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -378,7 +384,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_rencana')->insertGetId([
             "id_data_umum" => $req->id,
-            "rencana" => $this->PATH_FILE_DB . $name
+            "rencana" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -436,7 +443,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_sppbj')->insertGetId([
             "id_data_umum" => $req->id,
-            "sppbj" => $this->PATH_FILE_DB . $name
+            "sppbj" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -494,7 +502,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spl')->insertGetId([
             "id_data_umum" => $req->id,
-            "spl" => $this->PATH_FILE_DB . $name
+            "spl" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -552,7 +561,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spek_umum')->insertGetId([
             "id_data_umum" => $req->id,
-            "spek_umum" => $this->PATH_FILE_DB . $name
+            "spek_umum" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -610,7 +620,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_jaminan')->insertGetId([
             "id_data_umum" => $req->id,
-            "jaminan" => $this->PATH_FILE_DB . $name
+            "jaminan" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -668,7 +679,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spkmp')->insertGetId([
             "id_data_umum" => $req->id,
-            "spkmp" => $this->PATH_FILE_DB . $name
+            "spkmp" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);

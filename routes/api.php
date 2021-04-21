@@ -168,7 +168,7 @@ Route::prefix('laporan')->group(function () {
 
 Route::prefix('data-umum')->group(function () {
 
-  Route::get('/getFileDkh', [UploadController::class, 'getFileDkh']);
+  Route::get('/getDokumen/{id}', [DataUmumController::class, 'getDokumen']);
 
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
