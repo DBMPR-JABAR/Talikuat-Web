@@ -227,7 +227,7 @@ class PermintaanController extends Controller
     $get_data = DB::table('request')->where('id',$req->id)->first();
     if ($get_data->ditolak == 1) {
       DB::table('request')->where('id',$req->id)->update([
-        "status"=>1,
+        "status"=>2,
         "ditolak"=>0,
         "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
       ]);
@@ -262,8 +262,8 @@ class PermintaanController extends Controller
   public function revisiRequestKontraktor(Request $req)
   {
     date_default_timezone_set('Asia/Jakarta');
-    if($req->file('sketsa')){
-      $file = $req->file('sketsa');
+  if($req->file('sketsa')){
+  $file = $req->file('sketsa');
   $name = time()."_".$file->getClientOriginalName();
 
   DB::table('request')->where('id',$req->id)->update([
@@ -339,7 +339,7 @@ class PermintaanController extends Controller
     "id_request"=>$req->id,
     "user_id"=>$req->userId,
     "class"=>"revisi",
-    "keterangan"=>"Request Telah Direvisi Oleh Admin ".$req->username,
+    "keterangan"=>"Request Telah Direvisi Oleh ".$req->username,
     "created_at"=>\Carbon\Carbon::now()
   ]);
     
