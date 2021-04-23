@@ -154,9 +154,11 @@ Route::prefix('/permintaan')->group(function () {
 
   Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
 
-  Route::post('/konsultan/updaterequest', [PermintaanController::class, 'updateReqKonsultan']);
+  Route::post('/konsultan/updaterequest', [PermintaanController::class, 'responReqKonsultan']);
+  Route::post('/ppk/updaterequest', [PermintaanController::class, 'responReqPpk']);
 
-  Route::post('/updaterequest/revisi', [PermintaanController::class, 'revisiRequest']);
+  Route::post('/updaterequest/revisi', [PermintaanController::class, 'revisiRequestKontraktor']);
+  Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
 });
 
 Route::prefix('laporan')->group(function () {

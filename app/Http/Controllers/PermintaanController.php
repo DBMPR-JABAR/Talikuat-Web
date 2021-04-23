@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PermintaanController extends Controller
 {
-  private $PATH_FILE_DOCUMENTS = "/home/www/talikuat/lampiran/file_req";
-  private $PATH_FILE_DB = "/lampiran/file_req";
+  private $PATH_FILE_DB = "public/lampiran/file_req/";
   public function getAllPermintaan() {
 
     $result = DB::table('request')->get();
@@ -105,11 +105,11 @@ class PermintaanController extends Controller
       "nama_kontraktor"=>$req->penyedia_jasa,
       "nama_direksi"=>$req->konsultan,
       "nama_ppk"=>$req->nm_ppk,
-      "sketsa"=>$this->PATH_FILE_DB."\\".$name,
+      "sketsa"=>$this->PATH_FILE_DB."/".$name,
       "id_jadual"=>$req->id_jadual,
       "tgl_input"=>\Carbon\Carbon::now() 
     ]);
-    $file->move($this->PATH_FILE_DOCUMENTS, $name);
+    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
 
     for ($i=0; $i <count($req->jenis_peralatan) ; $i++) { 
         DB::table('detail_request_peralatan')->insert([
@@ -159,10 +159,10 @@ class PermintaanController extends Controller
       "nama_kontraktor"=>$req->penyedia_jasa,
       "nama_direksi"=>$req->konsultan,
       "nama_ppk"=>$req->nama_ppk,
-      "sketsa"=>$this->PATH_FILE_DB."\\".$name,
+      "sketsa"=>$this->PATH_FILE_DB."/".$name,
       "tgl_update"=>\Carbon\Carbon::now() 
     ]);
-    $file->move($this->PATH_FILE_DOCUMENTS, $name);
+    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }else{
     DB::table('request')->where('id',$req->id)->update([
       "nama_kegiatan"=>$req->kegiatan,
@@ -251,63 +251,7 @@ class PermintaanController extends Controller
       "code"=>200
     ]);
   }
-
-  public function updateReqKonsultan(Request $req)
-  {
-    date_default_timezone_set('Asia/Jakarta');
-    $validator = Validator::make($req->all(), [
-      // Data Umum
-      "laporan" => "required",
-    ]);
-    if ($validator->fails()) {
-        return response()->json([
-          'status' => 'failed',
-          'code' => '400',
-          'error' => $validator->getMessageBag()->getMessages()
-        ],400);
-      }
-
-
-      if ($req->laporan == 1) {
-        DB::table('request')->where('id',$req->id)->update([
-          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
-          "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
-          "status"=> 2
-        ]);
-        DB::table('history_request')->insert([
-          "username"=>$req->username,
-          "id_request"=>$req->id,
-          "user_id"=>$req->userId,
-          "class"=>"sukses",
-          "keterangan"=>"Request Telah Disetujui Oleh Admin ".$req->konsultan,
-          "created_at"=>\Carbon\Carbon::now()
-        ]);
-        return response()->json([
-          'code'=>200
-         ]);
-      } else {
-        DB::table('request')->where('id',$req->id)->update([
-          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
-          "catatan_konsultan"=>$req->catatan,
-          "status"=>1,
-          "ditolak"=>1
-        ]);
-        DB::table('history_request')->insert([
-          "username"=>$req->konsultan,
-          "id_request"=>$req->id,
-          "user_id"=>$req->userId,
-          "class"=>"reject",
-          "keterangan"=>"Request Telah Ditolak Oleh Admin ".$req->konsultan,
-          "created_at"=>\Carbon\Carbon::now()
-        ]);
-        return response()->json([
-          'code'=>200,
-         ]);
-      }
-      
-  }
-
-  public function revisiRequest(Request $req)
+  public function revisiRequestKontraktor(Request $req)
   {
     date_default_timezone_set('Asia/Jakarta');
     if($req->file('sketsa')){
@@ -328,10 +272,10 @@ class PermintaanController extends Controller
     "nama_kontraktor"=>$req->penyedia_jasa,
     "nama_direksi"=>$req->konsultan,
     "nama_ppk"=>$req->nama_ppk,
-    "sketsa"=>$this->PATH_FILE_DOCUMENTS."\\".$name,
+    "sketsa"=>$this->PATH_FILE_DOCUMENTS."/".$name,
     "tgl_update"=>\Carbon\Carbon::now() 
   ]);
-  $file->move($this->PATH_FILE_DOCUMENTS, $name);
+  Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
     }else{
   DB::table('request')->where('id',$req->id)->update([
     "nama_kegiatan"=>$req->kegiatan,
@@ -396,4 +340,146 @@ class PermintaanController extends Controller
   'code'=>200
  ]);
   }
+  public function responReqKonsultan(Request $req)
+  {
+    date_default_timezone_set('Asia/Jakarta');
+    $validator = Validator::make($req->all(), [
+      // Data Umum
+      "laporan" => "required",
+    ]);
+    if ($validator->fails()) {
+        return response()->json([
+          'status' => 'failed',
+          'code' => '400',
+          'error' => $validator->getMessageBag()->getMessages()
+        ],400);
+      }
+
+
+      if ($req->laporan == 1) {
+        DB::table('request')->where('id',$req->id)->update([
+          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+          "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+          "status"=> 3
+        ]);
+        DB::table('history_request')->insert([
+          "username"=>$req->konsultan,
+          "id_request"=>$req->id,
+          "user_id"=>$req->userId,
+          "class"=>"sukses",
+          "keterangan"=>"Request Telah Disetujui Oleh Admin ".$req->konsultan,
+          "created_at"=>\Carbon\Carbon::now()
+        ]);
+        if ($req->file('dokumentasi')) {
+          $file = $req->file('dokumentasi');
+          $name = time()."_".$file->getClientOriginalName();
+          DB::table('request')->where('id',$req->id)->update([
+            "foto_konsultan"=>$this->PATH_FILE_DB."/".$name
+          ]);
+          Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+        }
+        return response()->json([
+          "code"=>200
+        ],200);
+      } else {
+        DB::table('request')->where('id',$req->id)->update([
+          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
+          "catatan_konsultan"=>$req->catatan,
+          "status"=>1,
+          "ditolak"=>1
+        ]);
+        DB::table('history_request')->insert([
+          "username"=>$req->konsultan,
+          "id_request"=>$req->id,
+          "user_id"=>$req->userId,
+          "class"=>"reject",
+          "keterangan"=>"Request Telah Ditolak Oleh Admin ".$req->konsultan,
+          "created_at"=>\Carbon\Carbon::now()
+        ]);
+        if ($req->file('dokumentasi')) {
+          $file = $req->file('dokumentasi');
+          $name = time()."_".$file->getClientOriginalName();
+          DB::table('request')->where('id',$req->id)->update([
+            "foto_konsultan"=>$this->PATH_FILE_DB."/".$name
+          ]);
+          Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+        }
+        return response()->json([
+          "code"=>200
+        ],200);
+      }
+
+      
+  }
+  public function responReqPpk(Request $req)
+  {
+    date_default_timezone_set('Asia/Jakarta');
+    $validator = Validator::make($req->all(), [
+      // Data Umum
+      "laporan" => "required",
+    ]);
+    if ($validator->fails()) {
+        return response()->json([
+          'status' => 'failed',
+          'code' => '400',
+          'error' => $validator->getMessageBag()->getMessages()
+        ],400);
+      }
+
+
+      if ($req->laporan == 1) {
+        DB::table('request')->where('id',$req->id)->update([
+          "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+          "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+          "status"=> 3
+        ]);
+        DB::table('history_request')->insert([
+          "username"=>$req->nm_ppk,
+          "id_request"=>$req->id,
+          "user_id"=>$req->userId,
+          "class"=>"sukses",
+          "keterangan"=>"Request Telah Disetujui Oleh PPK ".$req->nm_ppk,
+          "created_at"=>\Carbon\Carbon::now()
+        ]);
+        if ($req->file('dokumentasi')) {
+          $file = $req->file('dokumentasi');
+          $name = time()."_".$file->getClientOriginalName();
+          DB::table('request')->where('id',$req->id)->update([
+            "foto_ppk"=>$this->PATH_FILE_DB."/".$name
+          ]);
+          Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+        }
+        return response()->json([
+          "code"=>200
+        ],200);
+      } else {
+        DB::table('request')->where('id',$req->id)->update([
+          "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
+          "catatan_ppk"=>$req->catatan,
+          "status"=>2,
+          "ditolak"=>1
+        ]);
+        DB::table('history_request')->insert([
+          "username"=>$req->nm_ppk,
+          "id_request"=>$req->id,
+          "user_id"=>$req->userId,
+          "class"=>"reject",
+          "keterangan"=>"Request Telah Ditolak Oleh PPK ".$req->nm_ppk,
+          "created_at"=>\Carbon\Carbon::now()
+        ]);
+        if ($req->file('dokumentasi')) {
+          $file = $req->file('dokumentasi');
+          $name = time()."_".$file->getClientOriginalName();
+          DB::table('request')->where('id',$req->id)->update([
+            "foto_ppk"=>$this->PATH_FILE_DB."/".$name
+          ]);
+          Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+        }
+        return response()->json([
+          "code"=>200
+        ],200);
+      }
+  }
+
+  
 }
