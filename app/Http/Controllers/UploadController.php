@@ -30,7 +30,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_dkh')->insertGetId([
             "id_data_umum" => $req->id,
-            "dkh" => $this->PATH_FILE_DB . $name
+            "dkh" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -47,6 +48,105 @@ class UploadController extends Controller
                 'filesize' => $file->getSize()
             ]
         ], Response::HTTP_CREATED);
+    }
+
+    public function getUploadedFile($id, Request $request)
+    {
+        if (empty($request->input('file'))) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '404',
+                'result' => 'file Tidak Boleh Kosong'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $result = null;
+
+        switch ($request->input('file')) {
+
+            case "file_dkh":
+
+                $result = DB::table('file_dkh')->selectRaw("id, dkh as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_kontrak":
+
+                $result = DB::table('file_kontrak')->selectRaw("id, kontrak as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spmk":
+
+                $result = DB::table('file_spmk')->selectRaw("id, spmk as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_syarat_umum":
+
+                $result = DB::table('file_syarat_umum')->selectRaw("id, syarat_umum as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_syarat_khusus":
+
+                $result = DB::table('file_syarat_khusus')->selectRaw("id, syarat_khusus as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_jpp":
+
+                $result = DB::table('file_jpp')->selectRaw("id, jpp as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_rencana":
+
+                $result = DB::table('file_rencana')->selectRaw("id, rencana as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_sppbj":
+
+                $result = DB::table('file_sppbj')->selectRaw("id, sppbj as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spl":
+
+                $result = DB::table('file_spl')->selectRaw("id, spl as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spek_umum":
+
+                $result = DB::table('file_spek_umum')->selectRaw("id, spek_umum as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_jaminan":
+
+                $result = DB::table('file_jaminan')->selectRaw("id, jaminan as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spkmp":
+
+                $result = DB::table('file_spkmp')->selectRaw("id, spkmp as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+        }
+
+        foreach ($result as $file) {
+            $file->filesize = Storage::size($file->filename);
+            $file->filename = explode('/', $file->filename)[3];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ], Response::HTTP_OK);
     }
 
     public function DeleteFileDkh($id)
@@ -88,7 +188,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_kontrak')->insertGetId([
             "id_data_umum" => $req->id,
-            "kontrak" => $this->PATH_FILE_DB . $name
+            "kontrak" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -146,7 +247,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spmk')->insertGetId([
             "id_data_umum" => $req->id,
-            "spmk" => $this->PATH_FILE_DB . $name
+            "spmk" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -204,7 +306,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_syarat_umum')->insertGetId([
             "id_data_umum" => $req->id,
-            "syarat_umum" => $this->PATH_FILE_DB . $name
+            "syarat_umum" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -262,7 +365,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_syarat_khusus')->insertGetId([
             "id_data_umum" => $req->id,
-            "syarat_khusus" => $this->PATH_FILE_DB . $name
+            "syarat_khusus" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -320,7 +424,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_jpp')->insertGetId([
             "id_data_umum" => $req->id,
-            "jpp" => $this->PATH_FILE_DB . $name
+            "jpp" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -378,7 +483,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_rencana')->insertGetId([
             "id_data_umum" => $req->id,
-            "rencana" => $this->PATH_FILE_DB . $name
+            "rencana" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -436,7 +542,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_sppbj')->insertGetId([
             "id_data_umum" => $req->id,
-            "sppbj" => $this->PATH_FILE_DB . $name
+            "sppbj" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -494,7 +601,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spl')->insertGetId([
             "id_data_umum" => $req->id,
-            "spl" => $this->PATH_FILE_DB . $name
+            "spl" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -552,7 +660,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spek_umum')->insertGetId([
             "id_data_umum" => $req->id,
-            "spek_umum" => $this->PATH_FILE_DB . $name
+            "spek_umum" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -610,7 +719,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_jaminan')->insertGetId([
             "id_data_umum" => $req->id,
-            "jaminan" => $this->PATH_FILE_DB . $name
+            "jaminan" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -668,7 +778,8 @@ class UploadController extends Controller
 
         $insertedId = DB::table('file_spkmp')->insertGetId([
             "id_data_umum" => $req->id,
-            "spkmp" => $this->PATH_FILE_DB . $name
+            "spkmp" => $this->PATH_FILE_DB . $name,
+            "created_at" => \Carbon\Carbon::now()
         ]);
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);

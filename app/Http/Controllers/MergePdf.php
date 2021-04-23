@@ -24,7 +24,8 @@ class MergePdf extends Controller
 
                     DB::table('file_dkh_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_dkh_update" => $nameFile
+                        "file_dkh_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table('file_dkh')->where('dkh', "=", $nameFile)->delete();
@@ -52,7 +53,8 @@ class MergePdf extends Controller
 
                     DB::table('file_dkh_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_dkh_update" => $nameFile
+                        "file_dkh_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -78,7 +80,8 @@ class MergePdf extends Controller
 
                     DB::table('file_kontrak_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_kontrak_update" => $nameFile
+                        "file_kontrak_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('kontrak', "=", $nameFile)->delete();
@@ -106,7 +109,8 @@ class MergePdf extends Controller
 
                     DB::table('file_kontrak_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_kontrak_update" => $nameFile
+                        "file_kontrak_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -132,7 +136,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spmk_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spmk_update" => $nameFile
+                        "file_spmk_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('spmk', "=", $nameFile)->delete();
@@ -160,7 +165,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spmk_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spmk_update" => $nameFile
+                        "file_spmk_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -185,7 +191,8 @@ class MergePdf extends Controller
 
                     DB::table('file_syarat_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_umum_update" => $nameFile
+                        "file_syarat_umum_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('syarat_umum', "=", $nameFile)->delete();
@@ -213,7 +220,8 @@ class MergePdf extends Controller
 
                     DB::table('file_syarat_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_umum_update" => $nameFile
+                        "file_syarat_umum_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -237,7 +245,8 @@ class MergePdf extends Controller
 
                     DB::table('file_syarat_khusus_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_khusus_update" => $nameFile
+                        "file_syarat_khusus_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('syarat_khusus', "=", $nameFile)->delete();
@@ -265,7 +274,8 @@ class MergePdf extends Controller
 
                     DB::table('file_syarat_khusus_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_syarat_khusus_update" => $nameFile
+                        "file_syarat_khusus_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -289,7 +299,8 @@ class MergePdf extends Controller
 
                     DB::table('file_jpp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jpp_update" => $nameFile
+                        "file_jpp_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('jpp', "=", $nameFile)->delete();
@@ -317,7 +328,8 @@ class MergePdf extends Controller
 
                     DB::table('file_jpp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jpp_update" => $nameFile
+                        "file_jpp_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -342,7 +354,8 @@ class MergePdf extends Controller
 
                     DB::table('file_rencana_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_rencana_update" => $nameFile
+                        "file_rencana_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('rencana', "=", $nameFile)->delete();
@@ -370,7 +383,8 @@ class MergePdf extends Controller
 
                     DB::table('file_rencana_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_rencana_update" => $nameFile
+                        "file_rencana_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -395,7 +409,8 @@ class MergePdf extends Controller
 
                     DB::table('file_sppbj_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_sppbj_update" => $nameFile
+                        "file_sppbj_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('sppbj', "=", $nameFile)->delete();
@@ -423,7 +438,8 @@ class MergePdf extends Controller
 
                     DB::table('file_sppbj_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_sppbj_update" => $nameFile
+                        "file_sppbj_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -449,7 +465,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spl_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spl_update" => $nameFile
+                        "file_spl_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('spl', "=", $nameFile)->delete();
@@ -477,7 +494,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spl_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spl_update" => $nameFile
+                        "file_spl_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -502,7 +520,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spek_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spek_umum_update" => $nameFile
+                        "file_spek_umum_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('spek_umum', "=", $nameFile)->delete();
@@ -530,7 +549,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spek_umum_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spek_umum_update" => $nameFile
+                        "file_spek_umum_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -555,7 +575,8 @@ class MergePdf extends Controller
 
                     DB::table('file_jaminan_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jaminan_update" => $nameFile
+                        "file_jaminan_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('jaminan', "=", $nameFile)->delete();
@@ -583,7 +604,8 @@ class MergePdf extends Controller
 
                     DB::table('file_jaminan_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_jaminan_update" => $nameFile
+                        "file_jaminan_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -608,7 +630,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spkmp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spkmp_update" => $nameFile
+                        "file_spkmp_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     DB::table($req->file)->where('spkmp', "=", $nameFile)->delete();
@@ -636,7 +659,8 @@ class MergePdf extends Controller
 
                     DB::table('file_spkmp_update')->insert([
                         "id_data_umum" => $req->id,
-                        "file_spkmp_update" => $nameFile
+                        "file_spkmp_update" => $nameFile,
+                        "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
@@ -660,6 +684,7 @@ class MergePdf extends Controller
                 break;
         }
     }
+
     public function getFile($id)
     {
         $dkh = DB::table('file_dkh_update')->select('file_dkh_update')->where('id_data_umum', $id)->get();

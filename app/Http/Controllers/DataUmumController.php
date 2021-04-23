@@ -79,7 +79,7 @@ class DataUmumController extends Controller
       "nama_ppk" => "required",
       "nama_se" => "required",
       "nama_gs" => "required",
-      "segment_jalan"=>"required"
+      "segment_jalan" => "required"
 
       // List Data Umum Ruas
       // "list_data_umum_ruas" => "required|json",
@@ -361,5 +361,250 @@ class DataUmumController extends Controller
     return response()->json([
       "code" => 200
     ], 200);
+  }
+
+  public function getDokumen($id, Request $request)
+  {
+
+    if (empty($request->input('file'))) {
+      return response()->json([
+        "status" => "success",
+        "code" => 404,
+        "result" => "file Tidak Boleh Kosong"
+      ], Response::HTTP_BAD_REQUEST);
+    }
+
+    switch ($request->input('file')) {
+
+      case "file_dkh":
+
+        $result = DB::table('file_dkh_update')
+          ->selectRaw("id, id_data_umum, file_dkh_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_kontrak":
+
+        $result = DB::table('file_kontrak_update')
+          ->selectRaw("id, id_data_umum, file_kontrak_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_spmk":
+
+        $result = DB::table('file_spmk_update')
+          ->selectRaw("id, id_data_umum, file_spmk_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_syarat_umum":
+
+        $result = DB::table('file_syarat_umum_update')
+          ->selectRaw("id, id_data_umum, file_syarat_umum_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_syarat_khusus":
+
+        $result = DB::table('file_syarat_khusus_update')
+          ->selectRaw("id, id_data_umum, file_syarat_khusus_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_jpp":
+
+        $result = DB::table('file_jpp_update')
+          ->selectRaw("id, id_data_umum, file_jpp_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_rencana":
+
+        $result = DB::table('file_rencana_update')
+          ->selectRaw("id, id_data_umum, file_rencana_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_sppbj":
+
+        $result = DB::table('file_sppbj_update')
+          ->selectRaw("id, id_data_umum, file_sppbj_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_spl":
+
+        $result = DB::table('file_spl_update')
+          ->selectRaw("id, id_data_umum, file_spl_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_spek_umum":
+
+        $result = DB::table('file_spek_umum_update')
+          ->selectRaw("id, id_data_umum, file_spek_umum_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_jaminan":
+
+        $result = DB::table('file_jaminan_update')
+          ->selectRaw("id, id_data_umum, file_jaminan_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      case "file_spkmp":
+
+        $result = DB::table('file_spkmp_update')
+          ->selectRaw("id, id_data_umum, file_spkmp_update as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      default:
+
+        return response()->json([
+          "status" => "success",
+          "code" => 404,
+          "result" => "file Tidak Ada"
+        ], Response::HTTP_BAD_REQUEST);
+
+        break;
+    }
+  }
+
+  public function getUploadedDokumen($id, Request $request)
+  {
+
+    if (empty($request->input('file'))) {
+      return response()->json([
+        "status" => "success",
+        "code" => 404,
+        "result" => "file Tidak Boleh Kosong"
+      ], Response::HTTP_BAD_REQUEST);
+    }
+
+    switch ($request->input('file')) {
+
+      case "file_dkh":
+
+        $result = DB::table('file_dkh')
+          ->selectRaw("id, id_data_umum, dkh as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      default:
+
+        return response()->json([
+          "status" => "success",
+          "code" => 404,
+          "result" => "file Tidak Ada"
+        ], Response::HTTP_BAD_REQUEST);
+
+        break;
+    }
   }
 }
