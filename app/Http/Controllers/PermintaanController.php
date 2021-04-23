@@ -280,7 +280,7 @@ class PermintaanController extends Controller
     "nama_kontraktor"=>$req->penyedia_jasa,
     "nama_direksi"=>$req->konsultan,
     "nama_ppk"=>$req->nama_ppk,
-    "sketsa"=>$this->PATH_FILE_DOCUMENTS."/".$name,
+    "sketsa"=>$this->PATH_FILE_DB."/".$name,
     "tgl_update"=>\Carbon\Carbon::now() 
   ]);
   Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -386,6 +386,14 @@ class PermintaanController extends Controller
           ]);
           Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
         }
+        if($req->file('checklist')){
+          $file = $req->file('checklist');
+          $name = time()."_".$file->getClientOriginalName();
+          DB::table('request')->where('id',$req->id)->update([
+            "checklist"=>$this->PATH_FILE_DB."/".$name
+          ]);
+          Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+        }
         return response()->json([
           "code"=>200
         ],200);
@@ -409,6 +417,14 @@ class PermintaanController extends Controller
           $name = time()."_".$file->getClientOriginalName();
           DB::table('request')->where('id',$req->id)->update([
             "foto_konsultan"=>$this->PATH_FILE_DB."/".$name
+          ]);
+          Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+        }
+        if($req->file('checklist')){
+          $file = $req->file('checklist');
+          $name = time()."_".$file->getClientOriginalName();
+          DB::table('request')->where('id',$req->id)->update([
+            "checklist"=>$this->PATH_FILE_DB."/".$name
           ]);
           Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
         }
