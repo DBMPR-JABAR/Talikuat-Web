@@ -168,8 +168,6 @@ Route::prefix('laporan')->group(function () {
 
 Route::prefix('data-umum')->group(function () {
 
-  Route::get('/getDokumen/{id}', [DataUmumController::class, 'getDokumen']);
-
   Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
   Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);
@@ -185,6 +183,8 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/addnewadendum', [DataUmumController::class, 'AddNewAdendum']);
 
   Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
+
+  Route::get('/getDokumen/{id}', [DataUmumController::class, 'getDokumen']);
 
   Route::post('/upload/filedkh', [UploadController::class, 'uploadFileDkh']);
 
@@ -233,6 +233,8 @@ Route::prefix('data-umum')->group(function () {
   Route::post('/upload/fileSpkmp', [UploadController::class, 'uploadFileSpkmp']);
 
   Route::delete('/fileSpkmp/{id}', [UploadController::class, 'DeleteFileSpkmp']);
+
+  Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {

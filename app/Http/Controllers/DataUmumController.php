@@ -567,4 +567,44 @@ class DataUmumController extends Controller
         break;
     }
   }
+
+  public function getUploadedDokumen($id, Request $request)
+  {
+
+    if (empty($request->input('file'))) {
+      return response()->json([
+        "status" => "success",
+        "code" => 404,
+        "result" => "file Tidak Boleh Kosong"
+      ], Response::HTTP_BAD_REQUEST);
+    }
+
+    switch ($request->input('file')) {
+
+      case "file_dkh":
+
+        $result = DB::table('file_dkh')
+          ->selectRaw("id, id_data_umum, dkh as file, created_at")
+          ->where('id_data_umum', '=', $id)
+          ->get();
+
+        return response()->json([
+          "status" => "success",
+          "code" => 200,
+          "result" => $result
+        ], Response::HTTP_OK);
+
+        break;
+
+      default:
+
+        return response()->json([
+          "status" => "success",
+          "code" => 404,
+          "result" => "file Tidak Ada"
+        ], Response::HTTP_BAD_REQUEST);
+
+        break;
+    }
+  }
 }

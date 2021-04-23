@@ -50,6 +50,105 @@ class UploadController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    public function getUploadedFile($id, Request $request)
+    {
+        if (empty($request->input('file'))) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '404',
+                'result' => 'file Tidak Boleh Kosong'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $result = null;
+
+        switch ($request->input('file')) {
+
+            case "file_dkh":
+
+                $result = DB::table('file_dkh')->selectRaw("id, dkh as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_kontrak":
+
+                $result = DB::table('file_kontrak')->selectRaw("id, kontrak as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spmk":
+
+                $result = DB::table('file_spmk')->selectRaw("id, spmk as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_syarat_umum":
+
+                $result = DB::table('file_syarat_umum')->selectRaw("id, syarat_umum as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_syarat_khusus":
+
+                $result = DB::table('file_syarat_khusus')->selectRaw("id, syarat_khusus as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_jpp":
+
+                $result = DB::table('file_jpp')->selectRaw("id, jpp as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_rencana":
+
+                $result = DB::table('file_rencana')->selectRaw("id, rencana as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_sppbj":
+
+                $result = DB::table('file_sppbj')->selectRaw("id, sppbj as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spl":
+
+                $result = DB::table('file_spl')->selectRaw("id, spl as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spek_umum":
+
+                $result = DB::table('file_spek_umum')->selectRaw("id, spek_umum as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_jaminan":
+
+                $result = DB::table('file_jaminan')->selectRaw("id, jaminan as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+
+            case "file_spkmp":
+
+                $result = DB::table('file_spkmp')->selectRaw("id, spkmp as filename")->where("id_data_umum", "=", $id)->get();
+
+                break;
+        }
+
+        foreach ($result as $file) {
+            $file->filesize = Storage::size($file->filename);
+            $file->filename = explode('/', $file->filename)[3];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ], Response::HTTP_OK);
+    }
+
     public function DeleteFileDkh($id)
     {
         $file = DB::table('file_dkh')->where('id', '=', $id)->first();
