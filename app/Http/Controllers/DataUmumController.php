@@ -186,7 +186,7 @@ class DataUmumController extends Controller
     ]);
   }
 
-  public function getDataUmumRuasById(Request $request)
+  public function getDataUmumRuasByIdAndKeyword(Request $request)
   {
 
     $result = DB::table('data_umum_ruas')
@@ -200,6 +200,21 @@ class DataUmumController extends Controller
     foreach ($result as $key => $value) {
       $value->id = $key + 1;
     }
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $result
+    ]);
+  }
+
+  public function getDataUmumRuas($id)
+  {
+
+    $result = DB::table('data_umum_ruas')
+      ->select('id', 'ruas_jalan', 'segment_jalan', 'lat_awal', 'long_awal', 'lat_akhir', 'long_akhir')
+      ->where('id_data_umum', '=', $id)
+      ->get();
 
     return response()->json([
       'status' => 'success',

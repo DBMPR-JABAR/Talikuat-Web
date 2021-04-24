@@ -182,7 +182,9 @@ Route::prefix('data-umum')->group(function () {
 
   Route::post('/addnewadendum', [DataUmumController::class, 'AddNewAdendum']);
 
-  Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasById']);
+  Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasByIdAndKeyword']);
+
+  Route::get('/getDataUmumRuas/{id}', [DataUmumController::class, 'getDataUmumRuas']);
 
   Route::get('/getDokumen/{id}', [DataUmumController::class, 'getDokumen']);
 
