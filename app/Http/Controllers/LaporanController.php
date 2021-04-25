@@ -72,7 +72,8 @@ class LaporanController extends Controller
       "sta_akhir"=>$req->sta_akhir,
       "ki_ka"=>$req->ki_ka,
       "volume"=>$req->volume,
-      "satuan"=>$req->satuan
+      "satuan"=>$req->satuan,
+      "ket"=>$req->ket
     ]);
 
     if($req->bahan[0]){
