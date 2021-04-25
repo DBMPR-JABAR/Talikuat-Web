@@ -64,6 +64,16 @@ class LaporanController extends Controller
       "gambar"=>$this->PATH_FILE_DB."/".$name
     ]);
     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    DB::table('detail_laporan_harian_pekerjaan')->insert([
+      "no_trans"=>$id,
+      "no_pekerjaan"=>$req->no_pekerjaan,
+      "jenis_pekerjaan"=>$req->jenis_pekerjaan,
+      "sta_awal"=>$req->sta_awal,
+      "sta_akhir"=>$req->sta_akhir,
+      "ki_ka"=>$req->ki_ka,
+      "volume"=>$req->volume,
+      "satuan"=>$req->satuan
+    ]);
 
     if($req->bahan[0]){
       for ($i=0; $i <count($req->bahan) ; $i++) { 
