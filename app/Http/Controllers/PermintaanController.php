@@ -455,7 +455,8 @@ class PermintaanController extends Controller
         DB::table('request')->where('id',$req->id)->update([
           "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
           "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
-          "status"=> 3
+          "status"=> 3,
+          "ditolak"=> "disetujui"
         ]);
         DB::table('history_request')->insert([
           "username"=>$req->nm_ppk,
@@ -505,5 +506,76 @@ class PermintaanController extends Controller
       }
   }
 
-  
+  public function revisiRequestKonsultan(Request $req)
+  {
+    if($req->option == 'PPK'){
+      DB::table('request')->where('id',$req->id)->update([
+        "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+        "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+        "status"=> 3,
+        "ditolak"=>0
+      ]);
+      DB::table('history_request')->insert([
+        "username"=>$req->konsultan,
+        "id_request"=>$req->id,
+        "user_id"=>$req->userId,
+        "class"=>"sukses",
+        "keterangan"=>"Revisi Request Telah Dikirim Oleh Admin ".$req->konsultan,
+        "created_at"=>\Carbon\Carbon::now()
+      ]);
+      if ($req->file('dokumentasi')) {
+        $file = $req->file('dokumentasi');
+        $name = time()."_".$file->getClientOriginalName();
+        DB::table('request')->where('id',$req->id)->update([
+          "foto_konsultan"=>$this->PATH_FILE_DB."/".$name
+        ]);
+        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+      }
+      if($req->file('checklist')){
+        $file = $req->file('checklist');
+        $name = time()."_".$file->getClientOriginalName();
+        DB::table('request')->where('id',$req->id)->update([
+          "checklist"=>$this->PATH_FILE_DB."/".$name
+        ]);
+        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+      }
+      return response()->json([
+        "code"=>200
+      ],200);
+    }else{
+      DB::table('request')->where('id',$req->id)->update([
+        "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
+        "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
+        "status"=> 1,
+        "ditolak"=>1
+      ]);
+      DB::table('history_request')->insert([
+        "username"=>$req->konsultan,
+        "id_request"=>$req->id,
+        "user_id"=>$req->userId,
+        "class"=>"reject",
+        "keterangan"=>"Request Dikembalikan ke Penyedia Oleh Admin ".$req->konsultan,
+        "created_at"=>\Carbon\Carbon::now()
+      ]);
+      if ($req->file('dokumentasi')) {
+        $file = $req->file('dokumentasi');
+        $name = time()."_".$file->getClientOriginalName();
+        DB::table('request')->where('id',$req->id)->update([
+          "foto_konsultan"=>$this->PATH_FILE_DB."/".$name
+        ]);
+        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+      }
+      if($req->file('checklist')){
+        $file = $req->file('checklist');
+        $name = time()."_".$file->getClientOriginalName();
+        DB::table('request')->where('id',$req->id)->update([
+          "checklist"=>$this->PATH_FILE_DB."/".$name
+        ]);
+        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+      }
+      return response()->json([
+        "code"=>200
+      ],200);
+    }
+  }
 }
