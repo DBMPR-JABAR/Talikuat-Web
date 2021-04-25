@@ -46,7 +46,7 @@ class LaporanController extends Controller
     $name = time()."_".$file->getClientOriginalName();
     $id = DB::table('master_laporan_harian')->insertGetId([
       "real_date"=>\Carbon\Carbon::now(),
-      "user"=>$req->userId,
+      "user"=>$req->user,
       "kegiatan"=>$req->kegiatan,
       "unor"=>$req->unor,
       "ruas_jalan"=>$req->ruas_jalan,
@@ -75,13 +75,13 @@ class LaporanController extends Controller
         ]);
       }
     }
-    if($req->jenis_perlaratan[0]){
-      for ($i=0; $i <count($req->jenis_perlaratan) ; $i++) { 
-        DB::table('detail_laporan_perlaratan')->inser([
+    if($req->jenis_peralatan[0]){
+      for ($i=0; $i <count($req->jenis_peralatan) ; $i++) { 
+        DB::table('detail_laporan_peralatan')->inser([
           "no_trans"=>$id,
-          "jenis_perlaratan"=>$req->jenis_perlaratan[$i],
-          "jumlah"=>$req->jumlah_perlaratan[$i],
-          "satuan"=>$req->satuan_perlaratan[$i]
+          "jenis_peralatan"=>$req->jenis_peralatan[$i],
+          "jumlah"=>$req->jumlah_peralatan[$i],
+          "satuan"=>$req->satuan_peralatan[$i]
         ]);
       }
     }
