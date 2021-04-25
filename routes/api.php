@@ -166,6 +166,8 @@ Route::prefix('laporan')->group(function () {
   Route::get('/getAllLaporanHarian', [LaporanController::class, 'getAllLaporanHarian']);
 
   Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
+  
+  Route::post('/kontraktor/createlaporan',[LaporanController::class,'createLaporan']);
 });
 
 Route::prefix('data-umum')->group(function () {

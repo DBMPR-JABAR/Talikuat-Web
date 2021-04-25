@@ -456,7 +456,7 @@ class PermintaanController extends Controller
           "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
           "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
           "status"=> 3,
-          "ditolak"=> "disetujui"
+          "ditolak"=> 4
         ]);
         DB::table('history_request')->insert([
           "username"=>$req->nm_ppk,
