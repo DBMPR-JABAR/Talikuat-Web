@@ -131,6 +131,8 @@ Route::prefix('/jadual')->group(function () {
 
   Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
 
+  Route::post('/insertJadualFromMobile', [JadualController::class, 'insertJadualFromMobile']);
+
   Route::post('/insertJadual', [JadualController::class, 'insertJadual']);
 
   Route::post('/deleteallnmp', [JadualController::class, 'deleteAllNmp']);
@@ -184,7 +186,7 @@ Route::prefix('data-umum')->group(function () {
 
   Route::post('/addnewadendum', [DataUmumController::class, 'AddNewAdendum']);
 
-  Route::get('/getDataUmumRuasById', [DataUmumController::class, 'getDataUmumRuasByIdAndKeyword']);
+  Route::get('/getDataUmumRuasByKeyword/{id}', [DataUmumController::class, 'getDataUmumRuasByKeyword']);
 
   Route::get('/getDataUmumRuas/{id}', [DataUmumController::class, 'getDataUmumRuas']);
 
