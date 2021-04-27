@@ -186,14 +186,14 @@ class DataUmumController extends Controller
     ]);
   }
 
-  public function getDataUmumRuasByIdAndKeyword(Request $request)
+  public function getDataUmumRuasByKeyword($id, Request $request)
   {
 
     $result = DB::table('data_umum_ruas')
-      ->where('id', '=', $request->input("id_data_umum"))
+      ->where('id_data_umum', '=', $id)
       ->where(function ($query) use ($request) {
         $query->where('ruas_jalan', 'like', '%' . $request->input('keyword') . '%')
-          ->orWhere('segmen_jalan', 'like', '%' . $request->input('keyword') . '%');
+          ->orWhere('segment_jalan', 'like', '%' . $request->input('keyword') . '%');
       })
       ->paginate(15);
 
