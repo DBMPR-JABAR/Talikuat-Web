@@ -168,6 +168,16 @@ Route::prefix('laporan')->group(function () {
   Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
   
   Route::post('/kontraktor/createlaporan',[LaporanController::class,'createLaporan']);
+  
+  Route::post('/kontraktor/editlaporan',[LaporanController::class,'editLaporan']);
+
+  Route::post('/sendlaporan',[LaporanController::class,'sendLaporan']);
+
+  Route::post('/respon/konsultan',[LaporanController::class,'responKonsultan']);
+
+  Route::post('/respon/ppk',[LaporanController::class,'responPpk']);
+
+  Route::post('/respon/revisikonsultan',[LaporanController::class,'responRevisiKonsultan']);
 });
 
 Route::prefix('data-umum')->group(function () {
