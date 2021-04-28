@@ -54,7 +54,8 @@ class JenisPekerjaanController extends Controller
     $keyword = $request->query("keyword");
 
     $result = DB::table('master_jenis_pekerjaan')
-      ->where('jenis_pekerjaan', 'like', '%' . $keyword . '%')
+      ->where('id', 'like', '%' . $keyword . '%')
+      ->orWhere('jenis_pekerjaan', 'like', '%' . $keyword . '%')
       ->orWhere('satuan', 'like', '%' . $keyword . '%')
       ->paginate(15);
 
@@ -100,5 +101,27 @@ class JenisPekerjaanController extends Controller
       'code' => '200',
       'result' => $newJenisPekerjaan
     ]);
+  }
+
+  public function getJenisPekerjaanByDataUmumId($id, Request $req)
+  {
+    $keyword = $req->input('keyword');
+
+    $result = DB::table('master_jenis_pekerjaan')
+      ->selectRaw('master_jenis_pekerjaan.id as id, master_jenis_pekerjaan.jenis_pekerjaan as jenis_pekerjaan, master_jenis_pekerjaan.satuan as satuan, master_jenis_pekerjaan.tgl_input as tgl_input, master_jenis_pekerjaan.tgl_update as tgl_update')
+      ->join('jadual', 'master_jenis_pekerjaan.id', '=', 'jadual.nmp')
+      ->where('jadual.id_data_umum', '=', $id)
+      ->where(function ($query) use ($keyword) {
+        return $query->where('master_jenis_pekerjaan.id', 'like', '%' . $keyword . '%')
+          ->orWhere('master_jenis_pekerjaan.jenis_pekerjaan', 'like', '%' . $keyword, '%')
+          ->orWhere('master_jenis_pekerjaan.satuan', 'like', '%' . $keyword . '%');
+      })
+      ->paginate(15);
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => $result
+    ], Response::HTTP_OK);
   }
 }

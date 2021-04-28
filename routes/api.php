@@ -115,6 +115,8 @@ Route::prefix('/jenis-pekerjaan')->group(function () {
   Route::get('/getJenisPekerjaanByKeyword', [JenisPekerjaanController::class, 'getJenisPekerjaanByKeyword']);
 
   Route::post('/insertJenisPekerjaan', [JenisPekerjaanController::class, 'insertJenisPekerjaan']);
+
+  Route::get('/getJenisPekerjaanByDataUmumId/{id}', [JenisPekerjaanController::class, 'getJenisPekerjaanByDataUmumId']);
 });
 
 Route::prefix('/jadual')->group(function () {
@@ -140,6 +142,10 @@ Route::prefix('/jadual')->group(function () {
   Route::get('/nmp/{id}', [JadualController::class, 'getNmpByid']);
 
   Route::post('/updatejadual', [JadualController::class, 'updateJadual']);
+
+  Route::get('/getJadualByDataUmumId/{id}', [JadualController::class, 'getJadualByDataUmumId']);
+
+  Route::get('getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -157,9 +163,11 @@ Route::prefix('/permintaan')->group(function () {
   Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
 
   Route::post('/konsultan/responserequest', [PermintaanController::class, 'responReqKonsultan']);
+
   Route::post('/ppk/responserequest', [PermintaanController::class, 'responReqPpk']);
 
   Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
+
   Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
 });
 
@@ -168,8 +176,8 @@ Route::prefix('laporan')->group(function () {
   Route::get('/getAllLaporanHarian', [LaporanController::class, 'getAllLaporanHarian']);
 
   Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
-  
-  Route::post('/kontraktor/createlaporan',[LaporanController::class,'createLaporan']);
+
+  Route::post('/kontraktor/createlaporan', [LaporanController::class, 'createLaporan']);
 });
 
 Route::prefix('data-umum')->group(function () {

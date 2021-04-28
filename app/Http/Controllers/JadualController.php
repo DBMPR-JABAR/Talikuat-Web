@@ -150,6 +150,7 @@ class JadualController extends Controller
           'bobot' => $jadual_item['bobot'],
           'volume' => $jadual_item['volume'],
           'nilai_kontrak' => $req->input('nilai_kontrak'),
+          'uraian' => $jadual_item['uraian'],
           'created_at' => \Carbon\Carbon::now()
         ]);
       } else {
@@ -165,6 +166,8 @@ class JadualController extends Controller
 
         if ($index_found_item != -1) {
           $list_jadual[$index_found_item]['volume'] += $jadual_item['volume'];
+          $list_jadual[$index_found_item]['jumlah_harga'] += $jadual_item['jumlah_harga'];
+          $list_jadual[$index_found_item]['bobot'] += $jadual_item['bobot'];
         } else {
           array_push($list_jadual, [
             'id_data_umum' => $req->input('id_data_umum'),
@@ -186,6 +189,7 @@ class JadualController extends Controller
             'bobot' => $jadual_item['bobot'],
             'volume' => $jadual_item['volume'],
             'nilai_kontrak' => $req->input('nilai_kontrak'),
+            'uraian' => $jadual_item['uraian'],
             'created_at' => \Carbon\Carbon::now()
           ]);
         }
@@ -389,8 +393,39 @@ class JadualController extends Controller
     }
 
     DB::table('detail_jadual')->insert($arr);
+
     return response()->json([
       "code" => 200
+    ]);
+  }
+
+  public function getJadualByDataUmumId($id)
+  {
+    $result = DB::table('jadual')
+      ->where('id_data_umum', '=', $id)
+      ->get();
+
+    return response()->json([
+      'status' => 'success',
+      'code' => 200,
+      'result' => $result
+    ]);
+  }
+
+  public function getJadualByDataUmumIdAndNmp(Request $req)
+  {
+    $id_data_umum = $req->input('id_data_umum');
+    $nmp = $req->input('nmp');
+
+    $result = DB::table('jadual')
+      ->where('id_data_umum', '=', $id_data_umum)
+      ->where('nmp', '=', $nmp)
+      ->first();
+
+    return response()->json([
+      'status' => 'success',
+      'code' => 200,
+      'result' => $result
     ]);
   }
 }
