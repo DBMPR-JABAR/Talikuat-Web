@@ -79,7 +79,8 @@ class DataUmumController extends Controller
       "nama_ppk" => "required",
       "nama_se" => "required",
       "nama_gs" => "required",
-      "segment_jalan" => "required"
+      "segment_jalan" => "required",
+      "ruas_jalan"=>"required"
 
       // List Data Umum Ruas
       // "list_data_umum_ruas" => "required|json",
@@ -225,7 +226,9 @@ class DataUmumController extends Controller
 
   public function updateDataUmum(Request $req)
   {
-
+    return response()->json([
+      $req->all()
+    ]);
     date_default_timezone_set('Asia/Jakarta');
     $data = [
       // Data Umum
