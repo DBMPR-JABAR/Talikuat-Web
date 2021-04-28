@@ -167,7 +167,7 @@ class DataUmumController extends Controller
         DB::table("data_umum_ruas")->insert([
           "id_data_umum" => $insertedDataUmumId,
           "ruas_jalan" => $request->ruas_jalan[$i],
-          "segment_jalan" => $request->segmen_jalan[$i],
+          "segment_jalan" => $request->segment_jalan[$i],
           "lat_awal" => $request->lat_awal[$i],
           "long_awal" => $request->long_awal[$i],
           "lat_akhir" => $request->lat_akhir[$i],
