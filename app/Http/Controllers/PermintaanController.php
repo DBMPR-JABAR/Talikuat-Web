@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -59,9 +60,98 @@ class PermintaanController extends Controller
     ]);
   }
 
-  // public function buatRequestFromMobile(Request $req) {
+  public function buatRequestFromMobile(Request $req)
+  {
+    $validator = Validator::make($req->all(), [
+      "id_jadual" => "required",
+      "user_id" => "required",
+      "nama_kegiatan" => "required",
+      "unor" => "required",
+      "jenis_pekerjaan" => "required",
+      "diajukan_tgl" => "required",
+      "lokasi_sta" => "required",
+      "volume" => "required",
+      "satuan" => "required",
+      "pelaksanaan_tgl" => "required",
+      "ci" => "required",
+      "qe" => "required",
+      "nama_kontraktor" => "required",
+      "nama_direksi" => "required",
+      "nama_ppk" => "required",
+      "sketsa" => "required",
+      "bahan" => "required|json",
+      "alat" => "required|json",
+      "pekerja" => "required|json"
+    ]);
 
-  // }
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 'failed',
+        'code' => 400,
+        'error' => $validator->getMessageBag()->getMessages()
+      ], Response::HTTP_BAD_REQUEST);
+    }
+
+    DB::table('jadual')->where('id', $req->id_jadual)->update([
+      "tgl_req" => \Carbon\Carbon::now()
+    ]);
+
+    $file = $req->file('sketsa');
+    $name = time() . "_" . $file->getClientOriginalName();
+
+    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+
+    $id = DB::table('request')->insertGetId([
+      "user_id" => $req->input('user_id'),
+      "nama_kegiatan" => $req->input('nama_kegiatan'),
+      "unor" => $req->input('unor'),
+      "jenis_pekerjaan" => $req->input('jenis_pekerjaan'),
+      "diajukan_tgl" => date('Y-m-d', strtotime($req->input('diajukan_tgl'))),
+      "lokasi_sta" => $req->input('lokasi_sta'),
+      "volume" => $req->input('volume'),
+      "satuan" => $req->input('satuan'),
+      "pelaksanaan_tgl" => date('Y-m-d', strtotime($req->input('pelaksanaan_tgl'))),
+      "ci" => $req->input('ci'),
+      "qe" => $req->input('qe'),
+      "nama_kontraktor" => $req->input('nama_kontraktor'),
+      "nama_direksi" => $req->input('nama_direksi'),
+      "nama_ppk" => $req->input('nama_ppk'),
+      "sketsa" => $this->PATH_FILE_DB . "/" . $name,
+      "id_jadual" => $req->input('id_jadual'),
+      "tgl_input" => \Carbon\Carbon::now()
+    ]);
+
+    foreach (json_decode($req->input('bahan')) as $item_bahan) {
+      DB::table('detail_request_bahan')->insert([
+        'id_request' => $id,
+        'bahan' => $item_bahan->bahan,
+        'volume' => $item_bahan->volume,
+        'satuan' => $item_bahan->satuan
+      ]);
+    }
+
+    foreach (json_decode($req->input('alat')) as $item_alat) {
+      DB::table('detail_request_peralatan')->insert([
+        'id_request' => $id,
+        'jenis_peralatan' => $item_alat->alat,
+        'jumlah' => $item_alat->jumlah,
+        'satuan' => $item_alat->satuan
+      ]);
+    }
+
+    foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
+      DB::table('detail_request_tkerja')->insert([
+        'id_request' => $id,
+        'tenaga_kerja' => $item_pekerja->pekerja,
+        'jumlah' => $item_pekerja->jumlah
+      ]);
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'code' => 201,
+    ], Response::HTTP_CREATED);
+  }
 
   public function buatRequest(Request $req)
   {

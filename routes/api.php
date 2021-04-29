@@ -156,6 +156,8 @@ Route::prefix('/permintaan')->group(function () {
 
   Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
 
+  Route::post('/buatRequestFromMobile', [PermintaanController::class, 'buatRequestFromMobile']);
+
   Route::post('/buatrequest', [PermintaanController::class, 'buatRequest']);
 
   Route::post('/updaterequest', [PermintaanController::class, 'updateRequest']);
