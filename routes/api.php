@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\GetFile;
@@ -35,6 +36,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
   return $request->user();
+});
+
+Route::prefix('/auth')->group(function () {
+
+  Route::get('/getAllAccount', [AuthController::class, 'getAllAccount']);
 });
 
 Route::prefix('/user')->group(function () {
