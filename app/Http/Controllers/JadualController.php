@@ -164,11 +164,7 @@ class JadualController extends Controller
           }
         }
 
-        if ($index_found_item != -1) {
-          $list_jadual[$index_found_item]['volume'] += $jadual_item['volume'];
-          $list_jadual[$index_found_item]['jumlah_harga'] += $jadual_item['jumlah_harga'];
-          $list_jadual[$index_found_item]['bobot'] += $jadual_item['bobot'];
-        } else {
+        if ($index_found_item == -1) {
           array_push($list_jadual, [
             'id_data_umum' => $req->input('id_data_umum'),
             'nmp' => $jadual_item['no_mata_pembayaran'],
