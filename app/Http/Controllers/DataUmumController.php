@@ -80,7 +80,8 @@ class DataUmumController extends Controller
       "nama_se" => "required",
       "nama_gs" => "required",
       "segment_jalan" => "required",
-      "ruas_jalan"=>"required"
+      "ruas_jalan"=>"required",
+      "sup"=>"required"
 
       // List Data Umum Ruas
       // "list_data_umum_ruas" => "required|json",
@@ -115,6 +116,8 @@ class DataUmumController extends Controller
       "nm_se" => $request->input("nama_se"),
       "nm_gs" => $request->input("nama_gs"),
       "is_adendum" => 0,
+      "id_sup"=>$request->input('sup'),
+      "id_uptd"=>$request->input("id_uptd"),
       "created_at" => \Carbon\Carbon::now()
     ];
 

@@ -53,24 +53,28 @@ class RuasJalanController extends Controller
 
             $get_ruas = DB::table("master_ruas_jalan")->select("id_ruas_jalan", "nama_ruas_jalan", "panjang")->where("uptd_id", $id)->get();
             $result = [];
+            $get_sup = DB::table('utils_sup')->select('*')->where("kantor_id","=",$id)->get();
             foreach ($get_ruas as $item) {
                 array_push($result, $item->nama_ruas_jalan . " - " . $item->id_ruas_jalan . " - " . $item->panjang);
             }
             return response()->json([
                 'status' => 'success',
                 'code' => '200',
-                'result' => $result
+                'result' => $result,
+                "sup"=> $get_sup
             ]);
         } else {
             $get_ruas = DB::table("master_ruas_jalan")->select("nama_ruas_jalan", "id_ruas_jalan", "panjang")->get();
             $result = [];
+            $get_sup = DB::table('utils_sup')->get();
             foreach ($get_ruas as $item) {
                 array_push($result, $item->nama_ruas_jalan . " - " . $item->id_ruas_jalan . " - " . $item->panjang);
             }
             return response()->json([
                 'status' => 'success',
                 'code' => '200',
-                'result' => $result
+                'result' => $result,
+                "sup"=> $get_sup
             ]);
         }
     }
