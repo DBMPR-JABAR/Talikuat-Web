@@ -226,9 +226,6 @@ class DataUmumController extends Controller
 
   public function updateDataUmum(Request $req)
   {
-    return response()->json([
-      $req->all()
-    ]);
     date_default_timezone_set('Asia/Jakarta');
     $data = [
       // Data Umum
