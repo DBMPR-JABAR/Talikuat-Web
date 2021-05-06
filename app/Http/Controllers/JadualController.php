@@ -248,7 +248,9 @@ class JadualController extends Controller
       "penyedia" => "required",
       "konsultan" => "required",
       "nama_ppk" => "required",
-      "waktu" => "required"
+      "waktu" => "required",
+      "id_uptd"=>"required",
+      "tgl"=>"required"
     ]);
 
     if ($validator->fails()) {
@@ -281,7 +283,8 @@ class JadualController extends Controller
       "volume" => $req->volume[0],
       "jumlah_harga" => preg_replace('/\./', '', $req->jumlah_harga[0]),
       "bobot" => $req->bobot[0],
-      "uraian" => $req->uraian[0]
+      "uraian" => $req->uraian[0],
+      "id_uptd"=>$req->id_uptd
     ]);
 
 
