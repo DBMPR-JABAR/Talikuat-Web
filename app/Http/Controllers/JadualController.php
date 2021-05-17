@@ -241,7 +241,7 @@ class JadualController extends Controller
       "tgl" => "required",
       "unor" => "required",
       "uraian" => "required",
-      "userId" => "required",
+      "user_id" => "required",
       "volume" => "required",
       "panjang" => "required",
       "ppk" => "required",
@@ -266,7 +266,7 @@ class JadualController extends Controller
     $get_id = DB::table('jadual')->insertGetId([
       "id_data_umum" => $req->id_data_umum,
       "nmp" => $req->nmp[0],
-      "user" => $req->userId,
+      "user" => $req->user_id,
       "unor" => $req->unor,
       "nm_paket" => $req->nm_paket,
       "ruas_jalan" => $req->ruas_jalan,
