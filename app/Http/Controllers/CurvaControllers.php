@@ -12,11 +12,15 @@ class CurvaControllers extends Controller
     {
         $tes= array();
         $jadual =DB::table('jadual')->select('id','nmp')->where('id_data_umum',$id)->get();
+        $data = DB::table('data_umum')->where('id',$id)->get();
         foreach($jadual as $id){
           array_push($tes,DB::table('detail_jadual')->where('id_jadual',$id->id)->orderBy('tgl','asc')->get());  
         }
 
-        return response($tes);
+        return response()->json([
+          "curva"=>$tes,
+          "data_umum"=>$data
+        ]);;
             
 
     }
