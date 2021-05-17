@@ -241,7 +241,6 @@ class JadualController extends Controller
       "tgl" => "required",
       "unor" => "required",
       "uraian" => "required",
-      "user_id" => "required",
       "volume" => "required",
       "panjang" => "required",
       "ppk" => "required",
