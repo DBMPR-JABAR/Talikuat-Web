@@ -86,7 +86,6 @@ class DataUmumController extends Controller
       // List Data Umum Ruas
       // "list_data_umum_ruas" => "required|json",
     ]);
-
     if ($validator->fails()) {
       return response()->json([
         'status' => 'failed',
@@ -94,6 +93,7 @@ class DataUmumController extends Controller
         'error' => $validator->getMessageBag()->getMessages()
       ], Response::HTTP_BAD_REQUEST);
     }
+    $replace = str_replace(',','.',$request->input('nilai_kontrak'));
 
     $data = [
       // Data Umum
@@ -104,7 +104,7 @@ class DataUmumController extends Controller
       "nm_paket" => $request->input("nm_paket"),
       "no_kontrak" => $request->input("no_kontrak"),
       "tgl_kontrak" => $request->input("tgl_kontrak"),
-      "nilai_kontrak" => $request->input("nilai_kontrak"),
+      "nilai_kontrak" => $replace,
       "no_spmk" => $request->input("no_spmk"),
       "tgl_spmk" => $request->input("tgl_spmk"),
       "panjang_km" => $request->input("panjang"),
