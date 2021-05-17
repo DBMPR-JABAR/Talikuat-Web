@@ -230,6 +230,7 @@ class DataUmumController extends Controller
   public function updateDataUmum(Request $req)
   {
     date_default_timezone_set('Asia/Jakarta');
+    $replace = str_replace(',','.',$req->input('nilai_kontrak'));
     $data = [
       // Data Umum
       'pemda' => $req->input("pemda"),
@@ -239,7 +240,7 @@ class DataUmumController extends Controller
       "nm_paket" => $req->input("nm_paket"),
       "no_kontrak" => $req->input("no_kontrak"),
       "tgl_kontrak" => $req->input("tgl_kontrak"),
-      "nilai_kontrak" => $req->input("nilai_kontrak"),
+      "nilai_kontrak" => $replace,
       "no_spmk" => $req->input("no_spmk"),
       "tgl_spmk" => $req->input("tgl_spmk"),
       "panjang_km" => $req->input("panjang_km"),
@@ -259,7 +260,7 @@ class DataUmumController extends Controller
       DB::table("data_umum_ruas")->insert([
         "id_data_umum" => $req->id,
         "ruas_jalan" => $req->ruas_jalan[$i],
-        "segment_jalan" => $req->segment_jalan[$i],
+        "segment_jalan" => $req->segmen_jalan[$i],
         "lat_awal" => $req->lat_awal[$i],
         "long_awal" => $req->long_awal[$i],
         "lat_akhir" => $req->lat_akhir[$i],
