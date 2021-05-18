@@ -267,6 +267,8 @@ class JadualController extends Controller
 
         $waktu = str_replace(" Hari", "", $req->waktu);
         $panjang = str_replace(" Km", "", $req->panjang);
+        $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
+        $total = preg_replace('/\./', '', $req->jumlah_harga[0]);
         $get_id = DB::table('jadual')->insertGetId([
             "id_data_umum" => $req->id_data_umum,
             "nmp" => $req->nmp[0],
@@ -283,15 +285,17 @@ class JadualController extends Controller
             "panjang_km" => $panjang,
             "created_at" => \Carbon\Carbon::now(),
             "satuan" => $req->satuan[0],
-            "harga_satuan" => preg_replace('/\./', '', $req->harga_satuan[0]),
+            "harga_satuan" => str_replace(',','.',$harga),
             "volume" => $req->volume[0],
-            "jumlah_harga" => preg_replace('/\./', '', $req->jumlah_harga[0]),
+            "jumlah_harga" => str_replace(',','.',$total),
             "bobot" => $req->bobot[0],
             "uraian" => $req->uraian[0],
             "id_uptd" => $req->id_uptd
         ]);
 
         for ($i = 0; $i < count($req->nmp); $i++) {
+          $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
+          $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
             DB::table('detail_jadual')->insert(
                 [
                     "id_jadual" => $get_id,
@@ -299,9 +303,9 @@ class JadualController extends Controller
                     "nmp" => $req->nmp[$i],
                     "uraian" => $req->uraian[$i],
                     "satuan" => $req->satuan[$i],
-                    "harga_satuan" => preg_replace('/\./', '', $req->harga_satuan[$i]),
+                    "harga_satuan" => str_replace(',','.',$harga),
                     "volume" => $req->volume[$i],
-                    "jumlah_harga" => preg_replace('/\./', '', $req->jumlah_harga[$i]),
+                    "jumlah_harga" => str_replace(',','.',$total),
                     "bobot" => $req->bobot[$i],
                     "koefisien" => $req->koefisien[$i],
                     "nilai" => $req->nilai[$i],
@@ -325,8 +329,8 @@ class JadualController extends Controller
         $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
 
         foreach ($list_jadual as $jadual) {
-            $jadual['harga_satuan'] = number_format($jadual['harga_satuan'], 2, ',', '.');
-            $jadual['jumlah_harga'] = number_format($jadual['jumlah_harga'], 2, ',', '.');
+            $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
+            $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
             $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
             $jadual['volume'] = number_format($jadual['volume'], 3, ',', '.');
             $jadual['nilai'] = number_format($jadual['nilai'], 3, ',', '.');
@@ -368,12 +372,14 @@ class JadualController extends Controller
     public function updateJadual(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
+        $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
+        $total = preg_replace('/\./', '', $req->jumlah_harga[0]);
         DB::table('jadual')->where('id', '=', $req->id_jadual)->update([
             "uraian" => $req->uraian[0],
             "satuan" => $req->satuan[0],
-            "harga_satuan" => preg_replace('/\./', '', $req->harga_satuan[0]),
+            "harga_satuan" => str_replace(',','.',$harga),
             "volume" => $req->volume[0],
-            "jumlah_harga" => preg_replace('/\./', '', $req->jumlah_harga[0]),
+            "jumlah_harga" => str_replace(',','.',$total),
             "bobot" => $req->bobot[0],
             "updated_at" => \Carbon\Carbon::now()
         ]);
@@ -383,26 +389,25 @@ class JadualController extends Controller
                 ['nmp', '=', $req->id_nmp]
             ])->delete();
         }
-        $arr = array();
         for ($i = 0; $i < count($req->nmp); $i++) {
-            $arr[] = array(
-                "id_jadual" => $req->id_jadual,
-                "tgl" => $req->tgl[$i],
-                "nmp" => $req->nmp[$i],
-                "uraian" => $req->uraian[$i],
-                "satuan" => $req->satuan[$i],
-                "harga_satuan" => preg_replace('/\./', '', $req->harga_satuan[$i]),
-                "volume" => $req->volume[$i],
-                "jumlah_harga" => preg_replace('/\./', '', $req->jumlah_harga[$i]),
-                "bobot" => $req->bobot[$i],
-                "koefisien" => $req->koefisien[$i],
-                "nilai" => $req->nilai[$i],
-                "created_at" => \Carbon\Carbon::now()
-            );
+          $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
+          $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
+            DB::table('detail_jadual')->insert(
+                [
+                    "id_jadual" => $req->id_jadual,
+                    "tgl" => $req->tgl[$i],
+                    "nmp" => $req->nmp[$i],
+                    "uraian" => $req->uraian[$i],
+                    "satuan" => $req->satuan[$i],
+                    "harga_satuan" => str_replace(',','.',$harga),
+                    "volume" => $req->volume[$i],
+                    "jumlah_harga" => str_replace(',','.',$total),
+                    "bobot" => $req->bobot[$i],
+                    "koefisien" => $req->koefisien[$i],
+                    "nilai" => $req->nilai[$i],
+                    "created_at" => \Carbon\Carbon::now()
+                ]);
         }
-
-        DB::table('detail_jadual')->insert($arr);
-
         return response()->json([
             "code" => 200
         ]);
