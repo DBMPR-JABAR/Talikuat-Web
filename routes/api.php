@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CurvaControllers;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
@@ -297,4 +299,9 @@ Route::prefix('merge')->group(function () {
 Route::prefix('adendum')->group(function () {
 
     Route::post('updatedata', [DataUmumAdendum::class, 'updateAdendum']);
+});
+
+Route::prefix('curva')->group(function (){
+
+  Route::get('tes/{id}',[CurvaControllers::class,'GetDataUmum']);
 });

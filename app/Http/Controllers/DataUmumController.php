@@ -80,12 +80,12 @@ class DataUmumController extends Controller
       "nama_se" => "required",
       "nama_gs" => "required",
       "segment_jalan" => "required",
-      "ruas_jalan"=>"required"
+      "ruas_jalan"=>"required",
+      //"sup"=>"required"
 
       // List Data Umum Ruas
       // "list_data_umum_ruas" => "required|json",
     ]);
-
     if ($validator->fails()) {
       return response()->json([
         'status' => 'failed',
@@ -93,6 +93,7 @@ class DataUmumController extends Controller
         'error' => $validator->getMessageBag()->getMessages()
       ], Response::HTTP_BAD_REQUEST);
     }
+    $replace = str_replace(',','.',$request->input('nilai_kontrak'));
 
     $data = [
       // Data Umum
@@ -103,7 +104,7 @@ class DataUmumController extends Controller
       "nm_paket" => $request->input("nm_paket"),
       "no_kontrak" => $request->input("no_kontrak"),
       "tgl_kontrak" => $request->input("tgl_kontrak"),
-      "nilai_kontrak" => $request->input("nilai_kontrak"),
+      "nilai_kontrak" => $replace,
       "no_spmk" => $request->input("no_spmk"),
       "tgl_spmk" => $request->input("tgl_spmk"),
       "panjang_km" => $request->input("panjang"),
@@ -115,6 +116,8 @@ class DataUmumController extends Controller
       "nm_se" => $request->input("nama_se"),
       "nm_gs" => $request->input("nama_gs"),
       "is_adendum" => 0,
+      //"id_sup"=>$request->input('sup'),
+      "id_uptd"=>$request->input("id_uptd"),
       "created_at" => \Carbon\Carbon::now()
     ];
 
@@ -226,10 +229,8 @@ class DataUmumController extends Controller
 
   public function updateDataUmum(Request $req)
   {
-    return response()->json([
-      $req->all()
-    ]);
     date_default_timezone_set('Asia/Jakarta');
+    $replace = str_replace(',','.',$req->input('nilai_kontrak'));
     $data = [
       // Data Umum
       'pemda' => $req->input("pemda"),
@@ -239,7 +240,7 @@ class DataUmumController extends Controller
       "nm_paket" => $req->input("nm_paket"),
       "no_kontrak" => $req->input("no_kontrak"),
       "tgl_kontrak" => $req->input("tgl_kontrak"),
-      "nilai_kontrak" => $req->input("nilai_kontrak"),
+      "nilai_kontrak" => $replace,
       "no_spmk" => $req->input("no_spmk"),
       "tgl_spmk" => $req->input("tgl_spmk"),
       "panjang_km" => $req->input("panjang_km"),
