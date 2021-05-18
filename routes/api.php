@@ -38,6 +38,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('/auth')->group(function () {
 
+    Route::get('/test', [AuthController::class, 'test']);
+
     Route::post('/login', [AuthController::class, 'login']);
 });
 
@@ -52,6 +54,8 @@ Route::prefix('/user')->group(function () {
     Route::get('/getLatestUser', [UserController::class, 'getLatestUser']);
 
     Route::get('/getUserByKeyword', [UserController::class, 'getUserByKeyword']);
+
+    Route::post('/createUser', [UserController::class, 'createUser']);
 });
 
 Route::prefix('/kontraktor')->group(function () {

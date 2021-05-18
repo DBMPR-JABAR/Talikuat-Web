@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
-    }
 
     public function login(Request $request)
     {
@@ -41,14 +38,13 @@ class AuthController extends Controller
             'email' => $user_detail->email,
             'gambar' => $user_detail->gambar,
             'nik' => $user_detail->nik,
-            'level' => $user_detail->level,
             'kantor_id' => $user_detail->kantor_id,
             'perusahaan' => $user_detail->perusahaan,
             'unit' => $user_detail->unit,
             'created_at' => $user_detail->created_at
         ];
 
-        $token = $user->createToken($user->pass);
+        $token = $user->createToken($user_detail->nama_lengkap);
 
         return response()->json([
             'status' => 'success',
