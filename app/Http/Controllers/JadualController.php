@@ -286,11 +286,9 @@ class JadualController extends Controller
       "id_uptd"=>$req->id_uptd
     ]);
 
-
-
-    $arr = array();
     for ($i = 0; $i < count($req->nmp); $i++) {
-      $arr[] = array(
+      DB::table('detail_jadual')->insert(
+      [
         "id_jadual" => $get_id,
         "tgl" => $req->tgl[$i],
         "nmp" => $req->nmp[$i],
@@ -303,9 +301,8 @@ class JadualController extends Controller
         "koefisien" => $req->koefisien[$i],
         "nilai" => $req->nilai[$i],
         "created_at" => \Carbon\Carbon::now()
-      );
+      ]);
     }
-    DB::table('detail_jadual')->insert($arr);
 
 
     return response()->json([
