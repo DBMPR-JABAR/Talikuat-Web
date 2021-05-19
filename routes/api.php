@@ -156,6 +156,7 @@ Route::prefix('/jadual')->group(function () {
     Route::get('/getJadualByDataUmumId/{id}', [JadualController::class, 'getJadualByDataUmumId']);
 
     Route::get('getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
+    Route::get('getJadualbyNmp/{id}', [JadualController::class, 'getNmpjadual']);
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -181,6 +182,10 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
+    
+    Route::get('/getsatuannmp/{id}', [PermintaanController::class, 'getSatuanNmp']);
+
+
 });
 
 Route::prefix('laporan')->group(function () {

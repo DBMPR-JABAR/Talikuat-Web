@@ -673,4 +673,10 @@ class PermintaanController extends Controller
       ], 200);
     }
   }
+  public function getSatuanNmp($id)
+  {
+    return response()->json([
+      DB::table('jadual')->select('satuan')->where('id',$id)->first()
+    ]);
+  }
 }

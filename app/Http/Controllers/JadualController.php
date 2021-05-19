@@ -269,6 +269,7 @@ class JadualController extends Controller
         $panjang = str_replace(" Km", "", $req->panjang);
         $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
         $total = preg_replace('/\./', '', $req->jumlah_harga[0]);
+        $nilai_kon = preg_replace('/\./', '',str_replace("Rp. ","",$req->nilai_kontrak));
         $get_id = DB::table('jadual')->insertGetId([
             "id_data_umum" => $req->id_data_umum,
             "nmp" => $req->nmp[0],
@@ -281,7 +282,7 @@ class JadualController extends Controller
             "nm_ppk" => $req->nama_ppk,
             "penyedia" => $req->penyedia,
             "konsultan" => $req->konsultan,
-            "nilai_kontrak" => $req->nilai_kontrak,
+            "nilai_kontrak" =>str_replace(",",".",$nilai_kon) ,
             "panjang_km" => $panjang,
             "created_at" => \Carbon\Carbon::now(),
             "satuan" => $req->satuan[0],
@@ -357,8 +358,7 @@ class JadualController extends Controller
 
 
     public function deleteallnmp(Request $req)
-    {
-
+    {  
         DB::table('jadual')->where('id', '=', $req->id)->delete();
         DB::table('detail_jadual')->where('nmp', '=', $req->nmp)->delete();
 
@@ -441,5 +441,11 @@ class JadualController extends Controller
             'code' => 200,
             'result' => $result
         ]);
+    }
+    public function getNmpJadual($id)
+    {
+      return response()->json(
+        DB::table('detail_jadual')->where('id_jadual',$id)->get()
+      );
     }
 }
