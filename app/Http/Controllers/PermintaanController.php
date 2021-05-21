@@ -477,7 +477,7 @@ class PermintaanController extends Controller
         "id_request" => $req->id,
         "user_id" => $req->userId,
         "class" => "sukses",
-        "keterangan" => "Request Telah Disetujui Oleh Admin " . $req->konsultan,
+        "keterangan" => "Request Telah Disetujui Oleh " . $req->konsultan,
         "created_at" => \Carbon\Carbon::now()
       ]);
       if ($req->file('dokumentasi')) {
@@ -511,7 +511,7 @@ class PermintaanController extends Controller
         "id_request" => $req->id,
         "user_id" => $req->userId,
         "class" => "reject",
-        "keterangan" => "Request Telah Ditolak Oleh Admin " . $req->konsultan,
+        "keterangan" => "Request Telah Ditolak Oleh " . $req->konsultan,
         "created_at" => \Carbon\Carbon::now()
       ]);
       if ($req->file('dokumentasi')) {
@@ -625,7 +625,7 @@ class PermintaanController extends Controller
         "id_request" => $req->id,
         "user_id" => $req->userId,
         "class" => "sukses",
-        "keterangan" => "Revisi Request Telah Dikirim Oleh Admin " . $req->konsultan,
+        "keterangan" => "Revisi Request Telah Dikirim Oleh " . $req->konsultan,
         "created_at" => \Carbon\Carbon::now()
       ]);
       if ($req->file('dokumentasi')) {
@@ -659,7 +659,7 @@ class PermintaanController extends Controller
         "id_request" => $req->id,
         "user_id" => $req->userId,
         "class" => "reject",
-        "keterangan" => "Request Dikembalikan ke Penyedia Oleh Admin " . $req->konsultan,
+        "keterangan" => "Request Dikembalikan ke Penyedia Oleh " . $req->konsultan,
         "created_at" => \Carbon\Carbon::now()
       ]);
       if ($req->file('dokumentasi')) {
