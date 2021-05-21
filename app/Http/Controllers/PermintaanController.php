@@ -467,6 +467,11 @@ class PermintaanController extends Controller
         "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
         "status" => 3
       ]);
+      if($req->catatan != NULL){
+        DB::table('request')->where('id', $req->id)->update([
+          "catatan_konsultan"=>$req->catatan
+        ]);
+      }
       DB::table('history_request')->insert([
         "username" => $req->konsultan,
         "id_request" => $req->id,
@@ -553,6 +558,11 @@ class PermintaanController extends Controller
         "status" => 3,
         "ditolak" => 4
       ]);
+      if($req->catatan != NULL){
+        DB::table('request')->where('id', $req->id)->update([
+          "catatan_ppk"=>$req->catatan
+        ]);
+      }
       DB::table('history_request')->insert([
         "username" => $req->nm_ppk,
         "id_request" => $req->id,

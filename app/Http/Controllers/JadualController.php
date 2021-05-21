@@ -360,7 +360,10 @@ class JadualController extends Controller
     public function deleteallnmp(Request $req)
     {  
         DB::table('jadual')->where('id', '=', $req->id)->delete();
-        DB::table('detail_jadual')->where('nmp', '=', $req->nmp)->delete();
+        DB::table('detail_jadual')->where([
+            ['nmp', '=', $req->nmp],
+            ['id_jadual','=',$req->id]
+            ])->delete();
 
         return response()->json([
             'status' => 'success',

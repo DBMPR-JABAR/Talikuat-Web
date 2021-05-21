@@ -24,4 +24,11 @@ class CurvaControllers extends Controller
             
 
     }
+  public function TestingDaily()
+  {
+   $tes = DB::table('request')->where('respon',NULL)->get();
+
+    dd($tes[0]->respon == null);
+  }
 }
+

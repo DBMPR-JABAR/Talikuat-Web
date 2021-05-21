@@ -309,4 +309,5 @@ Route::prefix('adendum')->group(function () {
 Route::prefix('curva')->group(function (){
 
   Route::get('tes/{id}',[CurvaControllers::class,'GetDataUmum']);
+  Route::get('updateDaily',[CurvaControllers::class,'TestingDaily']);
 });
