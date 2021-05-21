@@ -356,7 +356,7 @@ class LaporanController extends Controller
           "id_laporan"=>$req->id,
           "user_id"=>$req->userId,
           "class"=>"sukses",
-          "keterangan"=>"Laporan Telah Disetujui Oleh Admin ".$req->konsultan,
+          "keterangan"=>"Laporan Telah Disetujui Oleh ".$req->konsultan,
           "created_at"=>\Carbon\Carbon::now()
         ]);
         if ($req->file('dokumentasi')) {
@@ -382,7 +382,7 @@ class LaporanController extends Controller
           "id_laporan"=>$req->id,
           "user_id"=>$req->userId,
           "class"=>"reject",
-          "keterangan"=>"Laporan Telah Ditolak Oleh Admin ".$req->konsultan,
+          "keterangan"=>"Laporan Telah Ditolak Oleh ".$req->konsultan,
           "created_at"=>\Carbon\Carbon::now()
         ]);
         if ($req->file('dokumentasi')) {
@@ -482,7 +482,7 @@ class LaporanController extends Controller
         "id_laporan"=>$req->id,
         "user_id"=>$req->userId,
         "class"=>"sukses",
-        "keterangan"=>"Revisi Laporan Telah Dikirim Oleh Admin ".$req->konsultan,
+        "keterangan"=>"Revisi Laporan Telah Dikirim Oleh ".$req->konsultan,
         "created_at"=>\Carbon\Carbon::now()
       ]);
       if ($req->file('dokumentasi')) {
@@ -508,7 +508,7 @@ class LaporanController extends Controller
         "id_laporan"=>$req->id,
         "user_id"=>$req->userId,
         "class"=>"reject",
-        "keterangan"=>"Laporan Dikembalikan ke Penyedia Oleh Admin ".$req->konsultan,
+        "keterangan"=>"Laporan Dikembalikan ke Penyedia Oleh ".$req->konsultan,
         "created_at"=>\Carbon\Carbon::now()
       ]);
       if ($req->file('dokumentasi')) {

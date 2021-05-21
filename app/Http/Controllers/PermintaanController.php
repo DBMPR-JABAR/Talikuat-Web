@@ -155,24 +155,18 @@ class PermintaanController extends Controller
 
   public function buatRequest(Request $req)
   {
+    return response()->json([
+      $req->all()
+    ]);
     date_default_timezone_set('Asia/Jakarta');
     $validator = Validator::make($req->all(), [
       // Data Umum
-      "bahan" => "required",
       "diajukan_tgl" => "required",
       "unor" => "required",
-      "jenis_peralatan" => "required",
-      "jumlah_peralatan" => "required",
-      "jumlah_tk" => "required",
-      "satuan_bahan" => "required",
-      "satuan" => "required",
-      "qe" => "required",
       "userId" => "required",
-      "volume_bahan" => "required",
-      "tenaga_kerja" => "required",
-      "satuan_peralatan" => "required",
       "lokasi_sta" => "required",
       "ci" => "required",
+      "qe" => "required",
     ]);
     if ($validator->fails()) {
       return response()->json([
@@ -208,6 +202,7 @@ class PermintaanController extends Controller
     ]);
     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
 
+    if($req->jenis_peralatan){
     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
       DB::table('detail_request_peralatan')->insert([
         "id_request" => $id,
@@ -215,7 +210,8 @@ class PermintaanController extends Controller
         "jumlah" => $req->jumlah_peralatan[$i],
         "satuan" => $req->satuan_peralatan[$i]
       ]);
-    }
+    }}
+    if($req->bahan){
     for ($i = 0; $i < count($req->bahan); $i++) {
       DB::table('detail_request_bahan')->insert([
         "id_request" => $id,
@@ -223,14 +219,15 @@ class PermintaanController extends Controller
         "volume" => $req->volume_bahan[$i],
         "satuan" => $req->satuan_bahan[$i]
       ]);
-    }
+    }}
+    if($req->tenaga_kerja){
     for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
       DB::table('detail_request_tkerja')->insert([
         "id_request" => $id,
         "tenaga_kerja" => $req->tenaga_kerja[$i],
         "jumlah" => $req->jumlah_tk[$i],
       ]);
-    }
+    }}
     return response()->json([
       "code" => 200
     ]);
