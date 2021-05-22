@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\TestEmail;
+
+use function GuzzleHttp\Promise\all;
 
 class PermintaanController extends Controller
 {
@@ -155,9 +159,6 @@ class PermintaanController extends Controller
 
   public function buatRequest(Request $req)
   {
-    return response()->json([
-      $req->all()
-    ]);
     date_default_timezone_set('Asia/Jakarta');
     $validator = Validator::make($req->all(), [
       // Data Umum
@@ -167,6 +168,7 @@ class PermintaanController extends Controller
       "lokasi_sta" => "required",
       "ci" => "required",
       "qe" => "required",
+      "id_jadual"=>"required"
     ]);
     if ($validator->fails()) {
       return response()->json([
@@ -333,6 +335,20 @@ class PermintaanController extends Controller
         "class" => "kirim",
         "created_at" => \Carbon\Carbon::now()
       ]);
+      $bodyEmail = [
+        "role"=>"Kontraktor",
+        "status"=>"Mengirim",
+        "revisi"=>"Revisi ",
+        "username"=> $get_data->nama_kontraktor,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>"konsultan"
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail)); 
     } else {
       DB::table('request')->where('id', $req->id)->update([
         "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
@@ -347,10 +363,25 @@ class PermintaanController extends Controller
         "class" => "kirim",
         "created_at" => \Carbon\Carbon::now()
       ]);
+      $bodyEmail = [
+        "role"=>"Kontraktor",
+        "status"=>"Mengirim",
+        "revisi"=>"",
+        "username"=> $get_data->nama_kontraktor,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>"konsultan"
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail)); 
     }
 
     return response()->json([
-      "code" => 200
+      "code" => 200,
+      "email"=>"send"
     ]);
   }
   public function revisiRequestKontraktor(Request $req)
@@ -493,6 +524,35 @@ class PermintaanController extends Controller
         ]);
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }
+      $get_data = DB::table('request')->where('id',$req->id)->first();
+      $bodyEmail = [
+        "role"=>"Konsultan",
+        "status"=>"Menyetujui",
+        "revisi"=>"",
+        "username"=> $get_data->nama_direksi,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $bodyEmail = [
+        "role"=>"Konsultan",
+        "status"=>"Mengirim",
+        "revisi"=>"",
+        "username"=> $get_data->nama_direksi,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('nama_lengkap','=',$get_data->nama_ppk)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
       return response()->json([
         "code" => 200
       ], 200);
@@ -527,6 +587,21 @@ class PermintaanController extends Controller
         ]);
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }
+      $get_data = DB::table('request')->where('id',$req->id)->first();
+      $bodyEmail = [
+        "role"=>"Konsultan",
+        "status"=>"Menolak",
+        "revisi"=>"",
+        "username"=> $get_data->nama_direksi,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
       return response()->json([
         "code" => 200
       ], 200);
@@ -576,6 +651,23 @@ class PermintaanController extends Controller
         ]);
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }
+      $get_data = DB::table('request')->where('id',$req->id)->first();
+      $bodyEmail = [
+        "role"=>"PPK",
+        "status"=>"Menyetujui",
+        "revisi"=>"",
+        "username"=> $get_data->nama_ppk,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
       return response()->json([
         "code" => 200
       ], 200);
@@ -602,6 +694,23 @@ class PermintaanController extends Controller
         ]);
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }
+      $get_data = DB::table('request')->where('id',$req->id)->first();
+      $bodyEmail = [
+        "role"=>"PPK",
+        "status"=>"Menolak",
+        "revisi"=>"",
+        "username"=> $get_data->nm_ppk,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
       return response()->json([
         "code" => 200
       ], 200);
@@ -641,6 +750,21 @@ class PermintaanController extends Controller
         ]);
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }
+      $get_data = DB::table('request')->where('id',$req->id)->first();
+      $bodyEmail = [
+        "role"=>"Konsultan",
+        "status"=>"Mengirim",
+        "revisi"=>"Revisi",
+        "username"=> $get_data->nm_ppk,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_ppk)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
       return response()->json([
         "code" => 200
       ], 200);
@@ -675,6 +799,21 @@ class PermintaanController extends Controller
         ]);
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
       }
+      $get_data = DB::table('request')->where('id',$req->id)->first();
+      $bodyEmail = [
+        "role"=>"Konsultan",
+        "status"=>"Mengirim",
+        "revisi"=>"Revisi",
+        "username"=> $get_data->nm_ppk,
+        "no_dokumen"=>$req->id,
+        "kegiatan"=>$get_data->nama_kegiatan,
+        "lokasi"=>$get_data->lokasi_sta,
+        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
+        "volume"=>$get_data->volume,
+        "note"=>""
+      ];
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
+      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
       return response()->json([
         "code" => 200
       ], 200);
@@ -683,7 +822,17 @@ class PermintaanController extends Controller
   public function getSatuanNmp($id)
   {
     return response()->json([
-      DB::table('jadual')->select('satuan')->where('id',$id)->first()
+      DB::table('jadual')->where('nmp',$id)->first()
     ]);
+  }
+  public function getDetailJadual(Request $req)
+  {
+
+    return response()->json(
+      DB::table('detail_jadual')->where([
+        ['id_jadual',"=",$req->id],
+        ['nmp','=',$req->nmp]
+        ])->first()
+    );
   }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestEmail;
 
 class CurvaControllers extends Controller
 {
@@ -26,9 +28,12 @@ class CurvaControllers extends Controller
     }
   public function TestingDaily()
   {
-   $tes = DB::table('request')->where('respon',NULL)->get();
+   $tes = DB::table('request')->where('respon',NULL)->first();
 
-    dd($tes[0]->respon == null);
+    dd($tes->respon == null);
   }
+
+
+  
 }
 
