@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BypassRequestKontraktor extends Command
 {
@@ -41,6 +42,7 @@ class BypassRequestKontraktor extends Command
         DB::table('testing')->where('update',NULL)->update([
             'update'=>\Carbon\Carbon::now()
         ]);
+        Log::info('Cronjob berhasil dijalankan');
         echo "updated";
     }
 }
