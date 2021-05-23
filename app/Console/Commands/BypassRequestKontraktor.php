@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class BypassRequestKontraktor extends Command
 {
@@ -11,14 +12,14 @@ class BypassRequestKontraktor extends Command
      *
      * @var string
      */
-    protected $signature = 'command:bypassrequestkontraktor';
+    protected $signature = 'minute:update';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'tes update';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,9 @@ class BypassRequestKontraktor extends Command
      */
     public function handle()
     {
-        $this->info('running oke');
+        DB::table('testing')->where('update',NULL)->update([
+            'update'=>\Carbon\Carbon::now()
+        ]);
+        echo "updated";
     }
 }

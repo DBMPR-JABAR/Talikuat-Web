@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('command:bypassrequestkontraktor')->everyMinute();
+         $schedule->command('minute:update')->everyMinute(); 
     }
 
     /**
