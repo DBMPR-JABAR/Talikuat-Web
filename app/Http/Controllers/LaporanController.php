@@ -352,7 +352,8 @@ class LaporanController extends Controller
         DB::table('master_laporan_harian')->where('no_trans',$req->id)->update([
           "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
           "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
-          "status"=> 3
+          "status"=> 3,
+          "catatan_konsultan"=>$req->catatan
         ]);
         DB::table('history_laporan')->insert([
           "username"=>$req->konsultan,
@@ -422,7 +423,8 @@ class LaporanController extends Controller
           "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
           "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
           "status"=> 3,
-          "ditolak"=> 4
+          "ditolak"=> 4,
+          "catatan_ppk"=>$req->catatan
         ]);
         DB::table('history_laporan')->insert([
           "username"=>$req->nm_ppk,
@@ -478,7 +480,8 @@ class LaporanController extends Controller
         "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
         "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
         "status"=> 3,
-        "ditolak"=>0
+        "ditolak"=>0,
+        "catatan"=>$req->catatan
       ]);
       DB::table('history_laporan')->insert([
         "username"=>$req->konsultan,
@@ -504,7 +507,8 @@ class LaporanController extends Controller
         "konsultan"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
         "ppk"=>'<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
         "status"=> 1,
-        "ditolak"=>1
+        "ditolak"=>1,
+        "catatan"=> $req->catatan
       ]);
       DB::table('history_laporan')->insert([
         "username"=>$req->konsultan,
