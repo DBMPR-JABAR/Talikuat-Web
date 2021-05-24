@@ -45,7 +45,7 @@ class LaporanController extends Controller
     
     date_default_timezone_set('Asia/Jakarta');
     $file = $req->file('soft');
-    //$name = time()."_".$file->getClientOriginalName();
+    $name = time()."_".$file->getClientOriginalName();
     $id = DB::table('master_laporan_harian')->insertGetId([
       "real_date"=>\Carbon\Carbon::now(),
       "user"=>$req->user,
@@ -63,11 +63,11 @@ class LaporanController extends Controller
       "satuan"=>$req->satuan,
       "nmp"=>$req->jenis_pekerjaan,
       "ket"=>$req->ket,
-     // "gambar"=>$this->PATH_FILE_DB."/".$name,
+      "gambar"=>$this->PATH_FILE_DB."/".$name,
       "id_jadual"=>$req->id_jadual,
       "id_data_umum"=>$req->id_data_umum
     ]);
-    //Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
     DB::table('detail_laporan_harian_pekerjaan')->insert([
       "no_trans"=>$id,
       "no_pekerjaan"=>$req->no_pekerjaan,
