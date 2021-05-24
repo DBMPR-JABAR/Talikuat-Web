@@ -148,7 +148,7 @@ class LaporanController extends Controller
           "cerah"=>$req->cerah[$i],
           "hujan_ringan"=>$req->hujan_ringan[$i],
           "hujan_lebat"=>$req->hujan_lebat[$i],
-          "benca_alam"=>$req->bencana_alam[$i],
+          "bencana_alam"=>$req->bencana_alam[$i],
           "lain_lain"=>$req->lain_lain[$i],
         ]);
       }
