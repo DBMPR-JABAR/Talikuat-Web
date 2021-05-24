@@ -39,10 +39,15 @@ class BypassRequestKontraktor extends Command
      */
     public function handle()
     {
-        DB::table('testing')->where('update',NULL)->update([
-            'update'=>\Carbon\Carbon::now()
-        ]);
-        Log::info('Cronjob berhasil dijalankan');
-        echo "updated";
+        // DB::table('testing')->where('update',NULL)->update([
+        //     'update'=>\Carbon\Carbon::now()
+        // ]);
+        $get_request = DB::table('request')->get();    
+
+
+
+
+
+        Log::info('Cronjob bypass request kontraktor berhasil dijalankan');
     }
 }

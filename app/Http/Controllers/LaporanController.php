@@ -42,9 +42,10 @@ class LaporanController extends Controller
 
   public function createLaporan(Request $req)
   {
+    
     date_default_timezone_set('Asia/Jakarta');
     $file = $req->file('soft');
-    $name = time()."_".$file->getClientOriginalName();
+    //$name = time()."_".$file->getClientOriginalName();
     $id = DB::table('master_laporan_harian')->insertGetId([
       "real_date"=>\Carbon\Carbon::now(),
       "user"=>$req->user,
@@ -62,11 +63,11 @@ class LaporanController extends Controller
       "satuan"=>$req->satuan,
       "nmp"=>$req->jenis_pekerjaan,
       "ket"=>$req->ket,
-      "gambar"=>$this->PATH_FILE_DB."/".$name,
+     // "gambar"=>$this->PATH_FILE_DB."/".$name,
       "id_jadual"=>$req->id_jadual,
       "id_data_umum"=>$req->id_data_umum
     ]);
-    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    //Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
     DB::table('detail_laporan_harian_pekerjaan')->insert([
       "no_trans"=>$id,
       "no_pekerjaan"=>$req->no_pekerjaan,
@@ -80,9 +81,9 @@ class LaporanController extends Controller
       "tgl"=>$req->tanggal
     ]);
 
-    if($req->bahan){
+    if($req->bahan[0] != null){
       for ($i=0; $i <count($req->bahan) ; $i++) { 
-        DB::table('detail_laporan_bahan')->inser([
+        DB::table('detail_laporan_harian_bahan')->insert([
           "no_trans"=>$id,
           "bahan"=>$req->bahan[$i],
           "volume"=>$req->volume_bahan[$i],
@@ -90,9 +91,9 @@ class LaporanController extends Controller
         ]);
       }
     }
-    if($req->jenis_peralatan){
+    if($req->jenis_peralatan[0] != null){
       for ($i=0; $i <count($req->jenis_peralatan) ; $i++) { 
-        DB::table('detail_laporan_peralatan')->inser([
+        DB::table('detail_laporan_harian_peralatan')->insert([
           "no_trans"=>$id,
           "jenis_peralatan"=>$req->jenis_peralatan[$i],
           "jumlah"=>$req->jumlah_peralatan[$i],
@@ -100,9 +101,9 @@ class LaporanController extends Controller
         ]);
       }
     }
-    if($req->bahan_hotmix){
+    if($req->bahan_hotmix[0] != null){
       for ($i=0; $i <count($req->bahan_hotmix) ; $i++) { 
-        DB::table('detail_laporan_hotmix')->inser([
+        DB::table('detail_laporan_harian_hotmix')->insert([
           "no_trans"=>$id,
           "bahan_hotmix"=>$req->bahan_hotmix[$i],
           "no_dt"=>$req->no_dt[$i],
@@ -117,9 +118,9 @@ class LaporanController extends Controller
         ]);
       }
     }
-    if($req->bahan_beton){
+    if($req->bahan_beton[0] !=null){
       for ($i=0; $i <count($req->bahan_beton) ; $i++) { 
-        DB::table('detail_laporan_beton')->inser([
+        DB::table('detail_laporan_harian_beton')->insert([
           "no_trans"=>$id,
           "bahan_beton"=>$req->bahan_beton[$i],
           "no_tm"=>$req->no_tm[$i],
@@ -131,18 +132,18 @@ class LaporanController extends Controller
         ]);
       }
     }
-    if($req->tenaga_kerja){
+    if($req->tenaga_kerja[0] !=null){
       for ($i=0; $i <count($req->tenaga_kerja) ; $i++) { 
-        DB::table('detail_laporan_tkerja')->inser([
+        DB::table('detail_laporan_harian_tkerja')->insert([
           "no_trans"=>$id,
           "tenaga_kerja"=>$req->tenaga_kerja[$i],
           "jumlah"=>$req->jumlah_tk[$i],
         ]);
       }
     }
-    if($req->cerah){
+    if($req->cerah[0] !=null){
       for ($i=0; $i <count($req->cerah) ; $i++) { 
-        DB::table('detail_laporan_cuaca')->inser([
+        DB::table('detail_laporan_harian_cuaca')->insert([
           "no_trans"=>$id,
           "cerah"=>$req->cerah[$i],
           "hujan_ringan"=>$req->hujan_ringan[$i],
@@ -157,7 +158,7 @@ class LaporanController extends Controller
       "created_at"=>\Carbon\Carbon::now(),
       "keterangan"=> "Laporan Telah Dibuat Oleh ".$req->kontraktor,
       "user_id"=>$req->user,
-      "id_request"=>$id,
+      "id_laporan"=>$id,
       "class"=>"kirim"
     ]);     
     return response()->json([

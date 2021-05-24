@@ -28,9 +28,14 @@ class CurvaControllers extends Controller
     }
   public function TestingDaily()
   {
-   $tes = DB::table('request')->where('respon',NULL)->first();
+    //$get_request = DB::table('request')->where('status','2')->get();
+    $data = DB::table('member')->where('perusahaan',"PT. SECON DWITUNGGAL PUTRA KSO PT.NUANSA GALAXY")->get();
+    
 
-    dd($tes->respon == null);
+    return response(
+     // $get_request
+     $data
+    );
   }
 
 
