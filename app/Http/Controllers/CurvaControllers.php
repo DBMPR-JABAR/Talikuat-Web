@@ -15,8 +15,9 @@ class CurvaControllers extends Controller
         $tes= array();
         $jadual =DB::connection('oldDB')-> table('jadual')->select('id','nmp')->where('id_data_umum',$id)->get();
         $data = DB::connection('oldDB')->table('data_umum')->where('id',$id)->get();
-        foreach($jadual as $id){
-          array_push($tes,DB::table('detail_jadual')->where('id_jadual',$id->id)->orderBy('tgl','asc')->get());  
+        foreach($jadual as $e){
+          $dataJadual = DB::table('detail_jadual')->where('id_jadual',$e->id)->orderBy('tgl','asc')->get();
+          array_push($tes,$dataJadual);  
         }
 
         return response()->json([
