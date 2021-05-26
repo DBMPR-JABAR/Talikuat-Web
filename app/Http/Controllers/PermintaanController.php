@@ -699,7 +699,7 @@ class PermintaanController extends Controller
         "role"=>"PPK",
         "status"=>"Menolak",
         "revisi"=>"",
-        "username"=> $get_data->nm_ppk,
+        "username"=> $req->nm_ppk,
         "no_dokumen"=>$req->id,
         "kegiatan"=>$get_data->nama_kegiatan,
         "lokasi"=>$get_data->lokasi_sta,
