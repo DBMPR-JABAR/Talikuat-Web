@@ -206,6 +206,8 @@ Route::prefix('laporan')->group(function () {
     Route::post('/respon/ppk', [LaporanController::class, 'responPpk']);
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
+
+    Route::get('/breakdownjadual/{id}',[LaporanController::class,'pembandingRelasi']);
 });
 
 Route::prefix('data-umum')->group(function () {
@@ -279,6 +281,8 @@ Route::prefix('data-umum')->group(function () {
     Route::delete('/fileSpkmp/{id}', [UploadController::class, 'DeleteFileSpkmp']);
 
     Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
+
+    Route::post('linkspekumum',[UploadController::class,'fileSpekUmum']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {

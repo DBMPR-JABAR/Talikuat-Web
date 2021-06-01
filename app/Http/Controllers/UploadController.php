@@ -820,4 +820,17 @@ class UploadController extends Controller
             'result' => $file->spkmp . " Berhasil Dihapus",
         ], Response::HTTP_OK);
     }
+    public function fileSpekUmum(Request $req)
+    {
+      DB::table('file_spek_umum')->insert([
+        "id_data_umum"=>$req->id,
+        "spek_umum"=>$req->link_umum,
+        "created_at"=>\Carbon\Carbon::now()
+      ]);
+      
+      return response()->json([
+        $req->all()
+      ],200);
+
+    }
 }

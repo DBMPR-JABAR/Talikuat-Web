@@ -325,7 +325,7 @@ class LaporanController extends Controller
         "username"=>$req->username,
         "id_laporan"=>$req->id,
         "user_id"=>$req->userId,
-        "keterangan"=>"Request Telah Dikirim Oleh ".$req->kontraktor,
+        "keterangan"=>"Laporan Telah Dikirim Oleh ".$req->kontraktor,
         "class"=>"kirim",
         "created_at"=>\Carbon\Carbon::now()
       ]);
@@ -531,6 +531,17 @@ class LaporanController extends Controller
       ],200);
     }
   }
-    
+
+  public function pembandingRelasi($id)
+  {
+    $getRequest = DB::table('request')->where('id',$id)->first();
+    $getJadual = DB::table('detail_jadual')->where('id_jadual',$getRequest->id)->get();
+    $getLaporan = DB::table('master_laporan_harian')->where('id_jadual',$getJadual[0]->id)->get();
+    return response()->json([
+      "Request"=>$getRequest,
+      "Jadual"=>$getJadual,
+      "Laporan"=>$getLaporan
+    ]);
+  }
   
 }

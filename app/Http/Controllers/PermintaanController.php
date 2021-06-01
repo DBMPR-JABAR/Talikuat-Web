@@ -347,8 +347,11 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>"konsultan"
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail)); 
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
+      
     } else {
       DB::table('request')->where('id', $req->id)->update([
         "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
@@ -375,8 +378,10 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>"konsultan"
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail)); 
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
     }
 
     return response()->json([
@@ -537,8 +542,10 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       $bodyEmail = [
         "role"=>"Konsultan",
         "status"=>"Mengirim",
@@ -552,7 +559,9 @@ class PermintaanController extends Controller
         "note"=>""
       ];
       $mailto = DB::table('member')->where('nama_lengkap','=',$get_data->nama_ppk)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       return response()->json([
         "code" => 200
       ], 200);
@@ -600,8 +609,10 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       return response()->json([
         "code" => 200
       ], 200);
@@ -664,10 +675,14 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       return response()->json([
         "code" => 200
       ], 200);
@@ -707,10 +722,14 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       return response()->json([
         "code" => 200
       ], 200);
@@ -764,7 +783,9 @@ class PermintaanController extends Controller
         "note"=>""
       ];
       $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_ppk)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       return response()->json([
         "code" => 200
       ], 200);
@@ -812,8 +833,10 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->first();
-      Mail::to($mailto->email)->send(new TestEmail($bodyEmail));
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
+      foreach ($mailto as $email){
+        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
+      }
       return response()->json([
         "code" => 200
       ], 200);
