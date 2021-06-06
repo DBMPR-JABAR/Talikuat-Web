@@ -532,15 +532,22 @@ class LaporanController extends Controller
     }
   }
 
-  public function pembandingRelasi($id)
+  public function pembandingRelasi(Request $req)
   {
-    $getRequest = DB::table('request')->where('id',$id)->first();
-    $getJadual = DB::table('detail_jadual')->where('id_jadual',$getRequest->id)->get();
-    $getLaporan = DB::table('master_laporan_harian')->where('id_jadual',$getJadual[0]->id)->get();
+    $getRequest = DB::table('request')->where('id',$req->id)->first();
+    $getJadual = DB::table('detail_jadual')->where('id_jadual',$getRequest->id)->orderBy('tgl','asc')->get();
+    $getid = DB::table('jadual')->where('id',$getRequest->id)->first();
+    $getLaporan = DB::table('master_laporan_harian')->where([
+      ['id_jadual',$getJadual[0]->id],
+      ['nmp',$getJadual[0]->nmp]
+      ])->orderBy('tanggal','asc')->get();
+    $getDataUmum = DB::table('data_umum')->where('id',$getid->id_data_umum)->first();
     return response()->json([
+      "DataUmum"=>$getDataUmum,
       "Request"=>$getRequest,
       "Jadual"=>$getJadual,
       "Laporan"=>$getLaporan
+      
     ]);
   }
   

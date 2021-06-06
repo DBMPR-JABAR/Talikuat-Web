@@ -558,7 +558,7 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('nama_lengkap','=',$get_data->nama_ppk)->first();
+      $mailto = DB::table('member')->where('nama_lengkap','=',$get_data->nama_ppk)->get();
       foreach ($mailto as $email){
         Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
       }
@@ -782,7 +782,7 @@ class PermintaanController extends Controller
         "volume"=>$get_data->volume,
         "note"=>""
       ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_ppk)->first();
+      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_ppk)->get();
       foreach ($mailto as $email){
         Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
       }

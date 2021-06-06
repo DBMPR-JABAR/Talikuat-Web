@@ -207,7 +207,7 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 
-    Route::get('/breakdownjadual/{id}',[LaporanController::class,'pembandingRelasi']);
+    Route::post('/breakdownjadual',[LaporanController::class,'pembandingRelasi']);
 });
 
 Route::prefix('data-umum')->group(function () {
