@@ -255,6 +255,17 @@ class DataUmumController extends Controller
       "updated_at" => \Carbon\Carbon::now()
     ];
     DB::table('data_umum')->where('id', $req->id)->update($data);
+    DB::table('jadual')->where('id_data_umum',$req->id)->update([
+      "nm_paket" => $req->input("nm_paket"),
+      "nilai_kontrak" => $replace,
+      "panjang_km" => $req->input("panjang_km"),
+      "lama_waktu" => $req->input("lama_waktu"),
+      "penyedia" => $req->input("penyedia"),
+      "konsultan" => $req->input("konsultan"),
+      "nm_ppk" => $req->input("nm_ppk"),
+      "nm_se" => $req->input("nm_se"),
+      "nm_gs" => $req->input("nm_gs"),
+    ]);
     DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
     for ($i = 0; $i < count($req->ruas_jalan); $i++) {
       DB::table("data_umum_ruas")->insert([

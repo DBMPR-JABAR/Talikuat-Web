@@ -23,15 +23,6 @@ class DataUmumAdendum extends Controller
             "nm_gs" => $req->nm_gs,
             "updated_at" => \Carbon\Carbon::now()
         ]);
-        DB::table('jadual')->where('id_data_umum', "=", $req->id_data_umum)->update([
-            "konsultan" => $req->konsultan,
-            "lama_waktu" => $req->lama_waktu,
-            "nilai_kontrak" => $req->nilai_kontrak,
-            "panjang_km" => $req->panjang_km,
-            "penyedia" => $req->penyedia,
-            "ppk" => $req->ppk,
-            "updated_at" => \Carbon\Carbon::now()
-        ]);
         return response()->json([
             'status' => 'success',
             'code' => '200'
