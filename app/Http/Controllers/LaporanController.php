@@ -535,7 +535,7 @@ class LaporanController extends Controller
   public function deleteLaporan($id)
   {
     DB::table('master_laporan_harian')->where('no_trans',$id)->delete();
-    DB::table('detail_laporan__harian_pekerjaan')->where('no_trans',$id)->delete();
+    DB::table('detail_laporan_harian_pekerjaan')->where('no_trans',$id)->delete();
     DB::table('detail_laporan_harian_bahan')->where('no_trans',$id)->delete();
     DB::table('detail_laporan_harian_tkerja')->where('no_trans',$id)->delete();
     DB::table('detail_laporan_harian_cuaca')->where('no_trans',$id)->delete();
