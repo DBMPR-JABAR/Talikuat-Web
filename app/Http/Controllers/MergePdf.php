@@ -687,18 +687,18 @@ class MergePdf extends Controller
 
     public function getFile($id)
     {
-        $dkh = DB::table('file_dkh_update')->select('file_dkh_update')->where('id_data_umum', $id)->get();
-        $kontrak = DB::table('file_kontrak_update')->select('file_kontrak_update')->where('id_data_umum', $id)->get();
-        $spmk = DB::table('file_spmk_update')->select('file_spmk_update')->where('id_data_umum', $id)->get();
-        $syarat_umum = DB::table('file_syarat_umum_update')->select('file_syarat_umum_update')->where('id_data_umum', $id)->get();
-        $syarat_khusus = DB::table('file_syarat_khusus_update')->select('file_syarat_khusus_update')->where('id_data_umum', $id)->get();
-        $jpp = DB::table('file_jpp_update')->select('file_jpp_update')->where('id_data_umum', $id)->get();
-        $rencana = DB::table('file_rencana_update')->select('file_rencana_update')->where('id_data_umum', $id)->get();
-        $sppbj = DB::table('file_sppbj_update')->select('file_sppbj_update')->where('id_data_umum', $id)->get();
-        $spl = DB::table('file_spl_update')->select('file_spl_update')->where('id_data_umum', $id)->get();
-        $spek_umum = DB::table('file_spek_umum_update')->select('file_spek_umum_update')->where('id_data_umum', $id)->get();
-        $jaminan = DB::table('file_jaminan_update')->select('file_jaminan_update')->where('id_data_umum', $id)->get();
-        $spkmp = DB::table('file_spkmp_update')->select('file_spkmp_update')->where('id_data_umum', $id)->get();
+        $dkh = DB::table('file_dkh_update')->select('id','file_dkh_update')->where('id_data_umum', $id)->get();
+        $kontrak = DB::table('file_kontrak_update')->select('id','file_kontrak_update')->where('id_data_umum', $id)->get();
+        $spmk = DB::table('file_spmk_update')->select('id','file_spmk_update')->where('id_data_umum', $id)->get();
+        $syarat_umum = DB::table('file_syarat_umum_update')->select('id','file_syarat_umum_update')->where('id_data_umum', $id)->get();
+        $syarat_khusus = DB::table('file_syarat_khusus_update')->select('id','file_syarat_khusus_update')->where('id_data_umum', $id)->get();
+        $jpp = DB::table('file_jpp_update')->select('id','file_jpp_update')->where('id_data_umum', $id)->get();
+        $rencana = DB::table('file_rencana_update')->select('id','file_rencana_update')->where('id_data_umum', $id)->get();
+        $sppbj = DB::table('file_sppbj_update')->select('id','file_sppbj_update')->where('id_data_umum', $id)->get();
+        $spl = DB::table('file_spl_update')->select('id','file_spl_update')->where('id_data_umum', $id)->get();
+        $spek_umum = DB::table('file_spek_umum_update')->select('id','file_spek_umum_update')->where('id_data_umum', $id)->get();
+        $jaminan = DB::table('file_jaminan_update')->select('id','file_jaminan_update')->where('id_data_umum', $id)->get();
+        $spkmp = DB::table('file_spkmp_update')->select('id','file_spkmp_update')->where('id_data_umum', $id)->get();
 
         $merge_dkh = array();
         $merge_kontrak = array();
@@ -714,51 +714,51 @@ class MergePdf extends Controller
         $merge_spkmp = array();
 
         foreach ($dkh as $value) {
-            array_push($merge_dkh, $value->file_dkh_update);
+            array_push($merge_dkh, $value);
         }
 
         foreach ($kontrak as $value) {
-            array_push($merge_kontrak, $value->file_kontrak_update);
+            array_push($merge_kontrak, $value);
         }
 
         foreach ($spmk as $value) {
-            array_push($merge_spmk, $value->file_spmk_update);
+            array_push($merge_spmk, $value);
         }
 
         foreach ($syarat_umum as $value) {
-            array_push($merge_syarat_umum, $value->file_syarat_umum_update);
+            array_push($merge_syarat_umum, $value);
         }
 
         foreach ($syarat_khusus as $value) {
-            array_push($merge_syarat_khusus, $value->file_syarat_khusus_update);
+            array_push($merge_syarat_khusus, $value);
         }
 
         foreach ($jpp as $value) {
-            array_push($merge_jpp, $value->file_jpp_update);
+            array_push($merge_jpp, $value);
         }
 
         foreach ($rencana as $value) {
-            array_push($merge_rencana, $value->file_rencana_update);
+            array_push($merge_rencana, $value);
         }
 
         foreach ($sppbj as $value) {
-            array_push($merge_sppbj, $value->file_sppbj_update);
+            array_push($merge_sppbj, $value);
         }
 
         foreach ($spl as $value) {
-            array_push($merge_spl, $value->file_spl_update);
+            array_push($merge_spl, $value);
         }
 
         foreach ($spek_umum as $value) {
-            array_push($merge_spek_umum, $value->file_spek_umum_update);
+            array_push($merge_spek_umum, $value);
         }
 
         foreach ($jaminan as $value) {
-            array_push($merge_jaminan, $value->file_jaminan_update);
+            array_push($merge_jaminan, $value);
         }
 
         foreach ($spkmp as $value) {
-            array_push($merge_spkmp, $value->file_spkmp_update);
+            array_push($merge_spkmp, $value);
         }
 
         return response()->json([
@@ -776,5 +776,12 @@ class MergePdf extends Controller
             "file_spkmp" => $merge_spkmp
 
         ], 200);
+    }
+    public function deleteFile(Request $req)
+    {
+        DB::table($req->db)->where('id',$req->id)->delete();
+        return response()->json([
+        'code'=>200 
+        ]);
     }
 }

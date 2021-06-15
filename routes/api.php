@@ -207,6 +207,8 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 
+    Route::get('/deletelaporan/{id}',[LaporanController::class,'deleteLaporan']);
+
     Route::post('/breakdownjadual',[LaporanController::class,'pembandingRelasi']);
 });
 
@@ -304,6 +306,8 @@ Route::prefix('merge')->group(function () {
     Route::post('file', [MergePdf::class, 'merge']);
 
     Route::get('/file/{id}', [MergePdf::class, 'getFile']);
+    
+    Route::post('/deletefile',[MergePdf::class,'deleteFile']);
 });
 
 Route::prefix('adendum')->group(function () {
@@ -315,4 +319,5 @@ Route::prefix('curva')->group(function (){
 
   Route::get('tes/{id}',[CurvaControllers::class,'GetDataUmum']);
   Route::get('updateDaily',[CurvaControllers::class,'TestingDaily']);
+  Route::post('progress',[CurvaControllers::class,'getAllDataUmumUptd']);
 });
