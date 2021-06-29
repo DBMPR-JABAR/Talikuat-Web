@@ -858,4 +858,24 @@ class PermintaanController extends Controller
         ])->first()
     );
   }
+  public function deletePermintaan(Request $req)
+  {
+    $validator = Validator::make($req->all(), [
+      "alasan"=>"required"
+    ]);
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 'failed',
+        'code' => 400,
+        'error' => $validator->getMessageBag()->getMessages()
+      ], Response::HTTP_BAD_REQUEST);
+    }
+     DB::table('request')->where('id',$req->id)->update([
+       'reason_delete'=>$req->alasan
+     ]);
+    return response()->json([
+      $req->all(),
+      'code'=>200
+    ]);
+  }
 }
