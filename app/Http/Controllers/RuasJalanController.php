@@ -55,7 +55,7 @@ class RuasJalanController extends Controller
             $result = [];
             $get_sup = DB::table('utils_sup')->select('*')->where("kantor_id","=",$id)->get();
             foreach ($get_ruas as $item) {
-                array_push($result, $item->nama_ruas_jalan . " - " . $item->id_ruas_jalan . " - " . $item->panjang);
+                array_push($result, $item->nama_ruas_jalan);
             }
             return response()->json([
                 'status' => 'success',
@@ -68,7 +68,7 @@ class RuasJalanController extends Controller
             $result = [];
             $get_sup = DB::table('utils_sup')->get();
             foreach ($get_ruas as $item) {
-                array_push($result, $item->nama_ruas_jalan . " - " . $item->id_ruas_jalan . " - " . $item->panjang);
+                array_push($result, $item->nama_ruas_jalan);
             }
             return response()->json([
                 'status' => 'success',
