@@ -80,7 +80,7 @@
                                 <input
                                     class="input100"
                                     type="text"
-                                    name="username"
+                                    name="email"
                                     placeholder="NIP | NIK"
                                 />
                                 <span class="focus-input100"></span>

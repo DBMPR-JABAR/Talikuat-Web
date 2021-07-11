@@ -70,7 +70,7 @@
                 </div>
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">
+                        <a class="nav-link" href="{{ route('admin.dashboard.index') }}">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -364,7 +364,7 @@
                                         src="assets/images/faces/face1.jpg"
                                     />
                                     <span class="profile-name"
-                                        >Henry Klein</span
+                                        >{{ auth()->user()->name }}</span
                                     >
                                 </a>
                                 <div
@@ -381,7 +381,7 @@
                                         ></i>
                                         Profile
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i
                                             class="
                                                 mdi mdi-logout
@@ -391,6 +391,9 @@
                                         ></i>
                                         Signout
                                     </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
                                 </div>
                             </li>
                         </ul>
