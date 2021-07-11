@@ -65,9 +65,11 @@
                     <div class="login-form">
                         <form
                             class="login100-form validate-form"
-                            action=""
+                            action="{{ route('login') }}"
                             method="POST"
                         >
+                        @csrf
+
                             <span class="login100-form-title">
                                 Talikuat Bima Jabar
                             </span>

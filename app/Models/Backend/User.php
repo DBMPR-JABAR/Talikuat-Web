@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Backend;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model
-{
-    use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'login';
+class User extends Authenticatable
+{
+ 
+    use HasApiTokens, HasFactory, Notifiable;
+    protected $connection= 'teman_jabar';
+    protected $table = 'users';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_login';
+    protected $primaryKey = 'id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -38,14 +38,12 @@ class User extends Model
      * @var array
      */
     protected $hidden = [
-        'pass',
-        'id_sesi'
+        'password'
     ];
 
     protected $fillable = [
-        'user',
-        'pass',
-        'id_member',
-        'level'
+        'name', 'email', 'password',
     ];
+
 }
+
