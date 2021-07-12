@@ -4,67 +4,31 @@
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
+            name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <title>Tali Kuat Bina Marga | @yield('title')</title>
-        <link
-            rel="stylesheet"
-            href=" {{
-                asset('assets/vendors/mdi/css/materialdesignicons.min.css')
-            }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{
-                asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')
-            }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{
-                asset('assets/vendors/font-awesome/css/font-awesome.min.css')
-            }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{
-                asset(
-                    'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css'
-                )
-            }}"
-        />
+        <link rel="stylesheet" href=" {{asset('assets/vendors/mdi/css/materialdesignicons.min.css')}}"/>
+        <link rel="stylesheet" href="{{asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')}}"/>
+        <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"/>
+        <link rel="stylesheet" href="{{asset('assets/vendors/font-awesome/css/font-awesome.min.css')}}"/>
+        <link rel="stylesheet" href="{{asset('assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}"/>
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
-        <link
-            rel="shortcut icon"
-            href="{{ asset('assets/images/favicon.png') }}"
-        />
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}"/>
         @yield('header')
     </head>
     <body>
         <div class="container-scroller">
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <div
-                    class="
-                        text-center
-                        sidebar-brand-wrapper
-                        d-flex
-                        align-items-center
-                        mb-5
-                    "
-                >
+                    class="text-center sidebar-brand-wrapper d-flex align-items-center mb-5">
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="assets/images/logo.svg"
+                            src="{{ asset('assets/images/logo.svg')}}"
+                            
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="assets/images/logo-mini.svg"
+                            src="{{ asset('assets/images/logo-mini.svg')}}"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
@@ -184,13 +148,9 @@
                         </a>
                     </li>
                     <li class="nav-item sidebar-actions">
-                        <div class="nav-link">
-                            <div class="mt-4">
-                                <ul class="mt-4 pl-0">
-                                    <li>Sign Out</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <a class="nav-link mt-4" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <span class="menu-title">Sign Out</span>
+                        </a>
                     </li>
                 </ul>
             </nav>
@@ -285,7 +245,7 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="assets/images/faces/face4.jpg"
+                                                src="{{ asset('assets/images/faces/face4.jpg')}}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -306,7 +266,7 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="assets/images/faces/face3.jpg"
+                                                src="{{ asset('assets/images/faces/face3.jpg')}}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -327,7 +287,7 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="assets/images/faces/face2.jpg"
+                                                src="{{ asset('assets/images/faces/face2.jpg')}}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -358,11 +318,7 @@
                                     href="#"
                                     data-toggle="dropdown"
                                 >
-                                    <img
-                                        class="nav-profile-img mr-2"
-                                        alt=""
-                                        src="assets/images/faces/face1.jpg"
-                                    />
+                                    <img class="nav-profile-img mr-2" alt="" src="{{ asset('assets/images/faces/face1.jpg')}}"/>
                                     <span class="profile-name"
                                         >{{ auth()->user()->name }}</span
                                     >
@@ -382,14 +338,8 @@
                                         Profile
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i
-                                            class="
-                                                mdi mdi-logout
-                                                mr-2
-                                                text-primary
-                                            "
-                                        ></i>
-                                        Signout
+                                        <i class=" mdi mdi-logout mr-2 text-primary"></i>
+                                        Sign Out
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
@@ -410,7 +360,13 @@
                         </button>
                     </div>
                 </nav>
-                <div class="main-panel">@yield('content')</div>
+
+                <div class="main-panel">
+                    <div class="col-md-12" style="background: #f2f2f2">
+                        @include('flashalert.index')
+                    </div>
+                    @yield('content')
+                </div>
                 <!-- main-panel ends -->
             </div>
             <!-- page-body-wrapper ends -->

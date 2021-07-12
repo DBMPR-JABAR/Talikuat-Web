@@ -1,4 +1,6 @@
-@extends('layout.index') @section('title','Dashboard') @section('content')
+@extends('layout.index') 
+@section('title','Dashboard') 
+@section('content')
 
 <div class="content-wrapper pb-0">
     <div class="page-header flex-wrap">
