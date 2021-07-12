@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Backend\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,16 +15,17 @@ class DashboardControllers extends Controller
      */
     public function index()
     {
-       $penyedia = DB::table('master_penyedia_jasa')->count();
-       $konsultan = DB::table('master_konsultan')->count();
-       $ppk = DB::table('master_ppk')->count();
-       $dataUmum = DB::table('data_umum')->count();
-       return view('dashboard.index',[
-           "penyedia"=>$penyedia,
-           "konsultan"=>$konsultan,
-           "ppk"=>$ppk,
-           "dataUmum"=>$dataUmum
-           ]);
+        $peyedia = DB::table('master_penyedia_jasa')->count();
+        $konsultan = DB::table('master_konsultan')->count();
+        $dataUmum = DB::table('data_umum')->count();
+        $ppk = DB::table('master_ppk')->count();
+
+        return view('admin.index',[
+            'penyedia'=>$peyedia,
+            'konsultan'=>$konsultan,
+            'dataUmum'=>$dataUmum,
+            'ppk'=>$ppk
+    ]);
     }
 
     /**

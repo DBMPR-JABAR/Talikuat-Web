@@ -230,6 +230,25 @@ class PermintaanController extends Controller
         "jumlah" => $req->jumlah_tk[$i],
       ]);
     }}
+    if ($req->bahan_jmf) {
+      for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
+        DB::table('detail_request_jmf')->insert([
+          "id_request"=>$id,
+          "bahan_jmf"=>$req->bahan_jmf,
+          "volume"=>$req->volume_jmf,
+          "satuan"=>$req->satuan_jmf
+        ]);
+      }
+    }
+
+    if ($req->file('metode_kerja')) {
+      $file = $req->file('metode_kerja');
+      $name = time(). "_" . $file->getClientOriginalName();
+      DB::table('request')->where('id',$id)->update([
+        "metode_kerja"=>$this->PATH_FILE_DB . "/" . $name
+      ]);
+      Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    }
     return response()->json([
       "code" => 200
     ]);
@@ -309,7 +328,25 @@ class PermintaanController extends Controller
         "jumlah" => $req->jumlah_tk[$i],
       ]);
     }
+    if ($req->bahan_jmf) {
+      for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
+        DB::table('detail_request_jmf')->insert([
+          "id_request"=>$req->id,
+          "bahan_jmf"=>$req->bahan_jmf,
+          "volume"=>$req->volume_jmf,
+          "satuan"=>$req->satuan_jmf
+        ]);
+      }
+    }
 
+    if ($req->file('metode_kerja')) {
+      $file = $req->file('metode_kerja');
+      $name = time(). "_" . $file->getClientOriginalName();
+      DB::table('request')->where('id',$req->id)->update([
+        "metode_kerja"=>$this->PATH_FILE_DB . "/" . $name
+      ]);
+      Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    }
 
     return response()->json([
       'code' => 200
@@ -472,6 +509,25 @@ class PermintaanController extends Controller
       "keterangan" => "Request Telah Direvisi Oleh " . $req->username,
       "created_at" => \Carbon\Carbon::now()
     ]);
+    if ($req->bahan_jmf) {
+      for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
+        DB::table('detail_request_jmf')->insert([
+          "id_request"=>$req->id,
+          "bahan_jmf"=>$req->bahan_jmf,
+          "volume"=>$req->volume_jmf,
+          "satuan"=>$req->satuan_jmf
+        ]);
+      }
+    }
+
+    if ($req->file('metode_kerja')) {
+      $file = $req->file('metode_kerja');
+      $name = time(). "_" . $file->getClientOriginalName();
+      DB::table('request')->where('id',$req->id)->update([
+        "metode_kerja"=>$this->PATH_FILE_DB . "/" . $name
+      ]);
+      Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    }
 
 
     return response()->json([

@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Backend\DashboardControllers;
+use App\Http\Controllers\Backend\admin\MasterKontraktor;
+use App\Http\Controllers\Backend\admin\DashboardControllers;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,8 +20,10 @@ Route::get('/', function () {
 });
 
 
-// DASHBOARD
+// DASHBOARD ADMIN
 Route::get('/dashboard',[DashboardControllers::class,'index'])->name('dashboard');
+
+Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
 
 
 
