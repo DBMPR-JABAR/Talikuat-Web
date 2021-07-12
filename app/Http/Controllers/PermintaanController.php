@@ -159,6 +159,7 @@ class PermintaanController extends Controller
 
   public function buatRequest(Request $req)
   {
+
     date_default_timezone_set('Asia/Jakarta');
     $validator = Validator::make($req->all(), [
       // Data Umum
@@ -234,9 +235,9 @@ class PermintaanController extends Controller
       for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
         DB::table('detail_request_jmf')->insert([
           "id_request"=>$id,
-          "bahan_jmf"=>$req->bahan_jmf,
-          "volume"=>$req->volume_jmf,
-          "satuan"=>$req->satuan_jmf
+          "bahan_jmf"=>$req->bahan_jmf[$i],
+          "volume"=>$req->volume_jmf[$i],
+          "satuan"=>$req->satuan_jmf[$i]
         ]);
       }
     }
@@ -332,9 +333,9 @@ class PermintaanController extends Controller
       for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
         DB::table('detail_request_jmf')->insert([
           "id_request"=>$req->id,
-          "bahan_jmf"=>$req->bahan_jmf,
-          "volume"=>$req->volume_jmf,
-          "satuan"=>$req->satuan_jmf
+          "bahan_jmf"=>$req->bahan_jmf[$i],
+          "volume"=>$req->volume_jmf[$i],
+          "satuan"=>$req->satuan_jmf[$i]
         ]);
       }
     }
@@ -513,9 +514,9 @@ class PermintaanController extends Controller
       for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
         DB::table('detail_request_jmf')->insert([
           "id_request"=>$req->id,
-          "bahan_jmf"=>$req->bahan_jmf,
-          "volume"=>$req->volume_jmf,
-          "satuan"=>$req->satuan_jmf
+          "bahan_jmf"=>$req->bahan_jmf[$i],
+          "volume"=>$req->volume_jmf[$i],
+          "satuan"=>$req->satuan_jmf[$i]
         ]);
       }
     }
