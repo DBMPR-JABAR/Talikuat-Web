@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Backend\admin\MasterKontraktor;
-use App\Http\Controllers\Backend\admin\DashboardControllers;
+namespace App\Http\Controllers\Backend;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,16 +15,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.index');
+    return view('auth.login');
 });
 
 
-// DASHBOARD ADMIN
-Route::get('/dashboard',[DashboardControllers::class,'index'])->name('dashboard');
+// DASHBOARD
+// Route::get('/dashboard',[DashboardControllers::class,'index'])->name('dashboard');
 
-Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
+Route::prefix('admin')->group(function () {
 
-
+    //group route with middleware "auth"
+    Route::group(['middleware' => 'auth'], function() {
+        Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
+        Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
+        //route dashboard
+    });
+});
 
 
 

@@ -19,13 +19,14 @@ class DashboardControllers extends Controller
         $konsultan = DB::table('master_konsultan')->count();
         $dataUmum = DB::table('data_umum')->count();
         $ppk = DB::table('master_ppk')->count();
-
-        return view('admin.index',[
-            'penyedia'=>$peyedia,
-            'konsultan'=>$konsultan,
-            'dataUmum'=>$dataUmum,
-            'ppk'=>$ppk
-    ]);
+      
+       return view('admin.dashboard.index',[
+        'penyedia'=>$peyedia,
+        'konsultan'=>$konsultan,
+        'dataUmum'=>$dataUmum,
+        'ppk'=>$ppk
+        ]);
+           
     }
 
     /**

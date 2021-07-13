@@ -15,7 +15,7 @@ class User extends Authenticatable
 {
  
     use HasApiTokens, HasFactory, Notifiable;
-    protected $connection= 'teman_jabar';
+    protected $connection= 'db_users_dbmpr';
     protected $table = 'users';
 
     /**
