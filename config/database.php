@@ -77,7 +77,7 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-        'teman_jabar' => [
+        'db_users_dbmpr' => [
             'url' => env('DATABASE_URL'),
             'driver'    => env('DB_CONNECTION_SECOND'),
             'host'      => env('DB_HOST_SECOND', '127.0.0.1'),
