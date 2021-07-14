@@ -40,13 +40,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            data-toggle="collapse"
-                            href="#ui-basic"
-                            aria-expanded="false"
-                            aria-controls="ui-basic"
-                        >
+                        <a class="nav-link" href="{{ route('user.index') }}">
+                            <i class="mdi mdi-account-multiple menu-icon"></i>
+                            <span class="menu-title">Manajemen User</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <i class="mdi mdi-database menu-icon"></i>
                             <span class="menu-title">Data Utama</span>
                             <i class="menu-arrow"></i>
@@ -57,8 +57,7 @@
                                     <a
                                         class="nav-link"
                                         href="{{ route('masterkontraktor') }}"
-                                        >Kontraktor</a
-                                    >
+                                        >Kontraktor</a>
                                 </li>
                                 <li class="nav-item">
                                     <a

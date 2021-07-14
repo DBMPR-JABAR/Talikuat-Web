@@ -49,6 +49,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\Backend\UserProfiles', 'user_id');
     }
+    public function user_detail()
+    {
+        return $this->hasOne('App\Models\Backend\UserDetail', 'user_id');
+    }
 
 }
 

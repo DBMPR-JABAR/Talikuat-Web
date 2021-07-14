@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Backend\User as User;
 use App\Models\Backend\UserProfiles as UserProfiles;
+use App\Models\Backend\UserDetail as UserDetail;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -26,6 +27,9 @@ class UserController extends Controller
     public function index()
     {
         //
+        $data = UserDetail::all();
+        // dd($data);
+        return view('admin.user.index',compact('data'));
     }
 
     /**
@@ -61,7 +65,7 @@ class UserController extends Controller
         if($id != Auth::user()->id){
             return back()->with(['error'=>'Somethink when wrong']);
         }
-        return view('admin.user.profile');
+        return view('admin.user.show');
 
     }
 

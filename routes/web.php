@@ -33,6 +33,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
         
         Route::prefix('user')->group(function (){
+            Route::get('/',[UserController::class,'index'])->name('user.index');
             Route::get('/{id}',[UserController::class,'show'])->name('profile');
             Route::post('edit/{desc}/{id}',[UserController::class,'update'])->name('edit.user');
         });
