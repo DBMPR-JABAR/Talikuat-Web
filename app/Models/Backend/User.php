@@ -15,7 +15,7 @@ class User extends Authenticatable
 {
  
     use HasApiTokens, HasFactory, Notifiable;
-    protected $connection= 'teman_jabar';
+    protected $connection= 'db_users_dbmpr';
     protected $table = 'users';
 
     /**
@@ -44,6 +44,15 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
     ];
+
+    public function profile()
+    {
+        return $this->hasOne('App\Models\Backend\UserProfiles', 'user_id');
+    }
+    public function user_detail()
+    {
+        return $this->hasOne('App\Models\Backend\UserDetail', 'user_id');
+    }
 
 }
 

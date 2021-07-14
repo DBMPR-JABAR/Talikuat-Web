@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Backend\admin\MasterKontraktor;
-use App\Http\Controllers\Backend\admin\DashboardControllers;
+namespace App\Http\Controllers\Backend\Admin;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,16 +15,39 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.index');
+    return view('auth.login');
 });
 
 
-// DASHBOARD ADMIN
-Route::get('/dashboard',[DashboardControllers::class,'index'])->name('dashboard');
+// DASHBOARD
+// Route::get('/dashboard',[DashboardControllers::class,'index'])->name('dashboard');
 
-Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
+Route::prefix('admin')->group(function () {
+
+    //group route with middleware "auth"
+    Route::group(['middleware' => 'auth'], function() {
+        //route dashboard
+        Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
+        Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
+
+        Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
+        
+        Route::prefix('user')->group(function (){
+            Route::get('/',[UserController::class,'index'])->name('user.index');
+            Route::get('/{id}',[UserController::class,'show'])->name('profile');
+            Route::post('edit/{desc}/{id}',[UserController::class,'update'])->name('edit.user');
+        });
+        
+        //route user profles
+        Route::prefix('profile')->group(function (){
+            Route::get('/{id}',[UserController::class,'show'])->name('profile');
+            Route::post('/account/{id}', [UserController::class,'updateaccount']);
+            Route::get('/{desc}/{id}',[UserController::class,'edit'])->name('editProfile');
+        });
 
 
+    });
+});
 
 
 
