@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta
             name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <title>Tali Kuat Bina Marga | @yield('title')</title>
+        <title>@yield('title') | Tali Kuat Bina Marga </title>
         <link rel="stylesheet" href=" {{asset('assets/vendors/mdi/css/materialdesignicons.min.css')}}"/>
         <link rel="stylesheet" href="{{asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')}}"/>
         <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"/>
@@ -186,9 +186,7 @@
                         p-lg-0
                         fixed-top
                         d-flex
-                        flex-row
-                    "
-                >
+                        flex-row">
                     <div
                         class="
                             navbar-menu-wrapper
@@ -327,7 +325,7 @@
                                     class="dropdown-menu navbar-dropdown w-100"
                                     aria-labelledby="profileDropdown"
                                 >
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ url('admin/profile', Auth::user()->id) }}">
                                         <i
                                             class="
                                                 mdi mdi-face-profile
@@ -335,7 +333,7 @@
                                                 text-success
                                             "
                                         ></i>
-                                        Profile
+                                        Akun & Profil
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class=" mdi mdi-logout mr-2 text-primary"></i>
@@ -365,42 +363,46 @@
                     <div class="col-md-12" style="background: #f2f2f2">
                         @include('flashalert.index')
                     </div>
+                    <div class="content-wrapper pb-0">
+                    @yield('page-header')
+
                     @yield('content')
-                </div>
-                <footer class="footer">
-                    <div
-                        class="
-                            d-sm-flex
-                            justify-content-center justify-content-sm-between
-                        "
-                    >
-                        <span
-                            class="
-                                text-muted
-                                d-block
-                                text-center text-sm-left
-                                d-sm-inline-block
-                            "
-                            >Copyright © bootstrapdash.com 2020</span
-                        >
-                        <span
-                            class="
-                                float-none float-sm-right
-                                d-block
-                                mt-1 mt-sm-0
-                                text-center
-                            "
-                        >
-                            Free
-                            <a
-                                href="https://www.bootstrapdash.com/"
-                                target="_blank"
-                                >Bootstrap dashboard template</a
-                            >
-                            from Bootstrapdash.com</span
-                        >
                     </div>
-                </footer>
+                    <footer class="footer">
+                        <div
+                            class="
+                                d-sm-flex
+                                justify-content-center justify-content-sm-between
+                            "
+                        >
+                            <span
+                                class="
+                                    text-muted
+                                    d-block
+                                    text-center text-sm-left
+                                    d-sm-inline-block
+                                "
+                                >Copyright © bootstrapdash.com 2020</span
+                            >
+                            <span
+                                class="
+                                    float-none float-sm-right
+                                    d-block
+                                    mt-1 mt-sm-0
+                                    text-center
+                                "
+                            >
+                                Free
+                                <a
+                                    href="https://www.bootstrapdash.com/"
+                                    target="_blank"
+                                    >Bootstrap dashboard template</a
+                                >
+                                from Bootstrapdash.com</span
+                            >
+                        </div>
+                    </footer>
+                </div>
                 <!-- main-panel ends -->
             </div>
             <!-- page-body-wrapper ends -->
