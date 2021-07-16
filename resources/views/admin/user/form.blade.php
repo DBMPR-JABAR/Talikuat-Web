@@ -237,7 +237,28 @@
                 <div class="card-body">
                     <div class="card-block">
                                         
-                       
+                        <div class="form-group">
+                            <label>Perusahaan</label>
+                            <input name="perusahaan" placeholder="Perusahaan" type="text"
+                                value="{{ old('perusahaan', @$data->profile->perusahaan) }}"
+                                class="form-control  @error('perusahaan') is-invalid @enderror">
+                            @error('perusahaan')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Jabatan</label>
+                            <input name="jabatan" placeholder="Jabatan" type="text"
+                                value="{{ old('jabatan', @$data->profile->jabatan) }}"
+                                class="form-control  @error('jabatan') is-invalid @enderror">
+                            @error('jabatan')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         <div class="form-group">
                             <label>Tanggal Mulai</label>
                             <input name="tgl_mulai_kerja" placeholder="Tanggal Mulai Kerja" type="date"

@@ -15,15 +15,16 @@
             Talikuat Bima Jabar
         </span>
         
-        <div class="wrap-input100 validate-input" data-validate="NIP | NIK | E-Mail Tidak Boleh Kosong">
-            <input class="input100" type="text" name="email" placeholder="NIP | NIK | E-MAIL"/>
+        <div class="wrap-input100 ">
+
+            <input class="input100" type="text" name="email" placeholder="NIP | NIK | E-MAIL" required/>
             <span class="focus-input100"></span>
             <span class="symbol-input100">
                 <i class="fa fa-id-card" aria-hidden="true"></i>
             </span>
             
-            
         </div>
+  
 
         <div
             class="wrap-input100 validate-input"

@@ -152,12 +152,16 @@
                                         <label class="mt-3" style="font-weight: bold;">Pekerjaan</label>
                                         <table class="table table-striped">
                                             <tr>
+                                                <td width="20%">Perusahaan</td>
+                                                <td> {{ @$data->profile->perusahaan }}</td>
+                                            </tr>
+                                            <tr>
                                                 <td width="20%">Jabatan</td>
-                                                <td> {{ @$profile->internalRole->role }}</td>
+                                                <td> {{ @$data->profile->jabatan }}</td>
                                             </tr>
                                             <tr>
                                                 <td width="20%">UPTD</td>
-                                                <td>{{ Str::upper(@$profile->internalRole->uptd) }}</td>
+                                                <td>{{ Str::upper(@$data->uptd->nama) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>SUP</td>
@@ -202,6 +206,19 @@
                                         <option value="">Select</option>
                                         @foreach ($rule_user as $no =>$rule)
                                         <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
+                                        @endforeach
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label>Unit</label>
+                                    <select class="form-control" name="uptd">
+        
+                                        <option value="">Select</option>
+                                        @foreach ($uptd as $no =>$uptd)
+                                        <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
                                         @endforeach
                                         
                                     </select>

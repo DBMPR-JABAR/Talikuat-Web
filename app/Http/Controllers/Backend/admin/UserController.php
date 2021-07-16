@@ -11,6 +11,7 @@ use App\Models\Backend\User as User;
 use App\Models\Backend\UserProfiles as UserProfiles;
 use App\Models\Backend\UserDetail as UserDetail;
 use App\Models\Backend\UserRule as UserRule;
+use App\Models\Backend\Uptd as Uptd;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -97,8 +98,9 @@ class UserController extends Controller
             }
         }
         $rule_user = UserRule::all();
+        $uptd = Uptd::all();
         $data = User::where('id',$id)->first();
-        return view('admin.user.show',compact('data','rule_user'));
+        return view('admin.user.show',compact('data','rule_user','uptd'));
 
     }
 
@@ -159,6 +161,8 @@ class UserController extends Controller
                 'no_tlp'=> 'numeric|digits_between:8,13',
                 'no_tlp_rumah'=> '',
                 'sup_id'=> '',
+                'perusahaan'=> '',
+                'jabatan'=> '',
                 'tgl_mulai_kerja'=> '',
                 'sekolah'=> '',
                 'jejang'=> '',
@@ -193,6 +197,9 @@ class UserController extends Controller
             $update_user->jenis_kelamin = $request->input('jenis_kelamin');
             $update_user->no_tlp = $request->input('no_tlp');
             $update_user->no_tlp_rumah = $request->input('no_tlp_rumah');
+            $update_user->perusahaan = $request->input('perusahaan');
+            $update_user->jabatan = $request->input('jabatan');
+
             $update_user->tgl_mulai_kerja = $request->input('tgl_mulai_kerja');
             $update_user->sekolah = $request->input('sekolah');
             $update_user->jejang = $request->input('jejang');
@@ -314,6 +321,8 @@ class UserController extends Controller
         $this->validate($request,[
             'verified'=> 'required',
             'rule_user'=> 'required', 
+            'uptd'=> '', 
+
         ]);
         $update_detail = UserDetail::firstOrNew(['user_id'=> $id]);
         $update_detail->rule_user_id = $request->rule_user;
@@ -322,6 +331,10 @@ class UserController extends Controller
         
         $update_detail->save();
         if($update_detail){
+            $user = User::find($id);
+            $user->uptd_id = $request->uptd;
+            $user->save();
+
             return redirect(route('user.index'))->with(['success'=>'Account Has Been Verified!']);
         }
             

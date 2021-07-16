@@ -13,6 +13,8 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use App\Models\Backend\User;
 use App\Models\Backend\UserDetail as UserDetail;
+use App\Models\Backend\UserProfiles as UserProfiles;
+
 use Laravel\Fortify\Contracts\LogoutResponse;
 
 
@@ -45,6 +47,17 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
+            if(!$user){
+                $nipnik = UserProfiles::where('nip', $request->email)->first();
+                if(!$nipnik){
+                    $nipnik = UserProfiles::where('nik', $request->email)->first();
+                }
+                if($nipnik){
+                    $user = User::where('id', $nipnik->user_id)->first();
+                }    
+            }
+            // dd($user);
+
             $detail = UserDetail::where('user_id',$user->id)->first();
            
             if($detail){

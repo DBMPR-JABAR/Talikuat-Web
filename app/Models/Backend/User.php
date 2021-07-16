@@ -53,6 +53,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\Backend\UserDetail', 'user_id');
     }
+    public function uptd()
+    {
+        return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
+    }
 
 }
 
