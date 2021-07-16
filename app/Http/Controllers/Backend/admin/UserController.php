@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Backend\User as User;
 use App\Models\Backend\UserProfiles as UserProfiles;
 use App\Models\Backend\UserDetail as UserDetail;
-
+use App\Models\Backend\UserRule as UserRule;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+
+use Carbon\Carbon;
+
 
 class UserController extends Controller
 {
@@ -51,6 +54,31 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'email' => 'unique:db_users_dbmpr.users',
+            'password'   => 'confirmed',
+            'name'=> 'required',
+            'no_tlp'=> '',
+        ]);
+        if ($validator->fails()) {
+            return back()->with(['error'=>$validator->messages()->first()]);
+        }
+        $create_user = User::firstOrNew(['email'=> $request->email]);
+        $create_user->name = $request->input('name');
+        $create_user->password = Hash::make($request->input('password'));
+        $create_user->save();
+
+        $create_profile = UserProfiles::firstOrNew(['user_id'=> $create_user->id]);
+        $create_profile->nama = $request->input('name');
+        $create_profile->no_tlp = $request->input('no_tlp');
+        $create_profile->created_by = Auth::user()->id;
+
+        $create_profile->save();
+
+        $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id])->save();
+
+        return redirect(route('user.index'))->with(['success'=>'Berhasil Menambahkan User!!']);
+
     }
 
     /**
@@ -62,10 +90,14 @@ class UserController extends Controller
     public function show($id)
     {
         //
-        if($id != Auth::user()->id){
-            return back()->with(['error'=>'Somethink when wrong']);
+        if(request()->segment(2) == 'profile'){
+            if($id != Auth::user()->id){
+                return back()->with(['error'=>'Somethink when wrong']);
+            }
         }
-        return view('admin.user.show');
+        $rule_user = UserRule::all();
+        $data = User::where('id',$id)->first();
+        return view('admin.user.show',compact('data','rule_user'));
 
     }
 
@@ -136,19 +168,21 @@ class UserController extends Controller
                 'alamat'=> '',
                 'agama'=> 'required',
             ]);
+            // dd($id);
+            $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
+
             if($request->nik == null && $request->nip == null){
                 return back()->with(['warning'=>'NIP / NIK salah satu wajib di isi!']);
             }
             if($request->nik != null)
-                $validator = Validator::make($request->all(), ['nik' => Rule::unique('db_users_dbmpr.user_profiles', 'nik')->ignore($id)]);
+                $validator = Validator::make($request->all(), ['nik' => Rule::unique('db_users_dbmpr.user_profiles', 'nik')->ignore($update_user->id)]);
             
             if($request->nip != null)
-                $validator = Validator::make($request->all(), ['nip' => Rule::unique('db_users_dbmpr.user_profiles', 'nip')->ignore($id)]);
+                $validator = Validator::make($request->all(), ['nip' => Rule::unique('db_users_dbmpr.user_profiles', 'nip')->ignore($update_user->id)]);
             
             if ($validator->fails())
                 return back()->with(['error'=>$validator->messages()->first()]);
             
-            $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
             $update_user->nama = $request->input('nama');
             $update_user->nip = $request->input('nip');
             $update_user->nik = $request->input('nik');
@@ -169,9 +203,17 @@ class UserController extends Controller
             $update_user->save();
             $success = "Profil Berhasil Diupdate!";
             $failed = "Profil Gagal Diupdate!";
+            $update = User::find($id);
+            $update->name = $request->input('nama');
+            $update->save();
+
         }
         if($update_user){
             //redirect dengan pesan sukses
+            if(!Auth::user()->user_detail->account_verified_at){
+                Auth::logout();
+                return redirect('/')->with(['success'=>'Data Berhasil Disimpan, Selanjutnya Hubungi Admin Untuk Verifikasi Akun']); 
+            }
             return back()->with(['success'=>$success]);
         }else{
             //redirect dengan pesan error
@@ -238,6 +280,24 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function verified_account(Request $request, $id)
+    {
+        
+        $this->validate($request,[
+            'verified'=> 'required',
+            'rule_user'=> 'required', 
+        ]);
+        $update_detail = UserDetail::firstOrNew(['user_id'=> $id]);
+        $update_detail->rule_user_id = $request->rule_user;
+        if($request->verified == 1)
+            $update_detail->account_verified_at = Carbon::now()->toDateTimeString();
+        
+        $update_detail->save();
+        if($update_detail){
+            return redirect(route('user.index'))->with(['success'=>'Account Has Been Verified!']);
+        }
+            
     }
     
 }

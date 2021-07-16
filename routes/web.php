@@ -26,6 +26,8 @@ Route::prefix('admin')->group(function () {
 
     //group route with middleware "auth"
     Route::group(['middleware' => 'auth'], function() {
+    Route::group(['middleware' => 'account.verified'], function() {
+
         //route dashboard
         Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
         Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
@@ -34,8 +36,15 @@ Route::prefix('admin')->group(function () {
         
         Route::prefix('user')->group(function (){
             Route::get('/',[UserController::class,'index'])->name('user.index');
-            Route::get('/{id}',[UserController::class,'show'])->name('profile');
-            Route::post('edit/{desc}/{id}',[UserController::class,'update'])->name('edit.user');
+            Route::post('store',[UserController::class,'store'])->name('store.user');
+
+            Route::get('/{id}',[UserController::class,'show'])->name('show.user');
+            Route::get('verified/{id}',[UserController::class,'show'])->name('verified.user');
+            Route::post('verified/{id}',[UserController::class,'verified_account'])->name('verified.user');
+
+            Route::get('edit/{desc}/{id}',[UserController::class,'edit'])->name('edit.user');
+            Route::post('edit/{desc}/{id}',[UserController::class,'update'])->name('update.user');
+            
         });
         
         //route user profles
@@ -45,7 +54,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/{desc}/{id}',[UserController::class,'edit'])->name('editProfile');
         });
 
-
+    });
     });
 });
 

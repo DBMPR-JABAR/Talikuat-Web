@@ -10,7 +10,7 @@ class UserProfiles extends Model
     use HasFactory;
     protected $connection= 'db_users_dbmpr';
     protected $table = 'user_profiles';
-
+    protected $guarded = [];
     public function user()
     {
         return $this->belongsTo('App\Models\Backend\User', 'user_id');

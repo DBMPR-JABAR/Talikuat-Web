@@ -161,7 +161,7 @@
                                     <label>Jenis Kelamin</label>
                                     <select class="form-control" name="jenis_kelamin">
         
-                                        <option>Select</option>
+                                        <option value=" ">Select</option>
                                         {{-- <option selected>
                                         {!!  @$data->profile->jenis_kelamin !!}
                                     </option> --}}

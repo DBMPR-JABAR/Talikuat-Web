@@ -33,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+
+        
+
         View::composer('*', function ($view) {
             $provinces = Province::pluck('name','id');
             $cities = City::pluck('name','id');

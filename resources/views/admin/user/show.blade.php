@@ -1,11 +1,21 @@
 @extends('layout.index') 
-@section('title','Akun & Profile')
+@section('title')
+    @if(Request::segment(3) == 'verified')
+        Verifikasi 
+    @endif
+    Akun & Profile
+@endsection
 @section('header')
 @endsection 
 
 @section('page-header')
 <div class="page-header">
-    <h3 class="page-title"> Akun & Profile </h3>
+    <h3 class="page-title"> 
+        @if(Request::segment(3) == 'verified')
+        Verifikasi 
+        @endif
+        Akun & Profile {!! Str::title(@$data->profile->nama) !!}
+    </h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboar</a></li>
@@ -41,6 +51,12 @@
                                     <i class="icofont icofont-edit"></i>
                                     Edit Profil
                                 </a>
+                                @elseif(Request::segment(3) != 'verified')
+                                <a type="button" href="{{ url('admin/user/edit/detail',$data->id) }}" class="btn btn-responsive btn-primary">
+                                    {{-- <i class="icofont icofont-check-circled"></i> --}}
+                                    <i class="icofont icofont-edit"></i>
+                                    Edit Data
+                                </a>
                                 @endif
                                 <br>&nbsp;
                                 <div class="panel-body">
@@ -50,37 +66,37 @@
     
                                             <tr>
                                                 <td width="20%">Nama Lengkap</td>
-                                                <td >{!! Str::title(@Auth::user()->profile->nama) !!}</td>
+                                                <td >{!! Str::title(@$data->profile->nama) !!}</td>
                                             </tr>
                                             <tr>
                                                 <td>NIK</td>
-                                                <td >{{ old('nik', @Auth::user()->profile->nik) }}</td>
+                                                <td >{{ old('nik', @$data->profile->nik) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>NIP</td>
-                                                <td >{{ old('nip', @Auth::user()->profile->nip) }}</td>
+                                                <td >{{ old('nip', @$data->profile->nip) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Tempat / Tanggal Lahir</td>
-                                                <td >{{ old('tgl_lahir', @Auth::user()->profile->tgl_lahir) }}</td>
+                                                <td >{{ old('tgl_lahir', @$data->profile->tgl_lahir) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Jenis Kelamin</td>
-                                                <td>{{ old('jenis_kelamin', @Auth::user()->profile->jenis_kelamin) }}</td>
+                                                <td>{{ old('jenis_kelamin', @$data->profile->jenis_kelamin) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Agama</td>
                                                 <td >
-                                                    {{ old('agama', @Auth::user()->profile->agama) }}
+                                                    {{ old('agama', @$data->profile->agama) }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Telepon</td>
-                                                <td >{{ old('phone', @Auth::user()->profile->no_tlp) }}</td>
+                                                <td >{{ old('phone', @$data->profile->no_tlp) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Telepon Rumah</td>
-                                                <td >{{ old('phone', @Auth::user()->profile->no_tlp_rumah) }}</td>
+                                                <td >{{ old('phone', @$data->profile->no_tlp_rumah) }}</td>
                                             </tr>
     
                                         </table>
@@ -88,11 +104,15 @@
                                         <table class="table table-striped">
                                             {{-- <tr>
                                                 <td width="20%">Username</td>
-                                                <td >{!! Str::title(Auth::user()->name) !!}</td>
+                                                <td >{!! Str::title($data->name) !!}</td>
                                             </tr> --}}
                                             <tr>
                                                 <td width="20%">Email</td>
-                                                <td >{{ @Auth::user()->email }}</td>
+                                                <td >{{ @$data->email }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">Akun</td>
+                                                <td >{{ @$data->user_detail->rule->rule }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Created At</td>
@@ -103,30 +123,30 @@
                                         <table class="table table-striped">
                                             <tr>
                                                 <td width="20%">Alamat Lengkap</td>
-                                                <td >{!! old('alamat', @Auth::user()->profile->alamat) !!}</td>
+                                                <td >{!! old('alamat', @$data->profile->alamat) !!}</td>
                                             </tr>
                                             <tr>
                                                 <td>Provinsi</td>
-                                                <td>{{ old('provinsi', @Auth::user()->profile->province->name) }}</td>
+                                                <td>{{ old('provinsi', @$data->profile->province->name) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Kota / Kabupaten</td>
-                                                <td>{{ old('kota', @Auth::user()->profile->city->name) }}</td>
+                                                <td>{{ old('kota', @$data->profile->city->name) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Kode Pos</td>
-                                                <td>{{ old('kode_pos', @Auth::user()->profile->kode_pos) }}</td>
+                                                <td>{{ old('kode_pos', @$data->profile->kode_pos) }}</td>
                                             </tr>
                                         </table>
                                         <label class="mt-3" style="font-weight: bold;">Riwayat Pendidikan</label>
                                         <table class="table table-striped">
                                             <tr>
                                                 <td width="20%">Jejang</td>
-                                                <td >{{ old('jejang', @Auth::user()->profile->jejang) }}</td>
+                                                <td >{{ old('jejang', @$data->profile->jejang) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Jurusan</td>
-                                                <td>{{ old('jurusan_pendidikan', @Auth::user()->profile->jurusan_pendidikan) }}</td>
+                                                <td>{{ old('jurusan_pendidikan', @$data->profile->jurusan_pendidikan) }}</td>
                                             </tr>
                                         </table>
                                         <label class="mt-3" style="font-weight: bold;">Pekerjaan</label>
@@ -146,20 +166,77 @@
                                             
                                             <tr>
                                                 <td>Tanggal Mulai</td>
-                                                <td>{{ old('tgl_mulai_kerja', @Auth::user()->profile->tgl_mulai_kerja) }}</td>
+                                                <td>{{ old('tgl_mulai_kerja', @$data->profile->tgl_mulai_kerja) }}</td>
                                             </tr>
     
                                         </table>
                                     </div>
                                 </div>
-                                <a href="{{ url()->previous() }}"><button type="button" class="btn btn-danger waves-effect "
-                                    data-dismiss="modal">Kembali</button></a>
+                                
                             </div>
                     </div>
 
                 </div>
             </div>
 
+            @if(Request::segment(3) == 'verified')
+            <div class="card">
+                <div class="card-header ">
+                    <h4 class="card-title">Verified</h4>
+                    <div class="card-header-right">
+                        <ul class="list-unstyled card-option">
+                            {{-- <li><i class="feather icon-maximize full-card"></i></li> --}}
+                            <li><i class="feather icon-minus minimize-card"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{url('admin/user/verified/'.@$data->id)}}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card-block">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label>Rule User</label>
+                                    <select class="form-control" name="rule_user" required>
+        
+                                        <option value="">Select</option>
+                                        @foreach ($rule_user as $no =>$rule)
+                                        <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
+                                        @endforeach
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label >Verifikasi Akun (<i style="color :red; font-size: 10px;">Dengan Memilih Setuju maka Akun Dapat Digunakan!!</i>)</label>
+                                
+
+                                    <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="verified" id="verified1" value="1" > Setuju <i class="input-helper"></i></label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="verified" id="verified2" value="0" checked=""> Tidak Setuju <i class="input-helper"></i></label>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        <button type="submit" class="btn btn-responsive btn-primary"><i class="fa fa-paper-plane"></i> Submit</button>
+                        <a href="{{ url()->previous() }}"><button type="button" class="btn btn-danger waves-effect "
+                            data-dismiss="modal">Kembali</button></a>
+                    </form>
+                </div>
+    
+            </div>
+            @else
+            <a href="{{ url()->previous() }}"><button type="button" class="btn btn-danger waves-effect "
+                data-dismiss="modal">Kembali</button></a>
+            @endif
         </div>
     </div>
     <div class="modal-only" >

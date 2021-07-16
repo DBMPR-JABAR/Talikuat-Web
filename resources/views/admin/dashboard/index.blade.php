@@ -2,7 +2,7 @@
 @section('title','Dashboard') 
 @section('content')
 
-<div class="content-wrapper pb-0">
+
     <div class="page-header flex-wrap">
         <h3 class="mb-0">
             Hi, welcome back!
@@ -341,6 +341,6 @@
             </button>
         </div>
     </div>
-</div>
+
 
 @endsection
