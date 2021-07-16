@@ -79,8 +79,8 @@ class JadualController extends Controller
         $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
 
         foreach ($list_jadual as $jadual) {
-            $jadual['harga_satuan'] = number_format($jadual['harga_satuan'], 2, ',', '.');
-            $jadual['jumlah_harga'] = number_format($jadual['jumlah_harga'], 2, ',', '.');
+            $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
+            $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
             $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
             $jadual['volume'] = number_format($jadual['volume'], 3, ',', '.');
             $jadual['nilai'] = number_format($jadual['nilai'], 3, ',', '.');
@@ -358,7 +358,7 @@ class JadualController extends Controller
 
 
     public function deleteallnmp(Request $req)
-    {  
+    {
         DB::table('jadual')->where('id', '=', $req->id)->delete();
         DB::table('detail_jadual')->where([
             ['nmp', '=', $req->nmp],

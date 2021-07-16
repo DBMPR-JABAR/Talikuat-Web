@@ -113,6 +113,8 @@ Route::prefix('/paket')->group(function () {
     Route::get('/getPaketById/{id}', [PaketController::class, 'getPaketById']);
 
     Route::get('/getTotalPaket', [PaketController::class, 'getTotalPaket']);
+
+    Route::get('/getAllKategoriPaket', [PaketController::class, 'getAllKategoriPaket']);
 });
 
 Route::prefix('/jenis-pekerjaan')->group(function () {

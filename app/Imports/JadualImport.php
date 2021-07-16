@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class JadualImport implements ToModel, WithHeadingRow,WithCalculatedFormulas
+class JadualImport implements ToModel, WithHeadingRow, WithCalculatedFormulas
 {
     /**
      * @param array $row
