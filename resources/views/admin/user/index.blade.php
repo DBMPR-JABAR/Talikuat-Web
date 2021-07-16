@@ -21,7 +21,15 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Data Users</h4>
-                <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                @if (Request::segment(3) != 'trash')
+                    <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                    <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                @else
+                    <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
+
+                @endif
+                
+                
                 </p>
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -69,13 +77,18 @@
                             </td>
 
                             <td class="text-center"> 
-                                @if($item->account_verified_at)
-                                    <a type='button' href='{{ route('show.user',$item->user->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
-                                    <a type='button' href='{{ url('admin/user/edit/detail',$item->user->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
-                                @else
-                                    <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                @if (Request::segment(3) == 'trash')
+                                <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                {{-- <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i>Delete</a> --}}
+                                @else 
+                                    @if($item->account_verified_at)
+                                        <a type='button' href='{{ route('show.user',$item->user->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
+                                        <a type='button' href='{{ url('admin/user/edit/detail',$item->user->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                    @else
+                                        <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                    @endif
+                                        <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                                 @endif
-                                    <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                             </td>
 
                         </tr>
@@ -158,19 +171,42 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title">Hapus Data user</h4>
+                    <h4 class="modal-title">Pindahkan Data User ke Sampah</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
                 <div class="modal-body">
-                    <p>Apakah anda yakin ingin menghapus data ini?</p>
+                    <p>Apakah anda yakin?</p> 
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Tutup</button>
-                    <a id="delHref" href="" class="btn btn-danger waves-effect waves-light ">Hapus</a>
+                    <a id="delHref" href="" class="btn btn-danger waves-effect waves-light ">Pindahkan</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="Restore" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Kembalikan Data User </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Apakah anda yakin?</p> 
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Tutup</button>
+                    <a id="resHref" href="" class="btn btn-danger waves-effect waves-light ">Restore</a>
                 </div>
 
             </div>
@@ -180,5 +216,27 @@
 @endsection
 
 @section('script')
+<script>
+    $(document).ready(function() {
+        $('#delModal').on('show.bs.modal', function(event) {
+            const link = $(event.relatedTarget);
+            const id = link.data('id');
+            console.log(id);
+            const url = `{{ url('admin/user/trash/move_to_trash') }}/` + id;
+            console.log(url);
+            const modal = $(this);
+            modal.find('.modal-footer #delHref').attr('href', url);
+        });
+        $('#Restore').on('show.bs.modal', function(event) {
+            const link = $(event.relatedTarget);
+            const id = link.data('id');
+            console.log(id);
+            const url = `{{ url('admin/user/trash/restore') }}/` + id;
+            console.log(url);
+            const modal = $(this);
+            modal.find('.modal-footer #resHref').attr('href', url);
+        });
 
+    });
+</script>
 @endsection

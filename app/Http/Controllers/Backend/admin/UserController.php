@@ -30,10 +30,11 @@ class UserController extends Controller
     public function index()
     {
         //
-        $data = UserDetail::all();
+        $data = UserDetail::where('is_delete',null)->get();
         // dd($data);
         return view('admin.user.index',compact('data'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -280,6 +281,32 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function trash()
+    {
+        //
+        $data = UserDetail::where('is_delete',1)->get();
+        // dd($data);
+        return view('admin.user.index',compact('data'));
+    }
+    public function move_to_trash($desc, $id)
+    {
+        //
+
+        $user = UserDetail::find($id);
+        if($desc == 'restore'){
+            $user->is_delete = null;
+            $message = 'Data Berhasil Dikembalikan! ';
+        }elseif($desc == 'move_to_trash'){
+            $user->is_delete = 1;
+            $message = 'Data Berhasil di Pindahkan! ';
+        }
+        $user->save();
+        if($user){
+            return back()->with(['success'=>$message]);
+        }
+        // dd($data);
+       
     }
     public function verified_account(Request $request, $id)
     {

@@ -8,8 +8,7 @@
     <form
         class="login100-form validate-form"
         action="{{ route('login') }}"
-        method="POST"
-    >
+        method="POST">
     @csrf
 
         <span class="login100-form-title">
@@ -53,6 +52,7 @@
                 Login
             </button>
         </div>
+        <a href="{{ url('/register') }}" style=" text-decoration: underline; color: yellow">Create Account</a>.
     </form>
     @error('email')
     <div class="alert alert-danger mt-2">

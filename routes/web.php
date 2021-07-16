@@ -37,6 +37,8 @@ Route::prefix('admin')->group(function () {
         Route::prefix('user')->group(function (){
             Route::get('/',[UserController::class,'index'])->name('user.index');
             Route::post('store',[UserController::class,'store'])->name('store.user');
+            Route::get('/trash',[UserController::class,'trash'])->name('user.trash');
+            Route::get('/trash/{desc}/{id}',[UserController::class,'move_to_trash']);
 
             Route::get('/{id}',[UserController::class,'show'])->name('show.user');
             Route::get('verified/{id}',[UserController::class,'show'])->name('verified.user');
