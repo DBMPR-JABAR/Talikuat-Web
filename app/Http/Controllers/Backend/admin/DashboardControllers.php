@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Backend\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Laravel\Fortify\Contracts\LogoutResponse;
+use Illuminate\Support\Facades\Auth;
+
 
 class DashboardControllers extends Controller
 {
@@ -15,17 +18,22 @@ class DashboardControllers extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->profile->no_tlp ){
+            return redirect(url('admin/profile/edit', Auth::user()->id))->with(['warning'=>'Lengkapi Data Terlebih Dahulu']);
+        }
+
         $peyedia = DB::table('master_penyedia_jasa')->count();
         $konsultan = DB::table('master_konsultan')->count();
         $dataUmum = DB::table('data_umum')->count();
         $ppk = DB::table('master_ppk')->count();
-
-        return view('admin.index',[
+    
+        return view('admin.dashboard.index',[
             'penyedia'=>$peyedia,
             'konsultan'=>$konsultan,
             'dataUmum'=>$dataUmum,
             'ppk'=>$ppk
-    ]);
+        ]);
+        
     }
 
     /**

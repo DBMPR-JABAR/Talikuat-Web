@@ -14,7 +14,7 @@ class MasterKontraktor extends Controller
      */
     public function index()
     {
-        return view('admin.master_kontraktor');
+        return view('admin.data_utama.master_kontraktor');
     }
 
     /**

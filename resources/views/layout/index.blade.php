@@ -4,85 +4,49 @@
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-        <title>Tali Kuat Bina Marga | @yield('title')</title>
-        <link
-            rel="stylesheet"
-            href=" {{
-                asset('assets/vendors/mdi/css/materialdesignicons.min.css')
-            }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{
-                asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')
-            }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{
-                asset('assets/vendors/font-awesome/css/font-awesome.min.css')
-            }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{
-                asset(
-                    'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css'
-                )
-            }}"
-        />
+            name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <title>@yield('title') | Tali Kuat Bina Marga </title>
+        <link rel="stylesheet" href=" {{asset('assets/vendors/mdi/css/materialdesignicons.min.css')}}"/>
+        <link rel="stylesheet" href="{{asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')}}"/>
+        <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"/>
+        <link rel="stylesheet" href="{{asset('assets/vendors/font-awesome/css/font-awesome.min.css')}}"/>
+        <link rel="stylesheet" href="{{asset('assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}"/>
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
-        <link
-            rel="shortcut icon"
-            href="{{ asset('assets/images/favicon.png') }}"
-        />
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}"/>
         @yield('header')
     </head>
     <body>
         <div class="container-scroller">
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <div
-                    class="
-                        text-center
-                        sidebar-brand-wrapper
-                        d-flex
-                        align-items-center
-                        mb-5
-                    "
-                >
+                    class="text-center sidebar-brand-wrapper d-flex align-items-center mb-5">
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="assets/images/logo.svg"
+                            src="{{ asset('assets/images/logo.svg')}}"
+                            
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="assets/images/logo-mini.svg"
+                            src="{{ asset('assets/images/logo-mini.svg')}}"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">
+                        <a class="nav-link" href="{{ route('admin.dashboard.index') }}">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            data-toggle="collapse"
-                            href="#ui-basic"
-                            aria-expanded="false"
-                            aria-controls="ui-basic"
-                        >
+                        <a class="nav-link" href="{{ route('user.index') }}">
+                            <i class="mdi mdi-account-multiple menu-icon"></i>
+                            <span class="menu-title">Manajemen User</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <i class="mdi mdi-database menu-icon"></i>
                             <span class="menu-title">Data Utama</span>
                             <i class="menu-arrow"></i>
@@ -93,8 +57,7 @@
                                     <a
                                         class="nav-link"
                                         href="{{ route('masterkontraktor') }}"
-                                        >Kontraktor</a
-                                    >
+                                        >Kontraktor</a>
                                 </li>
                                 <li class="nav-item">
                                     <a
@@ -184,13 +147,9 @@
                         </a>
                     </li>
                     <li class="nav-item sidebar-actions">
-                        <div class="nav-link">
-                            <div class="mt-4">
-                                <ul class="mt-4 pl-0">
-                                    <li>Sign Out</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <a class="nav-link mt-4" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <span class="menu-title">Sign Out</span>
+                        </a>
                     </li>
                 </ul>
             </nav>
@@ -226,9 +185,7 @@
                         p-lg-0
                         fixed-top
                         d-flex
-                        flex-row
-                    "
-                >
+                        flex-row">
                     <div
                         class="
                             navbar-menu-wrapper
@@ -285,7 +242,7 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="assets/images/faces/face4.jpg"
+                                                src="{{ asset('assets/images/faces/face4.jpg')}}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -306,7 +263,7 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="assets/images/faces/face3.jpg"
+                                                src="{{ asset('assets/images/faces/face3.jpg')}}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -327,7 +284,7 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="assets/images/faces/face2.jpg"
+                                                src="{{ asset('assets/images/faces/face2.jpg')}}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -358,20 +315,16 @@
                                     href="#"
                                     data-toggle="dropdown"
                                 >
-                                    <img
-                                        class="nav-profile-img mr-2"
-                                        alt=""
-                                        src="assets/images/faces/face1.jpg"
-                                    />
+                                    <img class="nav-profile-img mr-2" alt="" src="{{ asset('assets/images/faces/face1.jpg')}}"/>
                                     <span class="profile-name"
-                                        >Henry Klein</span
+                                        >{{ auth()->user()->name }}</span
                                     >
                                 </a>
                                 <div
                                     class="dropdown-menu navbar-dropdown w-100"
                                     aria-labelledby="profileDropdown"
                                 >
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ url('admin/profile', Auth::user()->id) }}">
                                         <i
                                             class="
                                                 mdi mdi-face-profile
@@ -379,18 +332,15 @@
                                                 text-success
                                             "
                                         ></i>
-                                        Profile
+                                        Akun & Profil
                                     </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i
-                                            class="
-                                                mdi mdi-logout
-                                                mr-2
-                                                text-primary
-                                            "
-                                        ></i>
-                                        Signout
+                                    <a class="dropdown-item" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class=" mdi mdi-logout mr-2 text-primary"></i>
+                                        Sign Out
                                     </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
                                 </div>
                             </li>
                         </ul>
@@ -408,41 +358,50 @@
                     </div>
                 </nav>
 
-                <div class="main-panel">@yield('content')</div>
-                <footer class="footer">
-                    <div
-                        class="
-                            d-sm-flex
-                            justify-content-center justify-content-sm-between
-                        "
-                    >
-                        <span
-                            class="
-                                text-muted
-                                d-block
-                                text-center text-sm-left
-                                d-sm-inline-block
-                            "
-                            >Copyright © bootstrapdash.com 2020</span
-                        >
-                        <span
-                            class="
-                                float-none float-sm-right
-                                d-block
-                                mt-1 mt-sm-0
-                                text-center
-                            "
-                        >
-                            Free
-                            <a
-                                href="https://www.bootstrapdash.com/"
-                                target="_blank"
-                                >Bootstrap dashboard template</a
-                            >
-                            from Bootstrapdash.com</span
-                        >
+                <div class="main-panel" >
+                    <div class="col-md-12" style="background: #f2f2f2">
+                        @include('flashalert.index')
                     </div>
-                </footer>
+                    <div class="content-wrapper pb-0" >
+                    @yield('page-header')
+
+                    @yield('content')
+                    </div>
+                    <footer class="footer" style="">
+                        <div
+                            class="
+                                d-sm-flex
+                                justify-content-center justify-content-sm-between
+                            "
+                        >
+                            <span
+                                class="
+                                    text-muted
+                                    d-block
+                                    text-center text-sm-left
+                                    d-sm-inline-block
+                                "
+                                >Copyright © bootstrapdash.com 2020</span
+                            >
+                            <span
+                                class="
+                                    float-none float-sm-right
+                                    d-block
+                                    mt-1 mt-sm-0
+                                    text-center
+                                "
+                            >
+                                Free
+                                <a
+                                    href="https://www.bootstrapdash.com/"
+                                    target="_blank"
+                                    >Bootstrap dashboard template</a
+                                >
+                                from Bootstrapdash.com</span
+                            >
+                        </div>
+                    </footer>
+                </div>
                 <!-- main-panel ends -->
             </div>
             <!-- page-body-wrapper ends -->
