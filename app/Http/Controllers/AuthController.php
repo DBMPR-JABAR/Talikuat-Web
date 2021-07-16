@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
@@ -46,11 +47,66 @@ class AuthController extends Controller
 
         $token = $user->createToken($user_detail->nama_lengkap);
 
+        Auth::login($user);
+
         return response()->json([
             'status' => 'success',
             'code' => 200,
             'result' => $data,
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
+            'expiresIn' => 60 * 60 * 24
         ]);
+    }
+
+    public function checkToken(Request $request)
+    {
+        $user = $request->user();
+
+        $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
+
+        $data = [
+            'id_login' => $user->id_login,
+            'user' => $user->user,
+            'level' => $user->level,
+            'id_member' => $user->id_member,
+            'nm_member' => $user_detail->nm_member,
+            'nama_lengkap' => $user_detail->nama_lengkap,
+            'akses' => $user_detail->akses,
+            'jabatan' => $user_detail->jabatan,
+            'alamat_member' => $user_detail->alamat_member,
+            'telp' => $user_detail->telp,
+            'email' => $user_detail->email,
+            'gambar' => $user_detail->gambar,
+            'nik' => $user_detail->nik,
+            'kantor_id' => $user_detail->kantor_id,
+            'perusahaan' => $user_detail->perusahaan,
+            'unit' => $user_detail->unit,
+            'created_at' => $user_detail->created_at
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $data,
+        ]);
+    }
+
+    public function revokeAllTokens(Request $request)
+    {
+        try {
+            $request->user()->tokens()->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 200,
+                'result' => 'Berhasil Menghapus Semua Token'
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 500,
+                'result' => 'Gagal Menghapus Semua Token'
+            ]);
+        }
     }
 }
