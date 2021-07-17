@@ -25,6 +25,8 @@ class AuthController extends Controller
 
         $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
 
+        $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+
         $data = [
             'id_login' => $user->id_login,
             'user' => $user->user,
@@ -39,7 +41,7 @@ class AuthController extends Controller
             'email' => $user_detail->email,
             'gambar' => $user_detail->gambar,
             'nik' => $user_detail->nik,
-            'kantor_id' => $user_detail->kantor_id,
+            'kantor_id' => $id_uptd,
             'perusahaan' => $user_detail->perusahaan,
             'unit' => $user_detail->unit,
             'created_at' => $user_detail->created_at
@@ -64,6 +66,8 @@ class AuthController extends Controller
 
         $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
 
+        $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+
         $data = [
             'id_login' => $user->id_login,
             'user' => $user->user,
@@ -78,7 +82,7 @@ class AuthController extends Controller
             'email' => $user_detail->email,
             'gambar' => $user_detail->gambar,
             'nik' => $user_detail->nik,
-            'kantor_id' => $user_detail->kantor_id,
+            'kantor_id' => $id_uptd,
             'perusahaan' => $user_detail->perusahaan,
             'unit' => $user_detail->unit,
             'created_at' => $user_detail->created_at
