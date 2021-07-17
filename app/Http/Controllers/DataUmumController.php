@@ -198,6 +198,7 @@ class DataUmumController extends Controller
             "pemda" => "required",
             "opd" => "required",
             "unor" => "required",
+            "id_uptd" => "required",
             "nm_paket" => "required",
             "kategori" => "required",
             "no_kontrak" => "required",
