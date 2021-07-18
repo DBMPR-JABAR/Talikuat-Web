@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -69,7 +70,7 @@ class MergePdf extends Controller
                 }
 
                 break;
-                //File Kontrak -------------->
+            //File Kontrak -------------->
             case "file_kontrak":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -125,7 +126,7 @@ class MergePdf extends Controller
 
 
                 break;
-                //<================================================== File SPMK ==================================>
+            //<================================================== File SPMK ==================================>
             case "file_spmk":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -180,7 +181,7 @@ class MergePdf extends Controller
                 }
                 break;
 
-                //<================================ FILE Syarat Umum ==================>
+            //<================================ FILE Syarat Umum ==================>
             case "file_syarat_umum":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -234,7 +235,7 @@ class MergePdf extends Controller
                     ]);
                 }
                 break;
-                //<=============================FILE SYARAT KHUSUS =============>
+            //<=============================FILE SYARAT KHUSUS =============>
             case "file_syarat_khusus":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -288,7 +289,7 @@ class MergePdf extends Controller
                     ]);
                 }
                 break;
-                // <======================================== FILE Jadual Pelaksana ============================>
+            // <======================================== FILE Jadual Pelaksana ============================>
             case "file_jpp":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -343,7 +344,7 @@ class MergePdf extends Controller
                 }
 
                 break;
-                // <===========================================FILE Gambar Rencana =============================>
+            // <===========================================FILE Gambar Rencana =============================>
             case "file_rencana":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -398,7 +399,7 @@ class MergePdf extends Controller
                 }
 
                 break;
-                //<=======================================================FILE SPPBJ =====================================>
+            //<=======================================================FILE SPPBJ =====================================>
             case "file_sppbj":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -454,7 +455,7 @@ class MergePdf extends Controller
 
                 break;
 
-                //<=======================================================FILE SPL ================================================>
+            //<=======================================================FILE SPL ================================================>
             case "file_spl":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -509,7 +510,7 @@ class MergePdf extends Controller
                 }
 
                 break;
-                //<=========================================================FILE SPEK UMUM=====================================>
+            //<=========================================================FILE SPEK UMUM=====================================>
             case "file_spek_umum":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -564,7 +565,7 @@ class MergePdf extends Controller
                 }
 
                 break;
-                // <========================================================FILE JAMINAN JAMINAN =====================================>
+            // <========================================================FILE JAMINAN JAMINAN =====================================>
             case "file_jaminan":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -619,7 +620,7 @@ class MergePdf extends Controller
                 }
 
                 break;
-                //<==================================================FILE SPKMP =============================================>
+            //<==================================================FILE SPKMP =============================================>
             case "file_spkmp":
 
                 $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
@@ -687,18 +688,18 @@ class MergePdf extends Controller
 
     public function getFile($id)
     {
-        $dkh = DB::table('file_dkh_update')->select('id','file_dkh_update')->where('id_data_umum', $id)->get();
-        $kontrak = DB::table('file_kontrak_update')->select('id','file_kontrak_update')->where('id_data_umum', $id)->get();
-        $spmk = DB::table('file_spmk_update')->select('id','file_spmk_update')->where('id_data_umum', $id)->get();
-        $syarat_umum = DB::table('file_syarat_umum_update')->select('id','file_syarat_umum_update')->where('id_data_umum', $id)->get();
-        $syarat_khusus = DB::table('file_syarat_khusus_update')->select('id','file_syarat_khusus_update')->where('id_data_umum', $id)->get();
-        $jpp = DB::table('file_jpp_update')->select('id','file_jpp_update')->where('id_data_umum', $id)->get();
-        $rencana = DB::table('file_rencana_update')->select('id','file_rencana_update')->where('id_data_umum', $id)->get();
-        $sppbj = DB::table('file_sppbj_update')->select('id','file_sppbj_update')->where('id_data_umum', $id)->get();
-        $spl = DB::table('file_spl_update')->select('id','file_spl_update')->where('id_data_umum', $id)->get();
-        $spek_umum = DB::table('file_spek_umum_update')->select('id','file_spek_umum_update')->where('id_data_umum', $id)->get();
-        $jaminan = DB::table('file_jaminan_update')->select('id','file_jaminan_update')->where('id_data_umum', $id)->get();
-        $spkmp = DB::table('file_spkmp_update')->select('id','file_spkmp_update')->where('id_data_umum', $id)->get();
+        $dkh = DB::table('file_dkh_update')->select('id', 'file_dkh_update')->where('id_data_umum', $id)->get();
+        $kontrak = DB::table('file_kontrak_update')->select('id', 'file_kontrak_update')->where('id_data_umum', $id)->get();
+        $spmk = DB::table('file_spmk_update')->select('id', 'file_spmk_update')->where('id_data_umum', $id)->get();
+        $syarat_umum = DB::table('file_syarat_umum_update')->select('id', 'file_syarat_umum_update')->where('id_data_umum', $id)->get();
+        $syarat_khusus = DB::table('file_syarat_khusus_update')->select('id', 'file_syarat_khusus_update')->where('id_data_umum', $id)->get();
+        $jpp = DB::table('file_jpp_update')->select('id', 'file_jpp_update')->where('id_data_umum', $id)->get();
+        $rencana = DB::table('file_rencana_update')->select('id', 'file_rencana_update')->where('id_data_umum', $id)->get();
+        $sppbj = DB::table('file_sppbj_update')->select('id', 'file_sppbj_update')->where('id_data_umum', $id)->get();
+        $spl = DB::table('file_spl_update')->select('id', 'file_spl_update')->where('id_data_umum', $id)->get();
+        $spek_umum = DB::table('file_spek_umum_update')->select('id', 'file_spek_umum_update')->where('id_data_umum', $id)->get();
+        $jaminan = DB::table('file_jaminan_update')->select('id', 'file_jaminan_update')->where('id_data_umum', $id)->get();
+        $spkmp = DB::table('file_spkmp_update')->select('id', 'file_spkmp_update')->where('id_data_umum', $id)->get();
 
         $merge_dkh = array();
         $merge_kontrak = array();
@@ -777,11 +778,51 @@ class MergePdf extends Controller
 
         ], 200);
     }
+
+    public function getFileCount(Request $request)
+    {
+
+        $id = $request->id;
+
+        $dkh = DB::table('file_dkh_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $kontrak = DB::table('file_kontrak_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spmk = DB::table('file_spmk_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $syarat_umum = DB::table('file_syarat_umum_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $syarat_khusus = DB::table('file_syarat_khusus_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $jpp = DB::table('file_jpp_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $rencana = DB::table('file_rencana_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $sppbj = DB::table('file_sppbj_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spl = DB::table('file_spl_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spek_umum = DB::table('file_spek_umum_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $jaminan = DB::table('file_jaminan_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spkmp = DB::table('file_spkmp_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => [
+                "file_dkh" => $dkh,
+                "file_kontrak" => $kontrak,
+                "file_spmk" => $spmk,
+                "file_syarat_umum" => $syarat_umum,
+                "file_syarat_khusus" => $syarat_khusus,
+                "file_jpp" => $jpp,
+                "file_rencana" => $rencana,
+                "file_sppbj" => $sppbj,
+                "file_spl" => $spl,
+                "file_spek_umum" => $spek_umum,
+                "file_jaminan" => $jaminan,
+                "file_spkmp" => $spkmp
+            ]
+        ], Response::HTTP_OK);
+
+    }
+
     public function deleteFile(Request $req)
     {
-        DB::table($req->db)->where('id',$req->id)->delete();
+        DB::table($req->db)->where('id', $req->id)->delete();
         return response()->json([
-        'code'=>200 
+            'code' => 200
         ]);
     }
 }

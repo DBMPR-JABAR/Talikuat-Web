@@ -311,6 +311,8 @@ Route::prefix('merge')->group(function () {
 
     Route::get('/file/{id}', [MergePdf::class, 'getFile']);
 
+    Route::get('/file-count/{id}', [MergePdf::class, 'getFileCount']);
+
     Route::post('/deletefile', [MergePdf::class, 'deleteFile']);
 });
 
