@@ -43,6 +43,8 @@ Route::prefix('/auth')->group(function () {
 
     Route::middleware('auth:sanctum')->delete('/revokeAllTokens', [AuthController::class, 'revokeAllTokens']);
 
+    Route::post('/storeFcmToken', [AuthController::class, 'saveFcmTokenMobileDevice']);
+
     Route::post('/login', [AuthController::class, 'login']);
 });
 
@@ -311,7 +313,7 @@ Route::prefix('merge')->group(function () {
 
     Route::get('/file/{id}', [MergePdf::class, 'getFile']);
 
-    Route::get('/file-count/{id}', [MergePdf::class, 'getFileCount']);
+    Route::get('/fileCount/{id}', [MergePdf::class, 'getFileCount']);
 
     Route::post('/deletefile', [MergePdf::class, 'deleteFile']);
 });

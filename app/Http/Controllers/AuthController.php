@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -104,13 +105,55 @@ class AuthController extends Controller
                 'status' => 'success',
                 'code' => 200,
                 'result' => 'Berhasil Menghapus Semua Token'
-            ]);
-        } catch (Exception $exception) {
+            ], Response::HTTP_OK);
+        } catch (\Exception $exception) {
             return response()->json([
                 'status' => 'failed',
                 'code' => 500,
                 'result' => 'Gagal Menghapus Semua Token'
-            ]);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function saveFcmTokenMobileDevice(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+                "id_member" => "required",
+                "fcm_token" => "required"
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'failed',
+                    'code' => '400',
+                    'error' => $validator->getMessageBag()->getMessages()
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            DB::table('fcm_token')->updateOrInsert(
+                ["id_member" => $request->id_member],
+                ["id_member" => $request->id_member, "device_mobile_token" => $request->fcm_token]
+            );
+
+            pushNotification("SEND NOTIFICATION SUCCESS", "HOREE HOREE BERHASIL", $request->fcm_token);
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 200,
+                'result' => 'Berhasil Menambahkan FCM Token'
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $exception) {
+
+            return response()->json([
+                'status' => 'failed',
+                'code' => 500,
+                'result' => 'Gagal Menambahkan FCM Token'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        }
+
     }
 }
