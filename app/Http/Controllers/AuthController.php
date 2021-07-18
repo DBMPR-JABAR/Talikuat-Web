@@ -137,8 +137,6 @@ class AuthController extends Controller
                 ["id_member" => $request->id_member, "device_mobile_token" => $request->fcm_token]
             );
 
-            pushNotification("SEND NOTIFICATION SUCCESS", "HOREE HOREE BERHASIL", $request->fcm_token);
-
             return response()->json([
                 'status' => 'success',
                 'code' => 200,
