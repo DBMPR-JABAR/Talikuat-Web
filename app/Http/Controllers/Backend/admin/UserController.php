@@ -253,7 +253,7 @@ class UserController extends Controller
                 }
 
                 if($request->input('password') != ""){
-                    $data['password']     = Hash::make($request->input('password'));
+                    $useraccount['password']     = Hash::make($request->input('password'));
                 }else if($request->input('email') == Auth::user()->email){
                     return redirect(route('profile', $id))->with(['warning'=>'Tidak ada data yang dirubah!']);
 
