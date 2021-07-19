@@ -259,7 +259,7 @@ try {
   return response()->json([
     "code" => 500,
     "error"=>$e
-  ]);
+  ],500);
 }
 
     
@@ -316,6 +316,9 @@ try {
     for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
       DB::table('detail_request_tkerja')->where('id_request', $req->id)->delete();
     }
+    for ($i = 0; $i < count($req->bahan_jmf); $i++) {
+      DB::table('detail_request_jmf')->where('id_request', $req->id)->delete();
+    }
     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
       DB::table('detail_request_peralatan')->insert([
         "id_request" => $req->id,
@@ -339,7 +342,6 @@ try {
         "jumlah" => $req->jumlah_tk[$i],
       ]);
     }
-    if ($req->bahan_jmf) {
       for ($i=0; $i <count($req->bahan_jmf) ; $i++) { 
         DB::table('detail_request_jmf')->insert([
           "id_request"=>$req->id,
@@ -348,7 +350,7 @@ try {
           "satuan"=>$req->satuan_jmf[$i]
         ]);
       }
-    }
+    
 
     if ($req->file('metode_kerja')) {
       $file = $req->file('metode_kerja');
@@ -489,6 +491,9 @@ try {
     for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
       DB::table('detail_request_tkerja')->where('id_request', $req->id)->delete();
     }
+    for ($i = 0; $i < count($req->bahan_jmf); $i++) {
+      DB::table('detail_request_jmf')->where('id_request', $req->id)->delete();
+    }
     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
       DB::table('detail_request_peralatan')->insert([
         "id_request" => $req->id,
@@ -560,7 +565,6 @@ try {
       ], 400);
     }
 
-
     if ($req->laporan == 1) {
       DB::table('request')->where('id', $req->id)->update([
         "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
@@ -570,6 +574,16 @@ try {
       if($req->catatan != NULL){
         DB::table('request')->where('id', $req->id)->update([
           "catatan_konsultan"=>$req->catatan
+        ]);
+      }
+      if ($req->rekomendasi == 'with') {
+        DB::table('request')->where('id', $req->id)->update([
+          "rekomendasi"=>$req->rekomendasi,
+          "catatan_rekomendasi"=>$req->catatan_rekomendasi
+        ]);
+      }else{
+        DB::table('request')->where('id', $req->id)->update([
+          "rekomendasi"=>$req->rekomendasi,
         ]);
       }
       DB::table('history_request')->insert([
@@ -637,7 +651,8 @@ try {
         "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
         "catatan_konsultan" => $req->catatan,
         "status" => 1,
-        "ditolak" => 1
+        "ditolak" => 1,
+        "rekomendasi"=>$req->rekomendasi
       ]);
       DB::table('history_request')->insert([
         "username" => $req->konsultan,

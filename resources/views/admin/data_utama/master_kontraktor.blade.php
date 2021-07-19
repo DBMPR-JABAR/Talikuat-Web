@@ -1,4 +1,5 @@
-@extends('layout.index') @section('title','Dashboard') 
+@extends('layout.index') @section('title','Dashboard') @section('content')
 
-@section('content')
+<div class="container">sadcsa</div>
+
 @endsection
