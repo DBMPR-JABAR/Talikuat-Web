@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class MasterKontraktor extends Controller
+class MasterPpk extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class MasterKontraktor extends Controller
      */
     public function index()
     {
-        return view('admin.data_utama.master_kontraktor.index');
+        return view('admin.data_utama.master_ppk.index');
     }
 
     /**
@@ -46,7 +46,7 @@ class MasterKontraktor extends Controller
      */
     public function show($id)
     {
-        return view('admin.data_utama.master_kontraktor.show');
+        return view('admin.data_utama.master_ppk.index');
     }
 
     /**
