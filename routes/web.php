@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Backend\Admin;
+
+use App\Http\Controllers\Backend\admin\MasterKonsultan;
+use App\Http\Controllers\Backend\admin\MasterPpk;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,9 +34,7 @@ Route::prefix('admin')->group(function () {
         //route dashboard
         Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
         Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
-
-        Route::get('/masterkontraktor',[MasterKontraktor::class,'index'])->name('masterkontraktor');
-        
+  
         Route::prefix('user')->group(function (){
             Route::get('/',[UserController::class,'index'])->name('user.index');
             Route::post('store',[UserController::class,'store'])->name('store.user');
@@ -54,6 +55,19 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}',[UserController::class,'show'])->name('profile');
             Route::post('/account/{id}', [UserController::class,'updateaccount']);
             Route::get('/{desc}/{id}',[UserController::class,'edit'])->name('editProfile');
+        });
+
+        route::prefix('/master_kontraktor')->group(function(){
+            Route::get('/',[MasterKontraktor::class,'index'])->name('masterkontraktor.index');
+            Route::get('/{id}',[MasterKontraktor::class,'show'])->name('show.masterkontraktor');
+        });
+        route::prefix('/master_konsultan')->group(function(){
+            Route::get('/',[MasterKonsultan::class,'index'])->name('masterkonsultan.index');
+            Route::get('/{id}',[MasterKonsultan::class,'show'])->name('show.masterkonsultan');
+        });
+        route::prefix('/master_ppk')->group(function(){
+            Route::get('/',[MasterPpk::class,'index'])->name('masterppk.index');
+            Route::get('/{id}',[MasterPpk::class,'show'])->name('show.masterppk');
         });
 
     });

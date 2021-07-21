@@ -4,37 +4,90 @@
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
-            name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <title>@yield('title') | Tali Kuat Bina Marga </title>
-        <link rel="stylesheet" href=" {{asset('assets/vendors/mdi/css/materialdesignicons.min.css')}}"/>
-        <link rel="stylesheet" href="{{asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')}}"/>
-        <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"/>
-        <link rel="stylesheet" href="{{asset('assets/vendors/font-awesome/css/font-awesome.min.css')}}"/>
-        <link rel="stylesheet" href="{{asset('assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}"/>
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>@yield('title') | Tali Kuat Bina Marga</title>
+        <link
+            rel="stylesheet"
+            href=" {{
+                asset('assets/vendors/mdi/css/materialdesignicons.min.css')
+            }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{
+                asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')
+            }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{
+                asset('assets/vendors/font-awesome/css/font-awesome.min.css')
+            }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{
+                asset(
+                    'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css'
+                )
+            }}"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
+        />
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
-        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}"/>
+        <link
+            rel="shortcut icon"
+            href="{{ asset('assets/images/favicon.png') }}"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ asset('assets/css/custom.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ asset('vendor/datatables.min.css') }}"
+        />
         @yield('header')
     </head>
     <body>
         <div class="container-scroller">
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <div
-                    class="text-center sidebar-brand-wrapper d-flex align-items-center mb-5">
+                    class="
+                        text-center
+                        sidebar-brand-wrapper
+                        d-flex
+                        align-items-center
+                        mb-5
+                    "
+                >
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="{{ asset('assets/images/logo.svg')}}"
-                            
+                            src="{{ asset('assets/images/logo.svg') }}"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="{{ asset('assets/images/logo-mini.svg')}}"
+                            src="{{ asset('assets/images/logo-mini.svg') }}"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.dashboard.index') }}">
+                        <a
+                            class="nav-link"
+                            href="{{ route('admin.dashboard.index') }}"
+                        >
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -46,7 +99,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <a
+                            class="nav-link"
+                            data-toggle="collapse"
+                            href="#ui-basic"
+                            aria-expanded="false"
+                            aria-controls="ui-basic"
+                        >
                             <i class="mdi mdi-database menu-icon"></i>
                             <span class="menu-title">Data Utama</span>
                             <i class="menu-arrow"></i>
@@ -56,20 +115,25 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{ route('masterkontraktor') }}"
-                                        >Kontraktor</a>
+                                        href="{{
+                                            route('masterkontraktor.index')
+                                        }}"
+                                        >Kontraktor</a
+                                    >
                                 </li>
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/dropdowns.html"
+                                        href="{{
+                                            route('masterkonsultan.index')
+                                        }}"
                                         >Konsultan</a
                                     >
                                 </li>
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/typography.html"
+                                        href="{{ route('masterppk.index') }}"
                                         >PPK</a
                                     >
                                 </li>
@@ -147,7 +211,11 @@
                         </a>
                     </li>
                     <li class="nav-item sidebar-actions">
-                        <a class="nav-link mt-4" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <a
+                            class="nav-link mt-4"
+                            href="{{ route('logout') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        >
                             <span class="menu-title">Sign Out</span>
                         </a>
                     </li>
@@ -185,7 +253,9 @@
                         p-lg-0
                         fixed-top
                         d-flex
-                        flex-row">
+                        flex-row
+                    "
+                >
                     <div
                         class="
                             navbar-menu-wrapper
@@ -242,7 +312,11 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="{{ asset('assets/images/faces/face4.jpg')}}"
+                                                src="{{
+                                                    asset(
+                                                        'assets/images/faces/face4.jpg'
+                                                    )
+                                                }}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -263,7 +337,11 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="{{ asset('assets/images/faces/face3.jpg')}}"
+                                                src="{{
+                                                    asset(
+                                                        'assets/images/faces/face3.jpg'
+                                                    )
+                                                }}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -284,7 +362,11 @@
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
                                             <img
-                                                src="{{ asset('assets/images/faces/face2.jpg')}}"
+                                                src="{{
+                                                    asset(
+                                                        'assets/images/faces/face2.jpg'
+                                                    )
+                                                }}"
                                                 alt=""
                                                 class="profile-pic"
                                             />
@@ -315,8 +397,17 @@
                                     href="#"
                                     data-toggle="dropdown"
                                 >
-                                    <img class="nav-profile-img mr-2" alt="" src="{{ asset('assets/images/faces/face1.jpg')}}"/>
-                                    <span class="profile-name"
+                                    <img
+                                        class="nav-profile-img mr-2"
+                                        alt=""
+                                        src="{{
+                                            asset(
+                                                'assets/images/faces/face1.jpg'
+                                            )
+                                        }}"
+                                    />
+                                    <span
+                                        class="profile-name"
                                         >{{ auth()->user()->name }}</span
                                     >
                                 </a>
@@ -324,7 +415,10 @@
                                     class="dropdown-menu navbar-dropdown w-100"
                                     aria-labelledby="profileDropdown"
                                 >
-                                    <a class="dropdown-item" href="{{ url('admin/profile', Auth::user()->id) }}">
+                                    <a
+                                        class="dropdown-item"
+                                        href="{{ url('admin/profile', Auth::user()->id) }}"
+                                    >
                                         <i
                                             class="
                                                 mdi mdi-face-profile
@@ -334,11 +428,26 @@
                                         ></i>
                                         Akun & Profil
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class=" mdi mdi-logout mr-2 text-primary"></i>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    >
+                                        <i
+                                            class="
+                                                mdi mdi-logout
+                                                mr-2
+                                                text-primary
+                                            "
+                                        ></i>
                                         Sign Out
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form
+                                        id="logout-form"
+                                        action="{{ route('logout') }}"
+                                        method="POST"
+                                        style="display: none"
+                                    >
                                         @csrf
                                     </form>
                                 </div>
@@ -358,20 +467,19 @@
                     </div>
                 </nav>
 
-                <div class="main-panel" >
+                <div class="main-panel">
                     <div class="col-md-12" style="background: #f2f2f2">
                         @include('flashalert.index')
                     </div>
-                    <div class="content-wrapper pb-0" >
-                    @yield('page-header')
-
-                    @yield('content')
+                    <div class="content-wrapper pb-0">
+                        @yield('page-header') @yield('content')
                     </div>
-                    <footer class="footer" style="">
+                    <footer class="footer">
                         <div
                             class="
                                 d-sm-flex
-                                justify-content-center justify-content-sm-between
+                                justify-content-center
+                                justify-content-sm-between
                             "
                         >
                             <span
@@ -448,6 +556,7 @@
         <!-- Custom js for this page -->
         <script src="{{ asset('assets/js/dashboard.js') }}"></script>
         <!-- End custom js for this page -->
+        <script src="{{ asset('vendor/datatables.min.js') }}"></script>
         @yield('script')
     </body>
 </html>

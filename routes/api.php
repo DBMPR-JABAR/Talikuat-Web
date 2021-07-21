@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CurvaControllers;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CurvaControllers;
 use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\GetFile;
@@ -40,7 +39,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('/auth')->group(function () {
 
-    Route::get('/test', [AuthController::class, 'test']);
+    Route::middleware('auth:sanctum')->get('/checkToken', [AuthController::class, 'checkToken']);
+
+    Route::middleware('auth:sanctum')->delete('/revokeAllTokens', [AuthController::class, 'revokeAllTokens']);
 
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -112,6 +113,8 @@ Route::prefix('/paket')->group(function () {
     Route::get('/getPaketById/{id}', [PaketController::class, 'getPaketById']);
 
     Route::get('/getTotalPaket', [PaketController::class, 'getTotalPaket']);
+
+    Route::get('/getAllKategoriPaket', [PaketController::class, 'getAllKategoriPaket']);
 });
 
 Route::prefix('/jenis-pekerjaan')->group(function () {
@@ -182,12 +185,10 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
-    
+
     Route::get('/getsatuannmp/{id}', [PermintaanController::class, 'getSatuanNmp']);
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
-    Route::post('/delete-permintaan',[PermintaanController::class, 'deletePermintaan']);
-
-
+    Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 });
 
 Route::prefix('laporan')->group(function () {
@@ -208,9 +209,9 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 
-    Route::get('/delete-lapaoran',[LaporanController::class,'deleteLaporan']);
+    Route::get('/delete-lapaoran', [LaporanController::class, 'deleteLaporan']);
 
-    Route::post('/breakdownjadual',[LaporanController::class,'pembandingRelasi']);
+    Route::post('/breakdownjadual', [LaporanController::class, 'pembandingRelasi']);
 });
 
 Route::prefix('data-umum')->group(function () {
@@ -220,6 +221,8 @@ Route::prefix('data-umum')->group(function () {
     Route::get('/getDataUmumByKeyword', [DataUmumController::class, 'getDataUmumByKeyword']);
 
     Route::post('/insertDataUmum', [DataUmumController::class, 'insertDataUmum']);
+
+    Route::post('/insertDataUmumFromMobile', [DataUmumController::class, 'insertDataUmumFromMobile']);
 
     Route::get('/getAllKategori', [DataUmumController::class, 'getAllKategori']);
 
@@ -285,7 +288,7 @@ Route::prefix('data-umum')->group(function () {
 
     Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
 
-    Route::post('linkspekumum',[UploadController::class,'fileSpekUmum']);
+    Route::post('linkspekumum', [UploadController::class, 'fileSpekUmum']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
@@ -307,8 +310,10 @@ Route::prefix('merge')->group(function () {
     Route::post('file', [MergePdf::class, 'merge']);
 
     Route::get('/file/{id}', [MergePdf::class, 'getFile']);
-    
-    Route::post('/deletefile',[MergePdf::class,'deleteFile']);
+
+    Route::get('/file-count/{id}', [MergePdf::class, 'getFileCount']);
+
+    Route::post('/deletefile', [MergePdf::class, 'deleteFile']);
 });
 
 Route::prefix('adendum')->group(function () {
@@ -317,9 +322,9 @@ Route::prefix('adendum')->group(function () {
     Route::post('buatjadual', [DataUmumAdendum::class, 'buatJadualAdendum']);
 });
 
-Route::prefix('curva')->group(function (){
+Route::prefix('curva')->group(function () {
 
-  Route::get('tes/{id}',[CurvaControllers::class,'GetDataUmum']);
-  Route::get('updateDaily',[CurvaControllers::class,'TestingDaily']);
-  Route::post('progress',[CurvaControllers::class,'getAllDataUmumUptd']);
+    Route::get('tes/{id}', [CurvaControllers::class, 'GetDataUmum']);
+    Route::get('updateDaily', [CurvaControllers::class, 'TestingDaily']);
+    Route::post('progress', [CurvaControllers::class, 'getAllDataUmumUptd']);
 });
