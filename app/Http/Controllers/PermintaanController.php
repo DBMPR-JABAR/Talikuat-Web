@@ -702,6 +702,9 @@ try {
   }
   public function responReqPpk(Request $req)
   {
+    return response()->json([
+      $req->all()
+    ]);
     date_default_timezone_set('Asia/Jakarta');
     $validator = Validator::make($req->all(), [
       // Data Umum
