@@ -111,22 +111,6 @@ class PermintaanController extends Controller
             "nama_ppk" => "required",
             "sketsa" => "required"
         ]);
-<<<<<<< HEAD
-      }
-      DB::table('history_request')->insert([
-        "username" => $req->konsultan,
-        "id_request" => $req->id,
-        "user_id" => $req->userId,
-        "class" => "sukses",
-        "keterangan" => "Request Telah Disetujui Oleh " . $req->konsultan,
-        "created_at" => \Carbon\Carbon::now()
-      ]);
-      if ($req->file('dokumentasi')) {
-        $file = $req->file('dokumentasi');
-        $name = time() . "_" . $file->getClientOriginalName();
-        DB::table('request')->where('id', $req->id)->update([
-          "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
-=======
 
         if ($validator->fails()) {
             return response()->json([
@@ -526,7 +510,6 @@ class PermintaanController extends Controller
         return response()->json([
             "code" => 200,
             "email" => "send"
->>>>>>> 568d022b54d6625ea74a34dd9e57a2d74ac1b45c
         ]);
     }
 
@@ -1023,107 +1006,6 @@ class PermintaanController extends Controller
         return response()->json([
             DB::table('jadual')->where('nmp', $id)->first()
         ]);
-<<<<<<< HEAD
-      }
-      if ($req->rekomendasi == 'with') {
-        DB::table('request')->where('id', $req->id)->update([
-          "rekomendasi"=>$req->rekomendasi,
-          "catatan_rekomendasi"=>$req->catatan_rekomendasi
-        ]);
-      }else{
-        DB::table('request')->where('id', $req->id)->update([
-          "rekomendasi"=>$req->rekomendasi,
-        ]);
-      }
-      DB::table('history_request')->insert([
-        "username" => $req->nm_ppk,
-        "id_request" => $req->id,
-        "user_id" => $req->userId,
-        "class" => "sukses",
-        "keterangan" => "Request Telah Disetujui Oleh PPK " . $req->nm_ppk,
-        "created_at" => \Carbon\Carbon::now()
-      ]);
-      if ($req->file('dokumentasi')) {
-        $file = $req->file('dokumentasi');
-        $name = time() . "_" . $file->getClientOriginalName();
-        DB::table('request')->where('id', $req->id)->update([
-          "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
-        ]);
-        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-      }
-      $get_data = DB::table('request')->where('id',$req->id)->first();
-      $bodyEmail = [
-        "role"=>"PPK",
-        "status"=>"Menyetujui",
-        "revisi"=>"",
-        "username"=> $get_data->nama_ppk,
-        "no_dokumen"=>$req->id,
-        "kegiatan"=>$get_data->nama_kegiatan,
-        "lokasi"=>$get_data->lokasi_sta,
-        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
-        "volume"=>$get_data->volume,
-        "note"=>""
-      ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->get();
-      foreach ($mailto as $email){
-        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
-      }
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
-      foreach ($mailto as $email){
-        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
-      }
-      return response()->json([
-        "code" => 200
-      ], 200);
-    } else {
-      DB::table('request')->where('id', $req->id)->update([
-        "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
-        "catatan_ppk" => $req->catatan,
-        "status" => 2,
-        "ditolak" => 1
-      ]);
-      DB::table('history_request')->insert([
-        "username" => $req->nm_ppk,
-        "id_request" => $req->id,
-        "user_id" => $req->userId,
-        "class" => "reject",
-        "keterangan" => "Request Telah Ditolak Oleh PPK " . $req->nm_ppk,
-        "created_at" => \Carbon\Carbon::now()
-      ]);
-      if ($req->file('dokumentasi')) {
-        $file = $req->file('dokumentasi');
-        $name = time() . "_" . $file->getClientOriginalName();
-        DB::table('request')->where('id', $req->id)->update([
-          "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
-        ]);
-        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-      }
-      $get_data = DB::table('request')->where('id',$req->id)->first();
-      $bodyEmail = [
-        "role"=>"PPK",
-        "status"=>"Menolak",
-        "revisi"=>"",
-        "username"=> $req->nm_ppk,
-        "no_dokumen"=>$req->id,
-        "kegiatan"=>$get_data->nama_kegiatan,
-        "lokasi"=>$get_data->lokasi_sta,
-        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
-        "volume"=>$get_data->volume,
-        "note"=>""
-      ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_kontraktor)->get();
-      foreach ($mailto as $email){
-        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
-      }
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
-      foreach ($mailto as $email){
-        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
-      }
-      return response()->json([
-        "code" => 200
-      ], 200);
-=======
->>>>>>> 568d022b54d6625ea74a34dd9e57a2d74ac1b45c
     }
 
     public function getDetailJadual(Request $req)
@@ -1156,59 +1038,5 @@ class PermintaanController extends Controller
             $req->all(),
             'code' => 200
         ]);
-<<<<<<< HEAD
-        Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-      }
-      $get_data = DB::table('request')->where('id',$req->id)->first();
-      $bodyEmail = [
-        "role"=>"Konsultan",
-        "status"=>"Mengirim",
-        "revisi"=>"Revisi",
-        "username"=> $req->konsultan,
-        "no_dokumen"=>$req->id,
-        "kegiatan"=>$get_data->nama_kegiatan,
-        "lokasi"=>$get_data->lokasi_sta,
-        "jenis_pekerjaan"=>$get_data->jenis_pekerjaan,
-        "volume"=>$get_data->volume,
-        "note"=>""
-      ];
-      $mailto = DB::table('member')->where('perusahaan','=',$get_data->nama_direksi)->get();
-      foreach ($mailto as $email){
-        Mail::to($email->email)->send(new TestEmail($bodyEmail)); 
-      }
-      return response()->json([
-        "code" => 200
-      ], 200);
-    }
-  }
-  public function getSatuanNmp($id,$data)
-  {
-    return response()->json([
-      DB::table('jadual')->where(['nmp'=>$id,"id_data_umum"=>$data])->first()
-    ]);
-  }
-  public function getDetailJadual(Request $req)
-  {
-
-    return response()->json(
-      DB::table('detail_jadual')->where([
-        ['id_jadual',"=",$req->id],
-        ['nmp','=',$req->nmp]
-        ])->first()
-    );
-  }
-  public function deletePermintaan(Request $req)
-  {
-    $validator = Validator::make($req->all(), [
-      "alasan"=>"required"
-    ]);
-    if ($validator->fails()) {
-      return response()->json([
-        'status' => 'failed',
-        'code' => 400,
-        'error' => $validator->getMessageBag()->getMessages()
-      ], Response::HTTP_BAD_REQUEST);
-=======
->>>>>>> 568d022b54d6625ea74a34dd9e57a2d74ac1b45c
     }
 }
