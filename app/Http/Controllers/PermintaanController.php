@@ -576,16 +576,6 @@ try {
           "catatan_konsultan"=>$req->catatan
         ]);
       }
-      if ($req->rekomendasi == 'with') {
-        DB::table('request')->where('id', $req->id)->update([
-          "rekomendasi"=>$req->rekomendasi,
-          "catatan_rekomendasi"=>$req->catatan_rekomendasi
-        ]);
-      }else{
-        DB::table('request')->where('id', $req->id)->update([
-          "rekomendasi"=>$req->rekomendasi,
-        ]);
-      }
       DB::table('history_request')->insert([
         "username" => $req->konsultan,
         "id_request" => $req->id,
@@ -726,6 +716,16 @@ try {
       if($req->catatan != NULL){
         DB::table('request')->where('id', $req->id)->update([
           "catatan_ppk"=>$req->catatan
+        ]);
+      }
+      if ($req->rekomendasi == 'with') {
+        DB::table('request')->where('id', $req->id)->update([
+          "rekomendasi"=>$req->rekomendasi,
+          "catatan_rekomendasi"=>$req->catatan_rekomendasi
+        ]);
+      }else{
+        DB::table('request')->where('id', $req->id)->update([
+          "rekomendasi"=>$req->rekomendasi,
         ]);
       }
       DB::table('history_request')->insert([
@@ -924,10 +924,10 @@ try {
       ], 200);
     }
   }
-  public function getSatuanNmp($id)
+  public function getSatuanNmp($id,$data)
   {
     return response()->json([
-      DB::table('jadual')->where('nmp',$id)->first()
+      DB::table('jadual')->where(['nmp'=>$id,"id_data_umum"=>$data])->first()
     ]);
   }
   public function getDetailJadual(Request $req)

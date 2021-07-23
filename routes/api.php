@@ -186,7 +186,7 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
 
-    Route::get('/getsatuannmp/{id}', [PermintaanController::class, 'getSatuanNmp']);
+    Route::get('/getsatuannmp/{id}/{data}', [PermintaanController::class, 'getSatuanNmp']);
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 });
