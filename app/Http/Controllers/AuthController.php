@@ -26,7 +26,10 @@ class AuthController extends Controller
 
         $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
 
-        $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+        $id_uptd = null;
+        if ($user_detail->kantor_id != null) {
+            $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+        }
 
         $data = [
             'id_login' => $user->id_login,
@@ -67,7 +70,10 @@ class AuthController extends Controller
 
         $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
 
-        $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+        $id_uptd = null;
+        if ($user_detail->kantor_id != null) {
+            $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+        }
 
         $data = [
             'id_login' => $user->id_login,
@@ -134,8 +140,17 @@ class AuthController extends Controller
 
             DB::table('fcm_token')->updateOrInsert(
                 ["id_member" => $request->id_member],
-                ["id_member" => $request->id_member, "device_mobile_token" => $request->fcm_token]
+                ["id_member" => $request->id_member, "username" => $request->username, "device_mobile_token" => $request->fcm_token]
             );
+
+            $queue_fcm_notif = DB::table('queue_fcm_notification')->where('username', '=', $request->username)->get();
+
+            if ($queue_fcm_notif != null) {
+                foreach ($queue_fcm_notif as $notif) {
+                    pushNotification($notif->title, $notif->description, $notif->username);
+                    DB::table('queue_fcm_notification')->delete($notif->id);
+                }
+            }
 
             return response()->json([
                 'status' => 'success',
