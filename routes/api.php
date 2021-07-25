@@ -177,11 +177,15 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::get('/getPermintaanByDataUmumId/{id}', [PermintaanController::class, 'getPermintaanByDataUmumId']);
 
+    Route::get('/getPermintaanDetailById/{id}', [PermintaanController::class, 'getPermintaanDetailById']);
+
     Route::post('/buatRequestFromMobile', [PermintaanController::class, 'buatRequestFromMobile']);
 
     Route::post('/buatrequest', [PermintaanController::class, 'buatRequest']);
 
     Route::post('/updaterequest', [PermintaanController::class, 'updateRequest']);
+
+    Route::post('/sendRequestPekerjaanFromMobile', [PermintaanController::class, 'sendRequestPekerjaanFromMobile']);
 
     Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
 
@@ -194,7 +198,9 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
 
     Route::get('/getsatuannmp/{id}/{data}', [PermintaanController::class, 'getSatuanNmp']);
+
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
+
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 });
 

@@ -63,6 +63,40 @@ class PermintaanController extends Controller
         ]);
     }
 
+    public function getPermintaanDetailById($id)
+    {
+        try {
+            $result = DB::table('request')
+                ->where('id', '=', $id)
+                ->first();
+
+            $result->sketsa = Storage::url($result->sketsa);
+            $result->metode_kerja = Storage::url($result->metode_kerja);
+
+            $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $result->id)->get();
+            $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $result->id)->get();
+            $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $result->id)->get();
+            $pekerja = DB::table('detail_request_tkerja')->where('id_request', '=', $result->id)->get();
+
+            $result->bahan = $bahan;
+            $result->campuran = $campuran;
+            $result->peralatan = $peralatan;
+            $result->pekerja = $pekerja;
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 200,
+                'result' => $result
+            ], Response::HTTP_OK);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 500,
+                'message' => 'Gagal Mengambil Detail Permintaan Pekerjaan Dengan Id ' . $id
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function getPermintaanByDataUmumId($id)
     {
         $result = DB::table('request')
@@ -73,6 +107,9 @@ class PermintaanController extends Controller
             ->get();
 
         foreach ($result as $item) {
+            $item->sketsa = Storage::url($item->sketsa);
+            $item->metode_kerja = Storage::url($item->metode_kerja);
+
             $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
             $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
             $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
@@ -156,7 +193,7 @@ class PermintaanController extends Controller
             if ($req->input('bahan') != null) {
                 foreach (json_decode($req->input('bahan')) as $item_bahan) {
                     DB::table('detail_request_bahan')->insert([
-                        'id_request' => 1,
+                        'id_request' => $id,
                         'bahan' => $item_bahan->bahan,
                         'volume' => $item_bahan->volume,
                         'satuan' => $item_bahan->satuan
@@ -168,7 +205,7 @@ class PermintaanController extends Controller
                 foreach (json_decode($req->input('alat')) as $item_alat) {
                     DB::table('detail_request_peralatan')->insert([
                         'id_request' => $id,
-                        'jenis_peralatan' => $item_alat->alat,
+                        'jenis_peralatan' => $item_alat->jenis_peralatan,
                         'jumlah' => $item_alat->jumlah,
                         'satuan' => $item_alat->satuan
                     ]);
@@ -179,7 +216,7 @@ class PermintaanController extends Controller
                 foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
                     DB::table('detail_request_tkerja')->insert([
                         'id_request' => $id,
-                        'tenaga_kerja' => $item_pekerja->pekerja,
+                        'tenaga_kerja' => $item_pekerja->tenaga_kerja,
                         'jumlah' => $item_pekerja->jumlah
                     ]);
                 }
@@ -189,7 +226,7 @@ class PermintaanController extends Controller
                 foreach (json_decode($req->input('campuran')) as $item_campuran) {
                     DB::table('detail_request_jmf')->insert([
                         'id_request' => $id,
-                        'bahan_jmf' => $item_campuran->bahan,
+                        'bahan_jmf' => $item_campuran->bahan_jmf,
                         'volume' => $item_campuran->volume,
                         'satuan' => $item_campuran->satuan,
                     ]);
@@ -439,6 +476,80 @@ class PermintaanController extends Controller
         ]);
     }
 
+    public function sendRequestPekerjaanFromMobile(Request $req)
+    {
+        $get_data = DB::table('request')->where('id', $req->id)->first();
+        if ($get_data->ditolak == 1) {
+            DB::table('request')->where('id', $req->id)->update([
+                "status" => 2,
+                "ditolak" => 0,
+                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+            ]);
+            DB::table('history_request')->insert([
+                "username" => $req->username,
+                "id_request" => $req->id,
+                "user_id" => $req->userId,
+                "keterangan" => "Request Revisi Telah Dikirim Oleh " . $req->username,
+                "class" => "kirim",
+                "created_at" => \Carbon\Carbon::now()
+            ]);
+            $bodyEmail = [
+                "role" => "Kontraktor",
+                "status" => "Mengirim",
+                "revisi" => "Revisi ",
+                "username" => $get_data->nama_kontraktor,
+                "no_dokumen" => $req->id,
+                "kegiatan" => $get_data->nama_kegiatan,
+                "lokasi" => $get_data->lokasi_sta,
+                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+                "volume" => $get_data->volume,
+                "note" => "konsultan"
+            ];
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Revisi Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+
+        } else {
+//            DB::table('request')->where('id', $req->id)->update([
+//                "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
+//                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+//                "status" => 2
+//            ]);
+//            DB::table('history_request')->insert([
+//                "username" => $req->username,
+//                "id_request" => $req->id,
+//                "user_id" => $req->userId,
+//                "keterangan" => "Request Telah Dikirim Oleh " . $req->username,
+//                "class" => "kirim",
+//                "created_at" => \Carbon\Carbon::now()
+//            ]);
+//            $bodyEmail = [
+//                "role" => "Kontraktor",
+//                "status" => "Mengirim",
+//                "revisi" => "",
+//                "username" => $get_data->nama_kontraktor,
+//                "no_dokumen" => $req->id,
+//                "kegiatan" => $get_data->nama_kegiatan,
+//                "lokasi" => $get_data->lokasi_sta,
+//                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+//                "volume" => $get_data->volume,
+//                "note" => "konsultan"
+//            ];
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+//                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+        }
+
+        return response()->json([
+            "status" => "success",
+            "code" => 200,
+            "result" => "Permintaan Pekerjaan Telah Terkirim"
+        ]);
+    }
 
     public function sendReq(Request $req)
     {
@@ -472,6 +583,7 @@ class PermintaanController extends Controller
             ];
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Revisi Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
 
@@ -503,6 +615,7 @@ class PermintaanController extends Controller
             ];
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
         }
