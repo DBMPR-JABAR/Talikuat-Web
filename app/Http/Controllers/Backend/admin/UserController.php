@@ -209,6 +209,7 @@ class UserController extends Controller
             $update_user->kode_pos = $request->input('kode_pos');
             $update_user->alamat = $request->input('alamat');
             $update_user->save();
+            
             $success = "Profil Berhasil Diupdate!";
             $failed = "Profil Gagal Diupdate!";
             $update = User::find($id);
