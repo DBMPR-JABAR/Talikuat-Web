@@ -18,6 +18,7 @@ if (!function_exists('isNotNullOrBlank')) {
     }
 }
 
+
 if (!function_exists('pushNotification')) {
     function pushNotification($title, $descrition, $username)
     {
@@ -48,5 +49,33 @@ if (!function_exists('pushNotification')) {
                 ]
             ]);
         }
+    }
+}
+
+if (!function_exists('moneyFormat')) {
+    /**
+     * moneyFormat
+     *
+     * @param mixed $str
+     * @return void
+     */
+    function moneyFormat($str)
+    {
+        return 'Rp. ' . number_format($str, '0', '', '.');
+    }
+}
+
+if (!function_exists('dateID')) {
+    /**
+     * dateID
+     *
+     * @param mixed $tanggal
+     * @return void
+     */
+    function dateID($tanggal)
+    {
+        $value = Carbon\Carbon::parse($tanggal);
+        $parse = $value->locale('id');
+        return $parse->translatedFormat('l, d F Y');
     }
 }

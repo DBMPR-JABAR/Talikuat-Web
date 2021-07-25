@@ -209,6 +209,7 @@ class UserController extends Controller
             $update_user->kode_pos = $request->input('kode_pos');
             $update_user->alamat = $request->input('alamat');
             $update_user->save();
+            
             $success = "Profil Berhasil Diupdate!";
             $failed = "Profil Gagal Diupdate!";
             $update = User::find($id);
@@ -253,7 +254,7 @@ class UserController extends Controller
                 }
 
                 if($request->input('password') != ""){
-                    $data['password']     = Hash::make($request->input('password'));
+                    $useraccount['password']     = Hash::make($request->input('password'));
                 }else if($request->input('email') == Auth::user()->email){
                     return redirect(route('profile', $id))->with(['warning'=>'Tidak ada data yang dirubah!']);
 

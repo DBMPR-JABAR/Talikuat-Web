@@ -28,8 +28,6 @@
                     <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
 
                 @endif
-                
-                
                 </p>
                 <div class="table-responsive">
                     <table class="table table-striped">

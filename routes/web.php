@@ -58,16 +58,32 @@ Route::prefix('admin')->group(function () {
         });
 
         route::prefix('/master_kontraktor')->group(function(){
-            Route::get('/',[MasterKontraktor::class,'index'])->name('masterkontraktor.index');
-            Route::get('/{id}',[MasterKontraktor::class,'show'])->name('show.masterkontraktor');
+            Route::get('/',[MasterKontraktorController::class,'index'])->name('masterkontraktor.index');
+            Route::get('/detail/{id}',[MasterKontraktorController::class,'show'])->name('show.masterkontraktor');
+            Route::get('/create',[MasterKontraktorController::class,'create'])->name('create.masterkontraktor');
+            Route::post('/store',[MasterKontraktorController::class,'store'])->name('store.masterkontraktor');
+            Route::get('/edit/{id}',[MasterKontraktorController::class,'edit'])->name('edit.masterkontraktor');
+            Route::put('/update/{id}',[MasterKontraktorController::class,'update'])->name('update.masterkontraktor');
+            Route::get('/trash',[MasterKontraktorController::class,'trash'])->name('trash.masterkontraktor');
+            Route::get('/trash/{desc}/{id}',[MasterKontraktorController::class,'move_to_trash']);
         });
         route::prefix('/master_konsultan')->group(function(){
             Route::get('/',[MasterKonsultan::class,'index'])->name('masterkonsultan.index');
-            Route::get('/{id}',[MasterKonsultan::class,'show'])->name('show.masterkonsultan');
+            Route::get('/detail/{id}',[MasterKonsultan::class,'show'])->name('show.masterkonsultan');
+            Route::get('/create',[MasterKonsultan::class,'create'])->name('create.masterkonsultan');
+
         });
         route::prefix('/master_ppk')->group(function(){
-            Route::get('/',[MasterPpk::class,'index'])->name('masterppk.index');
-            Route::get('/{id}',[MasterPpk::class,'show'])->name('show.masterppk');
+            Route::get('/',[MasterPpkController::class,'index'])->name('masterppk.index');
+            Route::get('/detail/{id}',[MasterPpkController::class,'show'])->name('show.masterppk');
+
+            Route::get('/create',[MasterPpkController::class,'create'])->name('create.masterppk');
+            Route::post('/store',[MasterPpkController::class,'store'])->name('store.masterppk');
+            Route::get('/edit/{id}',[MasterPpkController::class,'edit'])->name('edit.masterppk');
+            Route::put('/update/{id}',[MasterPpkController::class,'update'])->name('update.masterppk');
+            Route::get('/trash',[MasterPpkController::class,'trash'])->name('trash.masterppk');
+            Route::get('/trash/{desc}/{id}',[MasterPpkController::class,'move_to_trash']);
+
         });
 
     });

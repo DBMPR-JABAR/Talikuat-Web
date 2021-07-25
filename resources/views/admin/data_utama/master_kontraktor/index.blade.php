@@ -20,14 +20,10 @@
             <div class="card-body">
                 <h4 class="card-title">Data Kontraktor</h4>
                 @if (Request::segment(3) != 'trash')
+                <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3">
+                    <i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
                 <a
-                    data-toggle="modal"
-                    href="#addModal"
-                    class="btn btn-mat btn-primary mb-3"
-                    ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
-                >
-                <a
-                    href="{{ route('masterkontraktor.index') }}"
+                    href="{{ route('trash.masterkontraktor') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-delete menu-icon"></i> Trash</a
                 >
@@ -43,39 +39,40 @@
                 <table
                     class="table-striped"
                     style="width: 100%"
-                    id="dataKontraktor"
-                >
+                    id="dataKontraktor">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Name Perusahaan</th>
-                            <th>Alamat</th>
                             <th>Nama Direktur</th>
-                            <th>NPWP</th>
                             <th>No. Telp</th>
-                            <th>Bank</th>
-                            <th>No.Rekening</th>
-                            <th>Aksi</th>
+                            <th style="width: 22%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>
-                                PT. LAKSANA DESAIN DAYA CIPTA KSO PT GUNUNG GIRI
-                                ENGINEERING KONSULTAN
-                            </td>
-                            <td>
-                                Kopo Permai Blok 18 CDF no.13 Bandung - Bandung
-                                (kab) - Jawa Barat
-                            </td>
-                            <td>Ir. Alfred Purawidjaja</td>
-                            <td>Ir. Zaharudin Kasim <br />Ir. Kasna</td>
-                            <td>Ir.Memet Slamet <br />Nurdin Firdausi, ST</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        @foreach ($data as $no => $item)
+                            
+                            <tr>
+                                <td>{{ ++$no }}</td>
+                                <td>
+                                    {!! $item->nama !!}
+                                </td>
+                               
+                                <td>{!! $item->nama_direktur !!}</td>
+                                <td>{!! $item->telp !!}</td>
+                                <td>
+                                    @if (Request::segment(3) != 'trash')
+                                    <a type='button' href='{{ route('show.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
+                                    <a type='button' href='{{ route('edit.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                    @else
+                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+
+                                    @endif
+                                    <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -86,14 +83,11 @@
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
-                <form
-                    action="{{ route('store.user') }}"
-                    method="post"
-                    enctype="multipart/form-data"
-                >
+                <form action="{{route('store.masterkontraktor')}}" method="post" enctype="multipart/form-data">
+
                     @csrf
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
+                        <h4 class="modal-title">Tambah Kontraktor</h4>
                         <button
                             type="button"
                             class="close"
@@ -109,19 +103,19 @@
                             <label>Nama Perusahaan</label>
                             <input
                                 type="text"
-                                name="name"
-                                id="name"
-                                value="{{ old('name') }}"
+                                name="nama"
+                                id="nama"
+                                value="{{ old('nama') }}"
                                 placeholder="Masukkan Nama Perusahaan"
                                 class="
                                     form-control
-                                    @error('name')
+                                    @error('nama')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('name')
+                            @error('nama')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -140,13 +134,13 @@
                                 placeholder="Masukan Alamat"
                                 class="
                                     form-control
-                                    @error('email')
+                                    @error('alamat')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('email')
+                            @error('alamat')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -159,19 +153,19 @@
                             <label>Nama Direktur</label>
                             <input
                                 type="text"
-                                name="nm_direktur"
-                                id="nm_direktur"
-                                value="{{ old('nm_direktur') }}"
+                                name="nama_direktur"
+                                id="nama_direktur"
+                                value="{{ old('nama_direktur') }}"
                                 placeholder="Masukkan Nama Direktur"
                                 class="
                                     form-control
-                                    @error('password')
+                                    @error('nama_direktur')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('password')
+                            @error('nama_direktur')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -196,7 +190,7 @@
                             <label>No Telp</label>
                             <input
                                 type="text"
-                                name="no_tlp"
+                                name="telp"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');"
                                 placeholder="082218XXXXXX"
                                 class="form-control"
@@ -215,7 +209,7 @@
                             <label>No.Rekening</label>
                             <input
                                 type="text"
-                                name="rekening"
+                                name="no_rek"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');"
                                 placeholder=""
                                 class="form-control"
@@ -246,7 +240,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Pindahkan Data User ke Sampah</h4>
+                    <h4 class="modal-title">Pindahkan Data Kontraktor ke Sampah</h4>
                     <button
                         type="button"
                         class="close"
@@ -283,7 +277,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Kembalikan Data User</h4>
+                    <h4 class="modal-title">Kembalikan Data Kontraktor</h4>
                     <button
                         type="button"
                         class="close"
@@ -325,7 +319,7 @@
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/user/trash/move_to_trash') }}/` + id;
+            const url = `{{ url('admin/master_kontraktor/trash/move_to_trash') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #delHref").attr("href", url);
@@ -334,7 +328,7 @@
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/user/trash/restore') }}/` + id;
+            const url = `{{ url('admin/master_kontraktor/trash/restore') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #resHref").attr("href", url);

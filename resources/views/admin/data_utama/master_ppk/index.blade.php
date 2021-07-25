@@ -1,14 +1,14 @@
-@extends('layout.index') @section('title','Kontraktor') @section('header')
+@extends('layout.index') @section('title','ppk') @section('header')
 @endsection @section('page-header')
 <div class="page-header">
-    <h3 class="page-title">Data Kontraktor</h3>
+    <h3 class="page-title">Data PPK</h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('admin.home') }}">Dashboard</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                Data Kontraktor
+                Data PPK
             </li>
         </ol>
     </nav>
@@ -18,7 +18,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Kontraktor</h4>
+                <h4 class="card-title">Data PPK</h4>
                 @if (Request::segment(3) != 'trash')
                 <a
                     data-toggle="modal"
@@ -27,13 +27,13 @@
                     ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
                 >
                 <a
-                    href="{{ route('masterkontraktor.index') }}"
+                    href="{{ route('trash.masterppk') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-delete menu-icon"></i> Trash</a
                 >
                 @else
                 <a
-                    href="{{ route('masterkontraktor.index') }}"
+                    href="{{ route('masterppk.index') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-undo menu-icon"></i> Kembali</a
                 >
@@ -43,29 +43,42 @@
                 <table
                     class="table-striped"
                     style="width: 100%"
-                    id="dataKontraktor"
+                    id="dataPpk"
                 >
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Name PPK</th>
                             <th>Alamat</th>
-                            <th>Aksi</th>
+                            <th style="width: 22%">Aksi</th>
+
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($data as $no => $item)
+
                         <tr>
-                            <td>1</td>
+                            <td>{{ ++$no }}</td>
                             <td>
-                                PT. LAKSANA DESAIN DAYA CIPTA KSO PT GUNUNG GIRI
-                                ENGINEERING KONSULTAN
+                                {!! $item->nama !!}
                             </td>
                             <td>
-                                Kopo Permai Blok 18 CDF no.13 Bandung - Bandung
-                                (kab) - Jawa Barat
+                                {!! $item->alamat !!}
+
                             </td>
-                            <td></td>
+                            <td>
+                                @if (Request::segment(3) != 'trash')
+                                    <a type='button' href='{{ route('show.masterppk',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
+                                    <a type='button' href='{{ route('edit.masterppk',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                @else
+                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+
+                                @endif
+                                    <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+
+                            </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -77,13 +90,13 @@
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <form
-                    action="{{ route('store.user') }}"
+                    action="{{route('store.masterppk')}}"
                     method="post"
                     enctype="multipart/form-data"
                 >
                     @csrf
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
+                        <h4 class="modal-title">Tambah PPK</h4>
                         <button
                             type="button"
                             class="close"
@@ -96,22 +109,22 @@
 
                     <div class="modal-body p-5">
                         <div class="form-group">
-                            <label>Nama Perusahaan</label>
+                            <label>Nama </label>
                             <input
                                 type="text"
-                                name="name"
-                                id="name"
-                                value="{{ old('name') }}"
-                                placeholder="Masukkan Nama Perusahaan"
+                                name="nama"
+                                id="nama"
+                                value="{{ old('nama') }}"
+                                placeholder="Masukkan Nama "
                                 class="
                                     form-control
-                                    @error('name')
+                                    @error('nama')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('name')
+                            @error('nama')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -130,13 +143,13 @@
                                 placeholder="Masukan Alamat"
                                 class="
                                     form-control
-                                    @error('email')
+                                    @error('alamat')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('email')
+                            @error('alamat')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -145,72 +158,7 @@
                             </div>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Nama Direktur</label>
-                            <input
-                                type="text"
-                                name="nm_direktur"
-                                id="nm_direktur"
-                                value="{{ old('nm_direktur') }}"
-                                placeholder="Masukkan Nama Direktur"
-                                class="
-                                    form-control
-                                    @error('password')
-                                    is-invalid
-                                    @enderror
-                                "
-                                required
-                            />
-                            @error('password')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>NPWP</label>
-                            <input
-                                type="text"
-                                name="npwp"
-                                id="npwm"
-                                value="{{ old('npwm') }}"
-                                placeholder="Masukkan NPWP"
-                                class="form-control"
-                                required
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label>No Telp</label>
-                            <input
-                                type="text"
-                                name="no_tlp"
-                                oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                                placeholder="082218XXXXXX"
-                                class="form-control"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Bank</label>
-                            <input
-                                type="text"
-                                name="bank"
-                                placeholder="Masukan Nama Bank"
-                                class="form-control"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label>No.Rekening</label>
-                            <input
-                                type="text"
-                                name="rekening"
-                                oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                                placeholder=""
-                                class="form-control"
-                            />
-                        </div>
+                        
                     </div>
 
                     <div class="modal-footer">
@@ -310,12 +258,12 @@
 @endsection @section('script')
 <script>
     $(document).ready(function () {
-        $("#dataKontraktor").DataTable();
+        $("#dataPpk").DataTable();
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/user/trash/move_to_trash') }}/` + id;
+            const url = `{{ url('admin/master_ppk/trash/move_to_trash') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #delHref").attr("href", url);
@@ -324,7 +272,7 @@
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/user/trash/restore') }}/` + id;
+            const url = `{{ url('admin/master_ppk/trash/restore') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #resHref").attr("href", url);

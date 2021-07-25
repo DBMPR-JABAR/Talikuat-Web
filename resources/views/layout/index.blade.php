@@ -468,8 +468,9 @@
                 </nav>
 
                 <div class="main-panel">
-                    <div class="col-md-12" style="background: #f2f2f2">
+                    <div  style="background: #f2f2f2">
                         @include('flashalert.index')
+
                     </div>
                     <div class="content-wrapper pb-0">
                         @yield('page-header') @yield('content')
