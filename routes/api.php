@@ -43,6 +43,8 @@ Route::prefix('/auth')->group(function () {
 
     Route::middleware('auth:sanctum')->delete('/revokeAllTokens', [AuthController::class, 'revokeAllTokens']);
 
+    Route::post('/storeFcmToken', [AuthController::class, 'saveFcmTokenMobileDevice']);
+
     Route::post('/login', [AuthController::class, 'login']);
 });
 
@@ -158,7 +160,10 @@ Route::prefix('/jadual')->group(function () {
 
     Route::get('/getJadualByDataUmumId/{id}', [JadualController::class, 'getJadualByDataUmumId']);
 
-    Route::get('getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
+    Route::get('/getJadualByDataUmumIdAndRuasJalan', [JadualController::class, 'getJadualByDataUmumIdAndRuasJalan']);
+
+    Route::get('/getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
+
     Route::get('getJadualbyNmp/{id}', [JadualController::class, 'getNmpjadual']);
 });
 
@@ -169,6 +174,8 @@ Route::prefix('/permintaan')->group(function () {
     Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);
 
     Route::get('/getPermintaanByKeyword', [PermintaanController::class, 'getPermintaanByKeyword']);
+
+    Route::get('/getPermintaanByDataUmumId/{id}', [PermintaanController::class, 'getPermintaanByDataUmumId']);
 
     Route::post('/buatRequestFromMobile', [PermintaanController::class, 'buatRequestFromMobile']);
 
@@ -186,7 +193,7 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
 
-    Route::get('/getsatuannmp/{id}', [PermintaanController::class, 'getSatuanNmp']);
+    Route::get('/getsatuannmp/{id}/{data}', [PermintaanController::class, 'getSatuanNmp']);
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 });
@@ -311,7 +318,7 @@ Route::prefix('merge')->group(function () {
 
     Route::get('/file/{id}', [MergePdf::class, 'getFile']);
 
-    Route::get('/file-count/{id}', [MergePdf::class, 'getFileCount']);
+    Route::get('/fileCount/{id}', [MergePdf::class, 'getFileCount']);
 
     Route::post('/deletefile', [MergePdf::class, 'deleteFile']);
 });

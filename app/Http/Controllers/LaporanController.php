@@ -65,7 +65,8 @@ class LaporanController extends Controller
       "ket"=>$req->ket,
       "gambar"=>$this->PATH_FILE_DB."/".$name,
       "id_jadual"=>$req->id_jadual,
-      "id_data_umum"=>$req->id_data_umum
+      "id_data_umum"=>$req->id_data_umum,
+      "bobot"=>$req->bobot
     ]);
     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
     DB::table('detail_laporan_harian_pekerjaan')->insert([
@@ -78,7 +79,8 @@ class LaporanController extends Controller
       "volume"=>$req->volume,
       "satuan"=>$req->satuan,
       "ket"=>$req->ket,
-      "tgl"=>$req->tanggal
+      "tgl"=>$req->tanggal,
+      "bobot"=>$req->bobot
     ]);
 
     if($req->bahan[0] != null){
