@@ -76,13 +76,24 @@ Route::prefix('admin')->group(function () {
         route::prefix('/master_ppk')->group(function(){
             Route::get('/',[MasterPpkController::class,'index'])->name('masterppk.index');
             Route::get('/detail/{id}',[MasterPpkController::class,'show'])->name('show.masterppk');
-
             Route::get('/create',[MasterPpkController::class,'create'])->name('create.masterppk');
             Route::post('/store',[MasterPpkController::class,'store'])->name('store.masterppk');
             Route::get('/edit/{id}',[MasterPpkController::class,'edit'])->name('edit.masterppk');
             Route::put('/update/{id}',[MasterPpkController::class,'update'])->name('update.masterppk');
             Route::get('/trash',[MasterPpkController::class,'trash'])->name('trash.masterppk');
             Route::get('/trash/{desc}/{id}',[MasterPpkController::class,'move_to_trash']);
+
+        });
+        route::prefix('/master_jenis_pekerjaan')->group(function(){
+            Route::get('/',[MasterJenisPekerjaanController::class,'index'])->name('masterjenispekerjaan.index');
+            Route::get('/detail/{id}',[MasterJenisPekerjaanController::class,'show'])->name('show.masterjenispekerjaan');
+
+            Route::get('/create',[MasterJenisPekerjaanController::class,'create'])->name('create.masterjenispekerjaan');
+            Route::post('/store',[MasterJenisPekerjaanController::class,'store'])->name('store.masterjenispekerjaan');
+            Route::get('/edit/{id}',[MasterJenisPekerjaanController::class,'edit'])->name('edit.masterjenispekerjaan');
+            Route::put('/update/{id}',[MasterJenisPekerjaanController::class,'update'])->name('update.masterjenispekerjaan');
+            Route::get('/trash',[MasterJenisPekerjaanController::class,'trash'])->name('trash.masterjenispekerjaan');
+            Route::get('/trash/{desc}/{id}',[MasterJenisPekerjaanController::class,'move_to_trash']);
 
         });
 

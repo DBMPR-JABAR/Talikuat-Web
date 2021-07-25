@@ -140,17 +140,17 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/typography.html"
+                                        href="{{ route('masterjenispekerjaan.index') }}"
                                         >Jenis Pekerjaan</a
                                     >
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a
                                         class="nav-link"
                                         href="pages/ui-features/typography.html"
                                         >Data Pengguna Aplikasi</a
                                     >
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </li>

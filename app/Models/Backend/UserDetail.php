@@ -20,4 +20,8 @@ class UserDetail extends Model
     {
         return $this->belongsTo('App\Models\Backend\UserRule', 'rule_user_id');
     }
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterKontraktor', 'kontraktor_id');
+    }
 }
