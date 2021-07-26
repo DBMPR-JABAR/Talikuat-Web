@@ -169,4 +169,22 @@ class AuthController extends Controller
         }
 
     }
+
+    public function logout(Request $req)
+    {
+        try {
+            DB::table('fcm_token')->where('id_member', '=', $req->user()->id_member)->delete();
+            $req->user()->currentAccessToken()->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 200
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 500
+            ]);
+        }
+    }
 }
