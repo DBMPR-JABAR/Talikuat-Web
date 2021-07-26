@@ -181,6 +181,10 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::get('/getPermintaanDetailById/{id}', [PermintaanController::class, 'getPermintaanDetailById']);
 
+    Route::get('/getLatestPermintaanByKonsultan', [PermintaanController::class, 'getLatestPermintaanByKonsultan']);
+
+    Route::get('/getPermintaanByKonsultan', [PermintaanController::class, 'getPermintaanByKonsultan']);
+
     Route::post('/buatRequestFromMobile', [PermintaanController::class, 'buatRequestFromMobile']);
 
     Route::post('/buatrequest', [PermintaanController::class, 'buatRequest']);
