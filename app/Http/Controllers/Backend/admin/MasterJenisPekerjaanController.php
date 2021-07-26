@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class MasterJenisPekerjaanController extends Controller
 {
@@ -20,7 +22,10 @@ class MasterJenisPekerjaanController extends Controller
      */
     public function index()
     {
-        $data = MasterJenisPekerjaan::all()->where('is_delete','!=',1);
+        $data = MasterJenisPekerjaan::get();
+        // $data = DB::table('master_jenis_pekerjaan')->get();
+        // dd($data);
+       
         return view('admin.data_utama.master_jenis_pekerjaan.index',compact('data'));
     }
 

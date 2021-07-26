@@ -60,31 +60,31 @@
         <style>
             
             @media only screen and (max-width: 646px) {
-            .table-striped {
-                width: 40%;
-                font-size: 12px;
-                overflow-x:scroll;
-            }
-            #table-wrapper {
-            position:relative;
-            }
-            #table-scroll {
-            overflow:auto;  
-            margin-top:20px;
-            }
-            #table-wrapper table {
-            width:100%;
-            }
+                .table-striped {
+                    width: 40%;
+                    font-size: 12px;
+                    overflow-x:scroll;
+                }
+                #table-wrapper {
+                position:relative;
+                }
+                #table-scroll {
+                overflow:auto;  
+                margin-top:20px;
+                }
+                #table-wrapper table {
+                width:100%;
+                }
+                
+                #table-wrapper table thead th .text {
+                position:absolute;   
+                top:-20px;
+                z-index:2;
+                width:35%;
+                border:1px solid red;
+                }
             
-            #table-wrapper table thead th .text {
-            position:absolute;   
-            top:-20px;
-            z-index:2;
-            width:35%;
-            border:1px solid red;
             }
-           
-        }
         </style>
         @yield('header')
     </head>
