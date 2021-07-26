@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Admin;
+namespace App\Http\Controllers\Backend\admin;
 
 use App\Http\Controllers\Backend\admin\MasterKonsultan;
 use App\Http\Controllers\Backend\admin\MasterPpk;
