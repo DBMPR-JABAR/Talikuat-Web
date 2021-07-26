@@ -48,7 +48,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Id</th>
+                            <th>Kode</th>
                             <th>Jenis Pekerjaan</th>
                             <th>Satuan</th>
                             <th style="width: 22%">Aksi</th>
@@ -112,22 +112,22 @@
 
                     <div class="modal-body p-5">
                         <div class="form-group">
-                            <label>Id </label>
+                            <label>Kode Jenis Pekerjaan </label>
                             <input
                                 type="text"
-                                name="id"
-                                id="id"
-                                value="{{ old('id') }}"
-                                placeholder="Masukkan id "
+                                name="kd_jenis_pekerjaan"
+                                id="kd_jenis_pekerjaan"
+                                value="{{ old('kd_jenis_pekerjaan') }}"
+                                placeholder="Masukkan Kode Jenis Pekerjaan "
                                 class="
                                     form-control
-                                    @error('id')
+                                    @error('kd_jenis_pekerjaan')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('id')
+                            @error('kd_jenis_pekerjaan')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
