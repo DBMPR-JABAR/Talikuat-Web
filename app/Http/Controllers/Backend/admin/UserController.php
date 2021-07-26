@@ -12,6 +12,7 @@ use App\Models\Backend\UserProfiles as UserProfiles;
 use App\Models\Backend\UserDetail as UserDetail;
 use App\Models\Backend\UserRule as UserRule;
 use App\Models\Backend\Uptd as Uptd;
+use App\Models\Backend\MasterKontraktor;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -119,8 +120,10 @@ class UserController extends Controller
             }
         }
         $data = User::find($id);
+        $kontraktors = MasterKontraktor::all();
+        // dd($data->user_detail);
         // dd($data);
-        return view('admin.user.form',compact('data'));
+        return view('admin.user.form',compact('data','kontraktors'));
     }
 
     /**
@@ -153,6 +156,8 @@ class UserController extends Controller
             $update_user = User::find($id)->update($data);
 
         }else if($desc == 'profiles'){
+            
+
             $this->validate($request,[
                 'nama'=> 'required',
                 'tgl_lahir'=> 'required',
@@ -173,6 +178,7 @@ class UserController extends Controller
                 'alamat'=> '',
                 'agama'=> 'required',
             ]);
+            // dd($id);
             // dd($id);
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
 
@@ -215,6 +221,11 @@ class UserController extends Controller
             $update = User::find($id);
             $update->name = $request->input('nama');
             $update->save();
+            // dd($id);
+            $update_deet = UserDetail::firstOrNew(['user_id'=> $id]);
+            $update_deet->kontraktor_id = $request->input('kontraktor');
+            $update_deet->save();
+            
 
         }
         if($update_user){

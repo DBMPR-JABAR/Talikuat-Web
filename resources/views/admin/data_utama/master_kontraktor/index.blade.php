@@ -35,46 +35,49 @@
                 >
 
                 @endif
+                <div id="table-wrapper">
+                    <div id="table-scroll">
+                        <table
+                            class="table-striped"
+                            style="width: 100%"
+                            id="dataKontraktor">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name Perusahaan</th>
+                                    <th>Nama Direktur</th>
+                                    <th>No. Telp</th>
+                                    <th style="width: 22%">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $no => $item)
+                                    
+                                    <tr>
+                                        <td>{{ ++$no }}</td>
+                                        <td>
+                                            {!! $item->nama !!}
+                                        </td>
+                                    
+                                        <td>{!! $item->nama_direktur !!}</td>
+                                        <td>{!! $item->telp !!}</td>
+                                        <td>
+                                            @if (Request::segment(3) != 'trash')
+                                            <a type='button' href='{{ route('show.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
+                                            <a type='button' href='{{ route('edit.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                            @else
+                                            <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
 
-                <table
-                    class="table-striped"
-                    style="width: 100%"
-                    id="dataKontraktor">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Name Perusahaan</th>
-                            <th>Nama Direktur</th>
-                            <th>No. Telp</th>
-                            <th style="width: 22%">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($data as $no => $item)
-                            
-                            <tr>
-                                <td>{{ ++$no }}</td>
-                                <td>
-                                    {!! $item->nama !!}
-                                </td>
-                               
-                                <td>{!! $item->nama_direktur !!}</td>
-                                <td>{!! $item->telp !!}</td>
-                                <td>
-                                    @if (Request::segment(3) != 'trash')
-                                    <a type='button' href='{{ route('show.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
-                                    <a type='button' href='{{ route('edit.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
-                                    @else
-                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                            @endif
+                                            <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
 
-                                    @endif
-                                    <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
-
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

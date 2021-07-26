@@ -159,7 +159,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Jenis Kelamin</label>
-                                    <select class="form-control" name="jenis_kelamin">
+                                    <select class="form-control" name="jenis_kelamin" required>
         
                                         <option value=" ">Select</option>
                                         {{-- <option selected>
@@ -239,14 +239,17 @@
                                         
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <input name="perusahaan" placeholder="Perusahaan" type="text"
-                                value="{{ old('perusahaan', @$data->profile->perusahaan) }}"
-                                class="form-control  @error('perusahaan') is-invalid @enderror">
-                            @error('perusahaan')
-                                <div class="invalid-feedback" style="display: block; color:red">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            
+                            <select class="form-control" name="kontraktor" @if(Request::segment(2) != 'user') disabled @endif>
+                                
+
+                                <option value="">Select</option>
+                               
+                                @foreach ($kontraktors as $no =>$kontraktor)
+                                <option value="{{ $kontraktor->id }}" @if (@$data->user_detail->kontraktor_id != null && $kontraktor->id == $data->user_detail->kontraktor_id) selected @endif>{{ $kontraktor->nama }}</option>
+                                
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Jabatan</label>

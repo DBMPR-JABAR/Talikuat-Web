@@ -57,6 +57,35 @@
             type="text/css"
             href="{{ asset('vendor/datatables.min.css') }}"
         />
+        <style>
+            
+            @media only screen and (max-width: 646px) {
+            .table-striped {
+                width: 40%;
+                font-size: 12px;
+                overflow-x:scroll;
+            }
+            #table-wrapper {
+            position:relative;
+            }
+            #table-scroll {
+            overflow:auto;  
+            margin-top:20px;
+            }
+            #table-wrapper table {
+            width:100%;
+            }
+            
+            #table-wrapper table thead th .text {
+            position:absolute;   
+            top:-20px;
+            z-index:2;
+            width:35%;
+            border:1px solid red;
+            }
+           
+        }
+        </style>
         @yield('header')
     </head>
     <body>
@@ -140,17 +169,17 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/typography.html"
+                                        href="{{ route('masterjenispekerjaan.index') }}"
                                         >Jenis Pekerjaan</a
                                     >
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a
                                         class="nav-link"
                                         href="pages/ui-features/typography.html"
                                         >Data Pengguna Aplikasi</a
                                     >
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </li>

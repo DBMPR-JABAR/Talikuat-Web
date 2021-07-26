@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Backend\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use App\Models\Backend\MasterPpk;
+use App\Models\Backend\MasterJenisPekerjaan;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
-class MasterPpkController extends Controller
+class MasterJenisPekerjaanController extends Controller
 {
+    //
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +20,8 @@ class MasterPpkController extends Controller
      */
     public function index()
     {
-        $data = MasterPpk::all()->where('is_delete','!=',1);
-        return view('admin.data_utama.master_ppk.index',compact('data'));
+        $data = MasterJenisPekerjaan::all()->where('is_delete','!=',1);
+        return view('admin.data_utama.master_jenis_pekerjaan.index',compact('data'));
     }
 
     /**
@@ -32,7 +32,7 @@ class MasterPpkController extends Controller
     public function create()
     {
         //
-        return view('admin.data_utama.master_ppk.form');
+        return view('admin.data_utama.master_jenis_pekerjaan.form');
 
     }
 
@@ -46,24 +46,26 @@ class MasterPpkController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'nama'=> 'required',
-            'alamat'=> 'required',
+            'id'=> 'required | unique:master_jenis_pekerjaan',
+            'jenis_pekerjaan'=> 'required',
+            'satuan'=> 'required',
         ]);
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $temp =([
-            'nama'=>$request->nama,
-            'alamat'=>$request->alamat,
+            'id'=>$request->id,
+            'jenis_pekerjaan'=>$request->jenis_pekerjaan,
+            'satuan'=>$request->satuan,
             'created_by'=>Auth::user()->id,
 
         ]);
-        $ppk = MasterPpk::create($temp);
+        $ppk = MasterJenisPekerjaan::create($temp);
 
         if($ppk){
-            return redirect()->route('masterppk.index')->with(['success' => 'Data Berhasil Disimpan!']);
+            return redirect()->route('masterjenispekerjaan.index')->with(['success' => 'Data Berhasil Disimpan!']);
         }else
-            return redirect()->route('masterppk.index')->with(['danger' => 'Data Gagal Disimpan!']);
+            return redirect()->route('masterjenispekerjaan.index')->with(['danger' => 'Data Gagal Disimpan!']);
     }
 
     /**
@@ -74,8 +76,8 @@ class MasterPpkController extends Controller
      */
     public function show($id)
     {
-        $data = MasterPpk::find($id);
-        return view('admin.data_utama.master_ppk.show', compact('data'));
+        $data = MasterJenisPekerjaan::find($id);
+        return view('admin.data_utama.master_jenis_pekerjaan.show', compact('data'));
     }
 
     /**
@@ -87,8 +89,8 @@ class MasterPpkController extends Controller
     public function edit($id)
     {
         //
-        $data = MasterPpk::find($id);
-        return view('admin.data_utama.master_ppk.form',compact('data'));
+        $data = MasterJenisPekerjaan::find($id);
+        return view('admin.data_utama.master_jenis_pekerjaan.form',compact('data'));
     }
 
     /**
@@ -104,24 +106,24 @@ class MasterPpkController extends Controller
         //
      
         $validator = Validator::make($request->all(), [
-            'nama'=> 'required',
-            'alamat'=> 'required',
+            'jenis_pekerjaan'=> 'required',
+            'satuan'=> 'required',
         ]);
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         
-        $update_ppk = MasterPpk::firstOrNew(['id'=> $id]);
-        $update_ppk->nama= $request->nama;
-        $update_ppk->alamat= $request->alamat;
-        $update_ppk->updated_by= Auth::user()->id;
-        $update_ppk->save();
+        $update_jenis_pekerjaan = MasterJenisPekerjaan::firstOrNew(['id'=> $id]);
+        $update_jenis_pekerjaan->jenis_pekerjaan= $request->jenis_pekerjaan;
+        $update_jenis_pekerjaan->satuan= $request->satuan;
+        $update_jenis_pekerjaan->updated_by= Auth::user()->id;
+        $update_jenis_pekerjaan->save();
        
-        if($update_ppk){
-            // dd($update_ppk);
-            return redirect()->route('masterppk.index')->with(['success' => 'Data Berhasil Di Perbaharui!']);
+        if($update_jenis_pekerjaan){
+            // dd($update_jenis_pekerjaan);
+            return redirect()->route('masterjenispekerjaan.index')->with(['success' => 'Data Berhasil Di Perbaharui!']);
         }else
-            return redirect()->route('masterppk.index')->with(['danger' => 'Data Gagal Di Perbaharui!']);
+            return redirect()->route('masterjenispekerjaan.index')->with(['danger' => 'Data Gagal Di Perbaharui!']);
 
     }
 
@@ -138,16 +140,16 @@ class MasterPpkController extends Controller
     public function trash()
     {
         //
-        $data = MasterPpk::where('is_delete',1)->get();
+        $data = MasterJenisPekerjaan::where('is_delete',1)->get();
         // dd($data);
-        return view('admin.data_utama.master_ppk.index', compact('data'));
+        return view('admin.data_utama.master_jenis_pekerjaan.index', compact('data'));
 
     }
     public function move_to_trash($desc, $id)
     {
         //
 
-        $user = MasterPpk::find($id);
+        $user = MasterJenisPekerjaan::find($id);
         if($desc == 'restore'){
             $user->is_delete = null;
             $message = 'Data Berhasil Dikembalikan! ';
