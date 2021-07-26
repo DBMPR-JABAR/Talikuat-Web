@@ -87,7 +87,6 @@ Route::prefix('admin')->group(function () {
         route::prefix('/master_jenis_pekerjaan')->group(function(){
             Route::get('/',[MasterJenisPekerjaanController::class,'index'])->name('masterjenispekerjaan.index');
             Route::get('/detail/{id}',[MasterJenisPekerjaanController::class,'show'])->name('show.masterjenispekerjaan');
-
             Route::get('/create',[MasterJenisPekerjaanController::class,'create'])->name('create.masterjenispekerjaan');
             Route::post('/store',[MasterJenisPekerjaanController::class,'store'])->name('store.masterjenispekerjaan');
             Route::get('/edit/{id}',[MasterJenisPekerjaanController::class,'edit'])->name('edit.masterjenispekerjaan');

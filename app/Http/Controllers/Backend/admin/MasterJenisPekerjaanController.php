@@ -23,9 +23,6 @@ class MasterJenisPekerjaanController extends Controller
     public function index()
     {
         $data = MasterJenisPekerjaan::get();
-        // $data = DB::table('master_jenis_pekerjaan')->get();
-        // dd($data);
-       
         return view('admin.data_utama.master_jenis_pekerjaan.index',compact('data'));
     }
 
@@ -50,8 +47,9 @@ class MasterJenisPekerjaanController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request);
         $validator = Validator::make($request->all(), [
-            'id'=> 'required | unique:master_jenis_pekerjaan',
+            'kd_jenis_pekerjaan'=> 'required | unique:master_jenis_pekerjaan',
             'jenis_pekerjaan'=> 'required',
             'satuan'=> 'required',
         ]);
@@ -59,7 +57,7 @@ class MasterJenisPekerjaanController extends Controller
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $temp =([
-            'id'=>$request->id,
+            'kd_jenis_pekerjaan'=>$request->kd_jenis_pekerjaan,
             'jenis_pekerjaan'=>$request->jenis_pekerjaan,
             'satuan'=>$request->satuan,
             'created_by'=>Auth::user()->id,
@@ -111,6 +109,8 @@ class MasterJenisPekerjaanController extends Controller
         //
      
         $validator = Validator::make($request->all(), [
+           
+            'kd_jenis_pekerjaan' => Rule::unique('master_jenis_pekerjaan', 'kd_jenis_pekerjaan')->ignore($id),
             'jenis_pekerjaan'=> 'required',
             'satuan'=> 'required',
         ]);
@@ -119,6 +119,7 @@ class MasterJenisPekerjaanController extends Controller
         }
         
         $update_jenis_pekerjaan = MasterJenisPekerjaan::firstOrNew(['id'=> $id]);
+        $update_jenis_pekerjaan->kd_jenis_pekerjaan= $request->kd_jenis_pekerjaan;
         $update_jenis_pekerjaan->jenis_pekerjaan= $request->jenis_pekerjaan;
         $update_jenis_pekerjaan->satuan= $request->satuan;
         $update_jenis_pekerjaan->updated_by= Auth::user()->id;
