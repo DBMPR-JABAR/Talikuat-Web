@@ -230,7 +230,7 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 
-    Route::get('/delete-lapaoran', [LaporanController::class, 'deleteLaporan']);
+    Route::post('/delete-lapaoran', [LaporanController::class, 'deleteLaporan']);
 
     Route::post('/breakdownjadual', [LaporanController::class, 'pembandingRelasi']);
 });
