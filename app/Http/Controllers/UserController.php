@@ -137,14 +137,13 @@ class UserController extends Controller
       $perusahaan = 0;
       break;
       case 'KONSULTAN':
-        $perusahaan = $req->nm_perusahaan;
+        $perusahaan = $req->nm_perusahaan_konsultan;
         break;
         case 'KONTRAKTOR':
           $perusahaan = $req->nm_perusahaan;
           break;
    
- }
-    
+ };
     DB::beginTransaction();
     try {
       DB::table('member')->insert([
@@ -162,11 +161,22 @@ class UserController extends Controller
       ]);
 
       if ($role == 'KONSULTAN') {
-        DB::table('master_konsultan')->insert([
+        $id=DB::table('master_konsultan')->insertGetId([
           'nama'=>$perusahaan,
-          'alamat'=>$req->alamat_perusahaan,
-          'nama_direktur'=>$req->nm_direktur,
+          'alamat'=>$req->alamat_perusahaan_konsultan,
+          'nama_direktur'=>$req->nm_direktur_konsultan,
         ]);
+        
+        $count =1;
+        for ($i=0; $i <count($req->nm_se) ; $i++) { 
+          DB::table('field_team_konsultan')->insert([
+            'id_konsultan'=>$id,
+            'nama_se'=>$req->nm_se[$i],
+            'nama_ie'=>$req->nm_ie[$i],
+            'team'=>'Field Team'.$count
+          ]);
+          $count++;
+        }
       }
       if ($role =='KONTRAKTOR') {
         DB::table('master_penyedia_jasa')->insert([
@@ -174,7 +184,9 @@ class UserController extends Controller
           'alamat'=>$req->alamat_perusahaan,
           'nama_direktur'=>$req->nm_direktur,
           'npwp'=>$req->npwp,
-          'nm_gs'=>$req->nm_gs,
+          'bank'=>$req->bank,
+          'no_rek'=>$req->no_rek,
+          'nama_gs'=>$req->nm_gs,
           'telp'=>$req->tlp_perusahaan,
           'created_at'=>\Carbon\Carbon::now()
         ]);
@@ -188,14 +200,9 @@ class UserController extends Controller
         "error" => $e
     ], 500);
     }
-
-
-
-
     return response()->json([
       'status' => 'success',
       'code' => '200',
-      'result' => 'oke'
     ]);
   }
 }
