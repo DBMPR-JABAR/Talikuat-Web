@@ -63,6 +63,8 @@ Route::prefix('/user')->group(function () {
     Route::get('/getUserByKeyword', [UserController::class, 'getUserByKeyword']);
 
     Route::post('/createUser', [UserController::class, 'createUser']);
+
+    Route::post('/register', [UserController::class, 'register']);
 });
 
 Route::prefix('/kontraktor')->group(function () {
