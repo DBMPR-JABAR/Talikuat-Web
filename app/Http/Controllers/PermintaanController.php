@@ -109,16 +109,47 @@ class PermintaanController extends Controller
         foreach ($result as $item) {
             $item->sketsa = Storage::url($item->sketsa);
             $item->metode_kerja = Storage::url($item->metode_kerja);
+        }
 
-            $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
-            $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
-            $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
-            $pekerja = DB::table('detail_request_tkerja')->where('id_request', '=', $item->id)->get();
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
 
-            $item->bahan = $bahan;
-            $item->campuran = $campuran;
-            $item->peralatan = $peralatan;
-            $item->pekerja = $pekerja;
+    public function getLatestPermintaanByKonsultan(Request $request)
+    {
+        $result = DB::table('request')
+            ->where('nama_direksi', '=', $request->konsultan)
+            ->limit(5)
+            ->orderByDesc('tgl_input')
+            ->orderByDesc('tgl_update')
+            ->get();
+
+        foreach ($result as $item) {
+            $item->sketsa = Storage::url($item->sketsa);
+            $item->metode_kerja = Storage::url($item->metode_kerja);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
+
+    public function getPermintaanByKonsultan(Request $request)
+    {
+        $result = DB::table('request')
+            ->where('nama_direksi', '=', $request->konsultan)
+            ->orderByDesc('tgl_input')
+            ->orderByDesc('tgl_update')
+            ->get();
+
+        foreach ($result as $item) {
+            $item->sketsa = Storage::url($item->sketsa);
+            $item->metode_kerja = Storage::url($item->metode_kerja);
         }
 
         return response()->json([
