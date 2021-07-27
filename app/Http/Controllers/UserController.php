@@ -174,6 +174,7 @@ class UserController extends Controller
           'alamat'=>$req->alamat_perusahaan,
           'nama_direktur'=>$req->nm_direktur,
           'npwp'=>$req->npwp,
+          'nm_gs'=>$req->nm_gs,
           'telp'=>$req->tlp_perusahaan,
           'created_at'=>\Carbon\Carbon::now()
         ]);
