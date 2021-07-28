@@ -230,7 +230,7 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 
-    Route::post('/delete-lapaoran', [LaporanController::class, 'deleteLaporan']);
+    Route::post('/delete', [LaporanController::class, 'deleteLaporan']);
 
     Route::post('/breakdownjadual', [LaporanController::class, 'pembandingRelasi']);
 });
@@ -309,7 +309,7 @@ Route::prefix('data-umum')->group(function () {
 
     Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
 
-    Route::post('linkspekumum', [UploadController::class, 'fileSpekUmum']);
+    Route::post('/linkspekumum', [UploadController::class, 'fileSpekUmum']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
