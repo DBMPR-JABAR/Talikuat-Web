@@ -822,7 +822,7 @@ class UploadController extends Controller
     }
     public function fileSpekUmum(Request $req)
     {
-      DB::table('file_spek_umum')->insert([
+      DB::table('file_spek_umum_update')->insert([
         "id_data_umum"=>$req->id,
         "spek_umum"=>$req->link_umum,
         "created_at"=>\Carbon\Carbon::now()
