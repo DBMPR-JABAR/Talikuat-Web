@@ -5,15 +5,15 @@ namespace App\Models\Backend;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MasterKontraktor extends Model
+class MasterKonsultan extends Model
 {
     use HasFactory;
     protected $connection= 'mysql';
-    protected $table = 'master_kontraktor';
+    protected $table = 'master_konsultan';
     protected $guarded = [];
 
-    public function user_detail()
+    public function konsultan_ft()
     {
-        return $this->hasOne('App\Models\Backend\UserDetail', 'kontraktor_id');
+        return $this->hasMany('App\Models\Backend\MasterKonsultanFt', 'konsultan_id');
     }
 }

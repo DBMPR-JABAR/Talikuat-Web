@@ -68,9 +68,16 @@ Route::prefix('admin')->group(function () {
             Route::get('/trash/{desc}/{id}',[MasterKontraktorController::class,'move_to_trash']);
         });
         route::prefix('/master_konsultan')->group(function(){
-            Route::get('/',[MasterKonsultan::class,'index'])->name('masterkonsultan.index');
-            Route::get('/detail/{id}',[MasterKonsultan::class,'show'])->name('show.masterkonsultan');
-            Route::get('/create',[MasterKonsultan::class,'create'])->name('create.masterkonsultan');
+            Route::get('/',[MasterKonsultanController::class,'index'])->name('masterkonsultan.index');
+            Route::get('/detail/{id}',[MasterKonsultanController::class,'show'])->name('show.masterkonsultan');
+            Route::get('/create',[MasterKonsultanController::class,'create'])->name('create.masterkonsultan');
+            Route::post('/store',[MasterKonsultanController::class,'store'])->name('store.masterkonsultan');
+            Route::get('/edit/{id}',[MasterKonsultanController::class,'edit'])->name('edit.masterkonsultan');
+            Route::put('/update/{id}',[MasterKonsultanController::class,'update'])->name('update.masterkonsultan');
+            Route::post('/update_ft/{id}',[MasterKonsultanController::class,'update_ft'])->name('update.masterkonsultanft');
+
+            Route::get('/trash',[MasterKonsultanController::class,'trash'])->name('trash.masterkonsultan');
+            Route::get('/trash/{desc}/{id}',[MasterKonsultanController::class,'move_to_trash']);
 
         });
         route::prefix('/master_ppk')->group(function(){
