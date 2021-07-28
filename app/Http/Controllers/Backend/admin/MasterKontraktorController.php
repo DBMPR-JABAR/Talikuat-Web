@@ -49,7 +49,7 @@ class MasterKontraktorController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'npwp' => 'unique:master_penyedia_jasa',
+            'npwp' => 'unique:master_kontraktor',
             'nama'=> 'required',
             'alamat'=> 'required',
             'telp'=> 'required',
@@ -74,6 +74,18 @@ class MasterKontraktorController extends Controller
         $kontraktor = MasterKontraktor::create($temp);
 
         if($kontraktor){
+            if(count($request->nm_gs) >=1){
+                for($x=0; $x<count($request->nm_gs); $x++){
+                    if($request->nm_gs[$x] != null){
+                        $save_ft = KontraktorGs::create([
+                            'kontraktor_id'=> $kontraktor->id,
+                            'gs'=> $request->nm_gs[$x],
+                            'created_by'=>Auth::user()->id,
+                        ]);
+                    }
+                }
+                
+            }
             return redirect()->route('masterkontraktor.index')->with(['success' => 'Data Berhasil Disimpan!']);
         }else
             return redirect()->route('masterkontraktor.index')->with(['danger' => 'Data Gagal Disimpan!']);
@@ -118,7 +130,7 @@ class MasterKontraktorController extends Controller
         //
      
          $validator = Validator::make($request->all(), [
-            'npwp' => Rule::unique('master_penyedia_jasa', 'npwp')->ignore($id),
+            'npwp' => Rule::unique('master_kontraktor', 'npwp')->ignore($id),
             'nama'=> 'required',
             'alamat'=> 'required',
             'telp'=> 'required',
@@ -158,24 +170,26 @@ class MasterKontraktorController extends Controller
             $delete_detail->each->delete();
         
         $jumlah_data = KontraktorGs::orderBy('id', 'DESC')->first();
-        
+       
         for($y=0; $y<count($request->nm_gs) ;$y++){
             if($request->nm_gs[$y] != null){
                 if(isset($request->id_gs[$y])){
                     $id_gs = $request->id_gs[$y];
                 }else{
-                    if($jumlah_data==null){
-                        $jumlah_data->id = 0;
+                    if(!isset($jumlah_data)){
+                        $id_gs =0;
+                    }else{
+                        $jumlah_data->id+=1;
+                        $id_gs = $jumlah_data->id;  
+
                     }
-                    $jumlah_data->id+=1;
-                    $id_gs = $jumlah_data->id;  
                    
                 }
                 $update_details = KontraktorGs::firstOrNew([
                     'id'=> $id_gs,
                     'kontraktor_id'=> $id,
                 ]);
-                $update_details->se = $request->nm_gs[$y];
+                $update_details->gs = $request->nm_gs[$y];
               
                 $update_details->created_by=Auth::user()->id;
                 $update_details->save();

@@ -163,7 +163,7 @@
                                     
                                     <div class="col-md-12 col-sm-6">
                                         <div class="form-group">
-                                            <label>GS</label>
+                                            <label>General Superintendent</label>
                                             <input type="text" name="nm_gs[]" class="form-control @error('nm_gs') is-invalid @enderror" value="{{ @$data_details[0]['gs'] }}" placeholder="Masukan nama GS" id="mytex1">
                                             <input type="text" name="id_gs[]" value="{{ @$data_details[0]['id'] }}" style="display: none" id="myimage">
         
@@ -190,10 +190,9 @@
                                        
                                         <div class="col-md-12 col-sm-6">
                                             <div class="form-group">
-                                                <label>GS</label>
+                                                <label>General Superintendent</label>
                                                 <input type="text" name="nm_gs[]" class="form-control @error('nm_gs') is-invalid @enderror" value="{{ @$data_details[$i]['gs'] }}" placeholder="Masukan nama GS" id="mytex1">
                                                 <input type="text" name="id_gs[]" value="{{ @$data_details[$i]['id'] }}" style="display: none" id="myimage">
-            
                                                 @error('nm_gs')
                                                 <div class="invalid-feedback" style="display: block">
                                                     {{ $message }}
@@ -221,7 +220,7 @@
                                     
                                     <div class="col-md-12 col-sm-6">
                                         <div class="form-group">
-                                            <label>GS</label>
+                                            <label>General Superintendent</label>
                                             <input type="text" name="nm_gs[]" class="form-control @error('nm_gs') is-invalid @enderror"
                                                 value="" placeholder="Masukan nama GS">
                                                 {{-- <input type="text" name="id_gs[]" value="" style="display: none" id="myimage"> --}}

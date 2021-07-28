@@ -218,6 +218,30 @@
                                 class="form-control"
                             />
                         </div>
+                        <div class="form-group">
+                            <label>General Superintendent</label>
+                            <div class="d-flex" id="ie">
+                                <input
+                                    type="text"
+                                    name="nm_gs[]"
+                                    placeholder="Masukkan Nama GS"
+                                    class="form-control"
+                                />
+                                
+                                <button
+                                    type="button"
+                                    class="ml-1"
+                                    style="border: none; padding: 0"
+                                    onclick="addIE()"
+                                    id="btn_addIE"
+                                >
+                                    <i
+                                        class="mdi mdi-account-plus mt-2"
+                                        style="color: green"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -337,5 +361,19 @@
             modal.find(".modal-footer #resHref").attr("href", url);
         });
     });
+    function addIE() {
+        $(
+            `
+            <div class="d-flex">
+            <input type="text" name="nm_gs[]" placeholder="Masukkan Nama GS" class="form-control" />
+
+            <i class="mdi mdi-delete mt-2" style="color:red;" onclick="deleteEl(this)"></i>
+            </div>`
+        ).insertAfter("#ie");
+    }
+    
+    function deleteEl(e) {
+        $(e).closest("div").remove();
+    }
 </script>
 @endsection
