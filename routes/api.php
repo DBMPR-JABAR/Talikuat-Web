@@ -309,7 +309,7 @@ Route::prefix('data-umum')->group(function () {
 
     Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
 
-    Route::post('linkspekumum', [UploadController::class, 'fileSpekUmum']);
+    Route::post('/linkspekumum', [UploadController::class, 'fileSpekUmum']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
