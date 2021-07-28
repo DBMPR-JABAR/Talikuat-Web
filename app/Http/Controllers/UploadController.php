@@ -829,7 +829,8 @@ class UploadController extends Controller
       ]);
       
       return response()->json([
-        $req->all()
+        'code'=>200,
+        'status'=>'Data Sudah Di Simpan'
       ],200);
 
     }
