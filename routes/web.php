@@ -64,6 +64,8 @@ Route::prefix('admin')->group(function () {
             Route::post('/store',[MasterKontraktorController::class,'store'])->name('store.masterkontraktor');
             Route::get('/edit/{id}',[MasterKontraktorController::class,'edit'])->name('edit.masterkontraktor');
             Route::put('/update/{id}',[MasterKontraktorController::class,'update'])->name('update.masterkontraktor');
+            Route::post('/update_gs/{id}',[MasterKontraktorController::class,'update_gs'])->name('update.masterkontraktorgs');
+
             Route::get('/trash',[MasterKontraktorController::class,'trash'])->name('trash.masterkontraktor');
             Route::get('/trash/{desc}/{id}',[MasterKontraktorController::class,'move_to_trash']);
         });

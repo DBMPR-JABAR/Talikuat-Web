@@ -16,4 +16,8 @@ class MasterKontraktor extends Model
     {
         return $this->hasOne('App\Models\Backend\UserDetail', 'kontraktor_id');
     }
+    public function kontraktor_gs()
+    {
+        return $this->hasMany('App\Models\Backend\MasterKontraktorGs', 'kontraktor_id');
+    }
 }
