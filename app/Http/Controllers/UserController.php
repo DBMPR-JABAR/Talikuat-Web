@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Carbon\Carbon;
+use PhpParser\Node\Stmt\TryCatch;
 
 class UserController extends Controller
 {
@@ -122,6 +123,79 @@ class UserController extends Controller
       'status' => 'success',
       'code' => '200',
       'result' => $result
+    ]);
+  }
+  public function register(Request $req)
+  {
+    $role = $req->role;
+    $perusahaan = '';
+ switch ($role) {
+   case 'PPK':
+     $perusahaan = 0;
+     break;
+    case 'ADMIN-UPTD':
+      $perusahaan = 0;
+      break;
+      case 'KONSULTAN':
+        $perusahaan = $req->nm_perusahaan;
+        break;
+        case 'KONTRAKTOR':
+          $perusahaan = $req->nm_perusahaan;
+          break;
+   
+ }
+    
+    DB::beginTransaction();
+    try {
+      DB::table('member')->insert([
+        'nm_member'=>$req->nm_dpn,
+        'nama_lengkap'=>$req->nm_dpn.' '.$req->nm_blkg,
+        'akses'=>$role,
+        'jabatan'=>$role,
+        'alamat_member'=>$req->alamat_user,
+        'telp'=>$req->tlp_user,
+        'email'=>$req->email,
+        'nik'=>$req->nik,
+        'perusahaan'=>$perusahaan,
+        'unit'=>$req->unit,
+        'created_at'=>\Carbon\Carbon::now()
+      ]);
+
+      if ($role == 'KONSULTAN') {
+        DB::table('master_konsultan')->insert([
+          'nama'=>$perusahaan,
+          'alamat'=>$req->alamat_perusahaan,
+          'nama_direktur'=>$req->nm_direktur,
+        ]);
+      }
+      if ($role =='KONTRAKTOR') {
+        DB::table('master_penyedia_jasa')->insert([
+          'nama'=>$perusahaan,
+          'alamat'=>$req->alamat_perusahaan,
+          'nama_direktur'=>$req->nm_direktur,
+          'npwp'=>$req->npwp,
+          'nm_gs'=>$req->nm_gs,
+          'telp'=>$req->tlp_perusahaan,
+          'created_at'=>\Carbon\Carbon::now()
+        ]);
+
+      }
+
+      DB::commit();
+    } catch (\Throwable $e) {
+      return response()->json([
+        "code" => 500,
+        "error" => $e
+    ], 500);
+    }
+
+
+
+
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+      'result' => 'oke'
     ]);
   }
 }

@@ -63,6 +63,8 @@ Route::prefix('/user')->group(function () {
     Route::get('/getUserByKeyword', [UserController::class, 'getUserByKeyword']);
 
     Route::post('/createUser', [UserController::class, 'createUser']);
+
+    Route::post('/register', [UserController::class, 'register']);
 });
 
 Route::prefix('/kontraktor')->group(function () {
@@ -181,6 +183,10 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::get('/getPermintaanDetailById/{id}', [PermintaanController::class, 'getPermintaanDetailById']);
 
+    Route::get('/getLatestPermintaanByKonsultan', [PermintaanController::class, 'getLatestPermintaanByKonsultan']);
+
+    Route::get('/getPermintaanByKonsultan', [PermintaanController::class, 'getPermintaanByKonsultan']);
+
     Route::post('/buatRequestFromMobile', [PermintaanController::class, 'buatRequestFromMobile']);
 
     Route::post('/buatrequest', [PermintaanController::class, 'buatRequest']);
@@ -224,7 +230,7 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 
-    Route::get('/delete-lapaoran', [LaporanController::class, 'deleteLaporan']);
+    Route::post('/delete-lapaoran', [LaporanController::class, 'deleteLaporan']);
 
     Route::post('/breakdownjadual', [LaporanController::class, 'pembandingRelasi']);
 });
