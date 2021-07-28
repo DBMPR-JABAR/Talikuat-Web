@@ -71,6 +71,24 @@
                                             </tr>
     
                                         </table>
+                                        <label style="font-weight: bold;" class="mt-3">Informasi General Superintendent</label>
+                                        
+                                        @if(count($data->kontraktor_gs) >= 1)
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td style="width: 10%">Team</td>
+                                                <td>Nama</td>
+                                            </tr>
+                                            @foreach ( $data->kontraktor_gs as $no => $gs)
+                                            <tr>
+                                                <td style="width: 10%">{{ ++$no }}</td>
+                                                <td>{{ $gs->gs }}</td>
+                                            </tr> 
+                                            @endforeach
+                                        </table>
+                                        @else
+                                        (No Data)
+                                        @endif
                                         
                                         
                                     </div>

@@ -205,7 +205,7 @@
                             </div>
                         </div> --}}
                         <div class="form-group">
-                            <label>Nama Inspection Engineering</label>
+                            <label>Masukan FT</label>
                             <div class="d-flex" id="ie">
                                 <input
                                     type="text"
