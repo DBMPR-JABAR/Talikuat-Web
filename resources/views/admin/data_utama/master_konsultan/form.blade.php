@@ -1,16 +1,16 @@
 @extends('layout.index') 
-@section('title','Kontraktor')
+@section('title','Konsultan')
 @section('header')
 @endsection 
 
 @section('page-header')
 <div class="page-header">
     
-    <h3 class="page-title"> @if(Request::segment(3) == 'edit') Edit @else Create @endif Data Kontraktor </h3>
+    <h3 class="page-title"> @if(Request::segment(3) == 'edit') Edit @else Create @endif Data Konsultan </h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboar</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('masterkontraktor.index') }}">Kontraktor</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('masterkonsultan.index') }}">Konsultan</a></li>
         
         @if(Request::segment(3) == 'edit') 
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
@@ -29,7 +29,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header ">
-                <h4 class="card-title">Kontraktor</h4>
+                <h4 class="card-title">Informasi Perusahaan</h4>
                 <div class="card-header-right">
                     <ul class="list-unstyled card-option">
                         {{-- <li><i class="feather icon-maximize full-card"></i></li> --}}
@@ -39,10 +39,10 @@
             </div>
             <div class="card-body">
                 @if(Request::segment(3) == 'edit') 
-                <form action="{{route('update.masterkontraktor',$data->id)}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('update.masterkonsultan',$data->id)}}" method="post" enctype="multipart/form-data">
                 @method('PUT')
                 @else 
-                <form action="{{route('store.masterkontraktor')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('store.masterkonsultan')}}" method="post" enctype="multipart/form-data">
               
                 @endif
                     @csrf
@@ -69,28 +69,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <label>NPWP</label>
-                                <input type="text" name="npwp" id="npwp" value="{{ @$data->npwp }}" class="form-control" required>
-                                @error('npwp')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <label>Telepon</label>
-                                <input type="text" name="telp" id="telp" value="{{ @$data->telp }}" class="form-control" required>
-                                @error('telp')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
+                      
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label>Alamat</label>
@@ -102,7 +81,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -128,7 +107,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         @if(Request::segment(3) == 'edit') 
                         <i style="color :red; font-size: 10px;">Biarkan jika tidak ada perubahan</i>
                         @endif
@@ -139,10 +118,9 @@
             </div>
 
         </div>
-
         <div class="card">
             <div class="card-header ">
-                <h4 class="card-title">Informasi GS</h4>
+                <h4 class="card-title">Informasi FT</h4>
                 <div class="card-header-right">
                     <ul class="list-unstyled card-option">
                         {{-- <li><i class="feather icon-maximize full-card"></i></li> --}}
@@ -152,7 +130,7 @@
             </div>
             <div class="card-body">
                 @if(Request::segment(3) == 'edit') 
-                <form action="{{route('update.masterkontraktorgs',$data->id)}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('update.masterkonsultanft',$data->id)}}" method="post" enctype="multipart/form-data">
                 
                 @endif
                     @csrf
@@ -161,20 +139,31 @@
                             <div class="col-md-11">
                                 <div class="row">
                                     
-                                    <div class="col-md-12 col-sm-6">
+                                    <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label>GS</label>
-                                            <input type="text" name="nm_gs[]" class="form-control @error('nm_gs') is-invalid @enderror" value="{{ @$data_details[0]['gs'] }}" placeholder="Masukan nama GS" id="mytex1">
-                                            <input type="text" name="id_gs[]" value="{{ @$data_details[0]['id'] }}" style="display: none" id="myimage">
+                                            <label>SE</label>
+                                            <input type="text" name="nm_se[]" class="form-control @error('nm_se') is-invalid @enderror" value="{{ @$data_details[0]['se'] }}" placeholder="Merah, Ungu,dll" id="mytex1">
+                                            <input type="text" name="id_ft[]" value="{{ @$data_details[0]['id'] }}" style="display: none" id="myimage">
         
-                                            @error('nm_gs')
+                                            @error('nm_se')
                                             <div class="invalid-feedback" style="display: block">
                                                 {{ $message }}
                                             </div>
                                             @enderror
                                         </div>
                                     </div>
-                                   
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label>IE</label>
+                                            <input type="text" name="nm_ie[]" class="form-control @error('nm_ie') is-invalid @enderror" value="{{ @$data_details[0]['ie'] }}" placeholder="Diskon Produk (%)" id="mytex2">
+        
+                                            @error('nm_ie')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                    
                                 </div>
                             </div>
@@ -188,20 +177,31 @@
                                 <div class="col-md-11"> 
                                     <div class="row">
                                        
-                                        <div class="col-md-12 col-sm-6">
+                                        <div class="col-md-6 col-sm-6">
                                             <div class="form-group">
-                                                <label>GS</label>
-                                                <input type="text" name="nm_gs[]" class="form-control @error('nm_gs') is-invalid @enderror" value="{{ @$data_details[$i]['gs'] }}" placeholder="Masukan nama GS" id="mytex1">
-                                                <input type="text" name="id_gs[]" value="{{ @$data_details[$i]['id'] }}" style="display: none" id="myimage">
+                                                <label>SE</label>
+                                                <input type="text" name="nm_se[]" class="form-control @error('nm_se') is-invalid @enderror" value="{{ @$data_details[$i]['se'] }}" placeholder="Merah, Ungu,dll" id="mytex1">
+                                                <input type="text" name="id_ft[]" value="{{ @$data_details[$i]['id'] }}" style="display: none" id="myimage">
             
-                                                @error('nm_gs')
+                                                @error('nm_se')
                                                 <div class="invalid-feedback" style="display: block">
                                                     {{ $message }}
                                                 </div>
                                                 @enderror
                                             </div>
                                         </div>
-                                      
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="form-group">
+                                                <label>IE</label>
+                                                <input type="text" name="nm_ie[]" class="form-control @error('nm_ie') is-invalid @enderror" value="{{ @$data_details[$i]['ie'] }}" placeholder="Diskon Produk (%)" id="mytex2">
+            
+                                                @error('nm_ie')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     
                                         
                                     </div>
@@ -219,21 +219,33 @@
                           
                                 <div class="row">
                                     
-                                    <div class="col-md-12 col-sm-6">
+                                    <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label>GS</label>
-                                            <input type="text" name="nm_gs[]" class="form-control @error('nm_gs') is-invalid @enderror"
-                                                value="" placeholder="Masukan nama GS">
-                                                {{-- <input type="text" name="id_gs[]" value="" style="display: none" id="myimage"> --}}
+                                            <label>SE</label>
+                                            <input type="text" name="nm_se[]" class="form-control @error('nm_se') is-invalid @enderror"
+                                                value="" placeholder="Merah, Ungu,dll">
+                                                {{-- <input type="text" name="id_ft[]" value="" style="display: none" id="myimage"> --}}
                                             
-                                            @error('nm_gs')
+                                            @error('nm_se')
                                             <div class="invalid-feedback" style="display: block">
                                                 {{ $message }}
                                             </div>
                                             @enderror
                                         </div>
                                     </div>
-                                   
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label>IE</label>
+                                            <input type="text" name="nm_ie[]" class="form-control @error('nm_ie') is-invalid @enderror"
+                                                value="" placeholder="Diskon Produk (%)">
+        
+                                            @error('nm_ie')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-1 mt-4">
@@ -257,23 +269,24 @@
 
 @section('script')
 <script>
-    $(document).ready(function(){
-      
-        var maxGroupPrice = 10;
-    
-        $(".addMorePrice").click(function(){
-            if($('body').find('.fieldGroupPrice').length < maxGroupPrice){
-                var fieldHTML = '<div class="form-group row fieldGroupPrice">'+$(".fieldGroupCopyPrice").html()+'</div>';
-                $('body').find('.fieldGroupPrice:last').after(fieldHTML);
-            }else{
-                alert('Maximum '+maxGroupPrice+' groups are allowed.');
-            }
-        });
-        
-        //remove fields group
-        $("body").on("click",".removePrice",function(){ 
-            $(this).parents(".fieldGroupPrice").remove();
-        });
+$(document).ready(function(){
+  
+    var maxGroupPrice = 10;
+
+    $(".addMorePrice").click(function(){
+        if($('body').find('.fieldGroupPrice').length < maxGroupPrice){
+            var fieldHTML = '<div class="form-group row fieldGroupPrice">'+$(".fieldGroupCopyPrice").html()+'</div>';
+            $('body').find('.fieldGroupPrice:last').after(fieldHTML);
+        }else{
+            alert('Maximum '+maxGroupPrice+' groups are allowed.');
+        }
     });
-    </script>
+    
+    //remove fields group
+    $("body").on("click",".removePrice",function(){ 
+        $(this).parents(".fieldGroupPrice").remove();
+    });
+});
+</script>
+
 @endsection

@@ -27,7 +27,7 @@
                     ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
                 >
                 <a
-                    href="{{ route('masterkonsultan.index') }}"
+                    href="{{ route('trash.masterkonsultan') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-delete menu-icon"></i> Trash</a
                 >
@@ -39,55 +39,47 @@
                 >
 
                 @endif
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <table
-                                id="dataKonsultan"
-                                class="table table-striped display nowrap"
-                                cellspacing="0"
-                                style="width: 100%"
-                            >
-                                <thead>
+                <div id="table-wrapper">
+                    <div id="table-scroll">
+                        <table
+                            class="table-striped"
+                            style="width: 100%"
+                            id="dataKontraktor">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name Perusahaan</th>
+                                    <th>Nama Direktur</th>
+                                    <th>FT</th>
+                                    <th style="width: 22%">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $no => $item)
+                                    
                                     <tr>
-                                        <th>Nama Perusahaan</th>
-                                        <th>Alamat</th>
-                                        <th>Nama Direktur</th>
-                                        <th>
-                                            Site Engineering / Quality
-                                            Engineering
-                                        </th>
-                                        <th>
-                                            Inspection Engineering / Quality
-                                            Engineering
-                                        </th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="small-text" width="10%">
-                                            PT. LAKSANA DESAIN DAYA CIPTA KSO PT
-                                            GUNUNG GIRI ENGINEERING KONSULTAN
-                                        </td>
+                                        <td>{{ ++$no }}</td>
                                         <td>
-                                            Kopo Permai Blok 18 CDF no.13
-                                            Bandung - Bandung (kab) - Jawa Barat
+                                            {!! $item->nama !!}
                                         </td>
-                                        <td>Ir. Alfred Purawidjaja</td>
-                                        <td>
-                                            Ir. Zaharudin Kasim <br />Ir. Kasna
-                                        </td>
-                                        <td>
-                                            Ir.Memet Slamet <br />Nurdin
-                                            Firdausi, ST
-                                        </td>
-
+                                    
+                                        <td>{!! $item->nama_direktur !!}</td>
                                         <td></td>
+                                        <td>
+                                            @if (Request::segment(3) != 'trash')
+                                            <a type='button' href='{{ route('show.masterkonsultan',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
+                                            <a type='button' href='{{ route('edit.masterkonsultan',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                            @else
+                                            <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+
+                                            @endif
+                                            <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+
+                                        </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -98,11 +90,8 @@
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
-                <form
-                    action="{{ route('store.user') }}"
-                    method="post"
-                    enctype="multipart/form-data"
-                >
+                <form action="{{route('store.masterkonsultan')}}" method="post" enctype="multipart/form-data">
+
                     @csrf
                     <div class="modal-header">
                         <h4 class="modal-title">Tambah User</h4>
@@ -121,19 +110,19 @@
                             <label>Nama Perusahaan</label>
                             <input
                                 type="text"
-                                name="name"
-                                id="name"
-                                value="{{ old('name') }}"
+                                name="nama"
+                                id="nama"
+                                value="{{ old('nama') }}"
                                 placeholder="Masukkan Nama Perusahaan"
                                 class="
                                     form-control
-                                    @error('name')
+                                    @error('nama')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('name')
+                            @error('nama')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -152,13 +141,13 @@
                                 placeholder="Masukan Alamat"
                                 class="
                                     form-control
-                                    @error('email')
+                                    @error('alamat')
                                     is-invalid
                                     @enderror
                                 "
                                 required
                             />
-                            @error('email')
+                            @error('alamat')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -171,9 +160,9 @@
                             <label>Nama Direktur</label>
                             <input
                                 type="text"
-                                name="nm_direktur"
-                                id="nm_direktur"
-                                value="{{ old('nm_direktur') }}"
+                                name="nama_direktur"
+                                id="nama_direktur"
+                                value="{{ old('nama_direktur') }}"
                                 placeholder="Masukkan Nama Direktur"
                                 class="
                                     form-control
@@ -183,7 +172,7 @@
                                 "
                                 required
                             />
-                            @error('password')
+                            @error('nama_direktur')
                             <div
                                 class="invalid-feedback"
                                 style="display: block; color: red"
@@ -192,7 +181,7 @@
                             </div>
                             @enderror
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>Nama Site Engineering</label>
                             <div class="d-flex" id="se">
                                 <input
@@ -214,7 +203,7 @@
                                     ></i>
                                 </button>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label>Nama Inspection Engineering</label>
                             <div class="d-flex" id="ie">
@@ -223,6 +212,13 @@
                                     name="nm_ie[]"
                                     placeholder="Masukkan Nama Inspection Engineering"
                                     class="form-control"
+                                />
+                                <input
+                                    type="text"
+                                    name="nm_se[]"
+                                    placeholder="Masukkan Nama Site Engineering"
+                                    class="form-control"
+                                    
                                 />
                                 <button
                                     type="button"
@@ -345,7 +341,7 @@
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/user/trash/move_to_trash') }}/` + id;
+            const url = `{{ url('admin/master_konsultan/trash/move_to_trash') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #delHref").attr("href", url);
@@ -354,7 +350,7 @@
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/user/trash/restore') }}/` + id;
+            const url = `{{ url('admin/master_konsultan/trash/restore') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #resHref").attr("href", url);
@@ -366,19 +362,21 @@
             `
             <div class="d-flex">
             <input type="text" name="nm_ie[]" placeholder="Masukkan Nama Inspection Engineering" class="form-control" />
+            <input type="text" name="nm_se[]" placeholder="Masukkan Nama Site Engineering" class="form-control" />
+
             <i class="mdi mdi-delete mt-2" style="color:red;" onclick="deleteEl(this)"></i>
             </div>`
         ).insertAfter("#ie");
     }
-    function addSE() {
-        $(
-            `
-            <div class="d-flex">
-            <input type="text" name="nm_se[]" placeholder="Masukkan Nama Site Engineering" class="form-control" />
-            <i class="mdi mdi-delete mt-2" style="color:red;" onclick="deleteEl(this)"></i>
-            </div>`
-        ).insertAfter("#se");
-    }
+    // function addSE() {
+    //     $(
+    //         `
+    //         <div class="d-flex">
+    //         <input type="text" name="nm_se[]" placeholder="Masukkan Nama Site Engineering" class="form-control" />
+    //         <i class="mdi mdi-delete mt-2" style="color:red;" onclick="deleteEl(this)"></i>
+    //         </div>`
+    //     ).insertAfter("#se");
+    // }
     function deleteEl(e) {
         $(e).closest("div").remove();
     }

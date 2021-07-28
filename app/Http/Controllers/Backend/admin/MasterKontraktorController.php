@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterKontraktorGs as KontraktorGs;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -99,7 +101,9 @@ class MasterKontraktorController extends Controller
     {
         //
         $data = MasterKontraktor::find($id);
-        return view('admin.data_utama.master_kontraktor.form',compact('data'));
+        $data_details = $data->kontraktor_gs->toArray();
+        
+        return view('admin.data_utama.master_kontraktor.form',compact('data','data_details'));
     }
 
     /**
@@ -145,6 +149,45 @@ class MasterKontraktorController extends Controller
 
     }
 
+    public function update_gs(Request $request, $id)
+    {
+        //
+        $delete_detail = KontraktorGs::where('kontraktor_id', $id)->whereNotIn('id', $request->id_gs)->get();
+        // dd($delete_detail);
+        if(count($delete_detail)>=1)
+            $delete_detail->each->delete();
+        
+        $jumlah_data = KontraktorGs::orderBy('id', 'DESC')->first();
+        
+        for($y=0; $y<count($request->nm_gs) ;$y++){
+            if($request->nm_gs[$y] != null){
+                if(isset($request->id_gs[$y])){
+                    $id_gs = $request->id_gs[$y];
+                }else{
+                    if($jumlah_data==null){
+                        $jumlah_data->id = 0;
+                    }
+                    $jumlah_data->id+=1;
+                    $id_gs = $jumlah_data->id;  
+                   
+                }
+                $update_details = KontraktorGs::firstOrNew([
+                    'id'=> $id_gs,
+                    'kontraktor_id'=> $id,
+                ]);
+                $update_details->se = $request->nm_gs[$y];
+              
+                $update_details->created_by=Auth::user()->id;
+                $update_details->save();
+            }
+        }
+        if($update_details){
+            // dd($update_konsultan);
+            return back()->with(['success' => 'Data Berhasil Di Perbaharui!']);
+        }else
+            return back()->with(['danger' => 'Data Gagal Di Perbaharui!']);
+
+    }
     /**
      * Remove the specified resource from storage.
      *
