@@ -319,7 +319,7 @@ class JadualController extends Controller
             $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
             $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
             $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
-            $jadual['volume'] = number_format($jadual['volume'], 3, ',', '.');
+            $jadual['volume'] = number_format($jadual['volume'], 2, ',', '.');
             $jadual['nilai'] = number_format($jadual['nilai'], 4, ',', '.');
             $jadual['tanggal'] = date("Y-n-d", Date::excelToTimestamp($jadual['tanggal']));
         }
