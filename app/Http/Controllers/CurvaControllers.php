@@ -18,6 +18,10 @@ class CurvaControllers extends Controller
         $data = DB::table('data_umum')->where('id',$id)->get();
         foreach($jadual as $e){
           $dataJadual = DB::table('detail_jadual')->where('id_jadual',$e->id)->orderBy('tgl','asc')->get();
+          foreach($dataJadual as $q){
+            $str = $q->nilai = str_replace(',','.',$q->nilai);
+            $q->nilai = floatval($str);
+          }
           array_push($tes,$dataJadual);  
         }
         $laporan = DB::table('master_laporan_harian')->where([

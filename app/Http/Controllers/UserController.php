@@ -146,19 +146,36 @@ class UserController extends Controller
  };
     DB::beginTransaction();
     try {
-      DB::table('member')->insert([
-        'nm_member'=>$req->nm_dpn,
-        'nama_lengkap'=>$req->nm_dpn.' '.$req->nm_blkg,
-        'akses'=>$role,
-        'jabatan'=>$role,
-        'alamat_member'=>$req->alamat_user,
-        'telp'=>$req->tlp_user,
-        'email'=>$req->email,
-        'nik'=>$req->nik,
-        'perusahaan'=>$perusahaan,
-        'unit'=>$req->unit,
-        'created_at'=>\Carbon\Carbon::now()
-      ]);
+      if ($role == 'KONSULTAN') {
+        DB::table('member')->insert([
+          'nm_member'=>$req->nm_dpn,
+          'nama_lengkap'=>$req->nm_dpn.' '.$req->nm_blkg,
+          'akses'=>$role,
+          'jabatan'=>$role,
+          'alamat_member'=>$req->alamat_user,
+          'telp'=>$req->tlp_user,
+          'email'=>$req->email,
+          'nik'=>$req->nik,
+          'perusahaan'=>$perusahaan,
+          'unit'=>$req->unit,
+          'created_at'=>\Carbon\Carbon::now()
+        ]);
+      }else{
+        DB::table('member')->insert([
+          'nm_member'=>$req->nm_dpn,
+          'nama_lengkap'=>$req->nm_dpn.' '.$req->nm_blkg,
+          'akses'=>$role,
+          'jabatan'=>$role,
+          'alamat_member'=>$req->alamat_user,
+          'telp'=>$req->tlp_user,
+          'email'=>$req->email,
+          'nik'=>$req->nik,
+          'perusahaan'=>$perusahaan,
+          'created_at'=>\Carbon\Carbon::now()
+        ]);
+      }
+
+     
 
       if ($role == 'KONSULTAN') {
         $id=DB::table('master_konsultan')->insertGetId([
@@ -169,11 +186,23 @@ class UserController extends Controller
         
         $count =1;
         for ($i=0; $i <count($req->nm_se) ; $i++) { 
-          DB::table('field_team_konsultan')->insert([
+          DB::table('team_konsultan')->insert([
             'id_konsultan'=>$id,
-            'nama_se'=>$req->nm_se[$i],
-            'nama_ie'=>$req->nm_ie[$i],
-            'team'=>'Field Team'.$count
+            'nama'=>$req->nm_se[$i],
+            'jabatan'=>'Site Engineer',
+            'team'=>'Field Team '.$count,
+            'aktive'=>0
+          ]);
+          $count++;
+        }
+        $count =1;
+        for ($i=0; $i <count($req->nm_ie) ; $i++) { 
+          DB::table('team_konsultan')->insert([
+            'id_konsultan'=>$id,
+            'nama'=>$req->nm_ie[$i],
+            'jabatan'=>'Inspetion Engineer',
+            'team'=>'Field Team '.$count,
+            'aktive'=>0
           ]);
           $count++;
         }
@@ -193,6 +222,72 @@ class UserController extends Controller
 
       }
 
+      DB::commit();
+    } catch (\Throwable $e) {
+      return response()->json([
+        "code" => 500,
+        "error" => $e
+    ], 500);
+    }
+    return response()->json([
+      'status' => 'success',
+      'code' => '200',
+    ]);
+  }
+
+  public function addTeam(Request $req)
+  {
+    $result =DB::table('team_konsultan')->where('id_konsultan',$req->id)->count();
+    if ($result == 0) {
+      $team = 1;
+    }else{
+      $team = ($result / 2)+1;
+    }
+      DB::table('team_konsultan')->insert([
+        'id_konsultan'=>$req->id,
+        'nama'=>$req->nm_se,
+        'jabatan'=>'SITE ENGINEERING',
+        'team'=>'Field Team '.$team,
+        'aktive'=>0
+      ]);
+      DB::table('team_konsultan')->insert([
+        'id_konsultan'=>$req->id,
+        'nama'=>$req->nm_ie,
+        'jabatan'=>'Inspetion Engineer',
+        'team'=>'Field Team '.$team,
+        'aktive'=>0
+      ]);
+    return response()->json([
+      'status' => 'success',
+      'code' => '200'
+    ]);
+  }
+
+  public function registerTeamKonsultan(Request $req)
+  {
+    $team = DB::table('team_konsultan')->where('id',$req->id)->first();
+    $konsultan = DB::table('master_konsultan')->where('id',$team->id_konsultan)->first();
+
+    try {
+      DB::beginTransaction();
+
+      DB::table('member')->insert([
+        'nm_member'=>$team->nama,
+        'nama_lengkap'=>$team->nama,
+        'akses'=>'KONSULTAN',
+        'perusahaan'=>$konsultan->nama,
+        'jabatan'=>$team->jabatan,
+        'alamat_member'=>$req->alamat_user,
+        'telp'=>$req->tlp_user,
+        'email'=>$req->email,
+        'nik'=>$req->nik,
+        'unit'=>$req->unit,
+        'created_at'=>\Carbon\Carbon::now()
+      ]);
+
+      DB::table('team_konsultan')->where('id',$req->id)->update([
+        'uptd'=>$req->unit
+      ]);
       DB::commit();
     } catch (\Throwable $e) {
       return response()->json([

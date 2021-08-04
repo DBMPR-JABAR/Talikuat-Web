@@ -1178,8 +1178,13 @@ class PermintaanController extends Controller
         DB::table('request')->where('id', $req->id)->update([
             'reason_delete' => $req->alasan
         ]);
+        $getId = DB::table('request')->where('id',$req->id)->first();
+
+
+        DB::table('jadual')->where('id',$getId->id_jadual)->update([
+            'tgl_req'=> NULL
+        ]);
         return response()->json([
-            $req->all(),
             'code' => 200
         ]);
     }
