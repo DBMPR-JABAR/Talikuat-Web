@@ -58,5 +58,17 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
     }
 
+    public function user_rule()
+    {
+        return $this->belongsToMany('App\Models\Backend\UserRule', 'user_rule_user', 'user_id', 'rule_user_id');
+    }
+    public function user_se()
+    {
+        return $this->hasOne('App\Models\Backend\MasterKonsultanFt', 'se_user_id');
+    }
+    public function user_ie()
+    {
+        return $this->hasOne('App\Models\Backend\MasterKonsultanFt', 'ie_user_id');
+    }
 }
 

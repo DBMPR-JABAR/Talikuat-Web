@@ -13,6 +13,7 @@ use App\Models\Backend\UserDetail as UserDetail;
 use App\Models\Backend\UserRule as UserRule;
 use App\Models\Backend\Uptd as Uptd;
 use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterKonsultanFt as KonsultanFt;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -34,7 +35,16 @@ class UserController extends Controller
         //
         $data = UserDetail::where('is_delete',null)->get();
         // dd($data);
+
         return view('admin.user.index',compact('data'));
+    }
+    public function index_ft()
+    {
+        //
+        
+        $data = KonsultanFt::where('is_delete',null)->get();
+        // dd($data);
+        return view('admin.user.ft',compact('data'));
     }
     
 
@@ -59,7 +69,7 @@ class UserController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'email' => 'unique:db_users_dbmpr.users',
-            'password'   => 'confirmed',
+            'password' => 'confirmed',
             'name'=> 'required',
             'no_tlp'=> '',
         ]);
@@ -69,6 +79,7 @@ class UserController extends Controller
         $create_user = User::firstOrNew(['email'=> $request->email]);
         $create_user->name = $request->input('name');
         $create_user->password = Hash::make($request->input('password'));
+        $create_user->role = 'internal';
         $create_user->save();
 
         $create_profile = UserProfiles::firstOrNew(['user_id'=> $create_user->id]);

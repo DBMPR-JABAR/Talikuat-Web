@@ -47,13 +47,7 @@
             </span>
         </div>
         <div class="wrap-input100 validate-input" data-validate="Password Konfirmasi Tidak Boleh Kosong">
-            <input
-                class="input100"
-                type="password"
-                name="password_confirmation"
-                placeholder="Password Confirmation"
-                id="password_confirmation"
-            />
+            <input class="input100" type="password" name="password_confirmation" placeholder="Password Confirmation" id="password_confirmation"/>
             <span class="focus-input100"></span>
             <span class="symbol-input100">
                 <i

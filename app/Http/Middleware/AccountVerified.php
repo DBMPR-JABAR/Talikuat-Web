@@ -19,7 +19,7 @@ class AccountVerified
     {
         
         if(Auth::user()->user_detail->is_delete != 1){
-            if(Auth::user()->profile->no_tlp){
+            if(Auth::user()->profile->no_tlp && (Auth::user()->profile->nip || Auth::user()->profile->nik)){
                 
                 if(Auth::user()->user_detail->account_verified_at){
                     return $next($request);
@@ -29,7 +29,7 @@ class AccountVerified
             }
             return $next($request);           
         }else{
-            return redirect('/')->with(['warning'=>'Akun Anda Di Hapus, Segera Hubungi Admin']);
+            return redirect('/')->with(['warning'=>'Akun Anda Di Blokir, Segera Hubungi Admin Jika ada kesalahan!']);
         }
 
     }

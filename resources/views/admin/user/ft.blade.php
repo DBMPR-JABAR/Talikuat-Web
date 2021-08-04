@@ -5,11 +5,11 @@
 
 @section('page-header')
 <div class="page-header">
-    <h3 class="page-title"> Manajemen User </h3>
+    <h3 class="page-title"> Field Team </h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Users</li>
+        <li class="breadcrumb-item active" aria-current="page">Field Team</li>
       </ol>
     </nav>
   </div>
@@ -20,9 +20,9 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Users</h4>
+                <h4 class="card-title">Data Field Team</h4>
                 @if (Request::segment(3) != 'trash')
-                    <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                    {{-- <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a> --}}
                     <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
                 @else
                     <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
@@ -34,14 +34,11 @@
                         <thead>
                         <tr>
                             <th class="text-center" style="width: 5%"> No </th>
-                            <th class="text-center"> Name </th>
-                            {{-- <th class="text-center"> Progress </th> --}}
-                            <th class="text-center"> NIK </th>
-                            <th class="text-center"> NIP </th>
-                            <th class="text-center"> Email Verified </th>
-                            <th class="text-center"> Account Verified </th>
+                            <th class="text-center"> Perusahaan </th>
+                            <th class="text-center"> Site Engineering </th>
+                            <th class="text-center"> Inspection Engineering </th>
+                            <th class="text-center"> FT Verified </th>
                             <th class="text-center"> Action </th>
-
                         </tr>
                         </thead>
                         <tbody>
@@ -51,23 +48,17 @@
                         <tr>
                             {{-- <td class="py-1"><img src="../../../assets/images/faces-clipart/pic-1.png" alt="image"></td> --}}
                             <td class="text-center">{{ ++$data}}</td>
-                            <td>{{ @$item->user->name }} </td>
+                            <td>{{ @$item->konsultan->nama }} </td>
                             {{-- <td>
                             <div class="progress">
                                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             </td> --}}
-                            <td> {{ @$item->user->profile->nik }} </td>
-                            <td> {{ @$item->user->profile->nip }} </td>
-                            <td class="text-center"> 
-                                @if($item->email_verified_at)
-                                <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
-                                @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
-                                @endif
-                            </td>
+                            <td> {{ @$item->user_se->name }} </td>
+                            <td> {{ @$item->user_ie->name }} </td>
+                            
                             <td class="text-center">
-                                @if($item->account_verified_at)
+                                @if($item->ft_verified_at)
                                 <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
                                 @else
                                 <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
@@ -79,11 +70,11 @@
                                 <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
                                 {{-- <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i>Delete</a> --}}
                                 @else 
-                                    @if($item->account_verified_at)
-                                        <a type='button' href='{{ route('show.user',$item->user->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
-                                        <a type='button' href='{{ url('admin/user/edit/detail',$item->user->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                    @if($item->ft_verified_at)
+                                        <a type='button' href='{{ route('show.user',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
+                                        <a type='button' href='{{ url('admin/user/edit/detail',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
                                     @else
-                                        <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        <a type='button' href='{{ route('verified.user',$item->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
                                     @endif
                                         <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                                 @endif

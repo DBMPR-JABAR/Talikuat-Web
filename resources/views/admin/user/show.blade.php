@@ -157,7 +157,17 @@
                                             </tr>
                                             <tr>
                                                 <td width="20%">Jabatan</td>
-                                                <td> {{ @$data->profile->jabatan }}</td>
+                                                <td>
+                                                    {{-- @if($data->user_rule != null && count($data->user_rule) >=1)
+                                                        @foreach (@$data->user_rule as $rule)
+                                                            
+                                                        {{ @$rule->rule }}
+                                                        @endforeach 
+                                                    @endif --}}
+                                                    @if(isset($data->user_detail->rule->rule))
+                                                        {{ $data->user_detail->rule->rule }}
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td width="20%">UPTD</td>
