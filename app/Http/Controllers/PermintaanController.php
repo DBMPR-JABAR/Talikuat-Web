@@ -399,9 +399,10 @@ class PermintaanController extends Controller
                 "code" => 200
             ]);
         } catch (\Throwable $e) {
+            DB::rollBack();
             return response()->json([
                 "code" => 500,
-                "error" => $e
+                "error" => $e->getMessage()
             ], 500);
         }
 

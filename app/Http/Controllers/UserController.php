@@ -224,9 +224,10 @@ class UserController extends Controller
 
       DB::commit();
     } catch (\Throwable $e) {
+      DB::rollBack();
       return response()->json([
         "code" => 500,
-        "error" => $e
+        "error" => $e->getMessage()
     ], 500);
     }
     return response()->json([
@@ -293,7 +294,7 @@ class UserController extends Controller
       DB::rollback();
       return response()->json([
         "code" => 500,
-        "error" => $e
+        "error" => $e->getMessage()
     ], 500);
     }
     return response()->json([
@@ -324,7 +325,7 @@ class UserController extends Controller
       } catch (\Throwable $e) {
         DB::rollback();
         return response()->json([
-          'status' =>$e,
+          'error' =>$e->getMessage(),
           'code'=>500
         ],500);
       }
