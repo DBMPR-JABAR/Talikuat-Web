@@ -274,7 +274,7 @@ class UserController extends Controller
       DB::table('member')->insert([
         'nm_member'=>$team->nama,
         'nama_lengkap'=>$team->nama,
-        'akses'=>'KONSULTAN',
+        'akses'=>'SITE ENGINEERING',
         'perusahaan'=>$konsultan->nama,
         'jabatan'=>$team->jabatan,
         'alamat_member'=>$req->alamat_user,
@@ -290,6 +290,7 @@ class UserController extends Controller
       ]);
       DB::commit();
     } catch (\Throwable $e) {
+      DB::rollback();
       return response()->json([
         "code" => 500,
         "error" => $e
@@ -300,4 +301,49 @@ class UserController extends Controller
       'code' => '200',
     ]);
   }
+
+  public function aktivasiUser($id)
+  {
+    $member = DB::table('member')->where('id_member',$id)->first();
+    $team = DB::table('team_konsultan')->where('nama',$member->nm_member)->first();
+    if ($member->jabatan == 'SITE ENGINEERING') {
+      try {
+        DB::beginTransaction();
+        DB::table('team_konsultan')->where('nama',$member->nm_member)->update([
+          'aktive'=>1,
+          'id_member'=>$member->id_member
+        ]);
+        DB::table('login')->insert([
+          'user'=>$member->nik,
+          'pass'=>'202cb962ac59075b964b07152d234b70',
+          'id_member'=>$member->id_member,
+          'level'=>$member->jabatan,
+          'id_team'=>$team->id
+        ]);
+        DB::commit();
+      } catch (\Throwable $e) {
+        DB::rollback();
+        return response()->json([
+          'status' =>$e,
+          'code'=>500
+        ],500);
+      }
+     
+      
+    }else{
+      DB::table('login')->insert([
+        'user'=>$member->nik,
+        'pass'=>'202cb962ac59075b964b07152d234b70',
+        'id_member'=>$member->id_member,
+        'level'=>$member->jabatan,
+      ]);
+       
+    }
+    return response()->json([
+      'status' =>'oke',
+      'code'=>200
+    ]);
+  }
+
+
 }

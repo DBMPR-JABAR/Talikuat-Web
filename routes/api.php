@@ -71,6 +71,8 @@ Route::prefix('/user')->group(function () {
 
     Route::post('/registerteam', [UserController::class, 'registerTeamKonsultan']);
 
+    Route::get('/aktivasiuser/{id}', [UserController::class, 'aktivasiUser']);
+
 });
 
 Route::prefix('/kontraktor')->group(function () {

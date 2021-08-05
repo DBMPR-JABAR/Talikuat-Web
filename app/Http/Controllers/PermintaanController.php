@@ -315,6 +315,7 @@ class PermintaanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
+        $getTeam = DB::table('jadual')->where('id',$req->id_jadual)->first();
         DB::beginTransaction();
         try {
             DB::table('jadual')->where('id', $req->id_jadual)->update([
@@ -340,7 +341,8 @@ class PermintaanController extends Controller
                 "nama_ppk" => $req->nm_ppk,
                 "sketsa" => $this->PATH_FILE_DB . "/" . $name,
                 "id_jadual" => $req->id_jadual,
-                "tgl_input" => \Carbon\Carbon::now()
+                "tgl_input" => \Carbon\Carbon::now(),
+                "field_team_konsultan"=>$getTeam->field_team_konsultan
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
 

@@ -250,6 +250,7 @@ class JadualController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], Response::HTTP_BAD_REQUEST);
         }
+        $getDataumum = DB::table('data_umum')->where('id',$req->id_data_umum)->first();
 
         $waktu = str_replace(" Hari", "", $req->waktu);
         $panjang = str_replace(" Km", "", $req->panjang);
@@ -277,7 +278,8 @@ class JadualController extends Controller
             "jumlah_harga" => str_replace(',', '.', $total),
             "bobot" => $req->bobot[0],
             "uraian" => $req->uraian[0],
-            "id_uptd" => $req->id_uptd
+            "id_uptd" => $req->id_uptd,
+            'field_team_konsultan'=>$getDataumum->field_team_konsultan
         ]);
 
         for ($i = 0; $i < count($req->nmp); $i++) {
