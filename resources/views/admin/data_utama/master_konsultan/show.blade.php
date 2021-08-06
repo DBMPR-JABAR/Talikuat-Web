@@ -60,14 +60,14 @@
                                         <table class="table table-striped">
                                             <tr>
                                                 <td style="width: 10%">Team</td>
-                                                <td>Se</td>
-                                                <td>Ie</td>
+                                                <td>Site Engineering</td>
+                                                <td>Inspection Engineering</td>
                                             </tr>
-                                            @foreach ( $data->konsultan_ft as $no => $ft)
+                                            @foreach ( $data->konsultan_ft->where('is_delete', null) as $no => $ft)
                                             <tr>
                                                 <td style="width: 10%">{{ ++$no }}</td>
-                                                <td>{{ $ft->se }}</td>
-                                                <td>{{ $ft->ie }}</td>
+                                                <td>{{ $ft->user_se->name }}</td>
+                                                <td>{{ $ft->user_ie->name }}</td>
                                             </tr> 
                                             @endforeach
                                         </table>

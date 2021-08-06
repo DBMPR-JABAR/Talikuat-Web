@@ -18,7 +18,8 @@ class DashboardControllers extends Controller
      */
     public function index()
     {
-        if(!Auth::user()->profile->no_tlp ){
+        // dd(Auth::user()->profile->nip);
+        if(!Auth::user()->profile->no_tlp || (Auth::user()->profile->nip == null && Auth::user()->profile->nik == null) ){
             return redirect(url('admin/profile/edit', Auth::user()->id))->with(['warning'=>'Lengkapi Data Terlebih Dahulu']);
         }
 

@@ -250,6 +250,7 @@ class JadualController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], Response::HTTP_BAD_REQUEST);
         }
+        $getDataumum = DB::table('data_umum')->where('id',$req->id_data_umum)->first();
 
         $waktu = str_replace(" Hari", "", $req->waktu);
         $panjang = str_replace(" Km", "", $req->panjang);
@@ -277,7 +278,8 @@ class JadualController extends Controller
             "jumlah_harga" => str_replace(',', '.', $total),
             "bobot" => $req->bobot[0],
             "uraian" => $req->uraian[0],
-            "id_uptd" => $req->id_uptd
+            "id_uptd" => $req->id_uptd,
+            'field_team_konsultan'=>$getDataumum->field_team_konsultan
         ]);
 
         for ($i = 0; $i < count($req->nmp); $i++) {
@@ -319,8 +321,6 @@ class JadualController extends Controller
             $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
             $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
             $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
-            $jadual['volume'] = number_format($jadual['volume'], 2, ',', '.');
-            $jadual['nilai'] = number_format($jadual['nilai'], 4, ',', '.');
             $jadual['tanggal'] = date("Y-n-d", Date::excelToTimestamp($jadual['tanggal']));
         }
 

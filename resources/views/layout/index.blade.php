@@ -135,6 +135,47 @@
                             aria-expanded="false"
                             aria-controls="ui-basic"
                         >
+                            <i class="mdi mdi-account-multiple menu-icon"></i>
+                            <span class="menu-title">Manajemen User</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('user.index') }}"
+                                        >Users</a
+                                    >
+                                </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{
+                                            route('user.ft.index')
+                                        }}"
+                                        >Field Team</a
+                                    >
+                                </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('masterppk.index') }}"
+                                        >General Superintendent</a
+                                    >
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            data-toggle="collapse"
+                            href="#ui-basic"
+                            aria-expanded="false"
+                            aria-controls="ui-basic"
+                        >
                             <i class="mdi mdi-database menu-icon"></i>
                             <span class="menu-title">Data Utama</span>
                             <i class="menu-arrow"></i>

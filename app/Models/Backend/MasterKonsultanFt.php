@@ -16,4 +16,20 @@ class MasterKonsultanFt extends Model
     {
         return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');
     }
+    public function user_se()
+    {
+        return $this->belongsTo('App\Models\Backend\User', 'se_user_id');
+    }
+    public function user_ie()
+    {
+        return $this->belongsTo('App\Models\Backend\User', 'ie_user_id');
+    }
+    public function user_se_detail()
+    {
+        return $this->belongsTo('App\Models\Backend\UserDetail', 'se_user_id','user_id');
+    }
+    public function user_ie_detail()
+    {
+        return $this->belongsTo('App\Models\Backend\UserDetail', 'ie_user_id','user_id');
+    }
 }

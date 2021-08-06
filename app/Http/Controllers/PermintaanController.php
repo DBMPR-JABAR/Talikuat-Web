@@ -319,6 +319,7 @@ class PermintaanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
+        $getTeam = DB::table('jadual')->where('id',$req->id_jadual)->first();
         DB::beginTransaction();
         try {
             DB::table('jadual')->where('id', $req->id_jadual)->update([
@@ -344,7 +345,8 @@ class PermintaanController extends Controller
                 "nama_ppk" => $req->nm_ppk,
                 "sketsa" => $this->PATH_FILE_DB . "/" . $name,
                 "id_jadual" => $req->id_jadual,
-                "tgl_input" => \Carbon\Carbon::now()
+                "tgl_input" => \Carbon\Carbon::now(),
+                "field_team_konsultan"=>$getTeam->field_team_konsultan
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
 
@@ -401,9 +403,10 @@ class PermintaanController extends Controller
                 "code" => 200
             ]);
         } catch (\Throwable $e) {
+            DB::rollBack();
             return response()->json([
                 "code" => 500,
-                "error" => $e
+                "error" => $e->getMessage()
             ], 500);
         }
 
@@ -1314,10 +1317,10 @@ class PermintaanController extends Controller
         }
     }
 
-    public function getSatuanNmp($id)
+    public function getSatuanNmp($id,$data)
     {
         return response()->json([
-            DB::table('jadual')->where('nmp', $id)->first()
+            DB::table('jadual')->where([['nmp', $id],['id_data_umum',$data]])->first()
         ]);
     }
 
@@ -1347,8 +1350,13 @@ class PermintaanController extends Controller
         DB::table('request')->where('id', $req->id)->update([
             'reason_delete' => $req->alasan
         ]);
+        $getId = DB::table('request')->where('id',$req->id)->first();
+
+
+        DB::table('jadual')->where('id',$getId->id_jadual)->update([
+            'tgl_req'=> NULL
+        ]);
         return response()->json([
-            $req->all(),
             'code' => 200
         ]);
     }

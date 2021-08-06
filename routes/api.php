@@ -18,6 +18,7 @@ use App\Http\Controllers\RuasJalanController;
 use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UtilsControllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -65,6 +66,13 @@ Route::prefix('/user')->group(function () {
     Route::post('/createUser', [UserController::class, 'createUser']);
 
     Route::post('/register', [UserController::class, 'register']);
+
+    Route::post('/addteam', [UserController::class, 'addTeam']);
+
+    Route::post('/registerteam', [UserController::class, 'registerTeamKonsultan']);
+
+    Route::get('/aktivasiuser/{id}', [UserController::class, 'aktivasiUser']);
+
 });
 
 Route::prefix('/kontraktor')->group(function () {
@@ -350,4 +358,10 @@ Route::prefix('curva')->group(function () {
     Route::get('tes/{id}', [CurvaControllers::class, 'GetDataUmum']);
     Route::get('updateDaily', [CurvaControllers::class, 'TestingDaily']);
     Route::post('progress', [CurvaControllers::class, 'getAllDataUmumUptd']);
+});
+
+Route::prefix('utils')->group(function () {
+
+    Route::post('konsultan', [UtilsControllers::class,'getteamKonsltan']);
+
 });
