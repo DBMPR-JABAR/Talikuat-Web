@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class PermintaanController extends Controller
 {
@@ -188,6 +189,7 @@ class PermintaanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
+
         DB::beginTransaction();
 
         try {
@@ -221,7 +223,8 @@ class PermintaanController extends Controller
 
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
 
-            if ($req->input('bahan') != null) {
+
+            if ($req->input('bahan') != null && $req->input('bahan') != 'null') {
                 foreach (json_decode($req->input('bahan')) as $item_bahan) {
                     DB::table('detail_request_bahan')->insert([
                         'id_request' => $id,
@@ -232,7 +235,7 @@ class PermintaanController extends Controller
                 }
             }
 
-            if ($req->input('alat') != null) {
+            if ($req->input('alat') != null && $req->input('alat') != 'null') {
                 foreach (json_decode($req->input('alat')) as $item_alat) {
                     DB::table('detail_request_peralatan')->insert([
                         'id_request' => $id,
@@ -243,7 +246,7 @@ class PermintaanController extends Controller
                 }
             }
 
-            if ($req->input('pekerja') != null) {
+            if ($req->input('pekerja') != null && $req->input('pekerja') != 'null') {
                 foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
                     DB::table('detail_request_tkerja')->insert([
                         'id_request' => $id,
@@ -253,7 +256,7 @@ class PermintaanController extends Controller
                 }
             }
 
-            if ($req->input('campuran') != null) {
+            if ($req->input('campuran') != null && $req->input('campuran') != 'null') {
                 foreach (json_decode($req->input('campuran')) as $item_campuran) {
                     DB::table('detail_request_jmf')->insert([
                         'id_request' => $id,
@@ -288,7 +291,8 @@ class PermintaanController extends Controller
 
             return response()->json([
                 'status' => 'failed',
-                'code' => 500
+                'code' => 500,
+                'error' => $error->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
         }
@@ -543,35 +547,35 @@ class PermintaanController extends Controller
             }
 
         } else {
-//            DB::table('request')->where('id', $req->id)->update([
-//                "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
-//                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
-//                "status" => 2
-//            ]);
-//            DB::table('history_request')->insert([
-//                "username" => $req->username,
-//                "id_request" => $req->id,
-//                "user_id" => $req->userId,
-//                "keterangan" => "Request Telah Dikirim Oleh " . $req->username,
-//                "class" => "kirim",
-//                "created_at" => \Carbon\Carbon::now()
-//            ]);
-//            $bodyEmail = [
-//                "role" => "Kontraktor",
-//                "status" => "Mengirim",
-//                "revisi" => "",
-//                "username" => $get_data->nama_kontraktor,
-//                "no_dokumen" => $req->id,
-//                "kegiatan" => $get_data->nama_kegiatan,
-//                "lokasi" => $get_data->lokasi_sta,
-//                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
-//                "volume" => $get_data->volume,
-//                "note" => "konsultan"
-//            ];
+            DB::table('request')->where('id', $req->id)->update([
+                "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
+                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "status" => 2
+            ]);
+            DB::table('history_request')->insert([
+                "username" => $req->username,
+                "id_request" => $req->id,
+                "user_id" => $req->userId,
+                "keterangan" => "Request Telah Dikirim Oleh " . $req->username,
+                "class" => "kirim",
+                "created_at" => \Carbon\Carbon::now()
+            ]);
+            $bodyEmail = [
+                "role" => "Kontraktor",
+                "status" => "Mengirim",
+                "revisi" => "",
+                "username" => $get_data->nama_kontraktor,
+                "no_dokumen" => $req->id,
+                "kegiatan" => $get_data->nama_kegiatan,
+                "lokasi" => $get_data->lokasi_sta,
+                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+                "volume" => $get_data->volume,
+                "note" => "konsultan"
+            ];
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
-//                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
         }
 
@@ -767,6 +771,171 @@ class PermintaanController extends Controller
         return response()->json([
             'code' => 200
         ]);
+    }
+
+    public function responReqKonsultanFromMobile(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            // Data Umum
+            "id" => "required",
+            "userId" => "required",
+            "konsultan" => "required",
+            "isAccepted" => "required",
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '400',
+                'error' => $validator->getMessageBag()->getMessages()
+            ], 400);
+        }
+
+        if ($req->isAccepted == true) {
+
+            DB::table('request')->where('id', $req->id)->update([
+                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+                "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "status" => 3
+            ]);
+
+            if ($req->catatan != null) {
+                DB::table('request')->where('id', $req->id)->update([
+                    "catatan_konsultan" => $req->catatan
+                ]);
+            }
+
+            DB::table('history_request')->insert([
+                "username" => $req->konsultan,
+                "id_request" => $req->id,
+                "user_id" => $req->userId,
+                "class" => "sukses",
+                "keterangan" => "Request Telah Disetujui Oleh " . $req->konsultan,
+                "created_at" => \Carbon\Carbon::now()
+            ]);
+
+            if ($req->file('dokumentasi')) {
+                $file = $req->file('dokumentasi');
+                $name = time() . "_" . $file->getClientOriginalName();
+                DB::table('request')->where('id', $req->id)->update([
+                    "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
+                ]);
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+            }
+
+            if ($req->file('checklist')) {
+                $file = $req->file('checklist');
+                $name = time() . "_" . $file->getClientOriginalName();
+                DB::table('request')->where('id', $req->id)->update([
+                    "checklist" => $this->PATH_FILE_DB . "/" . $name
+                ]);
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+            }
+
+            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $bodyEmail = [
+                "role" => "Konsultan",
+                "status" => "Menyetujui",
+                "revisi" => "",
+                "username" => $get_data->nama_direksi,
+                "no_dokumen" => $req->id,
+                "kegiatan" => $get_data->nama_kegiatan,
+                "lokasi" => $get_data->lokasi_sta,
+                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+                "volume" => $get_data->volume,
+                "note" => ""
+            ];
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+
+            $bodyEmail = [
+                "role" => "Konsultan",
+                "status" => "Mengirim",
+                "revisi" => "",
+                "username" => $get_data->nama_direksi,
+                "no_dokumen" => $req->id,
+                "kegiatan" => $get_data->nama_kegiatan,
+                "lokasi" => $get_data->lokasi_sta,
+                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+                "volume" => $get_data->volume,
+                "note" => ""
+            ];
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            foreach ($mailto as $email) {
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+
+            return response()->json([
+                "status" => "success",
+                "code" => 201,
+                "result" => "Response request pekerjaan dari konsultan berhasil disimpan"
+            ], ResponseAlias::HTTP_CREATED);
+
+        } else {
+            DB::table('request')->where('id', $req->id)->update([
+                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
+                "catatan_konsultan" => $req->catatan,
+                "status" => 1,
+                "ditolak" => 1,
+                "rekomendasi" => $req->rekomendasi
+            ]);
+
+            DB::table('history_request')->insert([
+                "username" => $req->konsultan,
+                "id_request" => $req->id,
+                "user_id" => $req->userId,
+                "class" => "reject",
+                "keterangan" => "Request Telah Ditolak Oleh " . $req->konsultan,
+                "created_at" => \Carbon\Carbon::now()
+            ]);
+
+            if ($req->file('dokumentasi')) {
+                $file = $req->file('dokumentasi');
+                $name = time() . "_" . $file->getClientOriginalName();
+                DB::table('request')->where('id', $req->id)->update([
+                    "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
+                ]);
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+            }
+
+            if ($req->file('checklist')) {
+                $file = $req->file('checklist');
+                $name = time() . "_" . $file->getClientOriginalName();
+                DB::table('request')->where('id', $req->id)->update([
+                    "checklist" => $this->PATH_FILE_DB . "/" . $name
+                ]);
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+            }
+
+            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $bodyEmail = [
+                "role" => "Konsultan",
+                "status" => "Menolak",
+                "revisi" => "",
+                "username" => $get_data->nama_direksi,
+                "no_dokumen" => $req->id,
+                "kegiatan" => $get_data->nama_kegiatan,
+                "lokasi" => $get_data->lokasi_sta,
+                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+                "volume" => $get_data->volume,
+                "note" => ""
+            ];
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+
+            return response()->json([
+                "code" => 200
+            ], 200);
+
+        }
     }
 
     public function responReqKonsultan(Request $req)

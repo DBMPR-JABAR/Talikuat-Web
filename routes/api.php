@@ -39,7 +39,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('/auth')->group(function () {
 
-    Route::middleware('auth:sanctum')->get('/checkToken', [AuthController::class, 'checkToken']);
+    Route::middleware('auth:sanctum')->post('/checkToken', [AuthController::class, 'checkToken']);
 
     Route::middleware('auth:sanctum')->delete('/revokeAllTokens', [AuthController::class, 'revokeAllTokens']);
 
@@ -200,6 +200,8 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/konsultan/responserequest', [PermintaanController::class, 'responReqKonsultan']);
 
     Route::post('/ppk/responserequest', [PermintaanController::class, 'responReqPpk']);
+
+    Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
 
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
