@@ -333,6 +333,8 @@ Route::prefix('ruas-jalan')->group(function () {
 
 Route::prefix('unor')->group(function () {
 
+    Route::get('/getAllUnor', [UnorController::class, 'getAllUnor']);
+
     Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
 });
 
@@ -362,6 +364,6 @@ Route::prefix('curva')->group(function () {
 
 Route::prefix('utils')->group(function () {
 
-    Route::post('konsultan', [UtilsControllers::class,'getteamKonsltan']);
+    Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
 
 });
