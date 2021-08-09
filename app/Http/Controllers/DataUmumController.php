@@ -12,13 +12,37 @@ class DataUmumController extends Controller
 
     private $PATH_FILE_DOCUMENTS = "C:\\xampp\\htdocs\\talikuat\\lampiran\\umum";
 
-    public function getLatestDataUmum()
+    public function getLatestDataUmum(Request $request)
     {
-
-        $result = DB::table('data_umum')
+        $query = DB::table('data_umum')
             ->limit(5)
-            ->orderByDesc('id')
-            ->get();
+            ->orderByDesc('id');
+
+        switch ($request->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('penyedia', '=', $request->value)
+                    ->get();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('konsultan', '=', $request->value)
+                    ->get();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('id_uptd', '=', $request->value)
+                    ->get();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nm_ppk', '=', $request->value)
+                    ->get();
+                break;
+            default:
+                $result = $query->get();
+                break;
+        }
 
         return response()->json([
             'status' => 'success',
@@ -27,15 +51,33 @@ class DataUmumController extends Controller
         ]);
     }
 
+
     public function getDataUmumByKeyword(Request $request)
     {
-
         $keyword = $request->query("keyword");
+        $query = DB::table('data_umum')
+            ->where(function ($query) use ($keyword) {
+                $query->where('nm_paket', 'like', '%' . $keyword . '%')
+                    ->orWhere('unor', 'like', '%' . $keyword . '%');
+            });
 
-        $result = DB::table('data_umum')
-            ->where('nm_paket', 'like', '%' . $keyword . '%')
-            ->orWhere('unor', 'like', '%' . $keyword . '%')
-            ->paginate(15);
+        switch ($request->type) {
+            case 'KONTRAKTOR':
+                $result = $query->where('penyedia', '=', $request->value)->paginate();
+                break;
+            case 'KONSULTAN':
+                $result = $query->where('konsultan', '=', $request->value)->paginate();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query->where('id_uptd', '=', $request->value)->paginate();
+                break;
+            case 'PPK':
+                $result = $query->where('nm_ppk', '=', $request->value)->paginate();
+                break;
+            default:
+                $result = $query->paginate();
+                break;
+        }
 
         return response()->json([
             'status' => 'success',
@@ -96,7 +138,7 @@ class DataUmumController extends Controller
         }
         $replace = str_replace(',', '.', $request->input('nilai_kontrak'));
 
-        $getSE=DB::table('team_konsultan')->where('id',$request->nama_se)->first();
+        $getSE = DB::table('team_konsultan')->where('id', $request->nama_se)->first();
 
         $data = [
             // Data Umum
@@ -122,9 +164,9 @@ class DataUmumController extends Controller
             //"id_sup"=>$request->input('sup'),
             "id_uptd" => $request->input("id_uptd"),
             "created_at" => \Carbon\Carbon::now(),
-            'field_team_konsultan'=>$request->nama_se
+            'field_team_konsultan' => $request->nama_se
         ];
-        
+
         $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
 
         // List Ruas Jalan
@@ -339,7 +381,7 @@ class DataUmumController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $replace = str_replace(',', '.', $req->input('nilai_kontrak'));
-        $getSE=DB::table('team_konsultan')->where('id',$req->nama_se)->first();
+        $getSE = DB::table('team_konsultan')->where('id', $req->nama_se)->first();
         $data = [
             // Data Umum
             'pemda' => $req->input("pemda"),
@@ -359,7 +401,7 @@ class DataUmumController extends Controller
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
             "nm_se" => $getSE->nama,
-            'field_team_konsultan'=>$req->nama_se,
+            'field_team_konsultan' => $req->nama_se,
             "nm_gs" => $req->input("nm_gs"),
             "is_adendum" => 0,
             "updated_at" => \Carbon\Carbon::now()
@@ -373,7 +415,7 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
-            'field_team_konsultan'=>$req->nama_se,
+            'field_team_konsultan' => $req->nama_se,
         ]);
         DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
         for ($i = 0; $i < count($req->ruas_jalan); $i++) {

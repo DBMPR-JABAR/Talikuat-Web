@@ -33,4 +33,19 @@ class UnorController extends Controller
             'result' => $result
         ]);
     }
+
+    public function getUnor(Request $request)
+    {
+        $namaLengkap = $request->nama_lengkap;
+
+        $result = DB::table('kantor')
+            ->where('nama_lengkap', '=', $namaLengkap)
+            ->first();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
 }

@@ -336,6 +336,8 @@ Route::prefix('unor')->group(function () {
     Route::get('/getAllUnor', [UnorController::class, 'getAllUnor']);
 
     Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
+
+    Route::get('/getUnor', [UnorController::class, 'getUnor']);
 });
 
 Route::prefix('merge')->group(function () {

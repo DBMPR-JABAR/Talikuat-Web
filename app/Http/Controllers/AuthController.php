@@ -26,10 +26,8 @@ class AuthController extends Controller
 
         $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
 
-        $uptd = null;
-        if ($user_detail->kantor_id != null) {
-            $uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first();
-        }
+        $uptd = DB::table('kantor')->where('nama_lengkap', '=', $user_detail->unit)->first();
+
 
         $data = [
             'id_login' => $user->id_login,
