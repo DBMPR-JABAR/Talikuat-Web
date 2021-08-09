@@ -40,7 +40,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('/auth')->group(function () {
 
-    Route::middleware('auth:sanctum')->get('/checkToken', [AuthController::class, 'checkToken']);
+    Route::middleware('auth:sanctum')->post('/checkToken', [AuthController::class, 'checkToken']);
 
     Route::middleware('auth:sanctum')->delete('/revokeAllTokens', [AuthController::class, 'revokeAllTokens']);
 
@@ -70,6 +70,8 @@ Route::prefix('/user')->group(function () {
     Route::post('/addteam', [UserController::class, 'addTeam']);
 
     Route::post('/registerteam', [UserController::class, 'registerTeamKonsultan']);
+
+    Route::get('/aktivasiuser/{id}', [UserController::class, 'aktivasiUser']);
 
 });
 
@@ -207,6 +209,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/ppk/responserequest', [PermintaanController::class, 'responReqPpk']);
 
+    Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
+
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
@@ -329,6 +333,8 @@ Route::prefix('ruas-jalan')->group(function () {
 
 Route::prefix('unor')->group(function () {
 
+    Route::get('/getAllUnor', [UnorController::class, 'getAllUnor']);
+
     Route::get('/getUnorByKeyword', [UnorController::class, 'getUnorByKeyword']);
 });
 
@@ -358,6 +364,6 @@ Route::prefix('curva')->group(function () {
 
 Route::prefix('utils')->group(function () {
 
-    Route::post('konsultan', [UtilsControllers::class,'getteamKonsltan']);
+    Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
 
 });

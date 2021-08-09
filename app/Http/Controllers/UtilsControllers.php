@@ -12,9 +12,7 @@ class UtilsControllers extends Controller
         $result = DB::table('master_konsultan')->where('nama',$req->nama)->first();
         $team = DB::table('team_konsultan')->where([
             ['id_konsultan','=',$result->id],
-            ['jabatan','=','Site Engineer'],
-            ['uptd','=',$req->unor]
-            ])->get();
+            ['jabatan','=','SITE ENGINEERING']])->get();
 
         return response()->json([
             'status' => 'success',

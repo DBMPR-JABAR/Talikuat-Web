@@ -80,7 +80,7 @@ class DataUmumController extends Controller
             "nama_ppk" => "required",
             "nama_se" => "required",
             "nama_gs" => "required",
-            "segment_jalan" => "required",
+            "segmen_jalan" => "required",
             "ruas_jalan" => "required",
             //"sup"=>"required"
 
@@ -95,6 +95,8 @@ class DataUmumController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
         $replace = str_replace(',', '.', $request->input('nilai_kontrak'));
+
+        $getSE=DB::table('team_konsultan')->where('id',$request->nama_se)->first();
 
         $data = [
             // Data Umum
@@ -114,14 +116,15 @@ class DataUmumController extends Controller
             "penyedia" => $request->input("penyedia"),
             "konsultan" => $request->input("konsultan"),
             "nm_ppk" => $request->input("nama_ppk"),
-            "nm_se" => $request->input("nama_se"),
-            "nm_gs" => $request->input("nama_gs"),
+            "nm_se" => $getSE->nama,
+            "nm_gs" => $request->nama_gs,
             "is_adendum" => 0,
             //"id_sup"=>$request->input('sup'),
             "id_uptd" => $request->input("id_uptd"),
-            "created_at" => \Carbon\Carbon::now()
+            "created_at" => \Carbon\Carbon::now(),
+            'field_team_konsultan'=>$request->nama_se
         ];
-
+        
         $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
 
         // List Ruas Jalan
@@ -151,7 +154,7 @@ class DataUmumController extends Controller
                 DB::table('data_umum_ruas')->insert([
                     "id_data_umum" => $insertedDataUmumId, // diganti sesuai DB
                     "ruas_jalan" => $dataUmumRuas["ruas_jalan"],
-                    "segment_jalan" => $dataUmumRuas["segment_jalan"],
+                    "segment_jalan" => $dataUmumRuas["segmen_jalan"],
                     "lat_awal" => $dataUmumRuas["lat_awal"],
                     "long_awal" => $dataUmumRuas["long_awal"],
                     "lat_akhir" => $dataUmumRuas["lat_akhir"],
@@ -172,7 +175,7 @@ class DataUmumController extends Controller
                 DB::table("data_umum_ruas")->insert([
                     "id_data_umum" => $insertedDataUmumId,
                     "ruas_jalan" => $request->ruas_jalan[$i],
-                    "segment_jalan" => $request->segment_jalan[$i],
+                    "segment_jalan" => $request->segmen_jalan[$i],
                     "lat_awal" => $request->lat_awal[$i],
                     "long_awal" => $request->long_awal[$i],
                     "lat_akhir" => $request->lat_akhir[$i],
@@ -336,6 +339,7 @@ class DataUmumController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $replace = str_replace(',', '.', $req->input('nilai_kontrak'));
+        $getSE=DB::table('team_konsultan')->where('id',$req->nama_se)->first();
         $data = [
             // Data Umum
             'pemda' => $req->input("pemda"),
@@ -354,7 +358,8 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
-            "nm_se" => $req->input("nm_se"),
+            "nm_se" => $getSE->nama,
+            'field_team_konsultan'=>$req->nama_se,
             "nm_gs" => $req->input("nm_gs"),
             "is_adendum" => 0,
             "updated_at" => \Carbon\Carbon::now()
@@ -368,6 +373,7 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
+            'field_team_konsultan'=>$req->nama_se,
         ]);
         DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
         for ($i = 0; $i < count($req->ruas_jalan); $i++) {

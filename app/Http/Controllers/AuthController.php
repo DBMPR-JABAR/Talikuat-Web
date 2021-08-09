@@ -26,9 +26,9 @@ class AuthController extends Controller
 
         $user_detail = DB::table('member')->where('id_member', '=', $user->id_member)->first();
 
-        $id_uptd = null;
+        $uptd = null;
         if ($user_detail->kantor_id != null) {
-            $id_uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first()->id_kantor;
+            $uptd = DB::table('kantor')->where('user', $user_detail->kantor_id)->first();
         }
 
         $data = [
@@ -45,7 +45,8 @@ class AuthController extends Controller
             'email' => $user_detail->email,
             'gambar' => $user_detail->gambar,
             'nik' => $user_detail->nik,
-            'kantor_id' => $id_uptd,
+            'kantor_id' => $uptd ? $uptd->id_kantor : null,
+            'kantor' => $uptd ? $uptd->nama_lengkap : null,
             'perusahaan' => $user_detail->perusahaan,
             'unit' => $user_detail->unit,
             'created_at' => $user_detail->created_at

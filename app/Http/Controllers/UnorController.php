@@ -7,12 +7,25 @@ use Illuminate\Support\Facades\DB;
 
 class UnorController extends Controller
 {
-    public function getUnorByKeyword(Request $request)
+    public function getAllUnor()
     {
-        $keyword = $request->input("keyword");
+        $result = DB::table('kantor')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
+
+    public function getUnorByKeyword(Request $req)
+    {
+        $keyword = $req->keyword;
 
         $result = DB::table('kantor')
-            ->paginate(15);
+            ->where('nama_kantor', 'like', '%' . $keyword . '%')
+            ->orWhere('nama_lengkap', 'like', '%' . $keyword . '%')
+            ->get();
 
         return response()->json([
             'status' => 'success',
