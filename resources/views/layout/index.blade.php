@@ -121,17 +121,17 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('user.index') }}">
                             <i class="mdi mdi-account-multiple menu-icon"></i>
                             <span class="menu-title">Manajemen User</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a
                             class="nav-link"
                             data-toggle="collapse"
-                            href="#ui-basic"
+                            href="#ui-basic1"
                             aria-expanded="false"
                             aria-controls="ui-basic"
                         >
@@ -139,7 +139,7 @@
                             <span class="menu-title">Manajemen User</span>
                             <i class="menu-arrow"></i>
                         </a>
-                        <div class="collapse" id="ui-basic">
+                        <div class="collapse" id="ui-basic1">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
                                     <a
@@ -157,13 +157,13 @@
                                         >Field Team</a
                                     >
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a
                                         class="nav-link"
                                         href="{{ route('masterppk.index') }}"
                                         >General Superintendent</a
                                     >
-                                </li>
+                                </li> --}}
                                 
                             </ul>
                         </div>

@@ -13,6 +13,7 @@ use App\Models\Backend\UserDetail as UserDetail;
 use App\Models\Backend\UserRule as UserRule;
 use App\Models\Backend\Uptd as Uptd;
 use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterKonsultan;
 use App\Models\Backend\MasterKonsultanFt as KonsultanFt;
 
 use Illuminate\Support\Facades\Validator;
@@ -115,7 +116,19 @@ class UserController extends Controller
         return view('admin.user.show',compact('data','rule_user','uptd'));
 
     }
+    public function show_ft($id)
+    {
+        //
+        $rule_user = UserRule::all();
+        $uptd = Uptd::all();
+        // $data = MasterKonsultan::find($id);
+        $data = KonsultanFt::find($id);
 
+        // dd($data);
+
+        return view('admin.user.fieldteam.show',compact('data','rule_user','uptd'));
+
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -362,5 +375,6 @@ class UserController extends Controller
         }
             
     }
+   
     
 }

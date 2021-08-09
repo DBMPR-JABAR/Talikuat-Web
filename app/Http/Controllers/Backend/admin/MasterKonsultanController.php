@@ -311,6 +311,14 @@ class MasterKonsultanController extends Controller
         }
         // dd($data); 
     }
+    public function trash_ft()
+    {
+        //
+        $data = KonsultanFt::where('is_delete',1)->get();
+        // dd($data);
+        return view('admin.user.fieldteam.index', compact('data'));
+
+    }
     public function move_to_trash_ft($desc, $id)
     {
         //

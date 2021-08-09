@@ -174,7 +174,7 @@
                                 <div class="form-group">
                                     <label>Agama</label>
                                     <select class="form-control" name="agama" required>
-                                        <option>Select</option>
+                                        <option value=" ">Select</option>
                                         {{-- <option selected>
                                         {!!  @$data->profile->jenis_kelamin !!}
                                     </option> --}}

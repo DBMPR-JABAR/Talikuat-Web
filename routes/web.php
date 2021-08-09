@@ -49,6 +49,12 @@ Route::prefix('admin')->group(function () {
             Route::post('edit/{desc}/{id}',[UserController::class,'update'])->name('update.user');
             Route::prefix('field_team')->group(function (){
                 Route::get('/index',[UserController::class,'index_ft'])->name('user.ft.index');
+                Route::get('/trash',[MasterKonsultanController::class,'trash_ft'])->name('user.ft.trash');
+                Route::get('/{id}',[UserController::class,'show_ft'])->name('show.user.ft');
+                
+
+                Route::get('verified/{id}',[UserController::class,'show_ft'])->name('verified.user.ft');
+                Route::post('verified/{id}',[VerifiedController::class,'verified_ft'])->name('verified.user.ft.store');
 
             });
             
