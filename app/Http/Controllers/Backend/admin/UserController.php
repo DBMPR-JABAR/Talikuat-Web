@@ -44,7 +44,7 @@ class UserController extends Controller
         
         $data = KonsultanFt::where('is_delete',null)->get();
         // dd($data);
-        return view('admin.user.ft',compact('data'));
+        return view('admin.user.fieldteam.index',compact('data'));
     }
     
 
