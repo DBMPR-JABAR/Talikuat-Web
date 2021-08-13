@@ -204,36 +204,7 @@
                                 </button>
                             </div>
                         </div> --}}
-                        <div class="form-group">
-                            <label>Masukan FT</label>
-                            <div class="d-flex" id="ie">
-                                <input
-                                    type="text"
-                                    name="nm_ie[]"
-                                    placeholder="Masukkan Nama Inspection Engineering"
-                                    class="form-control"
-                                />
-                                <input
-                                    type="text"
-                                    name="nm_se[]"
-                                    placeholder="Masukkan Nama Site Engineering"
-                                    class="form-control"
-                                    
-                                />
-                                <button
-                                    type="button"
-                                    class="ml-1"
-                                    style="border: none; padding: 0"
-                                    onclick="addIE()"
-                                    id="btn_addIE"
-                                >
-                                    <i
-                                        class="mdi mdi-account-plus mt-2"
-                                        style="color: green"
-                                    ></i>
-                                </button>
-                            </div>
-                        </div>
+                        
                     </div>
 
                     <div class="modal-footer">

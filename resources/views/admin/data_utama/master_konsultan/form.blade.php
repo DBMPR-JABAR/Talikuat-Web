@@ -121,7 +121,7 @@
         <div class="card">
             <div class="card-header ">
                 <h4 class="card-title">Informasi Pengguna Perusahaan</h4>
-                <a data-toggle="modal" href="#addModal"><button type="button" class="btn btn-responsive btn-warning"><i class="fa fa-user"></i> Tambah FT</button></a>
+                <a data-toggle="modal" href="#addModalUser"><button type="button" class="btn btn-responsive btn-warning"><i class="fa fa-user"></i> Tambah Pengguna</button></a>
 
             </div>
             <div class="card-body">
@@ -499,6 +499,79 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addModalUser" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+
+                <form action="{{ route('store.user') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h4 class="modal-title">Tambah User</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body p-5">
+                        <div class="form-group">
+                            <label>Jabatan</label>
+                            
+                            <select class="form-control" name="rule" required>
+
+                                <option value="">Select</option>
+                                <option value="4">Direktur</option>
+                                <option value="9">Admin</option>                               
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama</label>
+                            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan name" class="form-control @error('name') is-invalid @enderror" required>
+                            @error('name')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder="Masukkan email" class="form-control @error('email') is-invalid @enderror" required>
+                            @error('email')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" required>
+                            @error('password')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Ulangi Password</label>
+                            <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                                class="form-control" required>
+                        </div>
+                        <div class="form-group ">
+                            <label>No Telp</label>
+                            <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
+                        </div>
+                        
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Simpan</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="delModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -538,6 +611,7 @@
             </div>
         </div>
     </div>
+
 </div>
 @endsection
 
