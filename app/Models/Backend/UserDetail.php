@@ -34,4 +34,9 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterKonsultanFt', 'ie_user_id','user_id');
     }
+    public function konsultan()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');
+        // return $this->belongsToMany('App\Models\Backend\UserRule', 'user_rule_user', 'user_id', 'rule_user_id','user_id');
+    }
 }

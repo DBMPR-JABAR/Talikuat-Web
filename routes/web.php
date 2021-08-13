@@ -88,6 +88,8 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}',[MasterKonsultanController::class,'update'])->name('update.masterkonsultan');
             Route::post('/update_ft/{id}',[MasterKonsultanController::class,'update_ft'])->name('update.masterkonsultanft');
             Route::post('/store_ft/{id}',[MasterKonsultanController::class,'store_ft'])->name('store.masterkonsultanft');
+            Route::post('/store_ft_second',[MasterKonsultanController::class,'store_ft_second'])->name('store.masterkonsultanft.second');
+
             Route::get('/trash_ft/{desc}/{id}',[MasterKonsultanController::class,'move_to_trash_ft']);
 
             Route::get('/trash',[MasterKonsultanController::class,'trash'])->name('trash.masterkonsultan');

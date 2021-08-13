@@ -111,9 +111,13 @@ class MasterKonsultanController extends Controller
         $data = MasterKonsultan::find($id);
         $data_details = $data->konsultan_ft->toArray();
         $data_user = UserDetail::where('konsultan_id',$id)->where('is_delete',null)->get();
-        
-        
-        return view('admin.data_utama.master_konsultan.form',compact('data','data_details','data_user'));
+        // $data_pengguna = $data->user_detail->where('rule_user_id','!=',7)->where('rule_user_id','!=',8);
+        $data_pengguna = $data->user_detail_sec->where('rule_user_id','!=',7)->where('rule_user_id','!=',8);
+        // dd($data_pengguna->where('rule_user_id',9)->first()->user);
+       
+        // dd($data->user_detail_sec);
+
+        return view('admin.data_utama.master_konsultan.form',compact('data','data_details','data_user','data_pengguna'));
     }
 
     /**
@@ -149,8 +153,7 @@ class MasterKonsultanController extends Controller
             return back()->with(['danger' => 'Data Gagal Di Perbaharui!']);
 
     }
-
-    public function store_ft(Request $request, $id)
+    public function store_ft_first($request, $id)
     {
         $validator = Validator::make($request->all(), [
             'email_se' => 'unique:db_users_dbmpr.users,email',
@@ -167,6 +170,7 @@ class MasterKonsultanController extends Controller
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);
         }
+        
         // dd($id);
 
         $create_user_se = User::firstOrNew(['email'=> $request->email_se]);
@@ -226,7 +230,18 @@ class MasterKonsultanController extends Controller
             return back()->with(['success' => 'FT Berhasil Di Tambahkan!']);
         }else
             return back()->with(['danger' => 'FT Gagal Di Tambahkan!']);
+    }
 
+    public function store_ft(Request $request, $id)
+    {
+        $storage = $this->store_ft_first($request, $id);
+        return $storage;
+    }
+    public function store_ft_Second(Request $request)
+    {
+        $storage = $this->store_ft_first($request, $request->company);
+        return $storage;
+        
     }
     public function update_ft(Request $request, $id)
     {

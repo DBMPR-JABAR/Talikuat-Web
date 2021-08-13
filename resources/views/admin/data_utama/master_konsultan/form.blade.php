@@ -120,8 +120,54 @@
         </div>
         <div class="card">
             <div class="card-header ">
+                <h4 class="card-title">Informasi Pengguna Perusahaan</h4>
+                <a data-toggle="modal" href="#addModal"><button type="button" class="btn btn-responsive btn-warning"><i class="fa fa-user"></i> Tambah FT</button></a>
+
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+    
+                    
+                    <tr>
+                        <td style="width: 30%">Direktur</td>
+                        <td >:
+                            @if($data_pengguna->where('rule_user_id',4)->first())
+                            {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',9)->first()->user->name) }}
+                            @else
+                            No Data
+                            @endif
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Admin</td>
+                        <td >:
+                            @if($data_pengguna->where('rule_user_id',9)->first())
+                            {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',9)->first()->user->name) }}
+                            @else
+                            No Data
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Field Team</td>
+                        <td >:
+                            @if(count($data->konsultan_ft)>=1)
+                            {{ count($data->konsultan_ft) }}
+                            @else
+                            Tidak Ada
+                            @endif
+                            Team
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+        </div>
+        <div class="card">
+            <div class="card-header ">
                 <h4 class="card-title">Informasi FT</h4>
-                <a data-toggle="modal" href="#addModal"><button type="button" class="btn btn-responsive btn-primary"><i class="fa fa-paper-plane"></i> Tambah FT</button></a>
+                <a data-toggle="modal" href="#addModal"><button type="button" class="btn btn-responsive btn-warning"><i class="fa fa-paper-plane"></i> Tambah FT</button></a>
 
             </div>
             <div class="card-body">
@@ -248,7 +294,6 @@
                                 <a href="javascript:void(0)" data-toggle="modal"><button class="btn btn-danger removePrice btn-mini waves-effect waves-light" data-toggle="tooltip" title="Hapus"><i class="fa fa-trash"></i></button></a>
                             </div>
                         </div> --}}
-                        
                         @foreach ($data->konsultan_ft->where('is_delete', null) as $no=> $item)
                         <div class="row justify-content-md-center fieldGroupPrice">
                             <div class="col-md-11"> 
@@ -257,6 +302,11 @@
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label>Site Engineering</label>
+                                            @if(@$item->ft_verified_at != null)
+                                            <i style="color :green; font-size: 10px;">(FT has been verified)</i>
+                                            @else
+                                            <i style="color :red; font-size: 10px;">(FT not verified)</i>
+                                            @endif
                                             {{-- <input type="text" name="nm_se[]" class="form-control @error('nm_se') is-invalid @enderror" value="{{ @$item->user_se->name }}" placeholder="Merah, Ungu,dll" id="mytex1"> --}}
                                             <input type="text" name="id_ft[]" value="{{ @$item->id }}" style="display: none" readonly>
                                             <select class="form-control" name="nm_se[]" required>

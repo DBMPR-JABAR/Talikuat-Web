@@ -62,12 +62,21 @@
                                                 <td style="width: 10%">Team</td>
                                                 <td>Site Engineering</td>
                                                 <td>Inspection Engineering</td>
+                                                <td  class="text-center">FT Verified</td>
+
                                             </tr>
                                             @foreach ( $data->konsultan_ft->where('is_delete', null) as $no => $ft)
                                             <tr>
                                                 <td style="width: 10%">{{ ++$no }}</td>
                                                 <td>{{ $ft->user_se->name }}</td>
                                                 <td>{{ $ft->user_ie->name }}</td>
+                                                <td   class="text-center">
+                                                    @if($ft->ft_verified_at)
+                                                    <i class="mdi mdi-check-all menu-icon" style="color: green"></i>
+                                                    @else
+                                                    <i class="mdi mdi-close menu-icon" style="color: red"></i>
+                                                    @endif
+                                                </td>
                                             </tr> 
                                             @endforeach
                                         </table>

@@ -1,5 +1,5 @@
 @extends('layout.index') 
-@section('title','User')
+@section('title','Field Team')
 @section('header')
 @endsection 
 
@@ -22,7 +22,7 @@
             <div class="card-body">
                 <h4 class="card-title">Data Field Team</h4>
                 @if (Request::segment(3) != 'trash')
-                    {{-- <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a> --}}
+                    <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
                     <a href="{{ route('user.ft.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
                 @else
                     <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
@@ -91,66 +91,141 @@
 </div>
 <div class="modal-only">
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-md" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
+               
+                <form action="{{route('store.masterkonsultanft.second')}}" method="post" enctype="multipart/form-data">
 
-                <form action="{{ route('store.user') }}" method="post" enctype="multipart/form-data">
                     @csrf
+
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <h4 class="modal-title">Tambah Field Team</h4>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body p-5">
-
                         <div class="form-group">
-                            <label>Nama</label>
-                            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan name" class="form-control @error('name') is-invalid @enderror" required>
-                            @error('name')
+                            <label>Perusahaan</label>
+                            <select class="form-control" name="company" required>
+                                <option value="">Select</option>
+                                @foreach ($company as $it)
+                                <option value="{{ $it->id }}" >{{ $it->nama }}</option>
+                                    
+                                @endforeach
+                            </select>
+                            @error('name_se')
                             <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder="Masukkan email" class="form-control @error('email') is-invalid @enderror" required>
-                            @error('email')
-                            <div class="invalid-feedback" style="display: block; color:red">
-                                {{ $message }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="mb-3" style="font-weight: bold"> Site Engineering</label>
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <input type="text" required name="name_se" id="name_se" value="{{ old('name_se') }}" placeholder="Masukkan Nama Lengkap" class="form-control @error('name_se') is-invalid @enderror" >
+                                    @error('name_se')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <input type="email" required name="email_se" id="email_se" value="{{ old('email_se') }}" placeholder="Masukkan e-mail" class="form-control @error('email_se') is-invalid @enderror" >
+                                    @error('email_se')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" required minlength="8" name="password_se" id="password_se" value="{{ old('password_se') }}" placeholder="Masukkan Password_se" class="form-control @error('password_se') is-invalid @enderror" >
+                                    @error('password_se')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Ulangi Password</label>
+                                    <input type="password" minlength="8" required name="password_confirmation_se" id="password_confirmation_se" value="{{ old('password_confirmation_se') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                                        class="form-control" >
+                                </div>
+                                <div class="form-group ">
+                                    <label>No Telp</label>
+                                    <input type="text" name="no_tlp_se" required oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control" >  
+                                </div>
                             </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" required>
-                            @error('password')
-                            <div class="invalid-feedback" style="display: block; color:red">
-                                {{ $message }}
+                            <div class="col-md-6">
+                                <label class="mb-3" style="font-weight: bold">Inspection Engineering</label>
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <input type="text" name="name_ie" required id="name_ie" value="{{ old('name_ie') }}" placeholder="Masukkan Nama Lengkap" class="form-control @error('name_ie') is-invalid @enderror" >
+                                    @error('name_ie')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <input type="email" name="email_ie" required id="email_ie" value="{{ old('email_ie') }}" placeholder="Masukkan e-mail" class="form-control @error('email_ie') is-invalid @enderror" >
+                                    @error('email_ie')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" minlength="8" required name="password_ie" id="password_ie" value="{{ old('password_ie') }}" placeholder="Masukkan Password_ie" class="form-control @error('password_ie') is-invalid @enderror" >
+                                    @error('password_ie')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Ulangi Password</label>
+                                    <input type="password" minlength="8" required name="password_confirmation_ie" id="password_confirmation_ie" value="{{ old('password_confirmation_ie') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                                        class="form-control" >
+                                </div>
+                                <div class="form-group ">
+                                    <label>No Telp</label>
+                                    <input type="text" name="no_tlp_ie" required oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control" >  
+                                </div>
                             </div>
-                            @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Ulangi Password</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
-                                class="form-control" required>
-                        </div>
-                        <div class="form-group ">
-                            <label>No Telp</label>
-                            <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
-                        </div>
-                        
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Simpan</button>
+                        <button
+                            type="button"
+                            class="btn btn-default waves-effect"
+                            data-dismiss="modal"
+                        >
+                            Tutup
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary waves-effect waves-light"
+                        >
+                            Simpan
+                        </button>
                     </div>
+                
 
                 </form>
-
             </div>
         </div>
     </div>

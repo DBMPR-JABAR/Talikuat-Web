@@ -42,10 +42,11 @@ class UserController extends Controller
     public function index_ft()
     {
         //
+        $company = MasterKonsultan::all()->where('is_delete','!=',1);
         
         $data = KonsultanFt::where('is_delete',null)->get();
         // dd($data);
-        return view('admin.user.fieldteam.index',compact('data'));
+        return view('admin.user.fieldteam.index',compact('data','company'));
     }
     
 
