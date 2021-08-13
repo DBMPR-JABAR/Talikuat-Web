@@ -67,19 +67,19 @@ class MasterKonsultanController extends Controller
         $konsultan = MasterKonsultan::create($temp);
 
         if($konsultan){
-            if(count($request->nm_ie) >=1){
-                for($x=0; $x<count($request->nm_ie); $x++){
-                    if($request->nm_se[$x] != null || $request->nm_ie[$x] != null){
-                        $save_ft = KonsultanFt::create([
-                            'konsultan_id'=> $konsultan->id,
-                            'se'=> $request->nm_se[$x],
-                            'ie'=> $request->nm_ie[$x],
-                            'created_by'=>Auth::user()->id,
-                        ]);
-                    }
-                }
+            // if(count($request->nm_ie) >=1){
+            //     for($x=0; $x<count($request->nm_ie); $x++){
+            //         if($request->nm_se[$x] != null || $request->nm_ie[$x] != null){
+            //             $save_ft = KonsultanFt::create([
+            //                 'konsultan_id'=> $konsultan->id,
+            //                 'se'=> $request->nm_se[$x],
+            //                 'ie'=> $request->nm_ie[$x],
+            //                 'created_by'=>Auth::user()->id,
+            //             ]);
+            //         }
+            //     }
                 
-            }
+            // }
             return redirect()->route('masterkonsultan.index')->with(['success' => 'Data Berhasil Disimpan!']);
         }else
             return redirect()->route('masterkonsultan.index')->with(['danger' => 'Data Gagal Disimpan!']);
