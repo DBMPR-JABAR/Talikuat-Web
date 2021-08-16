@@ -22,7 +22,7 @@ class UserDetail extends Model
         // return $this->belongsToMany('App\Models\Backend\UserRule', 'user_rule_user', 'user_id', 'rule_user_id','user_id');
         
     }
-    public function company()
+    public function kontraktor()
     {
         return $this->belongsTo('App\Models\Backend\MasterKontraktor', 'kontraktor_id');
     }
