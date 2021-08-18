@@ -52,7 +52,7 @@ class MasterKonsultanController extends Controller
         $validator = Validator::make($request->all(), [
             'nama'=> 'required',
             'alamat'=> 'required',
-            'nama_direktur'=> 'required',
+            'nama_direktur'=> '',
            
         ]);
         if ($validator->fails()) {
@@ -113,7 +113,7 @@ class MasterKonsultanController extends Controller
         $data_user = UserDetail::where('konsultan_id',$id)->where('is_delete',null)->get();
         // $data_pengguna = $data->user_detail->where('rule_user_id','!=',7)->where('rule_user_id','!=',8);
         $data_pengguna = $data->user_detail_sec->where('rule_user_id','!=',7)->where('rule_user_id','!=',8);
-        // dd($data_pengguna->where('rule_user_id',9)->first()->user);
+        // dd($data_pengguna->where('rule_user_id',4)->first());
        
         // dd($data->user_detail_sec);
 
@@ -133,7 +133,7 @@ class MasterKonsultanController extends Controller
         $validator = Validator::make($request->all(), [
             'nama'=> 'required',
             'alamat'=> 'required',
-            'nama_direktur'=> 'required',
+            'nama_direktur'=> '',
         ]);
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);

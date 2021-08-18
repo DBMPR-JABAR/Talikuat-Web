@@ -80,9 +80,9 @@
     </div>
     @endif
     <div class="col-xl-6 col-md-6">
-        <form action="{{url('admin/user/edit/profiles/'.@$data->id)}}" method="post" enctype="multipart/form-data">
-                @csrf
-            <div class="card">
+        <div class="card">
+                <form action="{{url('admin/user/edit/profiles/'.@$data->id)}}" method="post" enctype="multipart/form-data">
+                        @csrf
                 <div class="card-header ">
                     <h4 class="card-title">Informasi Pribadi</h4>
                     <div class="card-header-right">
@@ -161,7 +161,7 @@
                                     <label>Jenis Kelamin</label>
                                     <select class="form-control" name="jenis_kelamin" required>
         
-                                        <option value=" ">Select</option>
+                                        <option value="">Select</option>
                                         {{-- <option selected>
                                         {!!  @$data->profile->jenis_kelamin !!}
                                     </option> --}}
@@ -188,7 +188,6 @@
                                 </div>
                             </div>
                         </div>
-        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -219,11 +218,8 @@
                             </div>
                         </div>
                     </div>
-    
                 </div>
-    
             </div>
-    
             <div class="card">
                 <div class="card-header ">
                     <h4 class="card-title">Pekerjaan</h4>
@@ -236,31 +232,45 @@
                 </div>
                 <div class="card-body">
                     <div class="card-block">
-                                        
+                        @if (@$data->user_detail->konsultan)
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            
+                            <select class="form-control" name="konsultan" @if(Request::segment(2) != 'user') disabled @endif>
+                                <option value="">Select</option> 
+                                @foreach ($konsultans as $no =>$konsultan)
+                                    <option value="{{ $konsultan->id }}" @if (@$data->user_detail->konsultan_id != null && $konsultan->id == $data->user_detail->konsultan_id) selected @endif>{{ $konsultan->nama }}</option> 
+                                @endforeach
+                            </select>
+                        </div>
+                        @elseif (@$data->user_detail->kontraktor)
+                        <div class="form-group">
+                            <label>Perusahaan</label>
                             <select class="form-control" name="kontraktor" @if(Request::segment(2) != 'user') disabled @endif>
-                                
-
                                 <option value="">Select</option>
-                               
                                 @foreach ($kontraktors as $no =>$kontraktor)
-                                <option value="{{ $kontraktor->id }}" @if (@$data->user_detail->kontraktor_id != null && $kontraktor->id == $data->user_detail->kontraktor_id) selected @endif>{{ $kontraktor->nama }}</option>
-                                
+                                    <option value="{{ $kontraktor->id }}" @if (@$data->user_detail->kontraktor_id != null && $kontraktor->id == $data->user_detail->kontraktor_id) selected @endif>{{ $kontraktor->nama }}</option> 
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
+
+                        <div class="form-group">
+                            <label>Jabatan</label>
+                            <select class="form-control" name="rule_user" @if(Request::segment(2) != 'user') disabled @endif>
+                                <option value="">Select</option>
+                                @foreach ($rule_user as $no =>$rule)
+                                <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Jabatan</label>
-                            <input name="jabatan" placeholder="Jabatan" type="text"
-                                value="{{ old('jabatan', @$data->profile->jabatan) }}"
-                                class="form-control  @error('jabatan') is-invalid @enderror">
-                            @error('jabatan')
-                                <div class="invalid-feedback" style="display: block; color:red">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            <label>Unit</label>
+                            <select class="form-control" name="uptd">
+                                <option value="">Select</option>
+                                @foreach ($uptd as $no =>$uptd)
+                                <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                @endforeach  
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Tanggal Mulai</label>
@@ -274,9 +284,7 @@
                             @enderror
                         </div>
                     </div>
-                    
                 </div>
-    
             </div>
         </div>
         <div class="col-xl-6 col-md-6">

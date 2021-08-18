@@ -43,7 +43,6 @@
                 @method('PUT')
                 @else 
                 <form action="{{route('store.masterkonsultan')}}" method="post" enctype="multipart/form-data">
-              
                 @endif
                     @csrf
                     <div class="card-block">
@@ -61,7 +60,12 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label>Nama Direktur</label>
-                                <input type="text" name="nama_direktur" id="nama_direktur" value="{{ @$data->nama_direktur }}" class="form-control" required>
+                                @if($data_pengguna->where('rule_user_id',4)->first())
+                                <br>{{ old('nama_direktur', @$data_pengguna->where('rule_user_id',4)->first()->user->name) }}
+                                @else
+                                <br>-No Data-
+                                @endif
+                                <input type="text" name="nama_direktur" id="nama_direktur" value="{{ @$data->nama_direktur }}" class="form-control" disabled style="display: none">
                                 @error('nama_direktur')
                                     <div class="invalid-feedback" style="display: block; color:red">
                                         {{ $message }}
@@ -121,8 +125,9 @@
         <div class="card">
             <div class="card-header ">
                 <h4 class="card-title">Informasi Pengguna Perusahaan</h4>
+                @if(!$data_pengguna->where('rule_user_id',4)->first() || !$data_pengguna->where('rule_user_id',9)->first())
                 <a data-toggle="modal" href="#addModalUser"><button type="button" class="btn btn-responsive btn-warning"><i class="fa fa-user"></i> Tambah Pengguna</button></a>
-
+                @endif
             </div>
             <div class="card-body">
                 <table class="table table-striped">
@@ -132,7 +137,7 @@
                         <td style="width: 30%">Direktur</td>
                         <td >:
                             @if($data_pengguna->where('rule_user_id',4)->first())
-                            {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',9)->first()->user->name) }}
+                            {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',4)->first()->user->name) }}
                             @else
                             No Data
                             @endif
@@ -143,7 +148,7 @@
                         <td>Admin</td>
                         <td >:
                             @if($data_pengguna->where('rule_user_id',9)->first())
-                            {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',9)->first()->user->name) }}
+                            {{ old('nama_admin', @$data_pengguna->where('rule_user_id',9)->first()->user->name) }}
                             @else
                             No Data
                             @endif
@@ -503,10 +508,10 @@
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
 
-                <form action="{{ route('store.user') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('store.user.kons', $data->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
+                        <h4 class="modal-title">Tambah Pengguna</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -515,12 +520,14 @@
                     <div class="modal-body p-5">
                         <div class="form-group">
                             <label>Jabatan</label>
-                            
                             <select class="form-control" name="rule" required>
-
                                 <option value="">Select</option>
+                                @if(!$data_pengguna->where('rule_user_id',4)->first())
                                 <option value="4">Direktur</option>
-                                <option value="9">Admin</option>                               
+                                @endif 
+                                @if(!$data_pengguna->where('rule_user_id',9)->first())
+                                <option value="9">Admin</option>
+                                @endif                               
                             </select>
                         </div>
                         <div class="form-group">
@@ -559,9 +566,7 @@
                             <label>No Telp</label>
                             <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
                         </div>
-                        
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Simpan</button>

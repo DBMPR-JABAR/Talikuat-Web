@@ -69,12 +69,30 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(), [
-            'email' => 'unique:db_users_dbmpr.users',
-            'password' => 'confirmed',
-            'name'=> 'required',
-            'no_tlp'=> '',
-        ]);
+        $user = User::select('name','email','password','id')->where('email', $request->email)->first();
+        // dd($user);
+        if($user){
+            if(!$user->user_detail){
+                $validator = Validator::make($request->all(), [
+                    'email' => 'email|required|string',
+                    'password' => 'confirmed',
+                    'name'=> 'required',
+                    'no_tlp'=> '',
+                    'rule' => 'required',
+        
+                ]);
+
+            }else
+                return back()->with(['error' => 'The email has already been taken.']);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'email' => 'email|required|string|unique:db_users_dbmpr.users',
+                'password' => 'confirmed',
+                'name'=> 'required',
+                'no_tlp'=> '',
+                'rule' => 'required',
+            ]);
+        }
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);
         }
@@ -96,7 +114,58 @@ class UserController extends Controller
         return redirect(route('user.index'))->with(['success'=>'Berhasil Menambahkan User!!']);
 
     }
+    public function store_konsultan(Request $request, $id)
+    {
+        //
+        $user = User::select('name','email','password','id')->where('email', $request->email)->first();
+        // dd($user);
+        if($user){
+            if(!$user->user_detail){
+                $validator = Validator::make($request->all(), [
+                    'email' => 'email|required|string',
+                    'password' => 'confirmed',
+                    'name'=> 'required',
+                    'no_tlp'=> '',
+                    'rule' => 'required',
+        
+                ]);
 
+            }else
+                return back()->with(['error' => 'The email has already been taken.']);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'email' => 'email|required|string|unique:db_users_dbmpr.users',
+                'password' => 'confirmed',
+                'name'=> 'required',
+                'no_tlp'=> '',
+                'rule' => 'required',
+            ]);
+        }
+        if ($validator->fails()) {
+            return back()->with(['error'=>$validator->messages()->first()]);
+        }
+        // dd($request->rule);
+        $create_user = User::firstOrNew(['email'=> $request->email]);
+        $create_user->name = $request->input('name');
+        $create_user->password = Hash::make($request->input('password'));
+        $create_user->role = 'internal';
+        $create_user->save();
+
+        $create_profile = UserProfiles::firstOrNew(['user_id'=> $create_user->id]);
+        $create_profile->nama = $request->input('name');
+        $create_profile->no_tlp = $request->input('no_tlp');
+        $create_profile->created_by = Auth::user()->id;
+
+        $create_profile->save();
+
+        $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id]);
+        $create_detail->rule_user_id = $request->rule;
+        $create_detail->konsultan_id = $id;
+        $create_detail->save();
+
+        return back()->with(['success'=>'Berhasil Menambahkan User!!']);
+
+    }
     /**
      * Display the specified resource.
      *
@@ -114,6 +183,7 @@ class UserController extends Controller
         $rule_user = UserRule::all();
         $uptd = Uptd::all();
         $data = User::where('id',$id)->first();
+        // dd($data->user_detail->kontraktor);
         return view('admin.user.show',compact('data','rule_user','uptd'));
 
     }
@@ -146,9 +216,13 @@ class UserController extends Controller
         }
         $data = User::find($id);
         $kontraktors = MasterKontraktor::all();
-        // dd($data->user_detail);
+        $konsultans = MasterKonsultan::all();
+        $rule_user = UserRule::all();
+        $uptd = Uptd::all();
+
+        // dd($data->user_detail->kontraktor);
         // dd($data);
-        return view('admin.user.form',compact('data','kontraktors'));
+        return view('admin.user.form',compact('data','kontraktors','konsultans','rule_user','uptd'));
     }
 
     /**
@@ -161,6 +235,7 @@ class UserController extends Controller
     public function update(Request $request ,$desc ,$id)
     {
         //
+        
         if($desc == 'account'){
             $validator = Validator::make($request->all(), [
                 'email' => Rule::unique('db_users_dbmpr.users', 'email')->ignore($id),
@@ -182,7 +257,6 @@ class UserController extends Controller
 
         }else if($desc == 'profiles'){
             
-
             $this->validate($request,[
                 'nama'=> 'required',
                 'tgl_lahir'=> 'required',
@@ -191,8 +265,6 @@ class UserController extends Controller
                 'no_tlp'=> 'numeric|digits_between:8,13',
                 'no_tlp_rumah'=> '',
                 'sup_id'=> '',
-                'perusahaan'=> '',
-                'jabatan'=> '',
                 'tgl_mulai_kerja'=> '',
                 'sekolah'=> '',
                 'jejang'=> '',
@@ -201,10 +273,10 @@ class UserController extends Controller
                 'kota'=> '',
                 'kode_pos'=> '',
                 'alamat'=> '',
-                'agama'=> 'required',
+                'agama'=> '',
             ]);
             // dd($id);
-            // dd($id);
+
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
 
             if($request->nik == null && $request->nip == null){
@@ -228,8 +300,6 @@ class UserController extends Controller
             $update_user->jenis_kelamin = $request->input('jenis_kelamin');
             $update_user->no_tlp = $request->input('no_tlp');
             $update_user->no_tlp_rumah = $request->input('no_tlp_rumah');
-            $update_user->perusahaan = $request->input('perusahaan');
-            $update_user->jabatan = $request->input('jabatan');
 
             $update_user->tgl_mulai_kerja = $request->input('tgl_mulai_kerja');
             $update_user->sekolah = $request->input('sekolah');
@@ -246,10 +316,16 @@ class UserController extends Controller
             $update = User::find($id);
             $update->name = $request->input('nama');
             $update->save();
-            // dd($id);
+            
             $update_deet = UserDetail::firstOrNew(['user_id'=> $id]);
-            $update_deet->kontraktor_id = $request->input('kontraktor');
+            if ($update->user_detail->konsultan){
+                $update_deet->konsultan_id = $request->input('konsultan');
+            }else if($update->user_detail->kontraktor)
+                $update_deet->kontraktor_id = $request->input('kontraktor');
+            
             $update_deet->save();
+
+            // dd($id);
             
 
         }
@@ -358,7 +434,6 @@ class UserController extends Controller
         $this->validate($request,[
             'verified'=> 'required',
             'rule_user'=> 'required', 
-            'uptd'=> '', 
 
         ]);
         $update_detail = UserDetail::firstOrNew(['user_id'=> $id]);
@@ -369,9 +444,7 @@ class UserController extends Controller
         $update_detail->save();
         if($update_detail){
             $user = User::find($id);
-            $user->uptd_id = $request->uptd;
             $user->save();
-
             return redirect(route('user.index'))->with(['success'=>'Account Has Been Verified!']);
         }
             

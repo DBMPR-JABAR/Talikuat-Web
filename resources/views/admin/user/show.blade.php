@@ -153,7 +153,13 @@
                                         <table class="table table-striped">
                                             <tr>
                                                 <td width="20%">Perusahaan</td>
-                                                <td> {{ @$data->profile->perusahaan }}</td>
+                                                <td> 
+                                                    @if (@$data->user_detail->konsultan)
+                                                    {{ @$data->user_detail->konsultan->nama }}
+                                                    @else
+                                                    {{ @$data->user_detail->kontraktor->nama }}
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td width="20%">Jabatan</td>
@@ -165,12 +171,12 @@
                                                         @endforeach 
                                                     @endif --}}
                                                     @if(isset($data->user_detail->rule->rule))
-                                                        {{ $data->user_detail->rule->rule }}
+                                                        {{ $data->user_detail->rule->description }}
                                                     @endif
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td width="20%">UPTD</td>
+                                                <td width="20%">UNIT</td>
                                                 <td>{{ Str::upper(@$data->uptd->nama) }}</td>
                                             </tr>
                                             <tr>
@@ -221,19 +227,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <label>Unit</label>
-                                    <select class="form-control" name="uptd">
-        
-                                        <option value="">Select</option>
-                                        @foreach ($uptd as $no =>$uptd)
-                                        <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
-                                        @endforeach
-                                        
-                                    </select>
-                                </div>
-                            </div>
+                           
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <label >Verifikasi Akun (<i style="color :red; font-size: 10px;">Dengan Memilih Setuju maka Akun Dapat Digunakan!!</i>)</label>
