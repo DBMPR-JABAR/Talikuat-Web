@@ -26,7 +26,8 @@ class CurvaControllers extends Controller
         }
         $laporan = DB::table('master_laporan_harian')->where([
           ['ditolak',4],
-          ['id_data_umum',$id]
+          ['id_data_umum',$id],
+          ['reason_delete',null]
         ])->get();
         return response()->json([
           "curva"=>$tes,
