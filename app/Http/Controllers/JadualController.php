@@ -305,6 +305,11 @@ class JadualController extends Controller
                 ]);
         }
         DB::commit();
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => 'Data Tersimpan'
+        ]);
         }catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
@@ -313,12 +318,6 @@ class JadualController extends Controller
                 'result' => 'Data Gagal'
             ],201);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'code' => '200',
-            'result' => 'Data Tersimpan'
-        ]);
     }
 
     public function excelToData(Request $request)
