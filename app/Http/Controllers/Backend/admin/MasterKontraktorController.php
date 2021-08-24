@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Backend\MasterKontraktor;
 use App\Models\Backend\MasterKontraktorGs as KontraktorGs;
+use App\Models\Backend\User as User;
+use App\Models\Backend\UserProfiles as UserProfiles;
+use App\Models\Backend\UserDetail as UserDetail;
+use App\Models\Backend\UserRule as UserRule;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Hash;
 
 class MasterKontraktorController extends Controller
 {
@@ -90,7 +93,68 @@ class MasterKontraktorController extends Controller
         }else
             return redirect()->route('masterkontraktor.index')->with(['danger' => 'Data Gagal Disimpan!']);
     }
+    public function store_gs(Request $request)
+    {
+        
+        $user = User::select('name','email','password','id')->where('email', $request->email_gs)->first();
+        if($user){
+            if(!$user->user_detail){
+                $validator = Validator::make($request->all(), [
+                    'email_gs' => 'email|required|string',
+                    'password_gs' => 'min:8|required_with:password_confirmation_gs|same:password_confirmation_gs',
+                    'password_confirmation_gs' => 'min:8',
+                    'name_gs'=> 'required',
+                    'no_tlp_gs'=> '',
+                ]);
 
+            }else
+                return back()->with(['error' => 'The email has already been taken.']);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'email_gs' => 'unique:db_users_dbmpr.users,email',
+                'password_gs' => 'min:8|required_with:password_confirmation_gs|same:password_confirmation_gs',
+                'password_confirmation_gs' => 'min:8',
+                'name_gs'=> 'required',
+                'no_tlp_gs'=> '',
+            ]);
+        }
+        if ($validator->fails()) {
+            return back()->with(['error'=>$validator->messages()->first()]);
+        }
+        // dd($request->no_tlp_gs);
+
+        $create_user_gs = User::firstOrNew(['email'=> $request->email_gs]);
+        $create_user_gs->name = $request->input('name_gs');
+        $create_user_gs->password = Hash::make($request->input('password_gs'));
+        $create_user_gs->role = 'internal';
+        $create_user_gs->save();
+
+        $create_profile_gs = UserProfiles::firstOrNew(['user_id'=> $create_user_gs->id]);
+        $create_profile_gs->nama = $request->input('name_gs');
+        $create_profile_gs->no_tlp = $request->input('no_tlp_gs');
+        $create_profile_gs->created_by = Auth::user()->id;
+        $create_profile_gs->save();
+
+        $create_detail_gs = UserDetail::firstOrNew([
+            'user_id'=> $create_user_gs->id,
+            'rule_user_id'=>11
+        ]);
+        $create_detail_gs->kontraktor_id = $request->company;
+        $create_detail_gs->rule_user_id = 11;
+        $create_detail_gs->save();
+        $create_user_gs->user_rule()->attach(11);
+        
+        $save_ft = KontraktorGs::create([
+            'kontraktor_id'=>$request->company,
+            'gs_user_id'=>$create_user_gs->id,
+            'created_by'=>Auth::user()->id,
+        ]);
+        if($save_ft){
+            // dd($update_konsultan);
+            return back()->with(['success' => 'FT Berhasil Di Tambahkan!']);
+        }else
+            return back()->with(['danger' => 'FT Gagal Di Tambahkan!']);
+    }
     /**
      * Display the specified resource.
      *
@@ -100,7 +164,9 @@ class MasterKontraktorController extends Controller
     public function show($id)
     {
         $data = MasterKontraktor::find($id);
-        return view('admin.data_utama.master_kontraktor.show', compact('data'));
+        $data_pengguna = $data->user_detail_gsc->where('rule_user_id','!=',11);
+
+        return view('admin.data_utama.master_kontraktor.show', compact('data','data_pengguna'));
     }
 
     /**
@@ -114,8 +180,10 @@ class MasterKontraktorController extends Controller
         //
         $data = MasterKontraktor::find($id);
         $data_details = $data->kontraktor_gs->toArray();
-        
-        return view('admin.data_utama.master_kontraktor.form',compact('data','data_details'));
+        $data_pengguna = $data->user_detail_gsc->where('rule_user_id','!=',11);
+        $data_user = UserDetail::where('kontraktor_id',$id)->where('is_delete',null)->get();
+        // dd($data_pengguna);
+        return view('admin.data_utama.master_kontraktor.form',compact('data','data_details','data_pengguna','data_user'));
     }
 
     /**
@@ -134,7 +202,7 @@ class MasterKontraktorController extends Controller
             'nama'=> 'required',
             'alamat'=> 'required',
             'telp'=> 'required',
-            'nama_direktur'=> 'required',
+            'nama_direktur'=> '',
             'bank'=> 'required',
             'no_rek'=> 'required',
         ]);
@@ -170,36 +238,36 @@ class MasterKontraktorController extends Controller
             $delete_detail->each->delete();
         
         $jumlah_data = KontraktorGs::orderBy('id', 'DESC')->first();
-       
+        // dd(array_count_values($request->nm_gs));
+        for($d=0; $d<count($request->nm_gs) ;$d++){
+            $count_request = count(array_keys($request->nm_gs, $request->nm_gs[$d]));
+            if($count_request > 1)
+            return back()->with(['error' => 'User General Superintendent Tidak Boleh Duplicate!']);
+        }
+        // dd($request->nm_gs);
         for($y=0; $y<count($request->nm_gs) ;$y++){
-            if($request->nm_gs[$y] != null){
+            if($request->nm_gs[$y] != null ){
                 if(isset($request->id_gs[$y])){
                     $id_gs = $request->id_gs[$y];
                 }else{
-                    if(!isset($jumlah_data)){
-                        $id_gs =0;
-                    }else{
-                        $jumlah_data->id+=1;
-                        $id_gs = $jumlah_data->id;  
-
-                    }
-                   
+                    $jumlah_data->id+=1;
+                    $id_gs = $jumlah_data->id;   
                 }
                 $update_details = KontraktorGs::firstOrNew([
                     'id'=> $id_gs,
                     'kontraktor_id'=> $id,
                 ]);
-                $update_details->gs = $request->nm_gs[$y];
-              
-                $update_details->created_by=Auth::user()->id;
+                $update_details->gs_user_id = $request->nm_gs[$y];
+                $update_details->updated_by=Auth::user()->id;
                 $update_details->save();
             }
         }
+
         if($update_details){
             // dd($update_konsultan);
             return back()->with(['success' => 'Data Berhasil Di Perbaharui!']);
         }else
-            return back()->with(['danger' => 'Data Gagal Di Perbaharui!']);
+            return back()->with(['error' => 'Data Gagal Di Perbaharui!']);
 
     }
     /**
@@ -238,5 +306,38 @@ class MasterKontraktorController extends Controller
         }
         // dd($data);
        
+    }
+    public function trash_gs()
+    {
+        //
+        $data = KontraktorGs::where('is_delete',1)->get();
+        $company = MasterKontraktor::all()->where('is_delete','!=',1);
+
+        // dd($data);
+        return view('admin.user.gs.index', compact('data','company'));
+
+    }
+    public function move_to_trash_gs($desc, $id)
+    {
+        //
+        $gs = KontraktorGs::find($id);
+        $kontraktor = MasterKontraktor::find($id);
+        $message = 'Somethink When Wrong!';
+
+        if($desc == 'restore'){
+            $gs->is_delete = null;
+            $gs->user_gs_detail->update(['is_delete'=>null]);
+            $message = 'Data Berhasil Dikembalikan!';
+        }elseif($desc == 'move_to_trash_gs'){
+            $gs->is_delete = 1;
+            $gs->user_gs_detail->update(['is_delete'=>1]);
+            $message = 'Data Berhasil di Hapus!';
+        }
+
+        $gs->save();
+        if($gs){
+            return back()->with(['success'=>$message]);
+        }
+        // dd($data); 
     }
 }

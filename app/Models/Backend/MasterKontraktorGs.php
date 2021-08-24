@@ -16,4 +16,12 @@ class MasterKontraktorGs extends Model
     {
         return $this->belongsTo('App\Models\Backend\MasterKontraktor', 'kontraktor_id');
     }
+    public function user_gs()
+    {
+        return $this->belongsTo('App\Models\Backend\User', 'gs_user_id');
+    }
+    public function user_gs_detail()
+    {
+        return $this->belongsTo('App\Models\Backend\UserDetail', 'gs_user_id','user_id');
+    }
 }

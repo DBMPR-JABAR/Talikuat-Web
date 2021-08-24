@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Models\Backend\MasterKonsultan;
 use App\Models\Backend\MasterKonsultanFt as KonsultanFt;
-
+use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterKontraktorGs as KontraktorGs;
 use Carbon\Carbon;
 
 class VerifiedController extends Controller
@@ -36,6 +37,30 @@ class VerifiedController extends Controller
             return redirect(route('user.ft.index'))->with(['success'=> $message]);
         }else
         return redirect(route('user.ft.index'))->with(['Error'=>'Failed Verification!']);
+
+            
+    }
+    public function verified_gs(Request $request, $id)
+    {
+        // dd($id);
+        $this->validate($request,[
+            'verified'=> 'required',
+        ]);
+        $message = "Field Team Has Been Rejected !";
+        $data = KontraktorGs::find($id);
+        
+        if($request->verified == 1){
+            $update_user['account_verified_at'] = Carbon::now()->toDateTimeString();
+            $data->gs_verified_at = Carbon::now()->toDateTimeString();
+            $message = "Field Team Has Been Verified!";
+            $data->user_gs_detail()->update($update_user);
+        }
+        $data->save();
+        if($data){
+
+            return redirect(route('user.gs.index'))->with(['success'=> $message]);
+        }else
+        return redirect(route('user.gs.index'))->with(['Error'=>'Failed Verification!']);
 
             
     }

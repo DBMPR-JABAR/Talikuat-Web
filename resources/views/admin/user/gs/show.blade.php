@@ -14,12 +14,12 @@
         @if(Request::segment(4) == 'verified')
         Verifikasi 
         @endif
-        Field Team 
+        General Superintendent 
     </h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Field Team</li>
+        <li class="breadcrumb-item active" aria-current="page">General Superintendent</li>
       </ol>
     </nav>
   </div>
@@ -43,116 +43,91 @@
                                 
                                 <div class="panel-body">
                                     <div class="table-responsive">
-                                        <label style="font-weight: bold;">Informasi Kosultan</label>
+                                        <label style="font-weight: bold;">Informasi Kontraktor</label>
                                         <table class="table table-striped">
     
                                             <tr>
                                                 <td width="20%">Nama Perusahaan</td>
-                                                <td >{!! Str::title(@$data->konsultan->nama) !!}</td>
+                                                <td >{!! Str::title(@$data->kontraktor->nama) !!}</td>
                                             </tr>
                                             <tr>
                                                 <td>Nama Direktur</td>
-                                                <td >{{ old('nama_direktur', @$data->konsultan->nama_direktur) }}</td>
+                                                <td>
+                                                    @if($data_pengguna->where('rule_user_id',5)->first())
+                                                    {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',5)->first()->user->name) }}
+                                                    {{-- <br>{{ old('nama_direktur', @$data_pengguna->where('rule_user_id',5)->first()->user->name) }} --}}
+                                                    @else
+                                                    {{ old('nama_direktur', @$data->kontraktor->nama_direktur) }}
+                                                    @endif
+                                                </td>
                                             </tr>
-                                            
+                                            <tr>
+                                                <td>NPWP</td>
+                                                <td >
+                                                    {{ old('alamat', @$data->kontraktor->npwp) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Telepon</td>
+                                                <td >
+                                                    {{ old('alamat', @$data->kontraktor->telp) }}
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td>Alamat</td>
                                                 <td >
-                                                    {{ old('alamat', @$data->konsultan->alamat) }}
+                                                    {{ old('alamat', @$data->kontraktor->alamat) }}
                                                 </td>
                                             </tr>
     
                                         </table>
-                                        <label style="font-weight: bold;" class="mt-3">Informasi FT</label>
+                                        <label style="font-weight: bold;" class="mt-3">Informasi GS</label>
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <label style="font-style: italic">Site Engineering</label> 
+                                            <div class="col-md-12">
+                                                <label style="font-style: italic">General Superintendent</label> 
                                                 @if(Request::segment(4) != 'verified')
-                                                <a type='button' href='{{ url('admin/user/edit/detail',@$data->user_se->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i>Edit Data SE</a>
+                                                <a type='button' href='{{ url('admin/user/edit/detail',@$data->user_gs->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i>Edit Data GS</a>
                                                 @endif
                                                 <table class="table table-striped mt-2">
     
                                                     <tr>
                                                         <td width="20%">Nama Lengkap</td>
-                                                        <td >{!! Str::title(@$data->user_se->profile->nama) !!}</td>
+                                                        <td >{!! Str::title(@$data->user_gs->profile->nama) !!}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>NIK</td>
-                                                        <td >{{ old('nik', @$data->user_se->profile->nik) }}</td>
+                                                        <td >{{ old('nik', @$data->user_gs->profile->nik) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>NIP</td>
-                                                        <td >{{ old('nip', @$data->user_se->profile->nip) }}</td>
+                                                        <td >{{ old('nip', @$data->user_gs->profile->nip) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Tempat / Tanggal Lahir</td>
-                                                        <td >{{ old('tgl_lahir', @$data->user_se->profile->tgl_lahir) }}</td>
+                                                        <td >{{ old('tgl_lahir', @$data->user_gs->profile->tgl_lahir) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Jenis Kelamin</td>
-                                                        <td>{{ old('jenis_kelamin', @$data->user_se->profile->jenis_kelamin) }}</td>
+                                                        <td>{{ old('jenis_kelamin', @$data->user_gs->profile->jenis_kelamin) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Agama</td>
                                                         <td >
-                                                            {{ old('agama', @$data->user_se->profile->agama) }}
+                                                            {{ old('agama', @$data->user_gs->profile->agama) }}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Telepon</td>
-                                                        <td >{{ old('phone', @$data->user_se->profile->no_tlp) }}</td>
+                                                        <td >{{ old('phone', @$data->user_gs->profile->no_tlp) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Telepon Rumah</td>
-                                                        <td >{{ old('phone', @$data->user_se->profile->no_tlp_rumah) }}</td>
+                                                        <td >{{ old('phone', @$data->user_gs->profile->no_tlp_rumah) }}</td>
                                                     </tr>
             
                                                 </table>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label style="font-style: italic">Inspection Engineering</label>
-                                                @if(Request::segment(4) != 'verified')
-                                                <a type='button' href='{{ url('admin/user/edit/detail',@$data->user_ie->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i>Edit Data IE</a>
-                                                @endif
-                                                <table class="table table-striped mt-2">
-    
-                                                    <tr>
-                                                        <td width="20%">Nama Lengkap</td>
-                                                        <td >{!! Str::title(@$data->user_ie->profile->nama) !!}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>NIK</td>
-                                                        <td >{{ old('nik', @$data->user_ie->profile->nik) }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>NIP</td>
-                                                        <td >{{ old('nip', @$data->user_ie->profile->nip) }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Tempat / Tanggal Lahir</td>
-                                                        <td >{{ old('tgl_lahir', @$data->user_ie->profile->tgl_lahir) }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Jenis Kelamin</td>
-                                                        <td>{{ old('jenis_kelamin', @$data->user_ie->profile->jenis_kelamin) }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Agama</td>
-                                                        <td >
-                                                            {{ old('agama', @$data->user_ie->profile->agama) }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Telepon</td>
-                                                        <td >{{ old('phone', @$data->user_ie->profile->no_tlp) }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Telepon Rumah</td>
-                                                        <td >{{ old('phone', @$data->user_ie->profile->no_tlp_rumah) }}</td>
-                                                    </tr>
-            
-                                                </table>
-                                            </div>
+                                            
                                         </div>
                                        
                                     </div>
@@ -176,7 +151,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('verified.user.ft.store',@$data->id)}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('verified.user.gs.store',@$data->id)}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card-block">
                            
