@@ -257,6 +257,9 @@ class JadualController extends Controller
         $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
         $total = preg_replace('/\./', '', $req->jumlah_harga[0]);
         $nilai_kon = preg_replace('/\./', '', str_replace("Rp. ", "", $req->nilai_kontrak));
+
+        try {
+        DB::beginTransaction();
         $get_id = DB::table('jadual')->insertGetId([
             "id_data_umum" => $req->id_data_umum,
             "nmp" => $req->nmp[0],
@@ -301,13 +304,20 @@ class JadualController extends Controller
                     "created_at" => \Carbon\Carbon::now()
                 ]);
         }
-
-
+        DB::commit();
         return response()->json([
             'status' => 'success',
             'code' => '200',
             'result' => 'Data Tersimpan'
         ]);
+        }catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'Failed',
+                'code' => '201',
+                'result' => 'Data Gagal'
+            ],201);
+        }
     }
 
     public function excelToData(Request $request)

@@ -537,7 +537,7 @@ class LaporanController extends Controller
   }
 
   public function deleteLaporan(Request $req)
-  {
+  { 
     $validator = Validator::make($req->all(), [
       "alasan"=>"required"
     ]);
@@ -567,21 +567,25 @@ class LaporanController extends Controller
 
   public function pembandingRelasi(Request $req)
   {
-    $getRequest = DB::table('request')->where('id',$req->id)->first();
-    $getJadual = DB::table('detail_jadual')->where('id_jadual',$getRequest->id)->orderBy('tgl','asc')->get();
-    $getid = DB::table('jadual')->where('id',$getRequest->id)->first();
-    $getLaporan = DB::table('master_laporan_harian')->where([
-      ['id_jadual',$getJadual[0]->id],
-      ['nmp',$getJadual[0]->nmp]
-      ])->orderBy('tanggal','asc')->get();
-    $getDataUmum = DB::table('data_umum')->where('id',$getid->id_data_umum)->first();
+    
+   $jadual = DB::table('jadual')->where('id',$req->id)->first();
+   $detail = DB::table('detail_jadual')->where('id_jadual',$jadual->id)->get();
+   if ($jadual->tgl_req) {
+     $request = DB::table('request')->where('id_jadual',$jadual->id)->first();
+     $laporan = DB::table('master_laporan_harian')->where([['id_request',$request->id],['status',4]])->orderBy('tanggal','desc')->get();
+    if (count($laporan) != 0 ) {
+      return response()->json([
+        'jadual'=>$detail,
+        'laporan'=>$laporan
+       ]);
+    }
     return response()->json([
-      "DataUmum"=>$getDataUmum,
-      "Request"=>$getRequest,
-      "Jadual"=>$getJadual,
-      "Laporan"=>$getLaporan
-      
-    ]);
+      'jadual'=>$detail
+     ]);
+   }
+   return response()->json([
+    'jadual'=>$detail
+   ]);
   }
   
 }

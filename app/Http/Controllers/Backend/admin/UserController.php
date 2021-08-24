@@ -422,7 +422,7 @@ class UserController extends Controller
             return back()->with(['success'=>$success]);
         }else{
             //redirect dengan pesan error
-            return back()->with(['error'=>$faile]);
+            return back()->with(['error'=>$failed]);
         }
     }
 
