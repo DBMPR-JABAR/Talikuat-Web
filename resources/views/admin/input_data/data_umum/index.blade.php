@@ -1,14 +1,14 @@
 @extends('layout.index') @section('title','Kontraktor') @section('header')
 @endsection @section('page-header')
 <div class="page-header">
-    <h3 class="page-title">Data Kontraktor</h3>
+    <h3 class="page-title">Data Umum</h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('admin.home') }}">Dashboard</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                Data Kontraktor
+                Data Umum
             </li>
         </ol>
     </nav>
@@ -18,27 +18,24 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Kontraktor</h4>
+                <h4 class="card-title">Data Umum</h4>
                 @if (Request::segment(3) != 'trash')
-                <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3">
+                <a  href="{{ route('create.dataumum') }}" class="btn btn-mat btn-primary mb-3">
                     <i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
-                <a
-                    href="{{ route('trash.masterkontraktor') }}"
-                    class="btn btn-mat btn-danger mb-3"
-                    ><i class="mdi mdi-delete menu-icon"></i> Trash</a
-                >
+                <a href="{{ route('trash.masterkontraktor') }}" class="btn btn-mat btn-danger mb-3"> 
+                    <i class="mdi mdi-delete menu-icon"></i> Trash
+                </a>
                 @else
                 <a
                     href="{{ route('masterkontraktor.index') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-undo menu-icon"></i> Kembali</a
                 >
-
                 @endif
                 <div id="table-wrapper">
                     <div id="table-scroll">
                         <table
-                            class="table-striped"
+                            class="table-striped table-scrolls"
                             style="width: 100%"
                             id="dataKontraktor">
                             <thead>
@@ -47,22 +44,27 @@
                                     <th>No Kontrak</th>
                                     <th>Unor</th>
                                     <th>Kategori</th>
+                                    <th>Nama Kegiatan</th>
                                     <th>Ruas</th>
                                     <th>kontraktor</th>
+                                    <th>PPK</th>
                                     <th style="width: 22%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $no => $item)
-                                    
                                     <tr>
                                         <td>{{ ++$no }}</td>
                                         <td>
-                                            {!! $item->nama !!}
+                                            {!! $item->no_kontrak !!}
                                         </td>
                                     
-                                        <td>{!! $item->nama_direktur !!}</td>
-                                        <td>{!! $item->telp !!}</td>
+                                        <td>{!! $item->unor !!}</td>
+                                        <td>{!! $item->kategori !!}</td>
+                                        <td>{!! $item->nm_paket !!}</td>
+                                        <td>{!! $item->nm_paket !!}</td>
+                                        <td>{!! $item->penyedia !!}</td>
+                                        <td>{!! $item->nm_ppk !!}</td>
                                         <td>
                                             @if (Request::segment(3) != 'trash')
                                             <a type='button' href='{{ route('show.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
@@ -90,7 +92,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Pindahkan Data Kontraktor ke Sampah</h4>
+                    <h4 class="modal-title">Pindahkan Data Umum ke Sampah</h4>
                     <button
                         type="button"
                         class="close"
@@ -127,7 +129,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Kembalikan Data Kontraktor</h4>
+                    <h4 class="modal-title">Kembalikan Data Umum</h4>
                     <button
                         type="button"
                         class="close"
@@ -184,19 +186,6 @@
             modal.find(".modal-footer #resHref").attr("href", url);
         });
     });
-    function addIE() {
-        $(
-            `
-            <div class="d-flex">
-            <input type="text" name="nm_gs[]" placeholder="Masukkan Nama GS" class="form-control" />
-
-            <i class="mdi mdi-delete mt-2" style="color:red;" onclick="deleteEl(this)"></i>
-            </div>`
-        ).insertAfter("#ie");
-    }
-    
-    function deleteEl(e) {
-        $(e).closest("div").remove();
-    }
+   
 </script>
 @endsection

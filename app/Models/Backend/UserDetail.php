@@ -34,6 +34,10 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterKonsultanFt', 'ie_user_id','user_id');
     }
+    public function user_gs_detail()
+    {
+        return $this->hasOne('App\Models\Backend\MasterKontraktorGs', 'gs_user_id','user_id');
+    }
     public function konsultan()
     {
         return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');

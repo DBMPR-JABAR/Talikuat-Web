@@ -13,6 +13,7 @@ use App\Models\Backend\UserDetail as UserDetail;
 use App\Models\Backend\UserRule as UserRule;
 use App\Models\Backend\Uptd as Uptd;
 use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterKontraktorGs as KontraktorGs;
 use App\Models\Backend\MasterKonsultan;
 use App\Models\Backend\MasterKonsultanFt as KonsultanFt;
 
@@ -47,6 +48,15 @@ class UserController extends Controller
         $data = KonsultanFt::where('is_delete',null)->get();
         // dd($data);
         return view('admin.user.fieldteam.index',compact('data','company'));
+    }
+    public function index_gs()
+    {
+        //
+        $company = MasterKontraktor::all()->where('is_delete','!=',1);
+        
+        $data = KontraktorGs::where('is_delete',null)->get();
+        // dd($data);
+        return view('admin.user.gs.index',compact('data','company'));
     }
     
 
@@ -166,6 +176,68 @@ class UserController extends Controller
         return back()->with(['success'=>'Berhasil Menambahkan User!!']);
 
     }
+    public function store_kontraktor(Request $request, $id)
+    {
+        //
+
+        $user = User::select('name','email','password','id')->where('email', $request->email)->first();
+        if($user){
+            if(!$user->user_detail){
+                $validator = Validator::make($request->all(), [
+                    'email' => 'email|required|string',
+                    'password' => 'confirmed',
+                    'name'=> 'required',
+                    'no_tlp'=> '',
+                    'rule' => 'required',
+                ]);
+
+            }else
+                return back()->with(['error' => 'The email has already been taken.']);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'email' => 'email|required|string|unique:db_users_dbmpr.users',
+                'password' => 'confirmed',
+                'name'=> 'required',
+                'no_tlp'=> '',
+                'rule' => 'required',
+            ]);
+        }
+        if ($validator->fails()) {
+            return back()->with(['error'=>$validator->messages()->first()]);
+        }
+        // dd($request->rule);
+        $create_user = User::firstOrNew(['email'=> $request->email]);
+        $create_user->name = $request->input('name');
+        $create_user->password = Hash::make($request->input('password'));
+        $create_user->role = 'internal';
+        $create_user->save();
+
+        $create_profile = UserProfiles::firstOrNew(['user_id'=> $create_user->id]);
+        $create_profile->nama = $request->input('name');
+        $create_profile->no_tlp = $request->input('no_tlp');
+        $create_profile->created_by = Auth::user()->id;
+
+        $create_profile->save();
+
+        $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id]);
+        $create_detail->rule_user_id = $request->rule;
+        $create_detail->kontraktor_id = $id;
+        $create_detail->save();
+
+        if($request->rule == 11){
+            $create_detail->user_gs_detail()->create([
+                'kontraktor_id' => $id,
+                'created_by' => Auth::user()->id
+            ]);
+            $create_user->user_rule()->attach(11);
+
+        }
+        // dd($request->rule);
+
+
+        return back()->with(['success'=>'Berhasil Menambahkan User!!']);
+
+    }
     /**
      * Display the specified resource.
      *
@@ -199,6 +271,18 @@ class UserController extends Controller
 
         return view('admin.user.fieldteam.show',compact('data','rule_user','uptd'));
 
+    }
+    public function show_gs($id)
+    {
+        //
+        $rule_user = UserRule::all();
+        $uptd = Uptd::all();
+        // $data = MasterKonsultan::find($id);
+        $data = KontraktorGs::find($id);
+        // dd($data->kontraktor->user_detail_gsc->where('rule_user_id','!=',11));
+        $data_pengguna = $data->kontraktor->user_detail_gsc->where('rule_user_id','!=',11);
+
+        return view('admin.user.gs.show',compact('data','rule_user','uptd','data_pengguna'));
     }
     /**
      * Show the form for editing the specified resource.

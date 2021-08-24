@@ -44,13 +44,56 @@
                                             </tr>
                                             <tr>
                                                 <td>Nama Direktur</td>
-                                                <td >{{ old('nama_direktur', @$data->nama_direktur) }}</td>
+                                                <td >
+                                                    @if($data_pengguna->where('rule_user_id',4)->first())
+                                                    {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',4)->first()->user->name) }}
+                                                    @else
+                                                    {{ old('nama_direktur', @$data->nama_direktur) }}
+                                                    @endif
+                                                </td>
                                             </tr>
                                             
                                             <tr>
                                                 <td>Alamat</td>
                                                 <td >
                                                     {{ old('alamat', @$data->alamat) }}
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                        <label style="font-weight: bold;">Informasi Pengguna</label>
+                                        <table class="table table-striped">
+    
+                                            <tr>
+                                                <td width="20%">Direktur</td>
+                                                <td >
+                                                    @if($data_pengguna->where('rule_user_id',4)->first())
+                                                    {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',4)->first()->user->name) }}
+                                                    @else
+                                                    No Data
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Admin</td>
+                                                <td >
+                                                    @if($data_pengguna->where('rule_user_id',9)->first())
+                                                    {{ old('nama_admin', @$data_pengguna->where('rule_user_id',9)->first()->user->name) }}
+                                                    @else
+                                                    No Data
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>Field Team</td>
+                                                <td >
+                                                    @if(count($data->konsultan_ft)>=1)
+                                                    {{ count($data->konsultan_ft) }}
+                                                    @else
+                                                    Tidak Ada
+                                                    @endif
+                                                    Team
                                                 </td>
                                             </tr>
 

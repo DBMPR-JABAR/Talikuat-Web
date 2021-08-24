@@ -94,9 +94,10 @@ class MasterKonsultanController extends Controller
     public function show($id)
     {
         $data = MasterKonsultan::find($id);
+        $data_pengguna = $data->user_detail_sec->where('rule_user_id','!=',7)->where('rule_user_id','!=',8);
 
         // dd($data->konsultan_ft);
-        return view('admin.data_utama.master_konsultan.show',compact('data'));
+        return view('admin.data_utama.master_konsultan.show',compact('data','data_pengguna'));
     }
 
     /**
@@ -155,22 +156,62 @@ class MasterKonsultanController extends Controller
     }
     public function store_ft_first($request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'email_se' => 'unique:db_users_dbmpr.users,email',
-            'password_se' => 'min:8|required_with:password_confirmation_se|same:password_confirmation_se',
-            'password_confirmation_se' => 'min:8',
-            'name_se'=> 'required',
-            'no_tlp_se'=> '',
-            'email_ie' => 'unique:db_users_dbmpr.users,email',
-            'password_ie' => 'min:8|required_with:password_confirmation_ie|same:password_confirmation_ie',
-            'password_confirmation_ie' => 'min:8',
-            'name_ie'=> 'required',
-            'no_tlp_ie'=> '',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'email_se' => 'unique:db_users_dbmpr.users,email',
+        //     'password_se' => 'min:8|required_with:password_confirmation_se|same:password_confirmation_se',
+        //     'password_confirmation_se' => 'min:8',
+        //     'name_se'=> 'required',
+        //     'no_tlp_se'=> '',
+        //     'email_ie' => 'unique:db_users_dbmpr.users,email',
+        //     'password_ie' => 'min:8|required_with:password_confirmation_ie|same:password_confirmation_ie',
+        //     'password_confirmation_ie' => 'min:8',
+        //     'name_ie'=> 'required',
+        //     'no_tlp_ie'=> '',
+        // ]);
+        // if ($validator->fails()) {
+        //     return back()->with(['error'=>$validator->messages()->first()]);
+        // }
+        
+        $user_se = User::select('name','email','password','id')->where('email', $request->email_se)->first();
+        $user_ie = User::select('name','email','password','id')->where('email', $request->email_ie)->first();
+        
+        if($user_se || $user_ie){
+            if(!$user_se->user_detail && !$user_ie->user_detail){
+                $validator = Validator::make($request->all(), [
+                    'email_se' => 'email|required|string',
+                    'password_se' => 'min:8|required_with:password_confirmation_se|same:password_confirmation_se',
+                    'password_confirmation_se' => 'min:8',
+                    'name_se'=> 'required',
+                    'no_tlp_se'=> '',
+                    'email_ie' => 'email|required|string',
+                    'password_ie' => 'min:8|required_with:password_confirmation_ie|same:password_confirmation_ie',
+                    'password_confirmation_ie' => 'min:8',
+                    'name_ie'=> 'required',
+                    'no_tlp_ie'=> '',
+                ]);
+
+            }else if($user_se->user_detail){
+                return back()->with(['error' => 'The email SE has already been taken.']);
+            }else
+                return back()->with(['error' => 'The email IE has already been taken.']);
+
+        }else{
+            $validator = Validator::make($request->all(), [
+                'email_se' => 'unique:db_users_dbmpr.users,email',
+                'password_se' => 'min:8|required_with:password_confirmation_se|same:password_confirmation_se',
+                'password_confirmation_se' => 'min:8',
+                'name_se'=> 'required',
+                'no_tlp_se'=> '',
+                'email_ie' => 'unique:db_users_dbmpr.users,email',
+                'password_ie' => 'min:8|required_with:password_confirmation_ie|same:password_confirmation_ie',
+                'password_confirmation_ie' => 'min:8',
+                'name_ie'=> 'required',
+                'no_tlp_ie'=> '',
+            ]);
+        }
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);
         }
-        
         // dd($id);
 
         $create_user_se = User::firstOrNew(['email'=> $request->email_se]);
@@ -277,7 +318,7 @@ class MasterKonsultanController extends Controller
                 ]);
                 $update_details->se_user_id = $request->nm_se[$y];
                 $update_details->ie_user_id = $request->nm_ie[$y];
-                $update_details->created_by=Auth::user()->id;
+                $update_details->updated_by=Auth::user()->id;
                 $update_details->save();
             }
         }
@@ -330,8 +371,10 @@ class MasterKonsultanController extends Controller
     {
         //
         $data = KonsultanFt::where('is_delete',1)->get();
+        $company = MasterKonsultan::all()->where('is_delete','!=',1);
+
         // dd($data);
-        return view('admin.user.fieldteam.index', compact('data'));
+        return view('admin.user.fieldteam.index', compact('data','company'));
 
     }
     public function move_to_trash_ft($desc, $id)
