@@ -37,6 +37,19 @@ class JadualController extends Controller
         ]);
     }
 
+    public function getJadualById($id)
+    {
+        $result = DB::table('jadual')
+            ->where('id', '=', $id)
+            ->first();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
+
     public function getDetailJadual($id)
     {
 
@@ -275,15 +288,13 @@ class JadualController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public
-    function insertJadualFromMobile(Request $req)
+    public function insertJadualFromMobile(Request $req)
     {
         $validator = Validator::make($req->all(), [
             'id_data_umum' => 'required',
             'user' => 'required',
             'unor' => 'required',
             'nm_paket' => 'required',
-            'ruas_jalan' => 'required',
             'lama_waktu' => 'required',
             'panjang_km' => 'required',
             'ppk' => 'required',
@@ -292,107 +303,90 @@ class JadualController extends Controller
             'konsultan' => 'required',
             'nilai_kontrak' => 'required',
             'id_uptd' => 'required',
-            'list_jadual' => 'present|array',
-            'list_jadual.*.bobot' => 'required',
-            'list_jadual.*.harga_satuan_rp' => 'required',
-            'list_jadual.*.jumlah_harga_rp' => 'required',
-            'list_jadual.*.koefisien' => 'required',
-            'list_jadual.*.nilai' => 'required',
-            'list_jadual.*.no_mata_pembayaran' => 'required',
-            'list_jadual.*.satuan' => 'required',
-            'list_jadual.*.tanggal' => 'required',
-            'list_jadual.*.uraian' => 'required',
-            'list_jadual.*.volume' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'failed',
                 'code' => 400,
-                'error' => $validator->getMessageBag()->getMessages()
+                'error' => $validator->errors()->first()
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $first_item = $req->input('list_jadual')[0];
-        foreach ($req->input('list_jadual') as $jadual_item) {
-            if ($jadual_item['no_mata_pembayaran'] != $first_item['no_mata_pembayaran']) {
-                return response()->json([
-                    'status' => 'failed',
-                    'code' => 400,
-                    'error' => 'No mata pembayaran tidak seragam'
-                ], Response::HTTP_BAD_REQUEST);
-            }
-        }
-
-        $data = [
-            "id_data_umum" => $req->id_data_umum,
-            "nmp" => $first_item['no_mata_pembayaran'],
-            "user" => $req->user,
-            "unor" => $req->unor,
-            "id_sup" => $req->id_sup,
-            "nm_paket" => $req->nm_paket,
-            "ruas_jalan" => $req->ruas_jalan,
-            "lama_waktu" => $req->lama_waktu,
-            "panjang_km" => $req->panjang_km,
-            "ppk" => $req->ppk,
-            "nm_ppk" => $req->nm_ppk,
-            "penyedia" => $req->penyedia,
-            "konsultan" => $req->konsultan,
-            "created_at" => Carbon::now(),
-            "harga_satuan" => $first_item["harga_satuan_rp"],
-            "volume" => $first_item["volume"],
-            "satuan" => $first_item["satuan"],
-            "nilai_kontrak" => $req->nilai_kontrak,
-            "jumlah_harga" => $first_item["jumlah_harga_rp"],
-            "bobot" => $first_item["bobot"],
-            "uraian" => $first_item["uraian"],
-            "id_uptd" => $req->id_uptd
-        ];
-
+        DB::beginTransaction();
         try {
-            $jadualId = DB::table("jadual")->insertGetId($data);
-        } catch (QueryException $error) {
-            $data["harga_satuan"] = str_replace(",", "", $data["harga_satuan"]);
-            $data["jumlah_harga"] = str_replace(",", "", $data["jumlah_harga"]);
-            $jadualId = DB::table("jadual")->insertGetId($data);
-        }
+            $list_temp_nmp = DB::select('SELECT * FROM detail_jadual_parsed WHERE id_data_umum = 34 AND nmp NOT IN (SELECT nmp FROM jadual WHERE id_data_umum = 34) GROUP BY nmp');
 
-        foreach ($req->input('list_jadual') as $jadual_item) {
+            foreach ($list_temp_nmp as $temp) {
+                $idJadual = DB::table('jadual')->insertGetId([
+                    "id_data_umum" => $req->id_data_umum,
+                    "nmp" => $temp->nmp,
+                    "user" => $req->user,
+                    "unor" => $req->unor,
+                    "id_sup" => $req->id_sup,
+                    "nm_paket" => $req->nm_paket,
+                    "ruas_jalan" => $temp->ruas_jalan,
+                    "lama_waktu" => $req->lama_waktu,
+                    "panjang_km" => $req->panjang_km,
+                    "ppk" => $req->ppk,
+                    "nm_ppk" => $req->nm_ppk,
+                    "penyedia" => $req->penyedia,
+                    "konsultan" => $req->konsultan,
+                    "created_at" => Carbon::now(),
+                    "harga_satuan" => $temp->harga_satuan,
+                    "volume" => $temp->volume,
+                    "satuan" => $temp->satuan,
+                    "nilai_kontrak" => $req->nilai_kontrak,
+                    "jumlah_harga" => $temp->jumlah_harga,
+                    "bobot" => $temp->bobot,
+                    "uraian" => $temp->uraian,
+                    "id_uptd" => $req->id_uptd
+                ]);
 
-            $rincianJadual = [
-                "id_jadual" => $jadualId,
-                "tgl" => Carbon::parse($jadual_item["tanggal"]),
-                "nmp" => $jadual_item["no_mata_pembayaran"],
-                "uraian" => $jadual_item["uraian"],
-                "satuan" => $jadual_item["satuan"],
-                "harga_satuan" => $jadual_item["harga_satuan_rp"],
-                "volume" => $jadual_item["volume"],
-                "jumlah_harga" => $jadual_item["jumlah_harga_rp"],
-                "bobot" => $jadual_item["bobot"],
-                "koefisien" => $jadual_item["koefisien"],
-                "nilai" => $jadual_item["nilai"],
-                "created_at" => Carbon::now()
-            ];
+                $list_temp_jadual = DB::table('detail_jadual_parsed')
+                    ->where('id_data_umum', '=', $req->id_data_umum)
+                    ->where('nmp', '=', $temp->nmp)
+                    ->get();
 
-            try {
-                DB::table("detail_jadual")->insert($rincianJadual);
-            } catch (QueryException $error) {
-                $rincianJadual["harga_satuan"] = str_replace(",", "", $rincianJadual["harga_satuan"]);
-                $rincianJadual["jumlah_harga"] = str_replace(",", "", $rincianJadual["jumlah_harga"]);
-                DB::table("detail_jadual")->insert($rincianJadual);
+                foreach ($list_temp_jadual as $jadual) {
+                    DB::table('detail_jadual')->insert([
+                        "id_jadual" => $idJadual,
+                        "tgl" => $jadual->tgl,
+                        "nmp" => $jadual->nmp,
+                        "uraian" => $jadual->uraian,
+                        "satuan" => $jadual->satuan,
+                        "harga_satuan" => $jadual->harga_satuan,
+                        "volume" => $jadual->volume,
+                        "jumlah_harga" => $jadual->jumlah_harga,
+                        "bobot" => $jadual->bobot,
+                        "koefisien" => $jadual->koefisien,
+                        "nilai" => $jadual->nilai,
+                        "created_at" => Carbon::now()
+                    ]);
+                }
             }
 
+            DB::table('detail_jadual_parsed')->where('id_data_umum', '=', $req->id_data_umum)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 200,
+                'result' => 'Berhasil upload jadual'
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'success',
+                'code' => 500,
+                'result' => 'Gagal upload jadual'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'code' => 201
-        ], Response::HTTP_CREATED);
-
     }
 
-    public
-    function insertJadual(Request $req)
+    public function insertJadual(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
@@ -491,8 +485,7 @@ class JadualController extends Controller
         ]);
     }
 
-    public
-    function excelToData(Request $request)
+    public function excelToData(Request $request)
     {
 
         $file = $request->file('jadual_excel_file');
@@ -514,8 +507,7 @@ class JadualController extends Controller
     }
 
 
-    public
-    function getNmpByid($id)
+    public function getNmpByid($id)
     {
         $get = DB::table('master_jenis_pekerjaan')->where('id', '=', $id)->first();
         return response()->json([
@@ -526,8 +518,7 @@ class JadualController extends Controller
     }
 
 
-    public
-    function deleteallnmp(Request $req)
+    public function deleteallnmp(Request $req)
     {
         DB::table('jadual')->where('id', '=', $req->id)->delete();
         DB::table('detail_jadual')->where([
@@ -542,8 +533,7 @@ class JadualController extends Controller
         ]);
     }
 
-    public
-    function updateJadual(Request $req)
+    public function updateJadual(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
@@ -587,8 +577,7 @@ class JadualController extends Controller
         ]);
     }
 
-    public
-    function getJadualByDataUmumId($id)
+    public function getJadualByDataUmumId($id)
     {
         $result = DB::table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
@@ -604,8 +593,21 @@ class JadualController extends Controller
         ]);
     }
 
-    public
-    function getJadualByDataUmumIdAndRuasJalan(Request $request)
+    public function getJadualNotRequested($id)
+    {
+        $result = DB::table('jadual')
+            ->where('id_data_umum', '=', $id)
+            ->whereNull('tgl_req')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ], Response::HTTP_OK);
+    }
+
+    public function getJadualByDataUmumIdAndRuasJalan(Request $request)
     {
         $result = DB::table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
@@ -623,8 +625,7 @@ class JadualController extends Controller
         ]);
     }
 
-    public
-    function getJadualByDataUmumIdAndNmp(Request $req)
+    public function getJadualByDataUmumIdAndNmp(Request $req)
     {
         $id_data_umum = $req->input('id_data_umum');
         $nmp = $req->input('nmp');
@@ -641,8 +642,7 @@ class JadualController extends Controller
         ]);
     }
 
-    public
-    function getNmpJadual($id)
+    public function getNmpJadual($id)
     {
         return response()->json(
             DB::table('detail_jadual')->where('id_jadual', $id)->get()

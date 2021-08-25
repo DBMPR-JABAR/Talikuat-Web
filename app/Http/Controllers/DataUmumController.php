@@ -86,6 +86,17 @@ class DataUmumController extends Controller
         ]);
     }
 
+    public function getDataUmumById($id)
+    {
+        $result = DB::table('data_umum')->where('id', '=', $id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
+
     public function getAllKategori(Request $request)
     {
 
