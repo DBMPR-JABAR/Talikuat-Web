@@ -44,7 +44,15 @@
                                             </tr>
                                             <tr>
                                                 <td>Nama Direktur</td>
-                                                <td >{{ old('nama_direktur', @$data->nama_direktur) }}</td>
+                                                <td >
+                                                    {{-- {{ old('nama_direktur', @$data->nama_direktur) }} --}}
+                                                    @if($data_pengguna->where('rule_user_id',5)->first())
+                                                    {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',5)->first()->user->name) }}
+                                                    {{-- <br>{{ old('nama_direktur', @$data_pengguna->where('rule_user_id',5)->first()->user->name) }} --}}
+                                                    @else
+                                                    {{ old('nama_direktur', @$data->nama_direktur) }}
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>NPWP</td>
@@ -71,25 +79,70 @@
                                             </tr>
     
                                         </table>
-                                        <label style="font-weight: bold;" class="mt-3">Informasi General Superintendent</label>
+                                        <label style="font-weight: bold;" class="mt-3">Informasi Pengguna</label>
                                         
-                                        @if(count($data->kontraktor_gs) >= 1)
                                         <table class="table table-striped">
                                             <tr>
-                                                <td style="width: 10%">Team</td>
+                                                <td style="width: 20%">Direktur</td>
+                                                <td >:
+                                                    @if($data_pengguna->where('rule_user_id',5)->first())
+                                                    {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',5)->first()->user->name) }}
+                                                    @else
+                                                    No Data
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>Admin</td>
+                                                <td >:
+                                                    @if($data_pengguna->where('rule_user_id',10)->first())
+                                                    {{ old('nama_admin', @$data_pengguna->where('rule_user_id',10)->first()->user->name) }}
+                                                    @else
+                                                    No Data
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>General Superintendent</td>
+                                                <td >:
+                                                    @if(count($data->kontraktor_gs)>=1)
+                                                    {{ count(@$data->kontraktor_gs) }} Orang
+                                                    @else
+                                                    No Data
+                                                    @endif
+                                                    
+                                                </td>
+                                            </tr>
+                                        
+                                        </table>
+                                        @if(count($data->kontraktor_gs) >= 1)
+                                        <label style="font-weight: bold;" class="mt-3">Informasi General Superintendent</label>
+                                            
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td style="width: 10%">No</td>
                                                 <td>Nama</td>
+                                                <td  class="text-center">GS Verified</td>
+
                                             </tr>
                                             @foreach ( $data->kontraktor_gs as $no => $gs)
                                             <tr>
                                                 <td style="width: 10%">{{ ++$no }}</td>
-                                                <td>{{ $gs->gs }}</td>
+                                                <td>{{ $gs->user_gs->name }}</td>
+                                                <td class="text-center">
+                                                    @if($gs->gs_verified_at)
+                                                    <i class="mdi mdi-check-all menu-icon" style="color: green"></i>
+                                                    @else
+                                                    <i class="mdi mdi-close menu-icon" style="color: red"></i>
+                                                    @endif
+                                                </td>
+
                                             </tr> 
                                             @endforeach
+                                      
                                         </table>
-                                        @else
-                                        (No Data)
                                         @endif
-                                        
                                         
                                     </div>
                                 </div>

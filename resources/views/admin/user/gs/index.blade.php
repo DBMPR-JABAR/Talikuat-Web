@@ -1,15 +1,15 @@
 @extends('layout.index') 
-@section('title','Field Team')
+@section('title','General Superintendent')
 @section('header')
 @endsection 
 
 @section('page-header')
 <div class="page-header">
-    <h3 class="page-title"> Field Team </h3>
+    <h3 class="page-title"> General Superintendent </h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Field Team</li>
+        <li class="breadcrumb-item active" aria-current="page">General Superintendent</li>
       </ol>
     </nav>
   </div>
@@ -20,12 +20,12 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Field Team</h4>
+                <h4 class="card-title">Data General Superintendent</h4>
                 @if (Request::segment(4) != 'trash')
                     <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
-                    <a href="{{ route('user.ft.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    <a href="{{ route('user.gs.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
                 @else
-                    <a href="{{ route('user.ft.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
+                    <a href="{{ route('user.gs.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
 
                 @endif
                 </p>
@@ -35,9 +35,8 @@
                         <tr>
                             <th class="text-center" style="width: 5%"> No </th>
                             <th class="text-center"> Perusahaan </th>
-                            <th class="text-center"> Site Engineering </th>
-                            <th class="text-center"> Inspection Engineering </th>
-                            <th class="text-center"> FT Verified </th>
+                            <th class="text-center"> General Superintendent </th>
+                            <th class="text-center"> GS Verified </th>
                             <th class="text-center"> Action </th>
                         </tr>
                         </thead>
@@ -48,14 +47,13 @@
                         <tr>
                             {{-- <td class="py-1"><img src="../../../assets/images/faces-clipart/pic-1.png" alt="image"></td> --}}
                             <td class="text-center">{{ ++$data}}</td>
-                            <td>{{ @$item->konsultan->nama }} </td>
+                            <td>{{ @$item->kontraktor->nama }} </td>
                             {{-- <td>
                             <div class="progress">
                                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             </td> --}}
-                            <td> {{ @$item->user_se->name }} </td>
-                            <td> {{ @$item->user_ie->name }} </td>
+                            <td> {{ @$item->user_gs->name }} </td>
                             
                             <td class="text-center">
                                 @if($item->ft_verified_at)
@@ -70,10 +68,10 @@
                                 <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
                                 {{-- <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i>Delete</a> --}}
                                 @else 
-                                    @if($item->ft_verified_at)
-                                        <a type='button' href='{{ route('show.user.ft',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
+                                    @if($item->gs_verified_at)
+                                        <a type='button' href='{{ route('show.user.gs',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
                                     @else
-                                        <a type='button' href='{{ route('verified.user.ft',$item->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        <a type='button' href='{{ route('verified.user.gs',$item->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
                                     @endif
                                     <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-mini btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
 
@@ -91,15 +89,15 @@
 </div>
 <div class="modal-only">
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                
-                <form action="{{route('store.masterkonsultanft.second')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('store.masterkontraktorgs')}}" method="post" enctype="multipart/form-data">
 
                     @csrf
 
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah Field Team</h4>
+                        <h4 class="modal-title">Tambah General Superintendent</h4>
                         <button
                             type="button"
                             class="close"
@@ -113,14 +111,33 @@
                     <div class="modal-body p-5">
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <select class="form-control" name="company" required>
+                            <select class="form-control" name="company" id="company" required>
                                 <option value="">Select</option>
                                 @foreach ($company as $it)
                                 <option value="{{ $it->id }}" >{{ $it->nama }}</option>
                                     
                                 @endforeach
                             </select>
-                            @error('name_se')
+                            @error('company')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        {{-- <label class="mb-3" style="font-weight: bold"> General Superintendent</label> --}}
+                        <div class="form-group">
+                            <label>Nama</label>
+                            <input type="text" required name="name_gs" id="name_gs" value="{{ old('name_gs') }}" placeholder="Masukkan Nama Lengkap" class="form-control @error('name_gs') is-invalid @enderror" >
+                            @error('name_gs')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="email" required name="email_gs" id="email_gs" value="{{ old('email_gs') }}" placeholder="Masukkan e-mail" class="form-control @error('email_gs') is-invalid @enderror" >
+                            @error('email_gs')
                             <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
                             </div>
@@ -128,84 +145,31 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="mb-3" style="font-weight: bold"> Site Engineering</label>
-                                <div class="form-group">
-                                    <label>Nama</label>
-                                    <input type="text" required name="name_se" id="name_se" value="{{ old('name_se') }}" placeholder="Masukkan Nama Lengkap" class="form-control @error('name_se') is-invalid @enderror" >
-                                    @error('name_se')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>E-mail</label>
-                                    <input type="email" required name="email_se" id="email_se" value="{{ old('email_se') }}" placeholder="Masukkan e-mail" class="form-control @error('email_se') is-invalid @enderror" >
-                                    @error('email_se')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input type="password" required minlength="8" name="password_se" id="password_se" value="{{ old('password_se') }}" placeholder="Masukkan Password_se" class="form-control @error('password_se') is-invalid @enderror" >
-                                    @error('password_se')
+                                    <input type="password" required minlength="8" name="password_gs" id="password_gs" value="{{ old('password_gs') }}" placeholder="Masukkan Password_gs" class="form-control @error('password_gs') is-invalid @enderror" >
+                                    @error('password_gs')
                                     <div class="invalid-feedback" style="display: block; color:red">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-                                <div class="form-group">
-                                    <label>Ulangi Password</label>
-                                    <input type="password" minlength="8" required name="password_confirmation_se" id="password_confirmation_se" value="{{ old('password_confirmation_se') }}" placeholder="Masukkan Konfirmasi Password Baru"
-                                        class="form-control" >
-                                </div>
-                                <div class="form-group ">
-                                    <label>No Telp</label>
-                                    <input type="text" name="no_tlp_se" required oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control" >  
-                                </div>
+
                             </div>
                             <div class="col-md-6">
-                                <label class="mb-3" style="font-weight: bold">Inspection Engineering</label>
-                                <div class="form-group">
-                                    <label>Nama</label>
-                                    <input type="text" name="name_ie" required id="name_ie" value="{{ old('name_ie') }}" placeholder="Masukkan Nama Lengkap" class="form-control @error('name_ie') is-invalid @enderror" >
-                                    @error('name_ie')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>E-mail</label>
-                                    <input type="email" name="email_ie" required id="email_ie" value="{{ old('email_ie') }}" placeholder="Masukkan e-mail" class="form-control @error('email_ie') is-invalid @enderror" >
-                                    @error('email_ie')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" minlength="8" required name="password_ie" id="password_ie" value="{{ old('password_ie') }}" placeholder="Masukkan Password_ie" class="form-control @error('password_ie') is-invalid @enderror" >
-                                    @error('password_ie')
-                                    <div class="invalid-feedback" style="display: block; color:red">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
                                 <div class="form-group">
                                     <label>Ulangi Password</label>
-                                    <input type="password" minlength="8" required name="password_confirmation_ie" id="password_confirmation_ie" value="{{ old('password_confirmation_ie') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                                    <input type="password" minlength="8" required name="password_confirmation_gs" id="password_confirmation_gs" value="{{ old('password_confirmation_gs') }}" placeholder="Masukkan Konfirmasi Password Baru"
                                         class="form-control" >
                                 </div>
-                                <div class="form-group ">
-                                    <label>No Telp</label>
-                                    <input type="text" name="no_tlp_ie" required oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control" >  
-                                </div>
+
                             </div>
                         </div>
+                        <div class="form-group ">
+                            <label>No Telp</label>
+                            <input type="text" name="no_tlp_gs" required oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control" >  
+                        </div>
+                        
                     </div>
 
                     <div class="modal-footer">
@@ -233,7 +197,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete Field Team</h4>
+                    <h4 class="modal-title">Delete General Superintendent</h4>
                     <button
                         type="button"
                         class="close"
@@ -301,7 +265,7 @@
             const link = $(event.relatedTarget);
             const id = link.data('id');
             console.log(id);
-            const url = `{{ url('admin/master_konsultan/trash_ft/move_to_trash_ft') }}/` + id;
+            const url = `{{ url('admin/master_kontraktor/trash_gs/move_to_trash_gs') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find('.modal-footer #delHref').attr('href', url);
@@ -310,7 +274,7 @@
             const link = $(event.relatedTarget);
             const id = link.data('id');
             console.log(id);
-            const url = `{{ url('admin/master_konsultan/trash_ft/restore') }}/` + id;
+            const url = `{{ url('admin/master_kontraktor/trash_gs/restore') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find('.modal-footer #resHref').attr('href', url);

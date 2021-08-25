@@ -329,7 +329,6 @@ class PermintaanController extends Controller
                 'code' => 201,
                 'result' => 'Request pekerjaan berhasil dibuat'
             ], Response::HTTP_CREATED);
-
         } catch (\Exception $error) {
 
             DB::rollBack();
@@ -339,9 +338,7 @@ class PermintaanController extends Controller
                 'code' => 500,
                 'error' => $error->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-
         }
-
     }
 
     public function buatRequest(Request $req)
@@ -454,8 +451,6 @@ class PermintaanController extends Controller
                 "error" => $e->getMessage()
             ], 500);
         }
-
-
     }
 
     public function updateRequest(Request $req)
@@ -593,7 +588,6 @@ class PermintaanController extends Controller
                 pushNotification("Request Pekerjaan", "Request Revisi Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-
         } else {
             DB::table('request')->where('id', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
@@ -669,7 +663,6 @@ class PermintaanController extends Controller
                 // pushNotification("Request Pekerjaan", "Request Revisi Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-
         } else {
             DB::table('request')->where('id', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
@@ -923,7 +916,6 @@ class PermintaanController extends Controller
                 "code" => 201,
                 "result" => "Response request pekerjaan dari konsultan berhasil disimpan"
             ], ResponseAlias::HTTP_CREATED);
-
         } else {
             DB::table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
@@ -1284,8 +1276,15 @@ class PermintaanController extends Controller
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "status" => 3,
-                "ditolak" => 4
+                "ditolak" => 4,
+                'rekomendasi' => $req->rekomendasi,
+
             ]);
+            if ($req->catatan_rekomendasi) {
+                DB::table('request')->where('id', $req->id)->update([
+                    "catatan_rekomendasi" => $req->catatan_rekomendasi
+                ]);
+            }
             if ($req->catatan != NULL) {
                 DB::table('request')->where('id', $req->id)->update([
                     "catatan_ppk" => $req->catatan
@@ -1336,7 +1335,8 @@ class PermintaanController extends Controller
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_ppk" => $req->catatan,
                 "status" => 2,
-                "ditolak" => 1
+                "ditolak" => 1,
+                'rekomendasi' => $req->rekomendasi,
             ]);
             DB::table('history_request')->insert([
                 "username" => $req->nm_ppk,

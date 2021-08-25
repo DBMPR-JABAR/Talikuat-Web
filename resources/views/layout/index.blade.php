@@ -58,7 +58,7 @@
             href="{{ asset('vendor/datatables.min.css') }}"
         />
         <style>
-            
+         
             @media only screen and (max-width: 646px) {
                 .table-striped {
                     width: 40%;
@@ -157,13 +157,13 @@
                                         >Field Team</a
                                     >
                                 </li>
-                                {{-- <li class="nav-item">
+                                <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{ route('masterppk.index') }}"
+                                        href="{{ route('user.gs.index') }}"
                                         >General Superintendent</a
                                     >
-                                </li> --}}
+                                </li>
                                 
                             </ul>
                         </div>
@@ -243,7 +243,7 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/buttons.html"
+                                        href="{{ route('dataumum.index') }}"
                                         >Data Umum</a
                                     >
                                 </li>

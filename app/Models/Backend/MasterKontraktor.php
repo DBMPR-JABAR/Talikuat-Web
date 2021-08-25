@@ -20,4 +20,13 @@ class MasterKontraktor extends Model
     {
         return $this->hasMany('App\Models\Backend\MasterKontraktorGs', 'kontraktor_id');
     }
+    public function user_detail_gsc()
+    {
+        return $this->hasMany('App\Models\Backend\UserDetail', 'kontraktor_id');
+
+        // return $this->hasManyThrough('App\Models\Backend\UserDetail','App\Models\Backend\UserRule', 'id','rule_user_id','id')->where('is_delete',  null);
+
+        // return $this->hasManyThrough('App\Models\Backend\UserDetail','App\Models\Backend\UserRule', 'kontraktor_id','ids','id','rule_user_id')->where('is_delete',  null);
+        // return $this->hasManyThrough('App\Models\Backend\UserRule','App\Models\Backend\UserDetail', 'kontraktor_id','id','id','rule_user_id')->where('is_delete',  null);        
+    }
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Stmt\TryCatch;
 
 class LaporanController extends Controller
 {
@@ -41,7 +41,6 @@ class LaporanController extends Controller
             'code' => '200',
             'result' => $result
         ]);
-
     }
 
     public function createLaporanFromMobile(Request $req)
@@ -130,7 +129,6 @@ class LaporanController extends Controller
 
     public function createLaporan(Request $req)
     {
-
         date_default_timezone_set('Asia/Jakarta');
         $file = $req->file('soft');
         $name = time() . "_" . $file->getClientOriginalName();
@@ -183,6 +181,8 @@ class LaporanController extends Controller
                 ]);
             }
         }
+
+
         if ($req->jenis_peralatan[0] != null) {
             for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
                 DB::table('detail_laporan_harian_peralatan')->insert([
@@ -193,6 +193,8 @@ class LaporanController extends Controller
                 ]);
             }
         }
+
+
         if ($req->bahan_hotmix[0] != null) {
             for ($i = 0; $i < count($req->bahan_hotmix); $i++) {
                 DB::table('detail_laporan_harian_hotmix')->insert([
@@ -210,6 +212,8 @@ class LaporanController extends Controller
                 ]);
             }
         }
+
+
         if ($req->bahan_beton[0] != null) {
             for ($i = 0; $i < count($req->bahan_beton); $i++) {
                 DB::table('detail_laporan_harian_beton')->insert([
@@ -219,11 +223,13 @@ class LaporanController extends Controller
                     "waktu_datang" => $req->waktu_datang_beton[$i],
                     "waktu_curah" => $req->waktu_curah[$i],
                     "slump_test" => $req->slump_test[$i],
-                    "satuan_beton" => $req->satuan_beton[$i],
-                    "ket_beton" => $req->ket_beton[$i]
+                    "satuan" => $req->satuan_beton[$i],
+                    "ket" => $req->ket_beton[$i]
                 ]);
             }
         }
+
+
         if ($req->tenaga_kerja[0] != null) {
             for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
                 DB::table('detail_laporan_harian_tkerja')->insert([
@@ -233,6 +239,8 @@ class LaporanController extends Controller
                 ]);
             }
         }
+
+
         if ($req->cerah[0] != null) {
             for ($i = 0; $i < count($req->cerah); $i++) {
                 DB::table('detail_laporan_harian_cuaca')->insert([
@@ -245,6 +253,8 @@ class LaporanController extends Controller
                 ]);
             }
         }
+
+
         DB::table('history_laporan')->insert([
             "username" => $req->kontraktor,
             "created_at" => \Carbon\Carbon::now(),
@@ -256,6 +266,7 @@ class LaporanController extends Controller
         return response()->json([
             'code' => 200
         ], 200);
+
     }
 
     public function editLaporan(Request $req)
@@ -344,8 +355,8 @@ class LaporanController extends Controller
                     "waktu_datang" => $req->waktu_datang_beton[$i],
                     "waktu_curah" => $req->waktu_curah[$i],
                     "slump_test" => $req->slump_test[$i],
-                    "satuan_beton" => $req->satuan_beton[$i],
-                    "ket_beton" => $req->ket_beton[$i]
+                    "satuan" => $req->satuan_beton[$i],
+                    "ket" => $req->ket_beton[$i]
                 ]);
             }
         }
@@ -658,21 +669,24 @@ class LaporanController extends Controller
 
     public function pembandingRelasi(Request $req)
     {
-        $getRequest = DB::table('request')->where('id', $req->id)->first();
-        $getJadual = DB::table('detail_jadual')->where('id_jadual', $getRequest->id)->orderBy('tgl', 'asc')->get();
-        $getid = DB::table('jadual')->where('id', $getRequest->id)->first();
-        $getLaporan = DB::table('master_laporan_harian')->where([
-            ['id_jadual', $getJadual[0]->id],
-            ['nmp', $getJadual[0]->nmp]
-        ])->orderBy('tanggal', 'asc')->get();
-        $getDataUmum = DB::table('data_umum')->where('id', $getid->id_data_umum)->first();
-        return response()->json([
-            "DataUmum" => $getDataUmum,
-            "Request" => $getRequest,
-            "Jadual" => $getJadual,
-            "Laporan" => $getLaporan
 
+        $jadual = DB::table('jadual')->where('id', $req->id)->first();
+        $detail = DB::table('detail_jadual')->where('id_jadual', $jadual->id)->get();
+        if ($jadual->tgl_req) {
+            $request = DB::table('request')->where('id_jadual', $jadual->id)->first();
+            $laporan = DB::table('master_laporan_harian')->where([['id_request', $request->id], ['status', 4]])->orderBy('tanggal', 'desc')->get();
+            if (count($laporan) != 0) {
+                return response()->json([
+                    'jadual' => $detail,
+                    'laporan' => $laporan
+                ]);
+            }
+            return response()->json([
+                'jadual' => $detail
+            ]);
+        }
+        return response()->json([
+            'jadual' => $detail
         ]);
     }
-
 }

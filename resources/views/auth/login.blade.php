@@ -45,12 +45,16 @@
                 Login
             </button>
         </div>
-        <a
-            href="{{ url('/register') }}"
-            style="text-decoration: underline; color: yellow"
-            >Create Account</a
-        >.
     </form>
+
+    <div class="container-login100-form-btn">
+        <a href="{{ url('/register') }}" class="w-100">
+            <button class="login100-form-btn bg-warning" type="button">
+                Daftar
+            </button></a
+        >
+    </div>
+
     @error('email')
     <div class="alert alert-danger mt-2">
         {{ $message }}
