@@ -5,6 +5,7 @@ use App\Http\Controllers\CurvaControllers;
 use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\GetFile;
+use App\Http\Controllers\JadualAdendumControllers;
 use App\Http\Controllers\JadualController;
 use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
@@ -353,8 +354,17 @@ Route::prefix('merge')->group(function () {
 
 Route::prefix('adendum')->group(function () {
 
-    Route::post('updatedata', [DataUmumAdendum::class, 'updateAdendum']);
-    Route::post('buatjadual', [DataUmumAdendum::class, 'buatJadualAdendum']);
+    //ADENDUM
+    Route::post('/update-data-adendum', [DataUmumAdendum::class, 'updateAdendum']);
+
+
+    //JADUAL
+    Route::post('/create-jadual', [JadualAdendumControllers::class, 'buatJadualAdendum']);
+    Route::get('/getJadualbyNmp/{id}',[JadualAdendumControllers::class,'getJadualbyNmp']);
+    Route::post('/update-jadual', [JadualAdendumControllers::class, 'updateJadualAdendum']);
+    Route::post('/delete-jadual', [JadualAdendumControllers::class, 'deleteJadual']);
+
+    
 });
 
 Route::prefix('curva')->group(function () {

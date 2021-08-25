@@ -439,6 +439,25 @@ class DataUmumController extends Controller
 
     public function addAdendum(Request $req)
     {
+        $valid_adendum = DB::table('master_laporan_harian')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
+        if ($valid_adendum != 0) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '503',
+                'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
+            ],503);
+        }
+        $valid = DB::table('master_laporan_harian')->where([['id_data_umum', $req->id],['ditolak',1]])->whereNull('reason_delete')->count();
+        if ($valid != 0) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '503',
+                'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
+            ],503);
+        }
+
+
+
         $get_data = DB::table('data_umum')->where('id', $req->id)->first();
         $data = [
             // Data Umum
@@ -449,7 +468,7 @@ class DataUmumController extends Controller
             "kategori" => $get_data->kategori,
             "nm_paket" => $get_data->nm_paket,
             "no_kontrak" => $get_data->no_kontrak,
-            "tgl_kontrak" => $get_data->tgl_kontrak,
+            "tgl_adendum" => $get_data->tgl_kontrak,
             "nilai_kontrak" => $get_data->nilai_kontrak,
             "no_spmk" => $get_data->no_spmk,
             "tgl_spmk" => $get_data->tgl_spmk,
@@ -461,6 +480,7 @@ class DataUmumController extends Controller
             "nm_ppk" => $get_data->nm_ppk,
             "nm_se" => $get_data->nm_se,
             "nm_gs" => $get_data->nm_gs,
+            "field_team_konsultan"=>$get_data->field_team_konsultan,
             "adendum" => "Adendum 1",
             "created_at" => \Carbon\Carbon::now()
         ];
@@ -491,59 +511,77 @@ class DataUmumController extends Controller
     }
 
 
-    public function AddNewAdendum(Request $req)
-    {
-        $get_data = DB::table('data_umum_adendum')->where('id_data_umum', $req->id)->get();
-        DB::table('data_umum_adendum')->where([
-            ["is_adendum", null],
-            ["id_data_umum", "=", $req->id]
-        ])->update([
-            "is_adendum" => 1
-        ]);
-        $data = [
-            // Data Umum
-            'id_data_umum' => $req->id,
-            'adendum' => "Adendum " . count($get_data) + 1,
-            'pemda' => $get_data[0]->pemda,
-            "opd" => $get_data[0]->opd,
-            "unor" => $get_data[0]->unor,
-            "kategori" => $get_data[0]->kategori,
-            "nm_paket" => $get_data[0]->nm_paket,
-            "no_kontrak" => $get_data[0]->no_kontrak,
-            "tgl_kontrak" => $get_data[0]->tgl_kontrak,
-            "nilai_kontrak" => $get_data[0]->nilai_kontrak,
-            "no_spmk" => $get_data[0]->no_spmk,
-            "tgl_spmk" => $get_data[0]->tgl_spmk,
-            "panjang_km" => $get_data[0]->panjang_km,
-            "lama_waktu" => $get_data[0]->lama_waktu,
-            "ppk" => $get_data[0]->ppk,
-            "penyedia" => $get_data[0]->penyedia,
-            "konsultan" => $get_data[0]->konsultan,
-            "nm_ppk" => $get_data[0]->nm_ppk,
-            "nm_se" => $get_data[0]->nm_se,
-            "nm_gs" => $get_data[0]->nm_gs,
-            "created_at" => \Carbon\Carbon::now()
-        ];
-        DB::table('data_umum_adendum')->insert($data);
-        $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
+    // public function AddNewAdendum(Request $req)
+    // {
+    //     $valid_adendum = DB::table('master_laporan_harian_adendum')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
+    //     if ($valid_adendum != 0) {
+    //         return response()->json([
+    //             'status' => 'failed',
+    //             'code' => '503',
+    //             'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
+    //         ],503);
+    //     }
+    //     $valid = DB::table('master_laporan_harian_adendum')->where([['id_data_umum', $req->id],['ditolak',1]])->whereNull('reason_delete')->count();
+    //     if ($valid != 0) {
+    //         return response()->json([
+    //             'status' => 'failed',
+    //             'code' => '503',
+    //             'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
+    //         ],503);
+    //     }
+    //     $get_data = DB::table('data_umum_adendum')->where('id_data_umum', $req->id)->get();
+    //     DB::table('data_umum_adendum')->where([
+    //         ["is_adendum", null],
+    //         ["id_data_umum", "=", $req->id]
+    //     ])->update([
+    //         "is_adendum" => 1
+    //     ]);
 
-        foreach ($get_data_ruas as $data) {
-            DB::table('data_umum_ruas_adendum')->insert([
-                "id_data_umum_adendum" => $data->id_data_umum,
-                "ruas_jalan" => $data->ruas_jalan,
-                "segment_jalan" => $data->segment_jalan,
-                "lat_awal" => $data->lat_awal,
-                "long_awal" => $data->long_awal,
-                "lat_akhir" => $data->lat_akhir,
-                "long_akhir" => $data->long_akhir,
-                "adendum" => "Adendum " . count($get_data) + 1,
-                "created_at" => \Carbon\Carbon::now()
-            ]);
-        }
-        return response()->json([
-            "code" => 200
-        ], 200);
-    }
+    //     $data = [
+    //         // Data Umum
+    //         'id_data_umum' => $req->id,
+    //         'adendum' => "Adendum " . count($get_data) + 1,
+    //         'pemda' => $get_data[0]->pemda,
+    //         "opd" => $get_data[0]->opd,
+    //         "unor" => $get_data[0]->unor,
+    //         "kategori" => $get_data[0]->kategori,
+    //         "nm_paket" => $get_data[0]->nm_paket,
+    //         "no_kontrak" => $get_data[0]->no_kontrak,
+    //         "tgl_kontrak" => $get_data[0]->tgl_kontrak,
+    //         "nilai_kontrak" => $get_data[0]->nilai_kontrak,
+    //         "no_spmk" => $get_data[0]->no_spmk,
+    //         "tgl_spmk" => $get_data[0]->tgl_spmk,
+    //         "panjang_km" => $get_data[0]->panjang_km,
+    //         "lama_waktu" => $get_data[0]->lama_waktu,
+    //         "ppk" => $get_data[0]->ppk,
+    //         "penyedia" => $get_data[0]->penyedia,
+    //         "konsultan" => $get_data[0]->konsultan,
+    //         "nm_ppk" => $get_data[0]->nm_ppk,
+    //         "nm_se" => $get_data[0]->nm_se,
+    //         "nm_gs" => $get_data[0]->nm_gs,
+    //         "field_team_konsultan"=>$get_data[0]->field_team_konsultan,
+    //         "created_at" => \Carbon\Carbon::now()
+    //     ];
+    //     DB::table('data_umum_adendum')->insert($data);
+    //     $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
+
+    //     foreach ($get_data_ruas as $data) {
+    //         DB::table('data_umum_ruas_adendum')->insert([
+    //             "id_data_umum_adendum" => $data->id_data_umum,
+    //             "ruas_jalan" => $data->ruas_jalan,
+    //             "segment_jalan" => $data->segment_jalan,
+    //             "lat_awal" => $data->lat_awal,
+    //             "long_awal" => $data->long_awal,
+    //             "lat_akhir" => $data->lat_akhir,
+    //             "long_akhir" => $data->long_akhir,
+    //             "adendum" => "Adendum " . count($get_data) + 1,
+    //             "created_at" => \Carbon\Carbon::now()
+    //         ]);
+    //     }
+    //     return response()->json([
+    //         "code" => 200
+    //     ], 200);
+    // }
 
     public function getDokumen($id, Request $request)
     {

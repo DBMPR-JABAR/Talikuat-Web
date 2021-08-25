@@ -44,10 +44,13 @@ class LaporanController extends Controller
 
   public function createLaporan(Request $req)
   {
+    
     date_default_timezone_set('Asia/Jakarta');
     $file = $req->file('soft');
     $name = time() . "_" . $file->getClientOriginalName();
     $getTeam = DB::table('request')->where('id', $req->permohonan)->first();
+    DB::beginTransaction();
+    try {
       $id = DB::table('master_laporan_harian')->insertGetId([
         "real_date" => \Carbon\Carbon::now(),
         "user" => $req->user,
@@ -178,10 +181,14 @@ class LaporanController extends Controller
         "id_laporan" => $id,
         "class" => "kirim"
       ]);
+      DB::commit();
       return response()->json([
         'code' => 200
       ], 200);
-    
+    } catch (\Throwable $e) {
+      DB::rollBack();
+      dd($e->getMessage());
+    }    
   }
 
   public function editLaporan(Request $req)
