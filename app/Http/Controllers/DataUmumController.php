@@ -366,7 +366,6 @@ class DataUmumController extends Controller
     {
 
         $result = DB::table('data_umum_ruas')
-            ->select('id', 'ruas_jalan', 'segment_jalan', 'lat_awal', 'long_awal', 'lat_akhir', 'long_akhir')
             ->where('id_data_umum', '=', $id)
             ->get();
 

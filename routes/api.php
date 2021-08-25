@@ -177,6 +177,16 @@ Route::prefix('/jadual')->group(function () {
     Route::get('/getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
 
     Route::get('getJadualbyNmp/{id}', [JadualController::class, 'getNmpjadual']);
+
+    Route::get('/getTempJadualByIdDataUmumAndKeyword/{idDataUmum}', [JadualController::class, 'getTempJadualByIdDataUmumAndKeyword']);
+
+    Route::post('/insertTempJadual', [JadualController::class, 'insertTempJadual']);
+
+    Route::delete('/deleteTempJadual/{id}', [JadualController::class, 'deleteTempJadual']);
+
+    Route::get('/getAllTempJadualGroupedByNmp/{id}', [JadualController::class, 'getAllTempJadualGroupedByNmp']);
+
+    Route::delete('/deleteAllTempJadual/{id}', [JadualController::class, 'deleteAllTempJadual']);
 });
 
 Route::prefix('/permintaan')->group(function () {

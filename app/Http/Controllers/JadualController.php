@@ -55,7 +55,6 @@ class JadualController extends Controller
 
     public function getJadualByKeyword(Request $request)
     {
-
         $keyword = $request->query("keyword");
 
         $result = DB::table("jadual")
@@ -64,7 +63,7 @@ class JadualController extends Controller
             ->orWhere("id", $keyword)
             ->orWhere("waktu_pelaksanaan", $keyword)
             ->orWhere("panjang", $keyword)
-            ->paginate(15);
+            ->paginate();
 
         return response()->json([
             'status' => 'success',
@@ -73,30 +72,211 @@ class JadualController extends Controller
         ]);
     }
 
+    public function getTempJadualByIdDataUmumAndKeyword($idDataUmum, Request $request)
+    {
+        $keyword = $request->keyword;
+
+        $result = DB::table('detail_jadual_parsed')
+            ->where('id_data_umum', '=', $idDataUmum)
+            ->where(function ($query) use ($keyword) {
+                return $query->where('nmp', 'like', '%' . $keyword . '%')
+                    ->orWhere('tgl', 'like', '%' . $keyword . '%')
+                    ->orWhere('ruas_jalan', 'like', '%' . $keyword . '%')
+                    ->orWhere('uraian', 'like', '%' . $keyword . '%');
+            })
+            ->orderBy('tgl')
+            ->paginate();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
+
+    public function deleteAllTempJadual($id)
+    {
+        DB::table('detail_jadual_parsed')
+            ->where('id_data_umum', '=', $id)
+            ->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => 'Berhasil menghapus semua jadual sementara'
+        ], Response::HTTP_OK);
+    }
+
+    public function getAllTempJadualGroupedByNmp($id)
+    {
+        $list_bobot = DB::table('detail_jadual_parsed')
+            ->select('bobot')
+            ->where('id_data_umum', '=', $id)
+            ->groupBy('nmp')
+            ->get();
+        $total_bobot = 0;
+        foreach ($list_bobot as $bobot) {
+            $total_bobot = $total_bobot + floatval($bobot->bobot);
+        }
+
+        $list_volume = DB::table('detail_jadual_parsed')
+            ->select('volume')
+            ->where('id_data_umum', '=', $id)
+            ->groupBy('nmp')
+            ->get();
+        $total_volume = 0;
+        foreach ($list_volume as $volume) {
+            $total_volume = $total_volume + floatval($volume->volume);
+        }
+
+        $list_koefisien = DB::table('detail_jadual_parsed')
+            ->select('koefisien')
+            ->where('id_data_umum', '=', $id)
+            ->groupBy('nmp')
+            ->get();
+        $total_koefisien = 0;
+        foreach ($list_koefisien as $koefisien) {
+            $total_koefisien = $total_koefisien + $koefisien->koefisien;
+        }
+
+        $total_data = DB::table('detail_jadual_parsed')
+            ->selectRaw('COUNT(tgl) as total_hari')
+            ->where('id_data_umum', '=', $id)
+            ->first();
+
+        $list_nmp = DB::table('detail_jadual_parsed')
+            ->selectRaw('nmp, volume, koefisien, bobot')
+            ->where('id_data_umum', '=', $id)
+            ->groupBy('nmp')
+            ->orderBy('nmp')
+            ->get();
+
+        $result = [
+            'total_bobot' => $total_bobot,
+            'total_volume' => $total_volume,
+            'total_koefisien' => $total_koefisien,
+            'total_data' => $total_data->total_hari,
+            'list_nmp' => $list_nmp
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ], Response::HTTP_OK);
+    }
+
+    public function insertTempJadual(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_data_umum' => 'required',
+            'tgl' => 'required',
+            'nmp' => 'required',
+            'uraian' => 'required',
+            'satuan' => 'required',
+            'harga_satuan' => 'required',
+            'volume' => 'required',
+            'jumlah_harga' => 'required',
+            'bobot' => 'required',
+            'koefisien' => 'required',
+            'nilai' => 'required',
+            'ruas_jalan' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 400,
+                'result' => $validator->errors()->first()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $data = [
+            'id_data_umum' => $request->id_data_umum,
+            'tgl' => $request->tgl,
+            'nmp' => $request->nmp,
+            'uraian' => $request->uraian,
+            'satuan' => $request->satuan,
+            'harga_satuan' => $request->harga_satuan,
+            'volume' => $request->volume,
+            'jumlah_harga' => $request->jumlah_harga,
+            'bobot' => $request->bobot,
+            'koefisien' => $request->koefisien,
+            'nilai' => $request->nilai,
+            'ruas_jalan' => $request->ruas_jalan
+        ];
+
+        DB::table('detail_jadual_parsed')->insert($data);
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 201,
+            'result' => 'Berhasil menambahkan jadual temporary'
+        ], Response::HTTP_CREATED);
+    }
+
+    public function deleteTempJadual($id)
+    {
+        DB::table('detail_jadual_parsed')->where('id', '=', $id)->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => 'Berhasil menghapus jadual temporary dengan id ' . $id
+        ], Response::HTTP_OK);
+    }
+
+
     public function parseJadualExcelFile(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'id_data_umum' => 'required',
+            'ruas_jalan' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 400,
+                'error' => $validator->errors()->first()
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         $file = $request->file('jadual_excel_file');
 
         $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
 
+        DB::table('detail_jadual_parsed')
+            ->where('nmp', '=', $list_jadual[0]['no_mata_pembayaran'])
+            ->where('id_data_umum', '=', $request->id_data_umum)
+            ->delete();
+
         foreach ($list_jadual as $jadual) {
-            $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2);
-            $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2);
-            $jadual['bobot'] = number_format($jadual['bobot'], 3);
-            $jadual['volume'] = number_format($jadual['volume'], 3);
-            $jadual['nilai'] = number_format($jadual['nilai'], 3);
-            $jadual['tanggal'] = date("d F Y", Date::excelToTimestamp($jadual['tanggal']));
+            DB::table('detail_jadual_parsed')->insert([
+                'id_data_umum' => $request->id_data_umum,
+                'ruas_jalan' => $request->ruas_jalan,
+                'tgl' => Carbon::createFromTimestamp(Date::excelToTimestamp($jadual['tanggal'])),
+                'nmp' => $jadual['no_mata_pembayaran'],
+                'uraian' => $jadual['uraian'],
+                'satuan' => $jadual['satuan'],
+                'harga_satuan' => $jadual['harga_satuan_rp'],
+                'volume' => $jadual['volume'],
+                'jumlah_harga' => $jadual['jumlah_harga_rp'],
+                'bobot' => $jadual['bobot'],
+                'koefisien' => $jadual['koefisien'],
+                'nilai' => $jadual['nilai']
+            ]);
         }
 
         return response()->json([
             'status' => 'success',
             'code' => '200',
-            'result' => $list_jadual
+            'result' => 'Berhasil untuk menyimpan parsed jadual'
         ], Response::HTTP_OK);
     }
 
-    public function insertJadualFromMobile(Request $req)
+    public
+    function insertJadualFromMobile(Request $req)
     {
         $validator = Validator::make($req->all(), [
             'id_data_umum' => 'required',
@@ -211,7 +391,8 @@ class JadualController extends Controller
 
     }
 
-    public function insertJadual(Request $req)
+    public
+    function insertJadual(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
@@ -250,7 +431,7 @@ class JadualController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], Response::HTTP_BAD_REQUEST);
         }
-        $getDataumum = DB::table('data_umum')->where('id',$req->id_data_umum)->first();
+        $getDataumum = DB::table('data_umum')->where('id', $req->id_data_umum)->first();
 
         $waktu = str_replace(" Hari", "", $req->waktu);
         $panjang = str_replace(" Km", "", $req->panjang);
@@ -279,7 +460,7 @@ class JadualController extends Controller
             "bobot" => $req->bobot[0],
             "uraian" => $req->uraian[0],
             "id_uptd" => $req->id_uptd,
-            'field_team_konsultan'=>$getDataumum->field_team_konsultan
+            'field_team_konsultan' => $getDataumum->field_team_konsultan
         ]);
 
         for ($i = 0; $i < count($req->nmp); $i++) {
@@ -310,7 +491,8 @@ class JadualController extends Controller
         ]);
     }
 
-    public function excelToData(Request $request)
+    public
+    function excelToData(Request $request)
     {
 
         $file = $request->file('jadual_excel_file');
@@ -332,7 +514,8 @@ class JadualController extends Controller
     }
 
 
-    public function getNmpByid($id)
+    public
+    function getNmpByid($id)
     {
         $get = DB::table('master_jenis_pekerjaan')->where('id', '=', $id)->first();
         return response()->json([
@@ -343,7 +526,8 @@ class JadualController extends Controller
     }
 
 
-    public function deleteallnmp(Request $req)
+    public
+    function deleteallnmp(Request $req)
     {
         DB::table('jadual')->where('id', '=', $req->id)->delete();
         DB::table('detail_jadual')->where([
@@ -358,7 +542,8 @@ class JadualController extends Controller
         ]);
     }
 
-    public function updateJadual(Request $req)
+    public
+    function updateJadual(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
@@ -402,7 +587,8 @@ class JadualController extends Controller
         ]);
     }
 
-    public function getJadualByDataUmumId($id)
+    public
+    function getJadualByDataUmumId($id)
     {
         $result = DB::table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
@@ -418,7 +604,8 @@ class JadualController extends Controller
         ]);
     }
 
-    public function getJadualByDataUmumIdAndRuasJalan(Request $request)
+    public
+    function getJadualByDataUmumIdAndRuasJalan(Request $request)
     {
         $result = DB::table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
@@ -436,7 +623,8 @@ class JadualController extends Controller
         ]);
     }
 
-    public function getJadualByDataUmumIdAndNmp(Request $req)
+    public
+    function getJadualByDataUmumIdAndNmp(Request $req)
     {
         $id_data_umum = $req->input('id_data_umum');
         $nmp = $req->input('nmp');
@@ -453,7 +641,8 @@ class JadualController extends Controller
         ]);
     }
 
-    public function getNmpJadual($id)
+    public
+    function getNmpJadual($id)
     {
         return response()->json(
             DB::table('detail_jadual')->where('id_jadual', $id)->get()
