@@ -151,6 +151,8 @@ Route::prefix('/jadual')->group(function () {
 
     Route::get('/getAllJadual', [JadualController::class, 'getAllJadual']);
 
+    Route::get('/getJadualById/{id}', [JadualController::class, 'getJadualById']);
+
     Route::get('/getDetailJadual/{id}', [JadualController::class, 'getDetailJadual']);
 
     Route::get('/getLatestJadual', [JadualController::class, 'getLatestJadual']);
@@ -178,6 +180,18 @@ Route::prefix('/jadual')->group(function () {
     Route::get('/getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
 
     Route::get('getJadualbyNmp/{id}', [JadualController::class, 'getNmpjadual']);
+
+    Route::get('/getTempJadualByIdDataUmumAndKeyword/{idDataUmum}', [JadualController::class, 'getTempJadualByIdDataUmumAndKeyword']);
+
+    Route::post('/insertTempJadual', [JadualController::class, 'insertTempJadual']);
+
+    Route::delete('/deleteTempJadual/{id}', [JadualController::class, 'deleteTempJadual']);
+
+    Route::get('/getAllTempJadualGroupedByNmp/{id}', [JadualController::class, 'getAllTempJadualGroupedByNmp']);
+
+    Route::delete('/deleteAllTempJadual/{id}', [JadualController::class, 'deleteAllTempJadual']);
+
+    Route::get('/getJadualNotRequested/{id}', [JadualController::class, 'getJadualNotRequested']);
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -212,6 +226,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
 
+    Route::post('/ppk/responserequest/mobile', [PermintaanController::class, 'responseReqPpkFromMobile']);
+
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
@@ -229,7 +245,11 @@ Route::prefix('laporan')->group(function () {
 
     Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
 
+    Route::get('/getLaporanByRequestId/{id}', [LaporanController::class, 'getLaporanByRequestId']);
+
     Route::post('/kontraktor/createlaporan', [LaporanController::class, 'createLaporan']);
+
+    Route::post('/kontraktor/createlaporan/mobile', [LaporanController::class, 'createLaporanFromMobile']);
 
     Route::post('/kontraktor/editlaporan', [LaporanController::class, 'editLaporan']);
 
@@ -247,6 +267,8 @@ Route::prefix('laporan')->group(function () {
 });
 
 Route::prefix('data-umum')->group(function () {
+
+    Route::get('/getDataUmumById/{id}', [DataUmumController::class, 'getDataUmumById']);
 
     Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 

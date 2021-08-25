@@ -86,6 +86,17 @@ class DataUmumController extends Controller
         ]);
     }
 
+    public function getDataUmumById($id)
+    {
+        $result = DB::table('data_umum')->where('id', '=', $id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => '200',
+            'result' => $result
+        ]);
+    }
+
     public function getAllKategori(Request $request)
     {
 
@@ -366,7 +377,6 @@ class DataUmumController extends Controller
     {
 
         $result = DB::table('data_umum_ruas')
-            ->select('id', 'ruas_jalan', 'segment_jalan', 'lat_awal', 'long_awal', 'lat_akhir', 'long_akhir')
             ->where('id_data_umum', '=', $id)
             ->get();
 
