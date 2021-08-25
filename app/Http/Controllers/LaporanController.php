@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -43,6 +44,11 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function getLaporanByRequestId($id)
+    {
+
+    }
+
     public function createLaporanFromMobile(Request $req)
     {
         $validator = Validator::make($req->all(), [
@@ -66,6 +72,12 @@ class LaporanController extends Controller
             "gambar" => "required",
             "keterangan" => "required",
             "bobot" => "required",
+            "list_bahan_material" => "json",
+            "list_peralatan" => "json",
+            "list_bahan_hotmix" => "json",
+            "list_bahan_beton" => "json",
+            "list_pekerja" => "json",
+            "list_cuaca" => "json"
         ]);
 
         if ($validator->fails()) {
@@ -118,6 +130,93 @@ class LaporanController extends Controller
             "ket" => $req->keterangan,
             "tgl" => $req->tanggal,
             "bobot" => floatval($req->bobot),
+        ]);
+
+        if ($req->list_bahan_material != null) {
+            foreach (json_decode($req->list_bahan_material) as $bahan_material) {
+                DB::table('detail_laporan_harian_bahan')->insert([
+                    "no_trans" => $idLaporan,
+                    "bahan" => $bahan_material->bahan,
+                    "volume" => $bahan_material->volume,
+                    "satuan" => $bahan_material->satuan
+                ]);
+            }
+        }
+
+        if ($req->list_peralatan != null) {
+            foreach (json_decode($req->list_peralatan) as $alat) {
+                DB::table('detail_laporan_harian_peralatan')->insert([
+                    "no_trans" => $idLaporan,
+                    "jenis_peralatan" => $alat->jenis_peralatan,
+                    "jumlah" => $alat->jumlah,
+                    "satuan" => $alat->satuan
+                ]);
+            }
+        }
+
+        if ($req->list_bahan_hotmix != null) {
+            foreach (json_decode($req->list_bahan_hotmix) as $hotmix) {
+                DB::table('detail_laporan_harian_hotmix')->insert([
+                    "no_trans" => $idLaporan,
+                    "bahan_hotmix" => $hotmix->bahan_hotmix,
+                    "no_dt" => $hotmix->no_dt,
+                    "waktu_datang" => $hotmix->waktu_datang,
+                    "waktu_hampar" => $hotmix->waktu_hampar,
+                    "suhu_datang" => $hotmix->suhu_datang,
+                    "suhu_hampar" => $hotmix->suhu_hampar,
+                    "pro_p" => $hotmix->pro_p,
+                    "pro_l" => $hotmix->pro_l,
+                    "pro_t" => $hotmix->pro_t,
+                    "ket" => $hotmix->ket
+                ]);
+            }
+        }
+
+        if ($req->list_bahan_beton != null) {
+            foreach (json_decode($req->list_bahan_beton) as $beton) {
+                DB::table('detail_laporan_harian_beton')->insert([
+                    "no_trans" => $idLaporan,
+                    "bahan_beton" => $beton->bahan_beton,
+                    "no_tm" => $beton->no_tm,
+                    "waktu_datang" => $beton->waktu_datang,
+                    "waktu_curah" => $beton->waktu_curah,
+                    "slump_test" => $beton->slump_test,
+                    "satuan" => $beton->satuan,
+                    "ket" => $beton->ket
+                ]);
+            }
+        }
+
+        if ($req->list_pekerja != null) {
+            foreach (json_decode($req->list_pekerja) as $pekerja) {
+                DB::table('detail_laporan_harian_tkerja')->insert([
+                    "no_trans" => $idLaporan,
+                    "tenaga_kerja" => $pekerja->tenaga_kerja,
+                    "jumlah" => $pekerja->jumlah,
+                ]);
+            }
+        }
+
+        if ($req->list_cuaca != null) {
+            foreach (json_decode($req->list_cuaca) as $cuaca) {
+                DB::table('detail_laporan_harian_cuaca')->insert([
+                    "no_trans" => $idLaporan,
+                    "cerah" => $cuaca->cerah,
+                    "hujan_ringan" => $cuaca->hujan_ringan,
+                    "hujan_lebat" => $cuaca->hujan_lebat,
+                    "bencana_alam" => $cuaca->bencana_alam,
+                    "lain_lain" => $cuaca->lain_lain,
+                ]);
+            }
+        }
+
+        DB::table('history_laporan')->insert([
+            "username" => $req->nama_kontraktor,
+            "created_at" => \Carbon\Carbon::now(),
+            "keterangan" => "Laporan Telah Dibuat Oleh " . $req->nama_kontraktor,
+            "user_id" => $req->user,
+            "id_laporan" => $idLaporan,
+            "class" => "kirim"
         ]);
 
         return response()->json([
