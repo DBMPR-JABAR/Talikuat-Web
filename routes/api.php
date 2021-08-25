@@ -244,6 +244,8 @@ Route::prefix('laporan')->group(function () {
 
     Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
 
+    Route::get('/getLaporanByRequestId/{id}', [LaporanController::class, 'getLaporanByRequestId']);
+
     Route::post('/kontraktor/createlaporan', [LaporanController::class, 'createLaporan']);
 
     Route::post('/kontraktor/createlaporan/mobile', [LaporanController::class, 'createLaporanFromMobile']);

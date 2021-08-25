@@ -44,9 +44,34 @@ class LaporanController extends Controller
         ]);
     }
 
-    public function getLaporanByRequestId($id)
+    public function getLaporanByRequestId($id, Request $req)
     {
+        $result = DB::table('master_laporan_harian')
+            ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
+            ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
+            ->where('master_laporan_harian.id_request', '=', $id)
+            ->where(function ($query) use ($req) {
+                return $query->where('master_laporan_harian.tanggal', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('master_laporan_harian.volume', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('master_laporan_harian.bobot', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('detail_laporan_harian_pekerjaan.no_pekerjaan', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('detail_laporan_harian_pekerjaan.jenis_pekerjaan', 'like', '%' . $req->keyword . '%');
+            })
+            ->paginate();
 
+        foreach ($result as $item) {
+            $item->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ], Response::HTTP_OK);
     }
 
     public function createLaporanFromMobile(Request $req)
@@ -165,7 +190,7 @@ class LaporanController extends Controller
                     "suhu_datang" => $hotmix->suhu_datang,
                     "suhu_hampar" => $hotmix->suhu_hampar,
                     "pro_p" => $hotmix->pro_p,
-                    "pro_l" => $hotmix->pro_l,
+                    "pro_i" => $hotmix->pro_i,
                     "pro_t" => $hotmix->pro_t,
                     "ket" => $hotmix->ket
                 ]);
@@ -201,11 +226,11 @@ class LaporanController extends Controller
             foreach (json_decode($req->list_cuaca) as $cuaca) {
                 DB::table('detail_laporan_harian_cuaca')->insert([
                     "no_trans" => $idLaporan,
-                    "cerah" => $cuaca->cerah,
-                    "hujan_ringan" => $cuaca->hujan_ringan,
-                    "hujan_lebat" => $cuaca->hujan_lebat,
-                    "bencana_alam" => $cuaca->bencana_alam,
-                    "lain_lain" => $cuaca->lain_lain,
+                    "cerah" => property_exists($cuaca, 'cerah') ? $cuaca->cerah : null,
+                    "hujan_ringan" => property_exists($cuaca, 'hujan_ringan') ? $cuaca->hujan_ringan : null,
+                    "hujan_lebat" => property_exists($cuaca, 'hujan_lebat') ? $cuaca->hujan_lebat : null,
+                    "bencana_alam" => property_exists($cuaca, 'bencana_alam') ? $cuaca->bencana_alam : null,
+                    "lain_lain" => property_exists($cuaca, 'lain_lain') ? $cuaca->lain_lain : null,
                 ]);
             }
         }
