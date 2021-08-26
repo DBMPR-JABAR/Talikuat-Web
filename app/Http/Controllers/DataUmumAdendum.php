@@ -58,6 +58,8 @@ class DataUmumAdendum extends Controller
                     $merge = array_merge($tmp, $dUmum);
                     DB::table('master_laporan_harian_adendum')->insert($merge);
                 }
+            }else{
+                DB::rollBack();
             }
             $nm_se = DB::table('team_konsultan')->where('id', $req->team)->first();
             DB::table('data_umum_adendum')->where('id', $req->id)->update([
