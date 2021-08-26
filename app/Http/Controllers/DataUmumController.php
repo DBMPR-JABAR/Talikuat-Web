@@ -448,7 +448,15 @@ class DataUmumController extends Controller
     }
 
     public function addAdendum(Request $req)
-    {
+    {   
+        $curva = DB::table('jadual')->where('id_data_umum',$req->id)->sum('bobot');
+        if ($curva >= 100.000) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '503',
+                'message' => 'Data Jadual Belum Selesai'
+            ],503);
+        }
         $valid_adendum = DB::table('master_laporan_harian')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
         if ($valid_adendum != 0) {
             return response()->json([
