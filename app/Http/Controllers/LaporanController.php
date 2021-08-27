@@ -65,6 +65,7 @@ class LaporanController extends Controller
             $item->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
             $item->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
             $item->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_peralatan = DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $item->no_trans)->get();
         }
 
         return response()->json([
