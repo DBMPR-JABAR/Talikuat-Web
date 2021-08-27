@@ -237,6 +237,8 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
 
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
+
+    Route::get('/getHistoryLogPermintaan/{id}', [PermintaanController::class, 'getHistoryLogPermintaan']);
 });
 
 Route::prefix('laporan')->group(function () {
@@ -386,7 +388,7 @@ Route::prefix('adendum')->group(function () {
     Route::post('/update-jadual', [JadualAdendumControllers::class, 'updateJadualAdendum']);
     Route::post('/delete-jadual', [JadualAdendumControllers::class, 'deleteJadual']);
 
-    
+
 });
 
 Route::prefix('curva')->group(function () {

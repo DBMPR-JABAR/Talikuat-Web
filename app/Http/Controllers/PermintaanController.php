@@ -1531,4 +1531,13 @@ class PermintaanController extends Controller
             'code' => 200
         ]);
     }
+
+    public function getHistoryLogPermintaan($id)
+    {
+        return response()->json([
+            "status" => "success",
+            "code" => 200,
+            "result" => DB::table('history_request')->where('id_request', $id)->get()
+        ]);
+    }
 }
