@@ -44,7 +44,8 @@ class LaporanController extends Controller
         ]);
     }
 
-    public function getLaporanById($id) {
+    public function getLaporanById($id)
+    {
         $result = DB::table('master_laporan_harian')
             ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
             ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
@@ -270,7 +271,7 @@ class LaporanController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'code' => 200,
+            'code' => 201,
             'result' => "Berhasil menambahkan laporan harian"
         ], Response::HTTP_CREATED);
     }
@@ -546,6 +547,46 @@ class LaporanController extends Controller
         return response()->json([
             'code' => 200
         ], 200);
+    }
+
+    public function sendLaporanFromMobile(Request $req)
+    {
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        if ($get_data->ditolak == 1) {
+            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                "status" => 2,
+                "ditolak" => 0,
+                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+            ]);
+            DB::table('history_laporan')->insert([
+                "username" => $req->username,
+                "id_laporan" => $req->id,
+                "user_id" => $req->userId,
+                "keterangan" => "Request Revisi Telah Dikirim Oleh " . $req->kontraktor,
+                "class" => "kirim",
+                "created_at" => \Carbon\Carbon::now()
+            ]);
+        } else {
+            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Laporan Di Kirim">&nbsp;</span></a>',
+                "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "status" => 2
+            ]);
+            DB::table('history_laporan')->insert([
+                "username" => $req->username,
+                "id_laporan" => $req->id,
+                "user_id" => $req->userId,
+                "keterangan" => "Laporan Telah Dikirim Oleh " . $req->kontraktor,
+                "class" => "kirim",
+                "created_at" => \Carbon\Carbon::now()
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => "Berhasil mengirimkan laporan harian"
+        ], Response::HTTP_OK);
     }
 
     public function sendLaporan(Request $req)

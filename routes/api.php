@@ -257,6 +257,8 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/kontraktor/editlaporan', [LaporanController::class, 'editLaporan']);
 
+    Route::post('/sendlaporan/mobile', [LaporanController::class, 'sendLaporanFromMobile']);
+
     Route::post('/sendlaporan', [LaporanController::class, 'sendLaporan']);
 
     Route::post('/respon/konsultan', [LaporanController::class, 'responKonsultan']);
@@ -386,7 +388,7 @@ Route::prefix('adendum')->group(function () {
 
     //JADUAL
     Route::post('/create-jadual', [JadualAdendumControllers::class, 'buatJadualAdendum']);
-    Route::get('/getJadualbyNmp/{id}',[JadualAdendumControllers::class,'getJadualbyNmp']);
+    Route::get('/getJadualbyNmp/{id}', [JadualAdendumControllers::class, 'getJadualbyNmp']);
     Route::post('/update-jadual', [JadualAdendumControllers::class, 'updateJadualAdendum']);
     Route::post('/delete-jadual', [JadualAdendumControllers::class, 'deleteJadual']);
 
