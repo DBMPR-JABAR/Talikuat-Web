@@ -60,6 +60,7 @@ class LaporanController extends Controller
             ->paginate();
 
         foreach ($result as $item) {
+            $item->gambar = Storage::url($item->gambar);
             $item->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
             $item->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
             $item->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
