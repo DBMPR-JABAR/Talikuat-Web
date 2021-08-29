@@ -243,6 +243,8 @@ Route::prefix('/permintaan')->group(function () {
 
 Route::prefix('laporan')->group(function () {
 
+    Route::get('/getLaporanById/{id}', [LaporanController::class, 'getLaporanById']);
+
     Route::get('/getAllLaporanHarian', [LaporanController::class, 'getAllLaporanHarian']);
 
     Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);

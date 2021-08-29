@@ -44,6 +44,28 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function getLaporanById($id) {
+        $result = DB::table('master_laporan_harian')
+            ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
+            ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
+            ->where('master_laporan_harian.no_trans', '=', $id)
+            ->first();
+
+        $result->gambar = Storage::url($result->gambar);
+        $result->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_peralatan = DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $result->no_trans)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ], Response::HTTP_OK);
+    }
+
     public function getLaporanByRequestId($id, Request $req)
     {
         $result = DB::table('master_laporan_harian')
