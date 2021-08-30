@@ -189,7 +189,7 @@ class UserController extends Controller
           DB::table('team_konsultan')->insert([
             'id_konsultan'=>$id,
             'nama'=>$req->nm_se[$i],
-            'jabatan'=>'Site Engineer',
+            'jabatan'=>'SITE ENGINEERING',
             'team'=>'Field Team '.$count,
             'aktive'=>0
           ]);
