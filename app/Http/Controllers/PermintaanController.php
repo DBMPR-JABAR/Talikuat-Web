@@ -822,7 +822,6 @@ class PermintaanController extends Controller
             "userId" => "required",
             "konsultan" => "required",
             "isAccepted" => "required",
-
         ]);
 
         if ($validator->fails()) {
