@@ -263,6 +263,8 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/respon/konsultan', [LaporanController::class, 'responKonsultan']);
 
+    Route::post('/response/konsultan/mobile', [LaporanController::class, 'responKonsultanFromMobile']);
+
     Route::post('/respon/ppk', [LaporanController::class, 'responPpk']);
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
