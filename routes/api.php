@@ -74,6 +74,8 @@ Route::prefix('/user')->group(function () {
 
     Route::get('/aktivasiuser/{id}', [UserController::class, 'aktivasiUser']);
 
+    Route::post('/update-profile', [UserController::class, 'updateProfile']);
+
 });
 
 Route::prefix('/kontraktor')->group(function () {
@@ -266,6 +268,8 @@ Route::prefix('laporan')->group(function () {
     Route::post('/response/konsultan/mobile', [LaporanController::class, 'responKonsultanFromMobile']);
 
     Route::post('/respon/ppk', [LaporanController::class, 'responPpk']);
+
+    Route::post('/response/ppk/mobile', [LaporanController::class, 'responPpkFromMobile']);
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
 

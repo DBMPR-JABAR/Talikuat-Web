@@ -28,7 +28,6 @@ class AuthController extends Controller
 
         $uptd = DB::table('kantor')->where('nama_lengkap', '=', $user_detail->unit)->first();
 
-
         $data = [
             'id_login' => $user->id_login,
             'user' => $user->user,
