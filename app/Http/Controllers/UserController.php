@@ -184,7 +184,7 @@ class UserController extends Controller
                 'alamat_member' => $user_detail->alamat_member,
                 'telp' => $user_detail->telp,
                 'email' => $user_detail->email,
-                'gambar' => $user_detail->gambar,
+                'gambar' => Storage::url($user_detail->gambar),
                 'nik' => $user_detail->nik,
                 'kantor_id' => $uptd ? $uptd->id_kantor : null,
                 'kantor' => $uptd ? $uptd->nama_lengkap : null,
@@ -192,6 +192,8 @@ class UserController extends Controller
                 'unit' => $user_detail->unit,
                 'created_at' => $user_detail->created_at
             ];
+
+            DB::commit();
 
             return response()->json([
                 'status' => 'success',

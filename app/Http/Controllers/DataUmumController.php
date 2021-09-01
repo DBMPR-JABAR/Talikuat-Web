@@ -31,7 +31,7 @@ class DataUmumController extends Controller
                 break;
             case 'ADMIN-UPTD':
                 $result = $query
-                    ->where('id_uptd', '=', $request->value)
+                    ->where('unor', '=', $request->value)
                     ->get();
                 break;
             case 'PPK':
@@ -69,7 +69,7 @@ class DataUmumController extends Controller
                 $result = $query->where('konsultan', '=', $request->value)->paginate();
                 break;
             case 'ADMIN-UPTD':
-                $result = $query->where('id_uptd', '=', $request->value)->paginate();
+                $result = $query->where('unor', '=', $request->value)->paginate();
                 break;
             case 'PPK':
                 $result = $query->where('nm_ppk', '=', $request->value)->paginate();
@@ -448,14 +448,14 @@ class DataUmumController extends Controller
     }
 
     public function addAdendum(Request $req)
-    {   
-        $curva = DB::table('jadual')->where('id_data_umum',$req->id)->sum('bobot');
+    {
+        $curva = DB::table('jadual')->where('id_data_umum', $req->id)->sum('bobot');
         if ($curva >= 100.000) {
             return response()->json([
                 'status' => 'failed',
                 'code' => '503',
                 'message' => 'Data Jadual Belum Selesai'
-            ],503);
+            ], 503);
         }
         $valid_adendum = DB::table('master_laporan_harian')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
         if ($valid_adendum != 0) {
@@ -463,17 +463,16 @@ class DataUmumController extends Controller
                 'status' => 'failed',
                 'code' => '503',
                 'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
-            ],503);
+            ], 503);
         }
-        $valid = DB::table('master_laporan_harian')->where([['id_data_umum', $req->id],['ditolak',1]])->whereNull('reason_delete')->count();
+        $valid = DB::table('master_laporan_harian')->where([['id_data_umum', $req->id], ['ditolak', 1]])->whereNull('reason_delete')->count();
         if ($valid != 0) {
             return response()->json([
                 'status' => 'failed',
                 'code' => '503',
                 'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
-            ],503);
+            ], 503);
         }
-
 
 
         $get_data = DB::table('data_umum')->where('id', $req->id)->first();
@@ -498,7 +497,7 @@ class DataUmumController extends Controller
             "nm_ppk" => $get_data->nm_ppk,
             "nm_se" => $get_data->nm_se,
             "nm_gs" => $get_data->nm_gs,
-            "field_team_konsultan"=>$get_data->field_team_konsultan,
+            "field_team_konsultan" => $get_data->field_team_konsultan,
             "adendum" => "Adendum 1",
             "created_at" => \Carbon\Carbon::now()
         ];
