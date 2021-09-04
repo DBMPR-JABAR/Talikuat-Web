@@ -32,7 +32,7 @@ class UtilsControllers extends Controller
             if (!Storage::exists('public/preview-pdf')) {
                 Storage::makeDirectory('public/preview-pdf');
             }
-            shell_exec('convert -verbose -density 150 -trim ' . Storage::path($req->file) . '[0] -quality 100 -flatten -sharpen 0x1.0 ' . Storage::path('public/preview-pdf/' . $fileName . '.jpg'));
+            shell_exec('convert -verbose -density 150 -trim ' . '\'' . Storage::path($req->file) . '[0]\' -quality 100 -flatten -sharpen 0x1.0 \'' . Storage::path('public/preview-pdf/' . $fileName . '.jpg') . '\'');
         }
         header('Content-Type: image/jpeg');
         echo Storage::get('public/preview-pdf/' . $fileName . '.jpg');
