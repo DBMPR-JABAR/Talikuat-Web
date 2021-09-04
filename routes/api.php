@@ -411,5 +411,6 @@ Route::prefix('curva')->group(function () {
 Route::prefix('utils')->group(function () {
 
     Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
+    Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
 
 });
