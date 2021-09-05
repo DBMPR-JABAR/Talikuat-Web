@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class JadualAdendumControllers extends Controller
 {
     public function buatJadualAdendum(Request $req)
-    { 
+    {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
             // Data Umum
@@ -81,8 +81,8 @@ class JadualAdendumControllers extends Controller
                 "uraian" => $req->uraian[0],
                 "id_uptd" => $req->id_uptd,
                 'field_team_konsultan' => $getDataumum->field_team_konsultan,
-                "adendum"=>$getDataumum->adendum,
-                'id_data_umum_adendum'=>$getDataumum->id
+                "adendum" => $getDataumum->adendum,
+                'id_data_umum_adendum' => $getDataumum->id
             ]);
 
             for ($i = 0; $i < count($req->nmp); $i++) {
@@ -120,12 +120,14 @@ class JadualAdendumControllers extends Controller
             ], 201);
         }
     }
+
     public function getJadualbyNmp($id)
     {
         return response()->json(
             DB::table('detail_jadual_adendum')->where('id_jadual', $id)->get()
         );
     }
+
     public function updateJadualAdendum(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -169,6 +171,7 @@ class JadualAdendumControllers extends Controller
             "code" => 200
         ]);
     }
+
     public function deleteJadual(Request $req)
     {
         DB::table('jadual_adendum')->where('id', '=', $req->id)->delete();

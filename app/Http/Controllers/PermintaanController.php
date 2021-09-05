@@ -74,7 +74,10 @@ class PermintaanController extends Controller
                 ->first();
 
             $result->sketsa = Storage::url($result->sketsa);
-            $result->metode_kerja = Storage::url($result->metode_kerja);
+            $result->metode_kerja = $result->metode_kerja != null ? Storage::url($result->metode_kerja) : null;
+            $result->foto_konsultan = $result->foto_konsultan != null ? Storage::url($result->foto_konsultan) : null;
+            $result->foto_ppk = $result->foto_ppk != null ? Storage::url($result->foto_ppk) : null;
+            $result->checklist = $result->checklist != null ? Storage::url($result->checklist) : null;
 
             $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $result->id)->get();
             $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $result->id)->get();
@@ -127,7 +130,10 @@ class PermintaanController extends Controller
 
         foreach ($result as $item) {
             $item->sketsa = Storage::url($item->sketsa);
-            $item->metode_kerja = Storage::url($item->metode_kerja);
+            $item->metode_kerja = $item->metode_kerja != null ? Storage::url($item->metode_kerja) : null;
+            $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
+            $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
+            $item->checklist = $item->checklist != null ? Storage::url($item->checklist) : null;
 
             $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
             $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
