@@ -234,6 +234,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
+    Route::post('/updaterequest/revisikontraktor/mobile', [PermintaanController::class, 'revisiRequestKontraktorFromMobile']);
+
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
 
     Route::get('/getsatuannmp/{id}/{data}', [PermintaanController::class, 'getSatuanNmp']);
