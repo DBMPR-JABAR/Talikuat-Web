@@ -347,6 +347,130 @@ class PermintaanController extends Controller
         }
     }
 
+    public function updateRequestFromMobile(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "id_request" => "required",
+            "diajukan_tgl" => "required",
+            "lokasi_sta" => "required",
+            "volume" => "required",
+            "pelaksanaan_tgl" => "required",
+            "ci" => "required",
+            "qe" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 400,
+                'error' => $validator->getMessageBag()->getMessages()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $tableRef = DB::table('request')->where('id', '=', $req->id_request);
+
+            $currentRequest = $tableRef->first();
+
+            $tableRef->update([
+                'diajukan_tgl' => date('Y-m-d', strtotime($req->diajukan_tgl)),
+                'lokasi_sta' => $req->lokasi_sta,
+                'volume' => $req->volume,
+                'pelaksanaan_tgl' => date('Y-m-d', strtotime($req->pelaksanaan_tgl)),
+                'ci' => $req->ci,
+                'qe' => $req->qe,
+            ]);
+
+            if ($req->file('sketsa') != null) {
+                $file = $req->file('sketsa');
+                $name = time() . "_" . $file->getClientOriginalName();
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+                $tableRef->update([
+                    'sketsa' => $this->PATH_FILE_DB . '/' . $name
+                ]);
+                Storage::delete($currentRequest->sketsa);
+            }
+
+            if ($req->file('metode_kerja') != null) {
+                $file = $req->file('metode_kerja');
+                $name = time() . "_" . $file->getClientOriginalName();
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+                $tableRef->update([
+                    "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
+                ]);
+                Storage::delete($currentRequest->metode_kerja);
+            }
+
+            DB::table('detail_request_bahan')->where('id_request', '=', $req->id_request)->delete();
+            if ($req->input('bahan') != null && $req->input('bahan') != 'null') {
+                foreach (json_decode($req->input('bahan')) as $item_bahan) {
+                    DB::table('detail_request_bahan')->insert([
+                        'id_request' => $req->id_request,
+                        'bahan' => $item_bahan->bahan,
+                        'volume' => $item_bahan->volume,
+                        'satuan' => $item_bahan->satuan
+                    ]);
+                }
+            }
+
+            DB::table('detail_request_peralatan')->where('id_request', '=', $req->id_request)->delete();
+            if ($req->input('alat') != null && $req->input('alat') != 'null') {
+                foreach (json_decode($req->input('alat')) as $item_alat) {
+                    DB::table('detail_request_peralatan')->insert([
+                        'id_request' => $req->id_request,
+                        'jenis_peralatan' => $item_alat->jenis_peralatan,
+                        'jumlah' => $item_alat->jumlah,
+                        'satuan' => $item_alat->satuan
+                    ]);
+                }
+            }
+
+            DB::table('detail_request_tkerja')->where('id_request', '=', $req->id_request)->delete();
+            if ($req->input('pekerja') != null && $req->input('pekerja') != 'null') {
+                foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
+                    DB::table('detail_request_tkerja')->insert([
+                        'id_request' => $req->id_request,
+                        'tenaga_kerja' => $item_pekerja->tenaga_kerja,
+                        'jumlah' => $item_pekerja->jumlah
+                    ]);
+                }
+            }
+
+            DB::table('detail_request_jmf')->where('id_request', '=', $req->id_request)->delete();
+            if ($req->input('campuran') != null && $req->input('campuran') != 'null') {
+                foreach (json_decode($req->input('campuran')) as $item_campuran) {
+                    DB::table('detail_request_jmf')->insert([
+                        'id_request' => $req->id_request,
+                        'bahan_jmf' => $item_campuran->bahan_jmf,
+                        'volume' => $item_campuran->volume,
+                        'satuan' => $item_campuran->satuan,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 201,
+                'result' => 'Request pekerjaan berhasil diupdate'
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $error) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'failed',
+                'code' => 500,
+                'error' => $error->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function buatRequest(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');

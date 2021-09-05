@@ -218,6 +218,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/updaterequest', [PermintaanController::class, 'updateRequest']);
 
+    Route::post('/updateRequestFromMobile', [PermintaanController::class, 'updateRequestFromMobile']);
+
     Route::post('/sendRequestPekerjaanFromMobile', [PermintaanController::class, 'sendRequestPekerjaanFromMobile']);
 
     Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
