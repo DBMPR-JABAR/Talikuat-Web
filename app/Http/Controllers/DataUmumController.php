@@ -844,4 +844,8 @@ class DataUmumController extends Controller
                 break;
         }
     }
+
+    public function getProgressPekerjaan() {
+
+    }
 }
