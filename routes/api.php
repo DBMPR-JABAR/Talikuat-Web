@@ -267,6 +267,8 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/kontraktor/editlaporan/mobile', [LaporanController::class, 'editLaporanFromMobile']);
 
+    Route::post('/kontraktor/revisilaporan/mobile', [LaporanController::class, 'revisiLaporanKontraktorFromMobile']);
+
     Route::post('/sendlaporan/mobile', [LaporanController::class, 'sendLaporanFromMobile']);
 
     Route::post('/sendlaporan', [LaporanController::class, 'sendLaporan']);

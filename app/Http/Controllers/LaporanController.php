@@ -462,8 +462,6 @@ class LaporanController extends Controller
             $currentReport = $tableRef->first();
             $request = DB::table('request')->where('id', '=', $currentReport->id_request)->first();
 
-//            dd($request->field_team_konsultan);
-
             if ($req->file('gambar')) {
                 $file = $req->file('gambar');
                 $name = time() . "_" . $file->getClientOriginalName();
@@ -577,6 +575,184 @@ class LaporanController extends Controller
                     ]);
                 }
             }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 201,
+                'result' => "Berhasil mengubah laporan harian"
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 500,
+                'result' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function revisiLaporanKontraktorFromMobile(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "id" => "required",
+            "tanggal" => "required",
+            "volume" => "required",
+            "sta_awal" => "required",
+            "sta_akhir" => "required",
+            "ki_ka" => "required",
+            "keterangan" => "required",
+            "bobot" => "required",
+            "list_bahan_material" => "json",
+            "list_peralatan" => "json",
+            "list_bahan_hotmix" => "json",
+            "list_bahan_beton" => "json",
+            "list_pekerja" => "json",
+            "list_cuaca" => "json"
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'success',
+                'code' => 400,
+                'result' => $validator->errors()->first()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $tableRef = DB::table('master_laporan_harian')->where('no_trans', '=', $req->id);
+            $currentReport = $tableRef->first();
+            $request = DB::table('request')->where('id', '=', $currentReport->id_request)->first();
+
+            $tableRef->update([
+                "tanggal" => $req->tanggal,
+                "tgl_update" => Carbon::now(),
+                "ket" => $req->keterangan,
+                "bobot" => floatval($req->bobot),
+                "status" => 1,
+                "ditolak" => 0,
+                "field_team_konsultan" => $request->field_team_konsultan
+            ]);
+
+            if ($req->file('gambar')) {
+                $file = $req->file('gambar');
+                $name = time() . "_" . $file->getClientOriginalName();
+                Storage::delete($currentReport->gambar);
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+                $tableRef->update([
+                    'gambar' => $this->PATH_FILE_DB . '/' . $name
+                ]);
+            }
+
+            DB::table('detail_laporan_harian_pekerjaan')
+                ->where('no_trans', '=', $req->id)
+                ->update([
+                    "sta_awal" => $req->sta_awal,
+                    "sta_akhir" => $req->sta_akhir,
+                    "ki_ka" => $req->ki_ka,
+                    "volume" => $req->volume,
+                    "ket" => $req->keterangan,
+                    "tgl" => $req->tanggal,
+                    "bobot" => floatval($req->bobot),
+                ]);
+
+            DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->id)->delete();
+            if ($req->list_bahan_material != null) {
+                foreach (json_decode($req->list_bahan_material) as $bahan_material) {
+                    DB::table('detail_laporan_harian_bahan')->insert([
+                        "no_trans" => $req->id,
+                        "bahan" => $bahan_material->bahan,
+                        "volume" => $bahan_material->volume,
+                        "satuan" => $bahan_material->satuan
+                    ]);
+                }
+            }
+
+            DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->id)->delete();
+            if ($req->list_peralatan != null) {
+                foreach (json_decode($req->list_peralatan) as $alat) {
+                    DB::table('detail_laporan_harian_peralatan')->insert([
+                        "no_trans" => $req->id,
+                        "jenis_peralatan" => $alat->jenis_peralatan,
+                        "jumlah" => $alat->jumlah,
+                        "satuan" => $alat->satuan
+                    ]);
+                }
+            }
+
+            DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->id)->delete();
+            if ($req->list_bahan_hotmix != null) {
+                foreach (json_decode($req->list_bahan_hotmix) as $hotmix) {
+                    DB::table('detail_laporan_harian_hotmix')->insert([
+                        "no_trans" => $req->id,
+                        "bahan_hotmix" => $hotmix->bahan_hotmix,
+                        "no_dt" => $hotmix->no_dt,
+                        "waktu_datang" => $hotmix->waktu_datang,
+                        "waktu_hampar" => $hotmix->waktu_hampar,
+                        "suhu_datang" => $hotmix->suhu_datang,
+                        "suhu_hampar" => $hotmix->suhu_hampar,
+                        "pro_p" => $hotmix->pro_p,
+                        "pro_i" => $hotmix->pro_i,
+                        "pro_t" => $hotmix->pro_t,
+                        "ket" => $hotmix->ket
+                    ]);
+                }
+            }
+
+            DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $req->id)->delete();
+            if ($req->list_bahan_beton != null) {
+                foreach (json_decode($req->list_bahan_beton) as $beton) {
+                    DB::table('detail_laporan_harian_beton')->insert([
+                        "no_trans" => $req->id,
+                        "bahan_beton" => $beton->bahan_beton,
+                        "no_tm" => $beton->no_tm,
+                        "waktu_datang" => $beton->waktu_datang,
+                        "waktu_curah" => $beton->waktu_curah,
+                        "slump_test" => $beton->slump_test,
+                        "satuan" => $beton->satuan,
+                        "ket" => $beton->ket
+                    ]);
+                }
+            }
+
+            DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->id)->delete();
+            if ($req->list_pekerja != null) {
+                foreach (json_decode($req->list_pekerja) as $pekerja) {
+                    DB::table('detail_laporan_harian_tkerja')->insert([
+                        "no_trans" => $req->id,
+                        "tenaga_kerja" => $pekerja->tenaga_kerja,
+                        "jumlah" => $pekerja->jumlah,
+                    ]);
+                }
+            }
+
+            DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $req->id)->delete();
+            if ($req->list_cuaca != null) {
+                foreach (json_decode($req->list_cuaca) as $cuaca) {
+                    DB::table('detail_laporan_harian_cuaca')->insert([
+                        "no_trans" => $req->id,
+                        "cerah" => property_exists($cuaca, 'cerah') ? $cuaca->cerah : null,
+                        "hujan_ringan" => property_exists($cuaca, 'hujan_ringan') ? $cuaca->hujan_ringan : null,
+                        "hujan_lebat" => property_exists($cuaca, 'hujan_lebat') ? $cuaca->hujan_lebat : null,
+                        "bencana_alam" => property_exists($cuaca, 'bencana_alam') ? $cuaca->bencana_alam : null,
+                        "lain_lain" => property_exists($cuaca, 'lain_lain') ? $cuaca->lain_lain : null,
+                    ]);
+                }
+            }
+
+            DB::table('history_laporan')->insert([
+                "username" => $currentReport->nama_kontraktor,
+                "created_at" => Carbon::now(),
+                "keterangan" => "Laporan Telah Diupdate Oleh " . $currentReport->nama_kontraktor,
+                "user_id" => $currentReport->user,
+                "id_laporan" => $req->id,
+                "class" => "kirim"
+            ]);
 
             DB::commit();
 
