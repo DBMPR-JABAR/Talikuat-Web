@@ -428,8 +428,7 @@ class LaporanController extends Controller
 
     }
 
-    public
-    function editLaporanFromMobile(Request $req)
+    public function editLaporanFromMobile(Request $req)
     {
         $validator = Validator::make($req->all(), [
             "id" => "required",
@@ -598,8 +597,7 @@ class LaporanController extends Controller
         }
     }
 
-    public
-    function editLaporan(Request $req)
+    public function editLaporan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -730,8 +728,7 @@ class LaporanController extends Controller
         ], 200);
     }
 
-    public
-    function sendLaporanFromMobile(Request $req)
+    public function sendLaporanFromMobile(Request $req)
     {
         $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
         if ($get_data->ditolak == 1) {
@@ -771,8 +768,7 @@ class LaporanController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public
-    function sendLaporan(Request $req)
+    public function sendLaporan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
@@ -811,8 +807,7 @@ class LaporanController extends Controller
         ]);
     }
 
-    public
-    function responKonsultan(Request $req)
+    public function responKonsultan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
@@ -880,8 +875,7 @@ class LaporanController extends Controller
         }
     }
 
-    public
-    function responKonsultanFromMobile(Request $req)
+    public function responKonsultanFromMobile(Request $req)
     {
         $validator = Validator::make($req->all(), [
             // Data Umum
@@ -900,7 +894,7 @@ class LaporanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($req->isAccepted == true) {
+        if ($req->isAccepted == "true") {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
@@ -955,8 +949,7 @@ class LaporanController extends Controller
         }
     }
 
-    public
-    function responPpk(Request $req)
+    public function responPpk(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
@@ -1028,8 +1021,7 @@ class LaporanController extends Controller
         }
     }
 
-    public
-    function responPpkFromMobile(Request $req)
+    public function responPpkFromMobile(Request $req)
     {
         $validator = Validator::make($req->all(), [
             // Data Umum
@@ -1048,7 +1040,7 @@ class LaporanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($req->isAccepted == true) {
+        if ($req->isAccepted == "true") {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
@@ -1104,8 +1096,7 @@ class LaporanController extends Controller
         }
     }
 
-    public
-    function responRevisiKonsultan(Request $req)
+    public function responRevisiKonsultan(Request $req)
     {
         if ($req->option == 'PPK') {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
@@ -1164,8 +1155,7 @@ class LaporanController extends Controller
         }
     }
 
-    public
-    function deleteLaporan(Request $req)
+    public function deleteLaporan(Request $req)
     {
         $validator = Validator::make($req->all(), [
             "alasan" => "required"
@@ -1194,8 +1184,7 @@ class LaporanController extends Controller
         ]);
     }
 
-    public
-    function pembandingRelasi(Request $req)
+    public function pembandingRelasi(Request $req)
     {
 
         $jadual = DB::table('jadual')->where('id', $req->id)->first();
