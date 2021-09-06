@@ -1771,7 +1771,7 @@ class PermintaanController extends Controller
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
                 "class" => "sukses",
-                "keterangan" => "Request Telah Disetujui Oleh " . $req->konsultan,
+                "keterangan" => "Revisi Request Telah Dikirim Oleh " . $req->konsultan,
                 "created_at" => \Carbon\Carbon::now()
             ]);
 
@@ -1848,7 +1848,7 @@ class PermintaanController extends Controller
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
                 "class" => "reject",
-                "keterangan" => "Request Telah Ditolak Oleh " . $req->konsultan,
+                "keterangan" => "Request Dikembalikan ke Penyedia Oleh " . $req->konsultan,
                 "created_at" => \Carbon\Carbon::now()
             ]);
 
