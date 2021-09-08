@@ -152,5 +152,5 @@ Route::prefix('admin')->group(function () {
 
 
 Route::get('/email', function () {
-    return view('email_request');
+    return view('email_memo');
 });

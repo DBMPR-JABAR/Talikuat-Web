@@ -474,7 +474,7 @@ class PermintaanController extends Controller
     }
 
     public function buatRequest(Request $req)
-    {
+    {   
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
             // Data Umum
@@ -493,85 +493,170 @@ class PermintaanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
-        $getTeam = DB::table('jadual')->where('id', $req->id_jadual)->first();
+        if ($req->adendum == null) {
+            $getTeam = DB::table('jadual')->where('id', $req->id_jadual)->first();
+        }else{
+            $getTeam = DB::table('jadual_adendum')->where('id', $req->id_jadual)->first();
+        }
         DB::beginTransaction();
         try {
-            DB::table('jadual')->where('id', $req->id_jadual)->update([
-                "tgl_req" => \Carbon\Carbon::now()
-            ]);
-            $file = $req->file('sketsa');
-            $name = time() . "_" . $file->getClientOriginalName();
-
-            $id = DB::table('request')->insertGetId([
-                "user_id" => $req->userId,
-                "nama_kegiatan" => $req->kegiatan,
-                "unor" => $req->unor,
-                "jenis_pekerjaan" => $req->jenis_pekerjaan,
-                "diajukan_tgl" => $req->diajukan_tgl,
-                "lokasi_sta" => $req->lokasi_sta,
-                "volume" => $req->perkiraan_volume,
-                "satuan" => $req->satuan,
-                "pelaksanaan_tgl" => $req->pelaksanaan_tgl,
-                "ci" => $req->ci,
-                "qe" => $req->qe,
-                "nama_kontraktor" => $req->penyedia_jasa,
-                "nama_direksi" => $req->konsultan,
-                "nama_ppk" => $req->nm_ppk,
-                "sketsa" => $this->PATH_FILE_DB . "/" . $name,
-                "id_jadual" => $req->id_jadual,
-                "tgl_input" => \Carbon\Carbon::now(),
-                "field_team_konsultan" => $getTeam->field_team_konsultan
-            ]);
-            Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-
-            if ($req->jenis_peralatan) {
-                for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-                    DB::table('detail_request_peralatan')->insert([
-                        "id_request" => $id,
-                        "jenis_peralatan" => $req->jenis_peralatan[$i],
-                        "jumlah" => $req->jumlah_peralatan[$i],
-                        "satuan" => $req->satuan_peralatan[$i]
-                    ]);
-                }
-            }
-            if ($req->bahan) {
-                for ($i = 0; $i < count($req->bahan); $i++) {
-                    DB::table('detail_request_bahan')->insert([
-                        "id_request" => $id,
-                        "bahan" => $req->bahan[$i],
-                        "volume" => $req->volume_bahan[$i],
-                        "satuan" => $req->satuan_bahan[$i]
-                    ]);
-                }
-            }
-            if ($req->tenaga_kerja) {
-                for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-                    DB::table('detail_request_tkerja')->insert([
-                        "id_request" => $id,
-                        "tenaga_kerja" => $req->tenaga_kerja[$i],
-                        "jumlah" => $req->jumlah_tk[$i],
-                    ]);
-                }
-            }
-            if ($req->bahan_jmf) {
-                for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-                    DB::table('detail_request_jmf')->insert([
-                        "id_request" => $id,
-                        "bahan_jmf" => $req->bahan_jmf[$i],
-                        "volume" => $req->volume_jmf[$i],
-                        "satuan" => $req->satuan_jmf[$i]
-                    ]);
-                }
-            }
-
-            if ($req->file('metode_kerja')) {
-                $file = $req->file('metode_kerja');
+            if($req->adendum == null){
+                DB::table('jadual')->where('id', $req->id_jadual)->update([
+                    "tgl_req" => \Carbon\Carbon::now()
+                ]);
+                $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $id)->update([
-                    "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
+                $id = DB::table('request')->insertGetId([
+                    "user_id" => $req->userId,
+                    "nama_kegiatan" => $req->kegiatan,
+                    "unor" => $req->unor,
+                    "jenis_pekerjaan" => $req->jenis_pekerjaan,
+                    "diajukan_tgl" => $req->diajukan_tgl,
+                    "lokasi_sta" => $req->lokasi_sta,
+                    "volume" => $req->perkiraan_volume,
+                    "satuan" => $req->satuan,
+                    "pelaksanaan_tgl" => $req->pelaksanaan_tgl,
+                    "ci" => $req->ci,
+                    "qe" => $req->qe,
+                    "nama_kontraktor" => $req->penyedia_jasa,
+                    "nama_direksi" => $req->konsultan,
+                    "nama_ppk" => $req->nm_ppk,
+                    "sketsa" => $this->PATH_FILE_DB . "/" . $name,
+                    "id_jadual" => $req->id_jadual,
+                    "tgl_input" => \Carbon\Carbon::now(),
+                    "field_team_konsultan" => $getTeam->field_team_konsultan
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    
+                if ($req->jenis_peralatan) {
+                    for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
+                        DB::table('detail_request_peralatan')->insert([
+                            "id_request" => $id,
+                            "jenis_peralatan" => $req->jenis_peralatan[$i],
+                            "jumlah" => $req->jumlah_peralatan[$i],
+                            "satuan" => $req->satuan_peralatan[$i]
+                        ]);
+                    }
+                }
+                if ($req->bahan) {
+                    for ($i = 0; $i < count($req->bahan); $i++) {
+                        DB::table('detail_request_bahan')->insert([
+                            "id_request" => $id,
+                            "bahan" => $req->bahan[$i],
+                            "volume" => $req->volume_bahan[$i],
+                            "satuan" => $req->satuan_bahan[$i]
+                        ]);
+                    }
+                }
+                if ($req->tenaga_kerja) {
+                    for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
+                        DB::table('detail_request_tkerja')->insert([
+                            "id_request" => $id,
+                            "tenaga_kerja" => $req->tenaga_kerja[$i],
+                            "jumlah" => $req->jumlah_tk[$i],
+                        ]);
+                    }
+                }
+                if ($req->bahan_jmf) {
+                    for ($i = 0; $i < count($req->bahan_jmf); $i++) {
+                        DB::table('detail_request_jmf')->insert([
+                            "id_request" => $id,
+                            "bahan_jmf" => $req->bahan_jmf[$i],
+                            "volume" => $req->volume_jmf[$i],
+                            "satuan" => $req->satuan_jmf[$i]
+                        ]);
+                    }
+                }
+    
+                if ($req->file('metode_kerja')) {
+                    $file = $req->file('metode_kerja');
+                    $name = time() . "_" . $file->getClientOriginalName();
+                    DB::table('request')->where('id', $id)->update([
+                        "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
+                    ]);
+                    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+                }
+            }else{
+                DB::table('jadual_adendum')->where('id', $req->id_jadual)->update([
+                    "tgl_req" => \Carbon\Carbon::now()
+                ]);
+                $file = $req->file('sketsa');
+                $name = time() . "_" . $file->getClientOriginalName();
+                $id = DB::table('request')->insertGetId([
+                    "user_id" => $req->userId,
+                    "nama_kegiatan" => $req->kegiatan,
+                    "unor" => $req->unor,
+                    "jenis_pekerjaan" => $req->jenis_pekerjaan,
+                    "diajukan_tgl" => $req->diajukan_tgl,
+                    "lokasi_sta" => $req->lokasi_sta,
+                    "volume" => $req->perkiraan_volume,
+                    "satuan" => $req->satuan,
+                    "pelaksanaan_tgl" => $req->pelaksanaan_tgl,
+                    "ci" => $req->ci,
+                    "qe" => $req->qe,
+                    "nama_kontraktor" => $req->penyedia_jasa,
+                    "nama_direksi" => $req->konsultan,
+                    "nama_ppk" => $req->nm_ppk,
+                    "adendum"=>$req->adendum,
+                    "id_data_umum_adendum"=>$req->id_data_umum_adendum,
+                    "sketsa" => $this->PATH_FILE_DB . "/" . $name,
+                    "id_jadual" => $req->id_jadual,
+                    "tgl_input" => \Carbon\Carbon::now(),
+                    "field_team_konsultan" => $getTeam->field_team_konsultan
+                ]);
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+    
+                if ($req->jenis_peralatan) {
+                    for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
+                        DB::table('detail_request_peralatan')->insert([
+                            "id_request" => $id,
+                            "jenis_peralatan" => $req->jenis_peralatan[$i],
+                            "jumlah" => $req->jumlah_peralatan[$i],
+                            "satuan" => $req->satuan_peralatan[$i]
+                        ]);
+                    }
+                }
+                if ($req->bahan) {
+                    for ($i = 0; $i < count($req->bahan); $i++) {
+                        DB::table('detail_request_bahan')->insert([
+                            "id_request" => $id,
+                            "bahan" => $req->bahan[$i],
+                            "volume" => $req->volume_bahan[$i],
+                            "satuan" => $req->satuan_bahan[$i]
+                        ]);
+                    }
+                }
+                if ($req->tenaga_kerja) {
+                    for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
+                        DB::table('detail_request_tkerja')->insert([
+                            "id_request" => $id,
+                            "tenaga_kerja" => $req->tenaga_kerja[$i],
+                            "jumlah" => $req->jumlah_tk[$i],
+                        ]);
+                    }
+                }
+                if ($req->bahan_jmf) {
+                    for ($i = 0; $i < count($req->bahan_jmf); $i++) {
+                        DB::table('detail_request_jmf')->insert([
+                            "id_request" => $id,
+                            "bahan_jmf" => $req->bahan_jmf[$i],
+                            "volume" => $req->volume_jmf[$i],
+                            "satuan" => $req->satuan_jmf[$i]
+                        ]);
+                    }
+                }
+    
+                if ($req->file('metode_kerja')) {
+                    $file = $req->file('metode_kerja');
+                    $name = time() . "_" . $file->getClientOriginalName();
+                    DB::table('request')->where('id', $id)->update([
+                        "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
+                    ]);
+                    Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+                }
+
             }
+            
             DB::commit();
             return response()->json([
                 "code" => 200
@@ -1899,8 +1984,13 @@ class PermintaanController extends Controller
 
     public function getSatuanNmp($id, $data)
     {
+        $res = DB::table('jadual')->where([['nmp', $id], ['id_data_umum', $data]])->first();
+        if($res == null){
+            $res = DB::table('jadual_adendum')->where([['nmp', $id], ['id_data_umum', $data]])->first();
+        }
+
         return response()->json([
-            DB::table('jadual')->where([['nmp', $id], ['id_data_umum', $data]])->first()
+            $res
         ]);
     }
 

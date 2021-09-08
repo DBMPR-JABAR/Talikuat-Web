@@ -11,6 +11,7 @@ use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
 use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\MemoControllers;
 use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
@@ -420,5 +421,13 @@ Route::prefix('utils')->group(function () {
 
     Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
     Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
+
+});
+Route::prefix('memo')->group(function () {
+
+    Route::post('/konsultan/kirim', [MemoControllers::class, 'store']);
+    Route::post('/cek-memo', [MemoControllers::class, 'cekMemo']);
+    Route::post('/read/{id}', [MemoControllers::class, 'update']);
+    Route::post('/respon/{id}', [MemoControllers::class, 'responMemo']);
 
 });
