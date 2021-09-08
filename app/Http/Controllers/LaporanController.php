@@ -921,6 +921,11 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+            }
         } else {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Laporan Di Kirim">&nbsp;</span></a>',
@@ -935,6 +940,10 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+            }
         }
 
         return response()->json([
@@ -962,6 +971,10 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+            }
         } else {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Laporan Di Kirim">&nbsp;</span></a>',
@@ -976,6 +989,10 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+            }
         }
 
         return response()->json([
@@ -996,6 +1013,7 @@ class LaporanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
         if ($req->laporan == 1) {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
@@ -1019,6 +1037,17 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1045,6 +1074,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1069,6 +1104,8 @@ class LaporanController extends Controller
                 'error' => $validator->errors()->first()
             ], Response::HTTP_BAD_REQUEST);
         }
+
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->isAccepted == "true") {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
@@ -1096,6 +1133,17 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1125,6 +1173,10 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1146,6 +1198,7 @@ class LaporanController extends Controller
             ], 400);
         }
 
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->laporan == 1) {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
@@ -1171,6 +1224,17 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+            }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1197,6 +1261,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1221,6 +1291,8 @@ class LaporanController extends Controller
                 'error' => $validator->errors()->first()
             ], Response::HTTP_BAD_REQUEST);
         }
+
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->isAccepted == "true") {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
@@ -1249,6 +1321,17 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+            }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1278,6 +1361,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1286,6 +1375,8 @@ class LaporanController extends Controller
 
     public function responRevisiKonsultan(Request $req)
     {
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+
         if ($req->option == 'PPK') {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
@@ -1310,6 +1401,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1337,6 +1434,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1362,6 +1465,8 @@ class LaporanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+
         if ($req->isAccepted == "true") {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
@@ -1386,6 +1491,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
@@ -1412,6 +1523,12 @@ class LaporanController extends Controller
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
+
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+            }
+
             return response()->json([
                 "code" => 200
             ], 200);
