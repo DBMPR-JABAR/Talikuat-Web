@@ -268,6 +268,8 @@ Route::prefix('laporan')->group(function () {
 
     Route::post('/kontraktor/editlaporan/mobile', [LaporanController::class, 'editLaporanFromMobile']);
 
+    Route::post('/kontraktor/revisilaporan/mobile', [LaporanController::class, 'revisiLaporanKontraktorFromMobile']);
+
     Route::post('/sendlaporan/mobile', [LaporanController::class, 'sendLaporanFromMobile']);
 
     Route::post('/sendlaporan', [LaporanController::class, 'sendLaporan']);
@@ -281,6 +283,8 @@ Route::prefix('laporan')->group(function () {
     Route::post('/response/ppk/mobile', [LaporanController::class, 'responPpkFromMobile']);
 
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
+
+    Route::post('/respon/revisikonsultan/mobile', [LaporanController::class, 'responRevisiKonsultanFromMobile']);
 
     Route::post('/delete', [LaporanController::class, 'deleteLaporan']);
 
