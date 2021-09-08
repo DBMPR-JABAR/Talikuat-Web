@@ -209,11 +209,6 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } else {
-                    return response()->json([
-                        "code" => 200,
-                        "memo" => 'null'
-                    ], 200);
                 }
             }
             if ($req->role == 'KONTRAKTOR') {
@@ -222,12 +217,7 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } else {
-                    return response()->json([
-                        "code" => 200,
-                        "memo" => 'null'
-                    ], 200);
-                }
+                } 
             }
             if ($req->role == 'ADMIN-UPTD') {
                 if ($memo->admin_readed == 0) {
@@ -235,12 +225,7 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } else {
-                    return response()->json([
-                        "code" => 200,
-                        "memo" => 'null'
-                    ], 200);
-                }
+                } 
             }
             if ($req->role == 'KONSULTAN') {
                 if ($memo->konsultan_readed == 0) {
@@ -248,12 +233,7 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } else {
-                    return response()->json([
-                        "code" => 200,
-                        "memo" => 'null'
-                    ], 200);
-                }
+                } 
             }
         }
         return response()->json([

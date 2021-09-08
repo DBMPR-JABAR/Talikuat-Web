@@ -41,6 +41,7 @@ class DataUmumAdendum extends Controller
             ], 500);
         }
     }
+
     public function getNmpJadual($id)
     {
         return response()->json(
