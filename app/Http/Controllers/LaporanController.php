@@ -1375,7 +1375,7 @@ class LaporanController extends Controller
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
                 "ditolak" => 0,
-                "catatan" => $req->catatan
+                "catatan_konsultan" => $req->catatan
             ]);
             DB::table('history_laporan')->insert([
                 "username" => $req->konsultan,
@@ -1408,7 +1408,7 @@ class LaporanController extends Controller
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "status" => 1,
                 "ditolak" => 1,
-                "catatan" => $req->catatan
+                "catatan_konsultan" => $req->catatan
             ]);
             DB::table('history_laporan')->insert([
                 "username" => $req->konsultan,
@@ -1429,7 +1429,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
