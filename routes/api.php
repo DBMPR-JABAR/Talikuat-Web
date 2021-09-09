@@ -368,6 +368,7 @@ Route::prefix('data-umum')->group(function () {
     Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
 
     Route::post('/linkspekumum', [UploadController::class, 'fileSpekUmum']);
+    Route::post('/linkgambar', [UploadController::class, 'fileGambarRencana']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {

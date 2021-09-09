@@ -700,7 +700,7 @@ class MergePdf extends Controller
         $spek_umum = DB::table('file_spek_umum_update')->select('id', 'file_spek_umum_update')->where('id_data_umum', $id)->get();
         $jaminan = DB::table('file_jaminan_update')->select('id', 'file_jaminan_update')->where('id_data_umum', $id)->get();
         $spkmp = DB::table('file_spkmp_update')->select('id', 'file_spkmp_update')->where('id_data_umum', $id)->get();
-
+        $linkGmbr = DB::table('file_rencana_link')->select('id', 'file_rencana_link')->where('id_data_umum', $id)->get();
         $merge_dkh = array();
         $merge_kontrak = array();
         $merge_spmk = array();
@@ -713,6 +713,7 @@ class MergePdf extends Controller
         $merge_spek_umum = array();
         $merge_jaminan = array();
         $merge_spkmp = array();
+        $merge_gmbr = array();
 
         foreach ($dkh as $value) {
             array_push($merge_dkh, $value);
@@ -761,6 +762,9 @@ class MergePdf extends Controller
         foreach ($spkmp as $value) {
             array_push($merge_spkmp, $value);
         }
+        foreach ($linkGmbr as $value) {
+            array_push($merge_gmbr, $value);
+        }
 
         return response()->json([
             "file_dkh" => $merge_dkh,
@@ -774,7 +778,8 @@ class MergePdf extends Controller
             "file_spl" => $merge_spl,
             "file_spek_umum" => $merge_spek_umum,
             "file_jaminan" => $merge_jaminan,
-            "file_spkmp" => $merge_spkmp
+            "file_spkmp" => $merge_spkmp,
+            'link_gambar'=>$merge_gmbr
 
         ], 200);
     }
