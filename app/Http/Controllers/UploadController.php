@@ -834,4 +834,18 @@ class UploadController extends Controller
       ],200);
 
     }
+    public function fileGambarRencana(Request $req)
+    {
+      DB::table('file_rencana_link')->insert([
+        "id_data_umum"=>$req->id,
+        "file_rencana_link"=>$req->link_rencana,
+        "created_at"=>\Carbon\Carbon::now()
+      ]);
+      
+      return response()->json([
+        'code'=>200,
+        'status'=>'Data Sudah Di Simpan'
+      ],200);
+
+    }
 }

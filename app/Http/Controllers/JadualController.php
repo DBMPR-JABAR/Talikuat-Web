@@ -485,12 +485,13 @@ class JadualController extends Controller
             'code' => '200',
             'result' => 'Data Tersimpan'
         ]);
-        }catch (\Throwable $th) {
+        }catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 'Failed',
                 'code' => '201',
-                'result' => 'Data Gagal'
+                'result' => 'Data Gagal',
+                'message'=>$e->getMessage()
             ],201);
         }
     }
