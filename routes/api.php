@@ -434,5 +434,7 @@ Route::prefix('memo')->group(function () {
     Route::post('/cek-memo', [MemoControllers::class, 'cekMemo']);
     Route::post('/read/{id}', [MemoControllers::class, 'update']);
     Route::post('/respon/{id}', [MemoControllers::class, 'responMemo']);
+    Route::post('/cek-konsultan',[MemoControllers::class, 'cekMemoKonsultan']);
+    Route::post('/read-konsultan',[MemoControllers::class, 'readKonsultan']);
 
 });

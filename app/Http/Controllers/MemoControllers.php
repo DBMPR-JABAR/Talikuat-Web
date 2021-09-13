@@ -242,6 +242,32 @@ class MemoControllers extends Controller
         ], 200);
     }
 
+    public function cekMemoKonsultan(Request $req)
+    {  
+        $cek = DB::table('memo')->where('nm_pengirim',$req->nm)->get();
+        foreach ($cek as $c) {
+            if ($c->respon_memo != null && $c->konsultan_readed == null) {
+                return response()->json([
+                    "code" => 200,
+                    "memo" => $c
+                ], 200);
+            }else{
+                return response()->json([
+                    "code" => 200,
+                    "memo" => 'null'
+                ], 200); 
+            }
+        }
+    }
+
+    public function readKonsultan(Request $req)
+    {
+        DB::table('memo')->where('respon_memo',$req->text)->update([
+            "konsultan_readed"=> 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
+        ]);
+
+    }
+
     public function responMemo(Request $req, $id)
     {   
         
