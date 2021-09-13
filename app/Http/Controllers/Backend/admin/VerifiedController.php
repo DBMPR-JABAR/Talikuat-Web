@@ -23,20 +23,23 @@ class VerifiedController extends Controller
         ]);
         $message = "Field Team Has Been Rejected !";
         $data = KonsultanFt::find($id);
-        
         if($request->verified == 1){
             $update_user['account_verified_at'] = Carbon::now()->toDateTimeString();
             $data->ft_verified_at = Carbon::now()->toDateTimeString();
             $message = "Field Team Has Been Verified!";
             $data->user_se_detail()->update($update_user);
             $data->user_ie_detail()->update($update_user);
-        }
+            storeLogActivity(declarLog(7, 'Field Team', $data->konsultan->nama.'- SE '.$data->user_se_detail->user->email.': Accepted',1 ));
+        }else
+            storeLogActivity(declarLog(7, 'Field Team', $data->konsultan->nama.'- SE '.$data->user_se_detail->user->email.': Rejected',1 ));
+
         $data->save();
         if($data){
-
             return redirect(route('user.ft.index'))->with(['success'=> $message]);
-        }else
-        return redirect(route('user.ft.index'))->with(['Error'=>'Failed Verification!']);
+        }else{
+            storeLogActivity(declarLog(7, 'Field Team', $data->konsultan->nama.'- SE '.$data->user_se_detail->user->email));
+            return redirect(route('user.ft.index'))->with(['Error'=>'Failed Verification!']);
+        }
 
             
     }

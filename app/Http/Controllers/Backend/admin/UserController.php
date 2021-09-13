@@ -92,18 +92,22 @@ class UserController extends Controller
         
                 ]);
 
-            }else
+            }else{
+                storeLogActivity(declarLog(1, 'Users', $request->email));
                 return back()->with(['error' => 'The email has already been taken.']);
+            }
         }else{
             $validator = Validator::make($request->all(), [
                 'email' => 'email|required|string|unique:db_users_dbmpr.users',
                 'password' => 'confirmed',
                 'name'=> 'required',
                 'no_tlp'=> '',
-                'rule' => 'required',
+                'rule'=>'required'
             ]);
         }
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'Users', $request->email.' '.$validator->messages()->first()));
+
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $create_user = User::firstOrNew(['email'=> $request->email]);
@@ -120,6 +124,7 @@ class UserController extends Controller
         $create_profile->save();
 
         $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id])->save();
+        storeLogActivity(declarLog(1, 'Users', $request->email,1 ));
 
         return redirect(route('user.index'))->with(['success'=>'Berhasil Menambahkan User!!']);
 
@@ -321,11 +326,14 @@ class UserController extends Controller
         //
         
         if($desc == 'account'){
+            $email = $request->input('email');
+
             $validator = Validator::make($request->all(), [
                 'email' => Rule::unique('db_users_dbmpr.users', 'email')->ignore($id),
                 'password'   => 'confirmed'
             ]);
             if ($validator->fails()) {
+                storeLogActivity(declarLog(2, 'Users', $email.': '.$validator->messages()->first() ));
                 return back()->with(['error'=>$validator->messages()->first()]);
             }
 
@@ -338,7 +346,6 @@ class UserController extends Controller
             $success = "Akun Berhasil Diupdate!";
             $failed = "Akun Gagal Diupdate!";
             $update_user = User::find($id)->update($data);
-
         }else if($desc == 'profiles'){
             
             $this->validate($request,[
@@ -362,8 +369,10 @@ class UserController extends Controller
             // dd($id);
 
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
+            $email = $update_user->user->email;
 
             if($request->nik == null && $request->nip == null){
+                storeLogActivity(declarLog(2, 'Users', $email ));
                 return back()->with(['warning'=>'NIP / NIK salah satu wajib di isi!']);
             }
             if($request->nik != null)
@@ -372,8 +381,10 @@ class UserController extends Controller
             if($request->nip != null)
                 $validator = Validator::make($request->all(), ['nip' => Rule::unique('db_users_dbmpr.user_profiles', 'nip')->ignore($update_user->id)]);
             
-            if ($validator->fails())
+            if ($validator->fails()){
+                storeLogActivity(declarLog(2, 'Users', $email.': '.$validator->messages()->first() ));
                 return back()->with(['error'=>$validator->messages()->first()]);
+            }
             
             $update_user->nama = $request->input('nama');
             $update_user->nip = $request->input('nip');
@@ -408,13 +419,14 @@ class UserController extends Controller
                 $update_deet->kontraktor_id = $request->input('kontraktor');
             
             $update_deet->save();
-
             // dd($id);
             
 
         }
         if($update_user){
             //redirect dengan pesan sukses
+            storeLogActivity(declarLog(2, 'Users', $email.': '.$desc,1 ));
+
             if(!Auth::user()->user_detail->account_verified_at){
                 Auth::logout();
                 return redirect('/')->with(['success'=>'Data Berhasil Disimpan, Selanjutnya Hubungi Admin Untuk Verifikasi Akun']); 
@@ -432,6 +444,7 @@ class UserController extends Controller
         if($id != Auth::user()->id){
             $color = "error";
             $msg = "Somethink when wrong!";
+            storeLogActivity(declarLog(2, 'Self Users', Auth::user()->email.': Ilegal Access'));
             return back()->with(compact('color', 'msg'));
             // return redirect('admin/user/profile/'. auth()->user()->id)->with(['error' => 'Somethink when wrong!']);
         }else{
@@ -446,6 +459,7 @@ class UserController extends Controller
                     'password'   => 'confirmed'
                 ]);
                 if ($validator->fails()) {
+                    storeLogActivity(declarLog(2, 'Self Users', Auth::user()->email.': '.$validator->messages()->first()));
                     return redirect(route('profile', $id))->with(['error'=>$validator->messages()->first()]);
                 }
 
@@ -460,14 +474,16 @@ class UserController extends Controller
                 $updateaccount = User::find($id)->update($useraccount);
                 if($updateaccount){
                     //redirect dengan pesan sukses
+                    storeLogActivity(declarLog(2, 'Self Users', Auth::user()->email.': account', 1));
                        
                     return redirect(route('profile', $id))->with(['success'=>'Akun Berhasil Diupdate!']);
                 }else{
                     //redirect dengan pesan error
-                   
+                    storeLogActivity(declarLog(2, 'Self Users', Auth::user()->email));
                     return redirect(route('profile', $id))->with(['error'=>'Akun Gagal Diupdate!']);
                 }
             }else{
+                storeLogActivity(declarLog(2, 'Self Users', Auth::user()->email.': Wrong Password' ));
                 
                 return back()->with(['error'=>'Password Lama Salah']);
             }
@@ -500,9 +516,11 @@ class UserController extends Controller
         $user = UserDetail::find($id);
         if($desc == 'restore'){
             $user->is_delete = null;
+            storeLogActivity(declarLog(4, 'Users', $user->user->email,1 ));
             $message = 'Data Berhasil Dikembalikan! ';
         }elseif($desc == 'move_to_trash'){
             $user->is_delete = 1;
+            storeLogActivity(declarLog(3, 'Users', $user->user->email,1 ));
             $message = 'Data Berhasil di Pindahkan! ';
         }
         $user->save();
@@ -522,8 +540,12 @@ class UserController extends Controller
         ]);
         $update_detail = UserDetail::firstOrNew(['user_id'=> $id]);
         $update_detail->rule_user_id = $request->rule_user;
-        if($request->verified == 1)
+        if($request->verified == 1){
             $update_detail->account_verified_at = Carbon::now()->toDateTimeString();
+            storeLogActivity(declarLog(7, 'Users', $update_detail->user->email.': Accepted',1 ));
+        }else{
+            storeLogActivity(declarLog(7, 'Users', $update_detail->user->email.': Rejected',1 ));
+        }
         
         $update_detail->save();
         if($update_detail){

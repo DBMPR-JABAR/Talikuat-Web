@@ -280,6 +280,15 @@
                             <span class="menu-title">Pusat Unduhan</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{{ route('log.index') }}"
+                        >
+                            <i class="mdi mdi-alert-octagon menu-icon"></i>
+                            <span class="menu-title">LOG</span>
+                        </a>
+                    </li>
                     <li class="nav-item sidebar-actions">
                         <a
                             class="nav-link mt-4"
@@ -500,6 +509,19 @@
                                     </a>
                                     <a
                                         class="dropdown-item"
+                                        href="{{ route('log.user.index',Auth::user()->user_detail->id) }}"
+                                    >
+                                        <i
+                                            class="
+                                                mdi mdi-alert-octagon
+                                                mr-2
+                                                text-success
+                                            "
+                                        ></i>
+                                        Log Activity
+                                    </a>
+                                    <a
+                                        class="dropdown-item"
                                         href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                     >
@@ -518,6 +540,9 @@
                                         method="POST"
                                         style="display: none"
                                     >
+                                    {{-- @php
+                                        App\Models\Backend\Log::create(['activity' => 'Logout','user_detail_id' => Auth::user()->user_detail->id, 'description' => 'User ' . Auth::user()->name . ' Logged Out From Web', 'ip_address' => request()->ip()]);
+                                    @endphp --}}
                                         @csrf
                                     </form>
                                 </div>

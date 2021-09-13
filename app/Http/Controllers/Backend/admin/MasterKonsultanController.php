@@ -56,6 +56,8 @@ class MasterKonsultanController extends Controller
            
         ]);
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'Konsultan', $request->nama));
+
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $temp =([
@@ -80,9 +82,12 @@ class MasterKonsultanController extends Controller
             //     }
                 
             // }
+            storeLogActivity(declarLog(1, 'Konsultan', $request->nama, 1));
             return redirect()->route('masterkonsultan.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(1, 'Konsultan', $request->nama));
             return redirect()->route('masterkonsultan.index')->with(['danger' => 'Data Gagal Disimpan!']);
+        }
     }
 
     /**
@@ -137,10 +142,13 @@ class MasterKonsultanController extends Controller
             'nama_direktur'=> '',
         ]);
         if ($validator->fails()) {
+            storeLogActivity(declarLog(2, 'Konsultan', $request->nama));
+
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         
         $update_konsultan = MasterKonsultan::firstOrNew(['id'=> $id]);
+        $before = $update_konsultan->nama;
         $update_konsultan->nama= $request->nama;
         $update_konsultan->alamat= $request->alamat;
         $update_konsultan->nama_direktur= $request->nama_direktur;
@@ -149,9 +157,12 @@ class MasterKonsultanController extends Controller
        
         if($update_konsultan){
             // dd($update_konsultan);
+            storeLogActivity(declarLog(2, 'Konsultan', $request->nama, 1));
             return back()->with(['success' => 'Data Berhasil Di Perbaharui!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(2, 'Konsultan', $request->nama));
             return back()->with(['danger' => 'Data Gagal Di Perbaharui!']);
+        }
 
     }
     public function store_ft_first($request, $id)
@@ -171,6 +182,7 @@ class MasterKonsultanController extends Controller
         // if ($validator->fails()) {
         //     return back()->with(['error'=>$validator->messages()->first()]);
         // }
+        $company = MasterKonsultan::find($id);
         
         $user_se = User::select('name','email','password','id')->where('email', $request->email_se)->first();
         $user_ie = User::select('name','email','password','id')->where('email', $request->email_ie)->first();
@@ -191,9 +203,12 @@ class MasterKonsultanController extends Controller
                 ]);
 
             }else if($user_se->user_detail){
+                storeLogActivity(declarLog(1, 'Field Team', $company->nama.': The email SE has already been taken' ));
                 return back()->with(['error' => 'The email SE has already been taken.']);
-            }else
+            }else{
+                storeLogActivity(declarLog(1, 'Field Team', $company->nama.': The email IE has already been taken' ));
                 return back()->with(['error' => 'The email IE has already been taken.']);
+            }
 
         }else{
             $validator = Validator::make($request->all(), [
@@ -210,6 +225,7 @@ class MasterKonsultanController extends Controller
             ]);
         }
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'Field Team', $company->nama.': '.$validator->messages()->first() ));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         // dd($id);
@@ -268,9 +284,12 @@ class MasterKonsultanController extends Controller
         ]);
         if($save_ft){
             // dd($update_konsultan);
+            storeLogActivity(declarLog(1, 'Field Team', $company->nama, 1));
             return back()->with(['success' => 'FT Berhasil Di Tambahkan!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(1, 'Field Team', $company->nama));
             return back()->with(['danger' => 'FT Gagal Di Tambahkan!']);
+        }
     }
 
     public function store_ft(Request $request, $id)
@@ -296,13 +315,17 @@ class MasterKonsultanController extends Controller
         // dd(array_count_values($request->nm_se));
         for($d=0; $d<count($request->nm_se) ;$d++){
             $count_request = count(array_keys($request->nm_se, $request->nm_se[$d]));
-            if($count_request > 1)
-            return back()->with(['error' => 'User Site Engineering Tidak Boleh Duplicate!']);
+            if($count_request > 1){
+                storeLogActivity(declarLog(2, 'Field Team', 'Swap SE - '.$request->nm_se[$d]));
+                return back()->with(['error' => 'User Site Engineering Tidak Boleh Duplicate!']);
+            }
         }
         for($d=0; $d<count($request->nm_ie) ;$d++){
             $count_request = count(array_keys($request->nm_ie, $request->nm_ie[$d]));
-            if($count_request > 1)
-            return back()->with(['error' => 'User Inspection Engineering Tidak Boleh Duplicate!']);
+            if($count_request > 1){
+                storeLogActivity(declarLog(2, 'Field Team', 'Swap IE - '.$request->nm_ie[$d]));
+                return back()->with(['error' => 'User Inspection Engineering Tidak Boleh Duplicate!']);
+            }
         }
         for($y=0; $y<count($request->nm_se) ;$y++){
             if($request->nm_se[$y] != null && $request->nm_ie[$y] != null){
@@ -325,9 +348,14 @@ class MasterKonsultanController extends Controller
 
         if($update_details){
             // dd($update_konsultan);
+            storeLogActivity(declarLog(2, 'Field Team', $update_details->konsultan->nama, 1));
+
             return back()->with(['success' => 'Data Berhasil Di Perbaharui!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(2, 'Field Team', ' '));
+
             return back()->with(['error' => 'Data Gagal Di Perbaharui!']);
+        }
 
     }
 

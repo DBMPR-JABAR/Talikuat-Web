@@ -39,7 +39,9 @@
     },
     "autoload": {
         "files": [
-            "app/Utils/helpers.php"
+            "app/Utils/helpers.php",
+            "app/Helpers/logActivity.php"
+
         ],
         "psr-4": {
             "App\\": "app/",

@@ -143,6 +143,10 @@ Route::prefix('admin')->group(function () {
                 Route::get('/trash/{desc}/{id}',[MasterJenisPekerjaanController::class,'move_to_trash']);
 
             });
+            Route::get('activity/{id}', [LogControllers::class,'getLogUser'])->name('log.user.index');
+            Route::prefix('log')->group(function (){
+                Route::get('/',[LogControllers::class,'index'])->name('log.index');
+            });
 
         });
     });
