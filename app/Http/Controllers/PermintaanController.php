@@ -16,10 +16,35 @@ class PermintaanController extends Controller
 {
     private $PATH_FILE_DB = "public/lampiran/file_req";
 
-    public function getAllPermintaan()
+    public function getAllPermintaan(Request $request)
     {
+        $query = DB::table('request');
 
-        $result = DB::table('request')->get();
+        switch ($request->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('nama_kontraktor', '=', $request->value)
+                    ->paginate();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('nama_direksi', '=', $request->value)
+                    ->paginate();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('unor', '=', $request->value)
+                    ->paginate();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nama_ppk', '=', $request->value)
+                    ->paginate();
+                break;
+            default:
+                $result = $query->paginate();
+                break;
+        }
 
         return response()->json([
             'status' => 'success',
@@ -28,14 +53,37 @@ class PermintaanController extends Controller
         ]);
     }
 
-    public function getLatestPermintaan()
+    public function getLatestPermintaan(Request $request)
     {
-
-        $result = DB::table('request')
+        $query = DB::table('request')
             ->limit(5)
-            ->orderBy('id', 'desc')
-            ->get();
+            ->orderBy('id', 'desc');
 
+        switch ($request->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('nama_kontraktor', '=', $request->value)
+                    ->get();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('nama_direksi', '=', $request->value)
+                    ->get();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('unor', '=', $request->value)
+                    ->get();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nama_ppk', '=', $request->value)
+                    ->get();
+                break;
+            default:
+                $result = $query->get();
+                break;
+        }
 
         return response()->json([
             'status' => 'success',
@@ -474,7 +522,7 @@ class PermintaanController extends Controller
     }
 
     public function buatRequest(Request $req)
-    {   
+    {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
             // Data Umum
@@ -495,12 +543,12 @@ class PermintaanController extends Controller
         }
         if ($req->adendum == null) {
             $getTeam = DB::table('jadual')->where('id', $req->id_jadual)->first();
-        }else{
+        } else {
             $getTeam = DB::table('jadual_adendum')->where('id', $req->id_jadual)->first();
         }
         DB::beginTransaction();
         try {
-            if($req->adendum == null){
+            if ($req->adendum == null) {
                 DB::table('jadual')->where('id', $req->id_jadual)->update([
                     "tgl_req" => \Carbon\Carbon::now()
                 ]);
@@ -527,7 +575,7 @@ class PermintaanController extends Controller
                     "field_team_konsultan" => $getTeam->field_team_konsultan
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-    
+
                 if ($req->jenis_peralatan) {
                     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
                         DB::table('detail_request_peralatan')->insert([
@@ -567,7 +615,7 @@ class PermintaanController extends Controller
                         ]);
                     }
                 }
-    
+
                 if ($req->file('metode_kerja')) {
                     $file = $req->file('metode_kerja');
                     $name = time() . "_" . $file->getClientOriginalName();
@@ -576,7 +624,7 @@ class PermintaanController extends Controller
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
-            }else{
+            } else {
                 DB::table('jadual_adendum')->where('id', $req->id_jadual)->update([
                     "tgl_req" => \Carbon\Carbon::now()
                 ]);
@@ -597,15 +645,15 @@ class PermintaanController extends Controller
                     "nama_kontraktor" => $req->penyedia_jasa,
                     "nama_direksi" => $req->konsultan,
                     "nama_ppk" => $req->nm_ppk,
-                    "adendum"=>$req->adendum,
-                    "id_data_umum_adendum"=>$req->id_data_umum_adendum,
+                    "adendum" => $req->adendum,
+                    "id_data_umum_adendum" => $req->id_data_umum_adendum,
                     "sketsa" => $this->PATH_FILE_DB . "/" . $name,
                     "id_jadual" => $req->id_jadual,
                     "tgl_input" => \Carbon\Carbon::now(),
                     "field_team_konsultan" => $getTeam->field_team_konsultan
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-    
+
                 if ($req->jenis_peralatan) {
                     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
                         DB::table('detail_request_peralatan')->insert([
@@ -645,7 +693,7 @@ class PermintaanController extends Controller
                         ]);
                     }
                 }
-    
+
                 if ($req->file('metode_kerja')) {
                     $file = $req->file('metode_kerja');
                     $name = time() . "_" . $file->getClientOriginalName();
@@ -656,7 +704,7 @@ class PermintaanController extends Controller
                 }
 
             }
-            
+
             DB::commit();
             return response()->json([
                 "code" => 200
@@ -2014,7 +2062,7 @@ class PermintaanController extends Controller
     public function getSatuanNmp($id, $data)
     {
         $res = DB::table('jadual')->where([['nmp', $id], ['id_data_umum', $data]])->first();
-        if($res == null){
+        if ($res == null) {
             $res = DB::table('jadual_adendum')->where([['nmp', $id], ['id_data_umum', $data]])->first();
         }
 
