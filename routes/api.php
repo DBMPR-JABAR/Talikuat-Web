@@ -5,11 +5,13 @@ use App\Http\Controllers\CurvaControllers;
 use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\GetFile;
+use App\Http\Controllers\JadualAdendumControllers;
 use App\Http\Controllers\JadualController;
 use App\Http\Controllers\JenisPekerjaanController;
 use App\Http\Controllers\KonsultanController;
 use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\MemoControllers;
 use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
@@ -72,6 +74,8 @@ Route::prefix('/user')->group(function () {
     Route::post('/registerteam', [UserController::class, 'registerTeamKonsultan']);
 
     Route::get('/aktivasiuser/{id}', [UserController::class, 'aktivasiUser']);
+
+    Route::post('/update-profile', [UserController::class, 'updateProfile']);
 
 });
 
@@ -150,6 +154,8 @@ Route::prefix('/jadual')->group(function () {
 
     Route::get('/getAllJadual', [JadualController::class, 'getAllJadual']);
 
+    Route::get('/getJadualById/{id}', [JadualController::class, 'getJadualById']);
+
     Route::get('/getDetailJadual/{id}', [JadualController::class, 'getDetailJadual']);
 
     Route::get('/getLatestJadual', [JadualController::class, 'getLatestJadual']);
@@ -177,6 +183,18 @@ Route::prefix('/jadual')->group(function () {
     Route::get('/getJadualByDataUmumIdAndNmp', [JadualController::class, 'getJadualByDataUmumIdAndNmp']);
 
     Route::get('getJadualbyNmp/{id}', [JadualController::class, 'getNmpjadual']);
+
+    Route::get('/getTempJadualByIdDataUmumAndKeyword/{idDataUmum}', [JadualController::class, 'getTempJadualByIdDataUmumAndKeyword']);
+
+    Route::post('/insertTempJadual', [JadualController::class, 'insertTempJadual']);
+
+    Route::delete('/deleteTempJadual/{id}', [JadualController::class, 'deleteTempJadual']);
+
+    Route::get('/getAllTempJadualGroupedByNmp/{id}', [JadualController::class, 'getAllTempJadualGroupedByNmp']);
+
+    Route::delete('/deleteAllTempJadual/{id}', [JadualController::class, 'deleteAllTempJadual']);
+
+    Route::get('/getJadualNotRequested/{id}', [JadualController::class, 'getJadualNotRequested']);
 });
 
 Route::prefix('/permintaan')->group(function () {
@@ -201,6 +219,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/updaterequest', [PermintaanController::class, 'updateRequest']);
 
+    Route::post('/updateRequestFromMobile', [PermintaanController::class, 'updateRequestFromMobile']);
+
     Route::post('/sendRequestPekerjaanFromMobile', [PermintaanController::class, 'sendRequestPekerjaanFromMobile']);
 
     Route::post('/sendrequest', [PermintaanController::class, 'sendReq']);
@@ -211,34 +231,60 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
 
+    Route::post('/ppk/responserequest/mobile', [PermintaanController::class, 'responseReqPpkFromMobile']);
+
     Route::post('/updaterequest/revisikontraktor', [PermintaanController::class, 'revisiRequestKontraktor']);
 
+    Route::post('/updaterequest/revisikontraktor/mobile', [PermintaanController::class, 'revisiRequestKontraktorFromMobile']);
+
     Route::post('/updaterequest/revisikonsultan', [PermintaanController::class, 'revisiRequestKonsultan']);
+
+    Route::post('/updaterequest/revisikonsultan/mobile', [PermintaanController::class, 'revisiRequestKonsultanFromMobile']);
 
     Route::get('/getsatuannmp/{id}/{data}', [PermintaanController::class, 'getSatuanNmp']);
 
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
 
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
+
+    Route::get('/getHistoryLogPermintaan/{id}', [PermintaanController::class, 'getHistoryLogPermintaan']);
 });
 
 Route::prefix('laporan')->group(function () {
+
+    Route::get('/getLaporanById/{id}', [LaporanController::class, 'getLaporanById']);
 
     Route::get('/getAllLaporanHarian', [LaporanController::class, 'getAllLaporanHarian']);
 
     Route::get('/getLaporanProgressKegiatanTerbaru', [LaporanController::class, 'getLaporanProgressKegiatanTerbaru']);
 
+    Route::get('/getLaporanByRequestId/{id}', [LaporanController::class, 'getLaporanByRequestId']);
+
     Route::post('/kontraktor/createlaporan', [LaporanController::class, 'createLaporan']);
 
+    Route::post('/kontraktor/createlaporan/mobile', [LaporanController::class, 'createLaporanFromMobile']);
+
     Route::post('/kontraktor/editlaporan', [LaporanController::class, 'editLaporan']);
+
+    Route::post('/kontraktor/editlaporan/mobile', [LaporanController::class, 'editLaporanFromMobile']);
+
+    Route::post('/kontraktor/revisilaporan/mobile', [LaporanController::class, 'revisiLaporanKontraktorFromMobile']);
+
+    Route::post('/sendlaporan/mobile', [LaporanController::class, 'sendLaporanFromMobile']);
 
     Route::post('/sendlaporan', [LaporanController::class, 'sendLaporan']);
 
     Route::post('/respon/konsultan', [LaporanController::class, 'responKonsultan']);
 
+    Route::post('/response/konsultan/mobile', [LaporanController::class, 'responKonsultanFromMobile']);
+
     Route::post('/respon/ppk', [LaporanController::class, 'responPpk']);
 
+    Route::post('/response/ppk/mobile', [LaporanController::class, 'responPpkFromMobile']);
+
     Route::post('/respon/revisikonsultan', [LaporanController::class, 'responRevisiKonsultan']);
+
+    Route::post('/respon/revisikonsultan/mobile', [LaporanController::class, 'responRevisiKonsultanFromMobile']);
 
     Route::post('/delete', [LaporanController::class, 'deleteLaporan']);
 
@@ -246,6 +292,8 @@ Route::prefix('laporan')->group(function () {
 });
 
 Route::prefix('data-umum')->group(function () {
+
+    Route::get('/getDataUmumById/{id}', [DataUmumController::class, 'getDataUmumById']);
 
     Route::get('/getLatestDataUmum', [DataUmumController::class, 'getLatestDataUmum']);
 
@@ -320,6 +368,7 @@ Route::prefix('data-umum')->group(function () {
     Route::get('/upload/{id}', [UploadController::class, 'getUploadedFile']);
 
     Route::post('/linkspekumum', [UploadController::class, 'fileSpekUmum']);
+    Route::post('/linkgambar', [UploadController::class, 'fileGambarRencana']);
 });
 
 Route::prefix('ruas-jalan')->group(function () {
@@ -353,8 +402,17 @@ Route::prefix('merge')->group(function () {
 
 Route::prefix('adendum')->group(function () {
 
-    Route::post('updatedata', [DataUmumAdendum::class, 'updateAdendum']);
-    Route::post('buatjadual', [DataUmumAdendum::class, 'buatJadualAdendum']);
+    //ADENDUM
+    Route::post('/update-data-adendum', [DataUmumAdendum::class, 'updateAdendum']);
+
+
+    //JADUAL
+    Route::post('/create-jadual', [JadualAdendumControllers::class, 'buatJadualAdendum']);
+    Route::get('/getJadualbyNmp/{id}', [JadualAdendumControllers::class, 'getJadualbyNmp']);
+    Route::post('/update-jadual', [JadualAdendumControllers::class, 'updateJadualAdendum']);
+    Route::post('/delete-jadual', [JadualAdendumControllers::class, 'deleteJadual']);
+
+
 });
 
 Route::prefix('curva')->group(function () {
@@ -367,5 +425,14 @@ Route::prefix('curva')->group(function () {
 Route::prefix('utils')->group(function () {
 
     Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
+    Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
+
+});
+Route::prefix('memo')->group(function () {
+
+    Route::post('/konsultan/kirim', [MemoControllers::class, 'store']);
+    Route::post('/cek-memo', [MemoControllers::class, 'cekMemo']);
+    Route::post('/read/{id}', [MemoControllers::class, 'update']);
+    Route::post('/respon/{id}', [MemoControllers::class, 'responMemo']);
 
 });

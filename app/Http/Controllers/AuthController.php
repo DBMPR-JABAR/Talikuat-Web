@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -28,7 +29,6 @@ class AuthController extends Controller
 
         $uptd = DB::table('kantor')->where('nama_lengkap', '=', $user_detail->unit)->first();
 
-
         $data = [
             'id_login' => $user->id_login,
             'user' => $user->user,
@@ -41,7 +41,7 @@ class AuthController extends Controller
             'alamat_member' => $user_detail->alamat_member,
             'telp' => $user_detail->telp,
             'email' => $user_detail->email,
-            'gambar' => $user_detail->gambar,
+            'gambar' => Storage::url($user_detail->gambar),
             'nik' => $user_detail->nik,
             'kantor_id' => $uptd ? $uptd->id_kantor : null,
             'kantor' => $uptd ? $uptd->nama_lengkap : null,
@@ -86,7 +86,7 @@ class AuthController extends Controller
             'alamat_member' => $user_detail->alamat_member,
             'telp' => $user_detail->telp,
             'email' => $user_detail->email,
-            'gambar' => $user_detail->gambar,
+            'gambar' => Storage::url($user_detail->gambar),
             'nik' => $user_detail->nik,
             'kantor_id' => $id_uptd,
             'perusahaan' => $user_detail->perusahaan,
