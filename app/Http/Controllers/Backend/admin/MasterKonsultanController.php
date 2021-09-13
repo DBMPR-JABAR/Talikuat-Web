@@ -385,9 +385,13 @@ class MasterKonsultanController extends Controller
         if($desc == 'restore'){
             $konsultan->is_delete = null;
             $message = 'Data Berhasil Dikembalikan! ';
+            storeLogActivity(declarLog(4, 'Konsultan', $konsultan->nama, 1));
+
         }elseif($desc == 'move_to_trash'){
             $konsultan->is_delete = 1;
             $message = 'Data Berhasil di Pindahkan! ';
+            storeLogActivity(declarLog(3, 'Konsultan', $konsultan->nama, 1));
+
         }
         $konsultan->save();
         if($konsultan){
@@ -415,13 +419,14 @@ class MasterKonsultanController extends Controller
             $ft->is_delete = null;
             $ft->user_se_detail->update(['is_delete'=>null]);
             $ft->user_ie_detail->update(['is_delete'=>null]);
-
             $message = 'Data Berhasil Dikembalikan! ';
+            storeLogActivity(declarLog(4, 'Field Team', $ft->konsultan->nama, 1));
         }elseif($desc == 'move_to_trash_ft'){
             $ft->is_delete = 1;
             $ft->user_se_detail->update(['is_delete'=>1]);
             $ft->user_ie_detail->update(['is_delete'=>1]);
             $message = 'Data Berhasil di Hapus! ';
+            storeLogActivity(declarLog(3, 'Field Team', $ft->konsultan->nama, 1));
         }
         $ft->save();
         if($ft){

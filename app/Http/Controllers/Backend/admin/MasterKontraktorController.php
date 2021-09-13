@@ -61,6 +61,7 @@ class MasterKontraktorController extends Controller
             'no_rek'=> 'required',
         ]);
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'Kontraktor', $request->nama.': '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $temp =([
@@ -80,7 +81,7 @@ class MasterKontraktorController extends Controller
             if(count($request->nm_gs) >=1){
                 for($x=0; $x<count($request->nm_gs); $x++){
                     if($request->nm_gs[$x] != null){
-                        $save_ft = KontraktorGs::create([
+                        $save_gs = KontraktorGs::create([
                             'kontraktor_id'=> $kontraktor->id,
                             'gs'=> $request->nm_gs[$x],
                             'created_by'=>Auth::user()->id,
@@ -89,9 +90,12 @@ class MasterKontraktorController extends Controller
                 }
                 
             }
+            storeLogActivity(declarLog(1, 'Kontraktor', $kontraktor->nama, 1));
             return redirect()->route('masterkontraktor.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(1, 'Kontraktor', $request->nama));
             return redirect()->route('masterkontraktor.index')->with(['danger' => 'Data Gagal Disimpan!']);
+        }
     }
     public function store_gs(Request $request)
     {
@@ -107,8 +111,10 @@ class MasterKontraktorController extends Controller
                     'no_tlp_gs'=> '',
                 ]);
 
-            }else
+            }else{
+                storeLogActivity(declarLog(1, 'General Superintendent', $request->email_gs.': The email has already been taken'));
                 return back()->with(['error' => 'The email has already been taken.']);
+            }
         }else{
             $validator = Validator::make($request->all(), [
                 'email_gs' => 'unique:db_users_dbmpr.users,email',
@@ -119,6 +125,7 @@ class MasterKontraktorController extends Controller
             ]);
         }
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'General Superintendent', $request->email_gs.': '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         // dd($request->no_tlp_gs);
@@ -144,16 +151,19 @@ class MasterKontraktorController extends Controller
         $create_detail_gs->save();
         $create_user_gs->user_rule()->attach(11);
         
-        $save_ft = KontraktorGs::create([
+        $save_gs = KontraktorGs::create([
             'kontraktor_id'=>$request->company,
             'gs_user_id'=>$create_user_gs->id,
             'created_by'=>Auth::user()->id,
         ]);
-        if($save_ft){
+        if($save_gs){
             // dd($update_konsultan);
-            return back()->with(['success' => 'FT Berhasil Di Tambahkan!']);
-        }else
-            return back()->with(['danger' => 'FT Gagal Di Tambahkan!']);
+            storeLogActivity(declarLog(1, 'General Superintendent', $save_gs->kontraktor->nama, 1));
+            return back()->with(['success' => 'GS Berhasil Di Tambahkan!']);
+        }else{
+            storeLogActivity(declarLog(1, 'General Superintendent', ' '));
+            return back()->with(['danger' => 'GS Gagal Di Tambahkan!']);
+        }
     }
     /**
      * Display the specified resource.
@@ -207,6 +217,7 @@ class MasterKontraktorController extends Controller
             'no_rek'=> 'required',
         ]);
         if ($validator->fails()) {
+            storeLogActivity(declarLog(2, 'Kontraktor', $request->nama.': '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         
@@ -223,9 +234,13 @@ class MasterKontraktorController extends Controller
        
         if($update_kontraktor){
             // dd($update_kontraktor);
+            storeLogActivity(declarLog(2, 'Kontraktor', $update_kontraktor->nama, 1));
             return redirect()->route('masterkontraktor.index')->with(['success' => 'Data Berhasil Di Perbaharui!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(2, 'Kontraktor', ' '));
+
             return redirect()->route('masterkontraktor.index')->with(['danger' => 'Data Gagal Di Perbaharui!']);
+        }
 
     }
 
@@ -241,8 +256,10 @@ class MasterKontraktorController extends Controller
         // dd(array_count_values($request->nm_gs));
         for($d=0; $d<count($request->nm_gs) ;$d++){
             $count_request = count(array_keys($request->nm_gs, $request->nm_gs[$d]));
-            if($count_request > 1)
-            return back()->with(['error' => 'User General Superintendent Tidak Boleh Duplicate!']);
+            if($count_request > 1){
+                storeLogActivity(declarLog(2, 'General Superintendent', 'Swap GS - '.$request->nm_gs[$d]));
+                return back()->with(['error' => 'User General Superintendent Tidak Boleh Duplicate!']);
+            }
         }
         // dd($request->nm_gs);
         for($y=0; $y<count($request->nm_gs) ;$y++){
@@ -265,9 +282,12 @@ class MasterKontraktorController extends Controller
 
         if($update_details){
             // dd($update_konsultan);
+            storeLogActivity(declarLog(2, 'General Superintendent', $update_details->kontraktor->nama ,1));
             return back()->with(['success' => 'Data Berhasil Di Perbaharui!']);
-        }else
+        }else{
+            storeLogActivity(declarLog(2, 'General Superintendent', ''));
             return back()->with(['error' => 'Data Gagal Di Perbaharui!']);
+        }
 
     }
     /**
@@ -292,16 +312,19 @@ class MasterKontraktorController extends Controller
     {
         //
 
-        $user = MasterKontraktor::find($id);
+        $kontraktor = MasterKontraktor::find($id);
         if($desc == 'restore'){
-            $user->is_delete = null;
+            $kontraktor->is_delete = null;
             $message = 'Data Berhasil Dikembalikan! ';
+            storeLogActivity(declarLog(4, 'Kontraktor', $kontraktor->nama,1));
+
         }elseif($desc == 'move_to_trash'){
-            $user->is_delete = 1;
+            $kontraktor->is_delete = 1;
             $message = 'Data Berhasil di Pindahkan! ';
+            storeLogActivity(declarLog(3, 'Kontraktor', $kontraktor->nama,1));
         }
-        $user->save();
-        if($user){
+        $kontraktor->save();
+        if($kontraktor){
             return back()->with(['success'=>$message]);
         }
         // dd($data);
@@ -323,15 +346,18 @@ class MasterKontraktorController extends Controller
         $gs = KontraktorGs::find($id);
         $kontraktor = MasterKontraktor::find($id);
         $message = 'Somethink When Wrong!';
-
         if($desc == 'restore'){
+            // dd($gs);
             $gs->is_delete = null;
             $gs->user_gs_detail->update(['is_delete'=>null]);
             $message = 'Data Berhasil Dikembalikan!';
+            storeLogActivity(declarLog(4, 'General Superintendent', $gs->kontraktor->nama,1));
+
         }elseif($desc == 'move_to_trash_gs'){
             $gs->is_delete = 1;
             $gs->user_gs_detail->update(['is_delete'=>1]);
             $message = 'Data Berhasil di Hapus!';
+            storeLogActivity(declarLog(3, 'General Superintendent', $gs->kontraktor->nama,1));
         }
 
         $gs->save();

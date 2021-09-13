@@ -145,8 +145,10 @@ class UserController extends Controller
         
                 ]);
 
-            }else
+            }else{
+                storeLogActivity(declarLog(1, 'User Konsultan', $request->email.': The email has already been taken'));
                 return back()->with(['error' => 'The email has already been taken.']);
+            }
         }else{
             $validator = Validator::make($request->all(), [
                 'email' => 'email|required|string|unique:db_users_dbmpr.users',
@@ -157,6 +159,7 @@ class UserController extends Controller
             ]);
         }
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'User Konsultan', $request->email.': '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         // dd($request->rule);
@@ -177,6 +180,7 @@ class UserController extends Controller
         $create_detail->rule_user_id = $request->rule;
         $create_detail->konsultan_id = $id;
         $create_detail->save();
+        storeLogActivity(declarLog(1, 'User Konsultan', $create_detail->konsultan->nama.': '. $request->email.' as '.$create_detail->rule->rule,1));
 
         return back()->with(['success'=>'Berhasil Menambahkan User!!']);
 
@@ -196,8 +200,10 @@ class UserController extends Controller
                     'rule' => 'required',
                 ]);
 
-            }else
+            }else{
+                storeLogActivity(declarLog(1, 'User Kontraktor', $request->email.': The email has already been taken'));
                 return back()->with(['error' => 'The email has already been taken.']);
+            }
         }else{
             $validator = Validator::make($request->all(), [
                 'email' => 'email|required|string|unique:db_users_dbmpr.users',
@@ -208,6 +214,7 @@ class UserController extends Controller
             ]);
         }
         if ($validator->fails()) {
+            storeLogActivity(declarLog(1, 'User Kontraktor', $request->email.': '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         // dd($request->rule);
@@ -239,6 +246,7 @@ class UserController extends Controller
         }
         // dd($request->rule);
 
+        storeLogActivity(declarLog(1, 'User Kontraktor', $create_detail->kontraktor->nama.': '. $request->email.' as '.$create_detail->rule->rule,1));
 
         return back()->with(['success'=>'Berhasil Menambahkan User!!']);
 
