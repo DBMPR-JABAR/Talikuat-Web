@@ -18,7 +18,16 @@ class PermintaanController extends Controller
 
     public function getAllPermintaan(Request $request)
     {
-        $query = DB::table('request');
+        $query = DB::table('request')
+            ->where(function ($query) use ($request) {
+                return $query->where('jenis_pekerjaan', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('volume', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('diajukan_tgl', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('pelaksanaan_tgl', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('lokasi_sta', 'like', '%' . $request->keyword . '%');
+            });
+
+//        $query = DB::table('request');
 
         switch ($request->type) {
             case 'KONTRAKTOR':
@@ -44,6 +53,40 @@ class PermintaanController extends Controller
             default:
                 $result = $query->paginate();
                 break;
+        }
+
+        foreach ($result as $item) {
+            $item->sketsa = Storage::url($item->sketsa);
+            $item->metode_kerja = $item->metode_kerja != null ? Storage::url($item->metode_kerja) : null;
+            $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
+            $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
+            $item->checklist = $item->checklist != null ? Storage::url($item->checklist) : null;
+
+            $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
+            $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
+            $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
+            $pekerja = DB::table('detail_request_tkerja')->where('id_request', '=', $item->id)->get();
+
+            foreach ($bahan as $index => $item_bahan) {
+                $item_bahan->id = $index + 1;
+            }
+
+            foreach ($campuran as $index => $item_campuran) {
+                $item_campuran->id = $index + 1;
+            }
+
+            foreach ($peralatan as $index => $item_alat) {
+                $item_alat->id = $index + 1;
+            }
+
+            foreach ($pekerja as $index => $item_pekerja) {
+                $item_pekerja->id = $index + 1;
+            }
+
+            $item->bahan = $bahan;
+            $item->campuran = $campuran;
+            $item->peralatan = $peralatan;
+            $item->pekerja = $pekerja;
         }
 
         return response()->json([
