@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\DB;
 class DataUmumAdendum extends Controller
 {
     public function updateAdendum(Request $req)
-    {
+    {   
+        return response()->json([
+           'message'=> $req->all()
+        ]);
         date_default_timezone_set('Asia/Jakarta');
         DB::beginTransaction();
         try {
