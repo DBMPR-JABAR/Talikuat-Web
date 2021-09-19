@@ -73,7 +73,8 @@ class CurvaControllers extends Controller
                 $lap = DB::table('data_umum')->join('master_laporan_harian', 'data_umum.id', '=', 'master_laporan_harian.id_data_umum')->where([
                     ['data_umum.id', $data->id],
                     ['master_laporan_harian.tanggal', '<=', $req->date],
-                    ['master_laporan_harian.ditolak', 4]
+                    ['master_laporan_harian.ditolak', 4],
+                    ['reason_delete', null]
                 ])->get();
                 array_push($dataLaporan, $lap);
             }
