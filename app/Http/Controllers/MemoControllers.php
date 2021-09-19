@@ -31,6 +31,176 @@ class MemoControllers extends Controller
         //
     }
 
+    public function getUnreadMemo(Request $req)
+    {
+        $query = DB::table('memo');
+
+        switch ($req->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('nm_kontraktor', '=', $req->value)
+                    ->where('is_readed', '=', '0')
+                    ->count();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('nm_konsultan', '=', $req->value)
+                    ->whereNull('konsultan_readed')
+                    ->count();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->whereNull('admin_readed')
+                    ->count();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nm_ppk', '=', $req->value)
+                    ->whereNull('ppk_readed')
+                    ->count();
+                break;
+            default:
+                $result = $query
+                    ->whereNull('is_readed')
+                    ->count();
+                break;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ]);
+    }
+
+    public function getAllMemo(Request $req)
+    {
+        $query = DB::table('memo');
+
+        switch ($req->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('nm_kontraktor', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('nm_konsultan', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nm_ppk', '=', $req->value)
+                    ->paginate();
+                break;
+            default:
+                $result = $query->paginate();
+                break;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ]);
+    }
+
+    public function getAllMemoByIdDataUmum($id, Request $req)
+    {
+        $query = DB::table('memo')->where('id_data_umum', '=', $id);
+
+        switch ($req->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('nm_kontraktor', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('nm_konsultan', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nm_ppk', '=', $req->value)
+                    ->paginate();
+                break;
+            default:
+                $result = $query->paginate();
+                break;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ]);
+    }
+
+    public function getLatestMemo(Request $req)
+    {
+        $query = DB::table('memo')->orderByDesc('id');
+
+        switch ($req->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('nm_kontraktor', '=', $req->value)
+                    ->limit(5)
+                    ->get();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('nm_konsultan', '=', $req->value)
+                    ->limit(5)
+                    ->get();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->limit(5)
+                    ->get();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('nm_ppk', '=', $req->value)
+                    ->limit(5)
+                    ->get();
+                break;
+            default:
+                $result = $query
+                    ->limit(5)
+                    ->get();
+                break;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ]);
+    }
+
+    public function getDetailMemo($id)
+    {
+        $result = DB::table('memo')->where('id', '=', $id)->first();
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $result
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -136,9 +306,9 @@ class MemoControllers extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'code' => 200,
+                'code' => 201,
                 'result' => 'Success menambahkan memo'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_CREATED);
 
         } catch (\Exception $exception) {
             return response()->json([
@@ -147,6 +317,19 @@ class MemoControllers extends Controller
                 'result' => $exception->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function responMemoFromMobile(Request $req)
+    {
+        DB::table('memo')->where('id', '=', $req->id)->update([
+            'isi_memo' => $req->memo
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => 'Success menambahkan respon memo'
+        ], Response::HTTP_OK);
     }
 
     public function store(Request $req)
