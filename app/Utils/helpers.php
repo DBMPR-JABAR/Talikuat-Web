@@ -24,13 +24,7 @@ if (!function_exists('pushNotification')) {
     {
         $result = DB::table('fcm_token')->where('username', '=', $username)->first();
 
-        if ($result == null) {
-            DB::table('queue_fcm_notification')->insert([
-                "title" => $title,
-                "description" => $descrition,
-                "username" => $username
-            ]);
-        } else {
+        if ($result != null) {
             $client = new Client([
                 'base_uri' => 'https://fcm.googleapis.com/fcm/',
                 'headers' => [

@@ -430,11 +430,13 @@ Route::prefix('utils')->group(function () {
 });
 Route::prefix('memo')->group(function () {
 
-    Route::post('/konsultan/kirim', [MemoControllers::class, 'store']);
+    Route::get('/total-memo/{id}', [MemoControllers::class, 'getTotalMemo']);
+    Route::post('/kirim', [MemoControllers::class, 'store']);
+    Route::post('/konsultan/kirim/mobile', [MemoControllers::class, 'storeFromMobile']);
     Route::post('/cek-memo', [MemoControllers::class, 'cekMemo']);
     Route::post('/read/{id}', [MemoControllers::class, 'update']);
     Route::post('/respon/{id}', [MemoControllers::class, 'responMemo']);
-    Route::post('/cek-konsultan',[MemoControllers::class, 'cekMemoKonsultan']);
-    Route::post('/read-konsultan',[MemoControllers::class, 'readKonsultan']);
+    Route::post('/cek-konsultan', [MemoControllers::class, 'cekMemoKonsultan']);
+    Route::post('/read-konsultan', [MemoControllers::class, 'readKonsultan']);
 
 });

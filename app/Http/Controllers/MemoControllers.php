@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\MemoMail;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class MemoControllers extends Controller
 {
@@ -32,9 +34,121 @@ class MemoControllers extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
+    public function storeFromMobile(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'id_data_umum' => 'required',
+            'no_memo' => 'required',
+            'tgl_memo' => 'required',
+            'nm_pengirim' => 'required',
+            'jabatan_pengirim' => 'required',
+            'isi_memo' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 400,
+                'result' => $validator->errors()->first()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $kontrak = DB::table('data_umum')->where('id', '=', $req->id_data_umum)->first();
+
+            $id = DB::table('memo')->insertGetId([
+                'nomor_memo' => $req->no_memo,
+                'tgl_memo' => $req->tgl_memo,
+                'nm_pengirim' => $req->nm_pengirim,
+                'jabatan_pengirim' => $req->jabatan_pengirim,
+                'nm_penerima' => $kontrak->nm_gs,
+                'jabatan_penerima' => "General Superintendent",
+                'isi_memo' => $req->isi_memo,
+                'tembusan_kontraktor' => 1,
+                'is_readed' => 0,
+                'id_data_umum' => $req->id_data_umum,
+                'nm_konsultan' => $kontrak->konsultan,
+                'nm_ppk' => $kontrak->nm_ppk,
+                'nm_kontraktor' => $kontrak->penyedia,
+                'nm_admin_uptd' => $kontrak->unor
+            ]);
+
+            if ($req->tembusan_ppk == 'true') {
+                DB::table('memo')->where('id', $id)->update([
+                    'tembusan_ppk' => 1,
+                    'ppk_readed' => 0
+                ]);
+            }
+
+            if ($req->tembusan_admin_uptd == 'true') {
+                DB::table('memo')->where('id', $id)->update([
+                    'tembusan_admin_uptd' => 1,
+                    'admin_readed' => 0
+                ]);
+            }
+
+            if ($req->tembusan_ppk == 'true' && $req->tembusan_admin_uptd == 'true') {
+
+                $bodyEmail = [
+                    "role" => "Konsultan",
+                    "status" => "Mengirim",
+                    "dokumen" => "Memo ",
+                    "username" => $kontrak->konsultan,
+                    "kepada" => 'Kontraktor',
+                    "nm_penerima" => $kontrak->penyedia,
+                    "no_dokumen" => $req->nomor_surat,
+                    "kegiatan" => $kontrak->nm_paket,
+                    "tembusan" => $kontrak->nm_ppk . ' (PPK), Admin ' . $kontrak->unor,
+                ];
+
+                $ppk = DB::table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
+                pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $ppk->nm_member);
+                if ($ppk->email != null) Mail::to($ppk->email)->send(new MemoMail($bodyEmail));
+
+                $list_kontraktor = DB::table('member')->where('perusahaan', '=', $kontrak->penyedia)->get();
+                foreach ($list_kontraktor as $kontraktor) {
+                    pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $kontraktor->nm_member);
+                    if ($kontraktor->email != null) Mail::to($kontraktor->email)->send(new MemoMail($bodyEmail));
+                }
+
+            } else if ($req->tembusan_ppk == 'true') {
+
+                $bodyEmail = [
+                    "role" => "Konsultan",
+                    "status" => "Mengirim",
+                    "dokumen" => "Memo ",
+                    "username" => $kontrak->konsultan,
+                    "kepada" => 'Kontraktor',
+                    "nm_penerima" => $kontrak->penyedia,
+                    "no_dokumen" => $req->nomor_surat,
+                    "kegiatan" => $kontrak->nm_paket,
+                    "tembusan" => $kontrak->nm_ppk . ' (PPK), Admin ' . $kontrak->unor,
+                ];
+
+                $ppk = DB::table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
+                pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $ppk->nm_member);
+                if ($ppk->email != null) Mail::to($ppk->email)->send(new MemoMail($bodyEmail));
+
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'code' => 200,
+                'result' => 'Success menambahkan memo'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        } catch (\Exception $exception) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => 500,
+                'result' => $exception->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function store(Request $req)
     {
         try {
@@ -119,7 +233,7 @@ class MemoControllers extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -130,7 +244,7 @@ class MemoControllers extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -141,12 +255,12 @@ class MemoControllers extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req,$id)
-    {   
+    public function update(Request $req, $id)
+    {
         $role = $req->role;
         date_default_timezone_set('Asia/Jakarta');
         $cek = DB::table('memo')->where('id', $id)->first();
@@ -176,7 +290,7 @@ class MemoControllers extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -184,6 +298,20 @@ class MemoControllers extends Controller
         //
     }
 
+    public function getTotalMemo(Request $req)
+    {
+        $total = DB::table('memo')
+            ->selectRaw('COUNT(*) as total_memo')
+            ->groupBy('id_data_umum')
+            ->having('id_data_umum', '=', $req->id)
+            ->first();
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => $total == null ? 0 : $total->total_memo
+        ]);
+    }
 
     public function cekMemo(Request $req)
     {
@@ -217,7 +345,7 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } 
+                }
             }
             if ($req->role == 'ADMIN-UPTD') {
                 if ($memo->admin_readed == 0) {
@@ -225,7 +353,7 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } 
+                }
             }
             if ($req->role == 'KONSULTAN') {
                 if ($memo->konsultan_readed == 0) {
@@ -233,7 +361,7 @@ class MemoControllers extends Controller
                         "code" => 200,
                         "memo" => $memo->id
                     ], 200);
-                } 
+                }
             }
         }
         return response()->json([
@@ -243,34 +371,34 @@ class MemoControllers extends Controller
     }
 
     public function cekMemoKonsultan(Request $req)
-    {  
-        $cek = DB::table('memo')->where('nm_pengirim',$req->nm)->get();
+    {
+        $cek = DB::table('memo')->where('nm_pengirim', $req->nm)->get();
         foreach ($cek as $c) {
             if ($c->respon_memo != null && $c->konsultan_readed == null) {
                 return response()->json([
                     "code" => 200,
                     "memo" => $c
                 ], 200);
-            }else{
+            } else {
                 return response()->json([
                     "code" => 200,
                     "memo" => 'null'
-                ], 200); 
+                ], 200);
             }
         }
     }
 
     public function readKonsultan(Request $req)
     {
-        DB::table('memo')->where('respon_memo',$req->text)->update([
-            "konsultan_readed"=> 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
+        DB::table('memo')->where('respon_memo', $req->text)->update([
+            "konsultan_readed" => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
         ]);
 
     }
 
     public function responMemo(Request $req, $id)
-    {   
-        
+    {
+
         DB::table('memo')->where('id', $id)->update([
             'respon_memo' => $req->respon
         ]);
