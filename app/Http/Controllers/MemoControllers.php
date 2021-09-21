@@ -45,25 +45,24 @@ class MemoControllers extends Controller
             case 'KONSULTAN':
                 $result = $query
                     ->where('nm_konsultan', '=', $req->value)
-                    ->whereNull('konsultan_readed')
+                    ->where('konsultan_readed', '=', '0')
                     ->count();
                 break;
             case 'ADMIN-UPTD':
                 $result = $query
                     ->where('nm_admin_uptd', '=', $req->value)
-                    ->whereNull('admin_readed')
+                    ->where('tembusan_admin_uptd', '=', 1)
+                    ->where('admin_readed', '=', '0')
                     ->count();
                 break;
             case 'PPK':
                 $result = $query
                     ->where('nm_ppk', '=', $req->value)
-                    ->whereNull('ppk_readed')
+                    ->where('tembusan_ppk', '=', 1)
+                    ->where('ppk_readed', '=', '0')
                     ->count();
                 break;
             default:
-                $result = $query
-                    ->whereNull('is_readed')
-                    ->count();
                 break;
         }
 
@@ -76,27 +75,32 @@ class MemoControllers extends Controller
 
     public function getAllMemo(Request $req)
     {
-        $query = DB::table('memo');
+        $query = DB::table('memo')
+            ->selectRaw('memo.*, data_umum.nm_paket')
+            ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
+            ->where('memo.nomor_memo', 'like', '%' . $req->keyword . '%');
 
         switch ($req->type) {
             case 'KONTRAKTOR':
                 $result = $query
-                    ->where('nm_kontraktor', '=', $req->value)
+                    ->where('memo.nm_kontraktor', '=', $req->value)
                     ->paginate();
                 break;
             case 'KONSULTAN':
                 $result = $query
-                    ->where('nm_konsultan', '=', $req->value)
+                    ->where('memo.nm_konsultan', '=', $req->value)
                     ->paginate();
                 break;
             case 'ADMIN-UPTD':
                 $result = $query
-                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->where('memo.nm_admin_uptd', '=', $req->value)
+                    ->where('tembusan_admin_uptd', '=', 1)
                     ->paginate();
                 break;
             case 'PPK':
                 $result = $query
-                    ->where('nm_ppk', '=', $req->value)
+                    ->where('memo.nm_ppk', '=', $req->value)
+                    ->where('tembusan_ppk', '=', 1)
                     ->paginate();
                 break;
             default:
@@ -113,27 +117,32 @@ class MemoControllers extends Controller
 
     public function getAllMemoByIdDataUmum($id, Request $req)
     {
-        $query = DB::table('memo')->where('id_data_umum', '=', $id);
+        $query = DB::table('memo')
+            ->selectRaw('memo.*, data_umum.nm_paket')
+            ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
+            ->where('id_data_umum', '=', $id);
 
         switch ($req->type) {
             case 'KONTRAKTOR':
                 $result = $query
-                    ->where('nm_kontraktor', '=', $req->value)
+                    ->where('memo.nm_kontraktor', '=', $req->value)
                     ->paginate();
                 break;
             case 'KONSULTAN':
                 $result = $query
-                    ->where('nm_konsultan', '=', $req->value)
+                    ->where('memo.nm_konsultan', '=', $req->value)
                     ->paginate();
                 break;
             case 'ADMIN-UPTD':
                 $result = $query
-                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->where('memo.nm_admin_uptd', '=', $req->value)
+                    ->where('tembusan_admin_uptd', '=', 1)
                     ->paginate();
                 break;
             case 'PPK':
                 $result = $query
-                    ->where('nm_ppk', '=', $req->value)
+                    ->where('memo.nm_ppk', '=', $req->value)
+                    ->where('tembusan_ppk', '=', 1)
                     ->paginate();
                 break;
             default:
@@ -150,30 +159,35 @@ class MemoControllers extends Controller
 
     public function getLatestMemo(Request $req)
     {
-        $query = DB::table('memo')->orderByDesc('id');
+        $query = DB::table('memo')
+            ->selectRaw('memo.*, data_umum.nm_paket')
+            ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
+            ->orderByDesc('id');
 
         switch ($req->type) {
             case 'KONTRAKTOR':
                 $result = $query
-                    ->where('nm_kontraktor', '=', $req->value)
+                    ->where('memo.nm_kontraktor', '=', $req->value)
                     ->limit(5)
                     ->get();
                 break;
             case 'KONSULTAN':
                 $result = $query
-                    ->where('nm_konsultan', '=', $req->value)
+                    ->where('memo.nm_konsultan', '=', $req->value)
                     ->limit(5)
                     ->get();
                 break;
             case 'ADMIN-UPTD':
                 $result = $query
-                    ->where('nm_admin_uptd', '=', $req->value)
+                    ->where('memo.nm_admin_uptd', '=', $req->value)
+                    ->where('tembusan_admin_uptd', '=', 1)
                     ->limit(5)
                     ->get();
                 break;
             case 'PPK':
                 $result = $query
-                    ->where('nm_ppk', '=', $req->value)
+                    ->where('memo.nm_ppk', '=', $req->value)
+                    ->where('tembusan_ppk', '=', 1)
                     ->limit(5)
                     ->get();
                 break;
@@ -193,7 +207,10 @@ class MemoControllers extends Controller
 
     public function getDetailMemo($id)
     {
-        $result = DB::table('memo')->where('id', '=', $id)->first();
+        $result = DB::table('memo')->where('id', '=', $id)
+            ->selectRaw('memo.*, data_umum.nm_paket')
+            ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
+            ->first();
         return response()->json([
             'status' => 'success',
             'code' => 200,
@@ -322,7 +339,7 @@ class MemoControllers extends Controller
     public function responMemoFromMobile(Request $req)
     {
         DB::table('memo')->where('id', '=', $req->id)->update([
-            'isi_memo' => $req->memo
+            'respon_memo' => $req->memo
         ]);
 
         return response()->json([
@@ -330,6 +347,47 @@ class MemoControllers extends Controller
             'code' => 200,
             'result' => 'Success menambahkan respon memo'
         ], Response::HTTP_OK);
+    }
+
+    public function readMemo($id, Request $req)
+    {
+        $query = DB::table('memo')
+            ->where('id', '=', $id);
+
+        switch ($req->type) {
+            case 'KONTRAKTOR':
+                $query
+                    ->update([
+                        'is_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
+                    ]);
+                break;
+            case 'KONSULTAN':
+                $query
+                    ->update([
+                        'konsultan_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
+                    ]);
+                break;
+            case 'ADMIN-UPTD':
+                $query
+                    ->update([
+                        'admin_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
+                    ]);
+                break;
+            case 'PPK':
+                $query
+                    ->update([
+                        'ppk_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
+                    ]);
+                break;
+            default:
+                break;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' => 200,
+            'result' => 'Success membaca memo'
+        ]);
     }
 
     public function store(Request $req)

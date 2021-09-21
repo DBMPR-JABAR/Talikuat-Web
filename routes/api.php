@@ -436,6 +436,7 @@ Route::prefix('memo')->group(function () {
     Route::get('/get-all-memo', [MemoControllers::class, 'getAllMemo']);
     Route::get('/detail-memo/{id}', [MemoControllers::class, 'getDetailMemo']);
     Route::get('/total-memo/{id}', [MemoControllers::class, 'getTotalMemo']);
+    Route::post('/read-memo/{id}', [MemoControllers::class, 'readMemo']);
     Route::post('/respon-memo/mobile', [MemoControllers::class, 'responMemoFromMobile']);
     Route::post('/kirim', [MemoControllers::class, 'store']);
     Route::post('/konsultan/kirim/mobile', [MemoControllers::class, 'storeFromMobile']);
