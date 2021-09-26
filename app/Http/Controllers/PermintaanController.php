@@ -1733,7 +1733,7 @@ class PermintaanController extends Controller
             DB::table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
-                "status" => 3,
+                "status" => 4,
                 "ditolak" => 4,
                 'rekomendasi' => $req->rekomendasi,
 
