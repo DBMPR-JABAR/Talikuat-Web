@@ -13,6 +13,7 @@ use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MemoControllers;
 use App\Http\Controllers\MergePdf;
+use App\Http\Controllers\MKController;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
@@ -227,6 +228,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/konsultan/responserequest', [PermintaanController::class, 'responReqKonsultan']);
 
+    Route::post('/mk/responserequest', [MKController::class, 'responMK']);
+
     Route::post('/ppk/responserequest', [PermintaanController::class, 'responReqPpk']);
 
     Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
@@ -248,6 +251,8 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 
     Route::get('/getHistoryLogPermintaan/{id}', [PermintaanController::class, 'getHistoryLogPermintaan']);
+
+
 });
 
 Route::prefix('laporan')->group(function () {

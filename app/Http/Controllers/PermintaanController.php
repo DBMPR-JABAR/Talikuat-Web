@@ -1444,7 +1444,7 @@ class PermintaanController extends Controller
         if ($req->laporan == 1) {
             DB::table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
-                "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "mk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3
             ]);
             if ($req->catatan != NULL) {
@@ -1516,7 +1516,7 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::table('member')->where('akses', 'MK')->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_direksi, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1794,7 +1794,7 @@ class PermintaanController extends Controller
             DB::table('request')->where('id', $req->id)->update([
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_ppk" => $req->catatan,
-                "status" => 2,
+                "status" => 3,
                 "ditolak" => 1,
                 'rekomendasi' => $req->rekomendasi,
             ]);
@@ -1833,6 +1833,11 @@ class PermintaanController extends Controller
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            foreach ($mailto as $email) {
+                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+            $mailto = DB::table('member')->where('akses', 'MK')->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
