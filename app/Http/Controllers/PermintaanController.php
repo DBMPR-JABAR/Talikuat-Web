@@ -1850,7 +1850,7 @@ class PermintaanController extends Controller
 
     public function revisiRequestKonsultan(Request $req)
     {
-        if ($req->option == 'PPK') {
+        if ($req->option == 'MK') {
             DB::table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',

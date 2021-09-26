@@ -12,7 +12,6 @@ class MKController extends Controller
 {
     public function responMK(Request $req)
     {
-
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
             "laporan" => "required",
@@ -97,7 +96,7 @@ class MKController extends Controller
         } else {
             DB::table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
-                "catatan_konsultan" => $req->catatan,
+                "catatan_mk" => $req->catatan,
                 "status" => 2,
                 "ditolak" => 1,
             ]);
@@ -122,7 +121,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nam_direksi)->get();
+            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
