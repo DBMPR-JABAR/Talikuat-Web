@@ -27,7 +27,7 @@ class PermintaanController extends Controller
                     ->orWhere('lokasi_sta', 'like', '%' . $request->keyword . '%');
             });
 
-//        $query = DB::table('request');
+        //        $query = DB::table('request');
 
         switch ($request->type) {
             case 'KONTRAKTOR':
@@ -551,7 +551,6 @@ class PermintaanController extends Controller
                 'code' => 201,
                 'result' => 'Request pekerjaan berhasil diupdate'
             ], Response::HTTP_CREATED);
-
         } catch (\Exception $error) {
 
             DB::rollBack();
@@ -745,7 +744,6 @@ class PermintaanController extends Controller
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
-
             }
 
             DB::commit();
@@ -1246,7 +1244,6 @@ class PermintaanController extends Controller
                 'code' => 201,
                 'result' => 'Request pekerjaan berhasil direvisi'
             ], Response::HTTP_CREATED);
-
         } catch (\Exception $error) {
 
             DB::rollBack();
@@ -2102,16 +2099,17 @@ class PermintaanController extends Controller
         }
     }
 
-    public function getSatuanNmp($id, $data)
+    public function getSatuanNmp(Request $req)
     {
-        $res = DB::table('jadual')->where([['nmp', $id], ['id_data_umum', $data]])->first();
-        if ($res == null) {
-            $res = DB::table('jadual_adendum')->where([['nmp', $id], ['id_data_umum', $data]])->first();
-        }
 
-        return response()->json([
+        if ($req->adendum == null) {
+            $res = DB::table('jadual')->where([['nmp', $req->id], ['id_data_umum', $req->id_data_umum]])->first();
+        } else {
+            $res = DB::table('jadual_adendum')->where([['nmp', $req->id], ['id_data_umum', $req->id_data_umum]])->first();
+        }
+        return response()->json(
             $res
-        ]);
+        );
     }
 
     public function getDetailJadual(Request $req)

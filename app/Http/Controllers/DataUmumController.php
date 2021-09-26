@@ -110,7 +110,7 @@ class DataUmumController extends Controller
     }
 
     public function insertDataUmum(Request $request)
-        // cek lagi untuk mobile ada yang di ganti :)              <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // cek lagi untuk mobile ada yang di ganti :)              <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     {
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($request->all(), [
@@ -454,7 +454,7 @@ class DataUmumController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'code' => '503',
-                'message' => 'Data Jadual Belum Selesai '.$curva
+                'message' => 'Data Jadual Belum Selesai ' . $curva
             ], 503);
         }
         $valid_adendum = DB::table('master_laporan_harian')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
@@ -474,57 +474,68 @@ class DataUmumController extends Controller
             ], 503);
         }
 
-
-        $get_data = DB::table('data_umum')->where('id', $req->id)->first();
-        $data = [
-            // Data Umum
-            'id_data_umum' => $req->id,
-            'pemda' => $get_data->pemda,
-            "opd" => $get_data->opd,
-            "unor" => $get_data->unor,
-            "kategori" => $get_data->kategori,
-            "nm_paket" => $get_data->nm_paket,
-            "no_kontrak" => $get_data->no_kontrak,
-            "tgl_adendum" => $get_data->tgl_kontrak,
-            "nilai_kontrak" => $get_data->nilai_kontrak,
-            "no_spmk" => $get_data->no_spmk,
-            "tgl_spmk" => $get_data->tgl_spmk,
-            "panjang_km" => $get_data->panjang_km,
-            "lama_waktu" => $get_data->lama_waktu,
-            "ppk" => $get_data->ppk,
-            "penyedia" => $get_data->penyedia,
-            "konsultan" => $get_data->konsultan,
-            "nm_ppk" => $get_data->nm_ppk,
-            "nm_se" => $get_data->nm_se,
-            "nm_gs" => $get_data->nm_gs,
-            "field_team_konsultan" => $get_data->field_team_konsultan,
-            "adendum" => "Adendum 1",
-            "created_at" => \Carbon\Carbon::now()
-        ];
-        DB::table('data_umum_adendum')->insert($data);
-        DB::table('data_umum')->where("id", $req->id)->update([
-            "is_adendum" => 1
-        ]);
-
-        $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
-
-        foreach ($get_data_ruas as $data) {
-            DB::table('data_umum_ruas_adendum')->insert([
-                "id_data_umum_adendum" => $data->id_data_umum,
-                "ruas_jalan" => $data->ruas_jalan,
-                "segment_jalan" => $data->segment_jalan,
-                "lat_awal" => $data->lat_awal,
-                "long_awal" => $data->long_awal,
-                "lat_akhir" => $data->lat_akhir,
-                "long_akhir" => $data->long_akhir,
+        try {
+            DB::beginTransaction();
+            $get_data = DB::table('data_umum')->where('id', $req->id)->first();
+            $data = [
+                'id_data_umum' => $req->id,
+                'pemda' => $get_data->pemda,
+                "opd" => $get_data->opd,
+                "unor" => $get_data->unor,
+                "kategori" => $get_data->kategori,
+                "nm_paket" => $get_data->nm_paket,
+                "no_kontrak" => $get_data->no_kontrak,
+                "tgl_adendum" => $get_data->tgl_kontrak,
+                "nilai_kontrak" => $get_data->nilai_kontrak,
+                "no_spmk" => $get_data->no_spmk,
+                "tgl_spmk" => $get_data->tgl_spmk,
+                "panjang_km" => $get_data->panjang_km,
+                "lama_waktu" => $get_data->lama_waktu,
+                "ppk" => $get_data->ppk,
+                "penyedia" => $get_data->penyedia,
+                "konsultan" => $get_data->konsultan,
+                "nm_ppk" => $get_data->nm_ppk,
+                "nm_se" => $get_data->nm_se,
+                "nm_gs" => $get_data->nm_gs,
+                "field_team_konsultan" => $get_data->field_team_konsultan,
                 "adendum" => "Adendum 1",
                 "created_at" => \Carbon\Carbon::now()
+            ];
+            DB::table('data_umum_adendum')->insert($data);
+            DB::table('data_umum')->where("id", $req->id)->update([
+                "is_adendum" => 1
             ]);
-        }
 
-        return response()->json([
-            "code" => 200
-        ], 200);
+            $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
+
+            foreach ($get_data_ruas as $data) {
+                DB::table('data_umum_ruas_adendum')->insert([
+                    "id_data_umum_adendum" => $data->id_data_umum,
+                    "ruas_jalan" => $data->ruas_jalan,
+                    "segment_jalan" => $data->segment_jalan,
+                    "lat_awal" => $data->lat_awal,
+                    "long_awal" => $data->long_awal,
+                    "lat_akhir" => $data->lat_akhir,
+                    "long_akhir" => $data->long_akhir,
+                    "adendum" => "Adendum 1",
+                    "created_at" => \Carbon\Carbon::now()
+                ]);
+            }
+            DB::table('request')->where('nama_kegiatan',$get_data->nm_paket)->update([
+                'disabled'=>1
+            ]);
+
+            DB::commit();
+            return response()->json([
+                "code" => 200
+            ], 200);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                "code" => 500,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -845,7 +856,7 @@ class DataUmumController extends Controller
         }
     }
 
-    public function getProgressPekerjaan() {
-
+    public function getProgressPekerjaan()
+    {
     }
 }
