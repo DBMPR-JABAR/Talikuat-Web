@@ -424,8 +424,12 @@ Route::prefix('curva')->group(function () {
 
 Route::prefix('utils')->group(function () {
 
-    Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
+    Route::post('konsultan', [UtilsControllers::class, 'getTeamKonsultan']);
     Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
+    Route::post('check-volume', [UtilsControllers::class, 'checkVolume']);
+    Route::post('volume-adendum', [UtilsControllers::class, 'volumeAdendum']);
+
+
 
 });
 Route::prefix('memo')->group(function () {

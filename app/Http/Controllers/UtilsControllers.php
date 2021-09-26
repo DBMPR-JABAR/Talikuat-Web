@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UtilsControllers extends Controller
 {
-    public function getteamKonsltan(Request $req)
+    public function getTeamKonsultan(Request $req)
     {
         $result = DB::table('master_konsultan')->where('nama', $req->nama)->first();
         $team = DB::table('team_konsultan')->where([
             ['id_konsultan', '=', $result->id],
-            ['jabatan', '=', 'SITE ENGINEERING']])->get();
+            ['jabatan', '=', 'SITE ENGINEERING']
+        ])->get();
 
         return response()->json([
             'status' => 'success',
@@ -53,5 +55,49 @@ class UtilsControllers extends Controller
             $fileName = substr($fileName, 0, -1);
         }
         return $fileName;
+    }
+
+
+    public function checkVolume(Request $req)
+    {
+        $get_volume = DB::table('data_umum_adendum')->where([['id_data_umum', $req->id], ['adendum', $req->adendum]])->first();
+        if (!$get_volume->volume_adendum) {
+            return response()->json([
+                'message' => 'null'
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'exist'
+            ]);
+        }
+    }
+    public function volumeAdendum(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "volume" => "required|min:4|max:6",
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '500',
+                'error' => $validator->getMessageBag()->getMessages()
+            ], 500);
+        }
+        try {
+            DB::table('data_umum_adendum')->where([['id_data_umum', $req->id], ['adendum', $req->adendum]])->update([
+                'volume_adendum' => $req->volume
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'code' => '200',
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'code' => '500',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 }

@@ -10,24 +10,14 @@ class DataUmumAdendum extends Controller
 {
     public function updateAdendum(Request $req)
     {   
-        return response()->json([
-           'message'=> $req->all()
-        ]);
         date_default_timezone_set('Asia/Jakarta');
         DB::beginTransaction();
         try {
-            $nm_se = DB::table('team_konsultan')->where('id', $req->team)->first();
             DB::table('data_umum_adendum')->where('id', $req->id)->update([
                 "nilai_kontrak" => $req->nilai_kontrak,
                 "tgl_adendum" => $req->tgl_adendum,
                 "panjang_km" => $req->panjang_km,
                 "lama_waktu" => $req->lama_waktu,
-                "penyedia" => $req->penyedia,
-                "konsultan" => $req->konsultan,
-                "ppk" => $req->ppk,
-                "nm_se" => $nm_se->nama,
-                "nm_gs" => $req->nm_gs,
-                "field_team_konsultan" => $req->team,
                 "updated_at" => \Carbon\Carbon::now()
             ]);
             DB::commit();
