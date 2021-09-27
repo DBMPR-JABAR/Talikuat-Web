@@ -450,7 +450,7 @@ class DataUmumController extends Controller
     public function addAdendum(Request $req)
     {
         $curva = DB::table('jadual')->where('id_data_umum', $req->id)->sum('bobot');
-        if (number_format($curva,2,'.','') >= 100.00 ) {
+        if (number_format($curva,2,'.','') != 100.00 ) {
             return response()->json([
                 'status' => 'failed',
                 'code' => '503',
