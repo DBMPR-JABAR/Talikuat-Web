@@ -53,6 +53,8 @@ class MasterKonsultanController extends Controller
             'nama'=> 'required',
             'alamat'=> 'required',
             'nama_direktur'=> '',
+            'npwp' => 'unique:master_konsultan',
+
            
         ]);
         if ($validator->fails()) {
@@ -64,6 +66,7 @@ class MasterKonsultanController extends Controller
             'nama'=>$request->nama,
             'alamat'=>$request->alamat,
             'nama_direktur'=>$request->nama_direktur,
+            'npwp'=>$request->npwp,
             'created_by'=>Auth::user()->id,
         ]);
         $konsultan = MasterKonsultan::create($temp);
@@ -140,6 +143,8 @@ class MasterKonsultanController extends Controller
             'nama'=> 'required',
             'alamat'=> 'required',
             'nama_direktur'=> '',
+            'npwp' => Rule::unique('master_konsultan', 'npwp')->ignore($id),
+
         ]);
         if ($validator->fails()) {
             storeLogActivity(declarLog(2, 'Konsultan', $request->nama));
@@ -152,6 +157,8 @@ class MasterKonsultanController extends Controller
         $update_konsultan->nama= $request->nama;
         $update_konsultan->alamat= $request->alamat;
         $update_konsultan->nama_direktur= $request->nama_direktur;
+        $update_konsultan->npwp= $request->npwp;
+
         $update_konsultan->updated_by= Auth::user()->id;
         $update_konsultan->save();
        

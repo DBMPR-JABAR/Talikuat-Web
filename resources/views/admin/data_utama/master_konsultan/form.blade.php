@@ -85,6 +85,18 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label>NPWP</label>
+                                <input type="text" name="npwp" id="npwp" value="{{ @$data->npwp }}" placeholder="12.345.674.9-629.000" class="form-control" required>
+                                
+                                @error('npwp')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
                         {{-- <div class="col-md-12">
 
                             <div class="row">
@@ -621,8 +633,11 @@
 @endsection
 
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
 <script>
 $(document).ready(function(){
+    $('#npwp').mask('00.000.000.0-000.000');
   
     var maxGroupPrice = 10;
 

@@ -49,8 +49,9 @@
                         <tr>
                             <th>No</th>
                             <th>Name PPK</th>
-                            <th>Alamat</th>
-                            <th style="width: 22%">Aksi</th>
+                            <th>UPTD</th>
+                            <th>E-mail</th>
+                            <th style="width: 25%">Aksi</th>
 
                         </tr>
                     </thead>
@@ -60,21 +61,28 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>
-                                {!! $item->nama !!}
+                                {!! $item->user_detail->user->name !!}
                             </td>
                             <td>
-                                {!! $item->alamat !!}
+                                {!! $item->uptd->nama !!}
+                            </td>
+                            <td>
+                                {!! $item->user_detail->user->email !!}
+                            </td>
+                            <td>
 
-                            </td>
-                            <td>
-                                @if (Request::segment(3) != 'trash')
-                                    <a type='button' href='{{ route('show.masterppk',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
-                                    <a type='button' href='{{ route('edit.masterppk',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                @if (Request::segment(3) == 'trash')
+                                <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
                                 @else
-                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @if($item->user_detail->account_verified_at)
+                                        <a type='button' href='{{ route('show.masterppk',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
+                                        <a type='button' href='{{ route('edit.masterppk',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                    @else
+                                        <a type='button' href='{{ route('verified.user',$item->user_detail->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                    @endif
 
+                                <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                                 @endif
-                                    <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
 
                             </td>
                         </tr>
@@ -108,73 +116,64 @@
                     </div>
 
                     <div class="modal-body p-5">
+
                         <div class="form-group">
-                            <label>Nama </label>
-                            <input
-                                type="text"
-                                name="nama"
-                                id="nama"
-                                value="{{ old('nama') }}"
-                                placeholder="Masukkan Nama "
-                                class="
-                                    form-control
-                                    @error('nama')
-                                    is-invalid
-                                    @enderror
-                                "
-                                required
-                            />
-                            @error('nama')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
+                            <label>Nama</label>
+                            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan name" class="form-control @error('name') is-invalid @enderror" required>
+                            @error('name')
+                            <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Alamat</label>
-                            <input
-                                type="text"
-                                name="alamat"
-                                id="alamat"
-                                value="{{ old('alamat') }}"
-                                placeholder="Masukan Alamat"
-                                class="
-                                    form-control
-                                    @error('alamat')
-                                    is-invalid
-                                    @enderror
-                                "
-                                required
-                            />
-                            @error('alamat')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
+                            <label>E-mail</label>
+                            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder="Masukkan email" class="form-control @error('email') is-invalid @enderror" required>
+                            @error('email')
+                            <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
                             </div>
                             @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" required>
+                            @error('password')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Ulangi Password</label>
+                            <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                                class="form-control" required>
+                        </div>
+                        <div class="form-group ">
+                            <label>No Telp</label>
+                            <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
+                        </div>
+                        <div class="form-group ">
+                            <label>Unit</label>
+                            <select
+                                name="unit"
+                                class="form-control"
+                                required
+                                value="{{ old('unit') }}"
+                            >
+                            <option value="" selected>Pilih Unit</option>
+                            @foreach (@$uptd_list as $item)
+                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach
+                            
+                            </select>
                         </div>
                         
                     </div>
 
                     <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-default waves-effect"
-                            data-dismiss="modal"
-                        >
-                            Tutup
-                        </button>
-                        <button
-                            type="submit"
-                            class="btn btn-primary waves-effect waves-light"
-                        >
-                            Simpan
-                        </button>
+                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Simpan</button>
                     </div>
                 </form>
             </div>

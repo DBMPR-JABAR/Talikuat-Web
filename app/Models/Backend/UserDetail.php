@@ -43,4 +43,12 @@ class UserDetail extends Model
         return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');
         // return $this->belongsToMany('App\Models\Backend\UserRule', 'user_rule_user', 'user_id', 'rule_user_id','user_id');
     }
+    public function ppk()
+    {
+        return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');
+    }
+    public function master_admin()
+    {
+        return $this->hasOne('App\Models\Backend\MasterAdmin', 'user_detail_id');
+    }
 }

@@ -24,6 +24,9 @@ Route::get('/', function () {
 
 // DASHBOARD
 // Route::get('/dashboard',[DashboardControllers::class,'index'])->name('dashboard');
+Route::get('getCity', [DropdownAddressController::class, 'getCity']);
+Route::get('getRuasByUptd', [DropdownDataController::class, 'getRuasByUptd']);
+Route::get('getPpkByUptd', [DropdownDataController::class, 'getPpkByUptd']);
 
 Route::prefix('admin')->group(function () {
 

@@ -16,6 +16,8 @@ use App\Models\Backend\MasterKontraktor;
 use App\Models\Backend\MasterKontraktorGs as KontraktorGs;
 use App\Models\Backend\MasterKonsultan;
 use App\Models\Backend\MasterKonsultanFt as KonsultanFt;
+use App\Models\Backend\MasterAdmin;
+use App\Models\Backend\MasterPpk;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -355,7 +357,7 @@ class UserController extends Controller
             $failed = "Akun Gagal Diupdate!";
             $update_user = User::find($id)->update($data);
         }else if($desc == 'profiles'){
-            
+            // dd($request->uptd);
             $this->validate($request,[
                 'nama'=> 'required',
                 'tgl_lahir'=> 'required',
@@ -373,8 +375,10 @@ class UserController extends Controller
                 'kode_pos'=> '',
                 'alamat'=> '',
                 'agama'=> '',
+                'uptd'=> '',
+                'rule_user' => 'required',
             ]);
-            // dd($id);
+            // dd($request->all());
 
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
             $email = $update_user->user->email;
@@ -393,7 +397,13 @@ class UserController extends Controller
                 storeLogActivity(declarLog(2, 'Users', $email.': '.$validator->messages()->first() ));
                 return back()->with(['error'=>$validator->messages()->first()]);
             }
-            
+            if($request->input('rule_user') == 2 || $request->input('rule_user') == 3){
+                $validator = Validator::make($request->all(), ['uptd' =>'required' ]);
+            }
+            if ($validator->fails()){
+                storeLogActivity(declarLog(2, 'Users', $email.': '.$validator->messages()->first() ));
+                return back()->with(['error'=>$validator->messages()->first()]);
+            }
             $update_user->nama = $request->input('nama');
             $update_user->nip = $request->input('nip');
             $update_user->nik = $request->input('nik');
@@ -426,9 +436,20 @@ class UserController extends Controller
             }else if($update->user_detail->kontraktor)
                 $update_deet->kontraktor_id = $request->input('kontraktor');
             
+            $update_deet->uptd_id = $request->input('uptd');
+            $update_deet->rule_user_id = $request->input('rule_user');
             $update_deet->save();
             // dd($id);
-            
+            if($request->input('rule_user') == 2){
+                $update_ppk = MasterPpk::firstOrNew(['user_detail_id'=> $update_deet->id]);
+                $update_ppk->uptd_id = $request->input('uptd');
+                $update_ppk->save();
+            }else if($request->input('rule_user') == 3){
+                $update_master_admin = MasterAdmin::firstOrNew(['user_detail_id'=> $update_deet->id]);
+                $update_master_admin->uptd_id = $request->input('uptd');
+                $update_master_admin->save();
+                // $update_deet->master_admin->firstOrNew(['uptd_id' =>$request->input('uptd')]);
+            }
 
         }
         if($update_user){
@@ -559,7 +580,9 @@ class UserController extends Controller
         if($update_detail){
             $user = User::find($id);
             $user->save();
-            return redirect(route('user.index'))->with(['success'=>'Account Has Been Verified!']);
+            return back()->with(['success'=>'Account Has Been Verified!']);
+
+            // return redirect(route('user.index'))->with(['success'=>'Account Has Been Verified!']);
         }
             
     }
