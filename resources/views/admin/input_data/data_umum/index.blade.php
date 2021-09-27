@@ -1,4 +1,22 @@
 @extends('layout.index') @section('title','Kontraktor') @section('header')
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css"
+/>
+<style>
+    th {
+        width: fit-content !important;
+    }
+</style>
+
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">Data Umum</h3>
@@ -16,78 +34,113 @@
 @endsection @section('content')
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Data Umum</h4>
-                @if (Request::segment(3) != 'trash')
-                <a  href="{{ route('create.dataumum') }}" class="btn btn-mat btn-primary mb-3">
-                    <i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
-                <a href="{{ route('trash.masterkontraktor') }}" class="btn btn-mat btn-danger mb-3"> 
-                    <i class="mdi mdi-delete menu-icon"></i> Trash
-                </a>
-                @else
-                <a
-                    href="{{ route('masterkontraktor.index') }}"
-                    class="btn btn-mat btn-danger mb-3"
-                    ><i class="mdi mdi-undo menu-icon"></i> Kembali</a
-                >
-                @endif
-                <div id="table-wrapper">
-                    <div id="table-scroll">
-                        <table
-                            class="table-striped table-scrolls"
-                            style="width: 100%"
-                            id="dataKontraktor">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>No Kontrak</th>
-                                    <th>Unor</th>
-                                    <th>Kategori</th>
-                                    <th>Nama Kegiatan</th>
-                                    <th>Ruas</th>
-                                    <th>kontraktor</th>
-                                    <th>PPK</th>
-                                    <th style="width: 22%">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data as $no => $item)
-                                    <tr>
-                                        <td>{{ ++$no }}</td>
-                                        <td>
-                                            {!! $item->no_kontrak !!}
-                                        </td>
-                                    
-                                        <td>{!! $item->unor !!}</td>
-                                        <td>{!! $item->kategori !!}</td>
-                                        <td>{!! $item->nm_paket !!}</td>
-                                        <td>{!! $item->nm_paket !!}</td>
-                                        <td>{!! $item->penyedia !!}</td>
-                                        <td>{!! $item->nm_ppk !!}</td>
-                                        <td>
-                                            @if (Request::segment(3) != 'trash')
-                                            <a type='button' href='{{ route('show.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
-                                            <a type='button' href='{{ route('edit.masterkontraktor',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
-                                            @else
-                                            <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
-
-                                            @endif
-                                            <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+        <div class="container">
+            <h4 class="card-title">Data Umum</h4>
+            @if (Request::segment(3) != 'trash')
+            <a
+                href="{{ route('create.dataumum') }}"
+                class="btn btn-mat btn-primary mb-3"
+            >
+                <i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
+            >
+            <a
+                href="{{ route('trash.masterkontraktor') }}"
+                class="btn btn-mat btn-danger mb-3"
+            >
+                <i class="mdi mdi-delete menu-icon"></i> Trash
+            </a>
+            @else
+            <a
+                href="{{ route('masterkontraktor.index') }}"
+                class="btn btn-mat btn-danger mb-3"
+                ><i class="mdi mdi-undo menu-icon"></i> Kembali</a
+            >
+            @endif
         </div>
+    </div>
+    <div class="container">
+        <table
+            class="display responsive"
+            id="dataKontraktor"
+            style="width: 100%"
+        >
+            <thead>
+                <tr>
+                    <th style="width: 10px">No</th>
+                    <th>No Kontrak</th>
+                    <th>Nama Kegiatan</th>
+                    <th>Unor</th>
+                    <th>Kategori</th>
+                    <th>Ruas</th>
+                    <th>kontraktor</th>
+                    <th>PPK</th>
+                    <th style="width: 22%">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($data as $no => $item)
+                <tr>
+                    <td style="width: 10px">{{ +(+$no) + 1 }}</td>
+                    <td>{!! $item->no_kontrak !!}</td>
+                    <td>{!! $item->nm_paket !!}</td>
+                    <td>{!! $item->unor !!}</td>
+                    <td>{!! $item->kategori !!}</td>
+                    <td>{!! $item->nm_paket !!}</td>
+                    <td>{!! $item->penyedia !!}</td>
+                    <td>{!! $item->nm_ppk !!}</td>
+                    <td>
+                        @if (Request::segment(3) != 'trash')
+                        <a
+                            type="button"
+                            href="route('show.masterkontraktor',$item->id) }}"
+                            class="
+                                btn btn-sm btn-success
+                                waves-effect waves-light
+                            "
+                            ><i class="mdi mdi-search-web menu-icon"></i
+                        ></a>
+                        <a
+                            type="button"
+                            href="route('edit.masterkontraktor',$item->id) }}"
+                            class="
+                                btn btn-sm btn-warning
+                                waves-effect waves-light
+                            "
+                            ><i class="mdi mdi-table-edit menu-icon"></i
+                        ></a>
+                        @else
+                        <a
+                            type="button"
+                            href="#Restore"
+                            data-toggle="modal"
+                            data-id="{{$item->id}}"
+                            class="
+                                btn btn-sm btn-success
+                                waves-effect waves-light
+                            "
+                            ><i class="mdi mdi-backup-restore menu-icon"></i
+                            >Restore</a
+                        >
+                        @endif
+                        <a
+                            type="button"
+                            href="#delModal"
+                            data-toggle="modal"
+                            data-id="{{$item->id}}"
+                            class="
+                                btn btn-sm btn-danger
+                                waves-effect waves-light
+                            "
+                            ><i class="mdi mdi-delete menu-icon"></i></a
+                        ><br />
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 <div class="modal-only">
-    
     <div class="modal fade" id="delModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -164,14 +217,26 @@
     </div>
 </div>
 @endsection @section('script')
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#dataKontraktor").DataTable();
+        $("#dataKontraktor").DataTable({
+            responsive: true,
+            columnDefs: [
+                { responsivePriority: 1, targets: 0 },
+                { responsivePriority: 2, targets: 1 },
+                { responsivePriority: 3, targets: -1 },
+            ],
+        });
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/master_kontraktor/trash/move_to_trash') }}/` + id;
+            const url =
+                `{{ url('admin/master_kontraktor/trash/move_to_trash') }}/` +
+                id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #delHref").attr("href", url);
@@ -180,12 +245,12 @@
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/master_kontraktor/trash/restore') }}/` + id;
+            const url =
+                `{{ url('admin/master_kontraktor/trash/restore') }}/` + id;
             console.log(url);
             const modal = $(this);
             modal.find(".modal-footer #resHref").attr("href", url);
         });
     });
-   
 </script>
 @endsection

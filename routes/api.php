@@ -13,6 +13,7 @@ use App\Http\Controllers\KontraktorController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MemoControllers;
 use App\Http\Controllers\MergePdf;
+use App\Http\Controllers\MKController;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
@@ -227,6 +228,8 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/konsultan/responserequest', [PermintaanController::class, 'responReqKonsultan']);
 
+    Route::post('/mk/responserequest', [MKController::class, 'responMK']);
+
     Route::post('/ppk/responserequest', [PermintaanController::class, 'responReqPpk']);
 
     Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
@@ -241,13 +244,15 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/updaterequest/revisikonsultan/mobile', [PermintaanController::class, 'revisiRequestKonsultanFromMobile']);
 
-    Route::get('/getsatuannmp/{id}/{data}', [PermintaanController::class, 'getSatuanNmp']);
+    Route::post('/getsatuannmp', [PermintaanController::class, 'getSatuanNmp']);
 
     Route::post('/getdetailjadual', [PermintaanController::class, 'getDetailJadual']);
 
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 
     Route::get('/getHistoryLogPermintaan/{id}', [PermintaanController::class, 'getHistoryLogPermintaan']);
+
+
 });
 
 Route::prefix('laporan')->group(function () {
@@ -424,17 +429,30 @@ Route::prefix('curva')->group(function () {
 
 Route::prefix('utils')->group(function () {
 
-    Route::post('konsultan', [UtilsControllers::class, 'getteamKonsltan']);
+    Route::post('konsultan', [UtilsControllers::class, 'getTeamKonsultan']);
     Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
+    Route::post('check-volume', [UtilsControllers::class, 'checkVolume']);
+    Route::post('volume-adendum', [UtilsControllers::class, 'volumeAdendum']);
+
+
 
 });
 Route::prefix('memo')->group(function () {
 
-    Route::post('/konsultan/kirim', [MemoControllers::class, 'store']);
+    Route::get('/unread-memo', [MemoControllers::class, 'getUnreadMemo']);
+    Route::get('/get-latest-memo', [MemoControllers::class, 'getLatestMemo']);
+    Route::get('/get-all-memo/{id}', [MemoControllers::class, 'getAllMemoByIdDataUmum']);
+    Route::get('/get-all-memo', [MemoControllers::class, 'getAllMemo']);
+    Route::get('/detail-memo/{id}', [MemoControllers::class, 'getDetailMemo']);
+    Route::get('/total-memo/{id}', [MemoControllers::class, 'getTotalMemo']);
+    Route::post('/read-memo/{id}', [MemoControllers::class, 'readMemo']);
+    Route::post('/respon-memo/mobile', [MemoControllers::class, 'responMemoFromMobile']);
+    Route::post('/kirim', [MemoControllers::class, 'store']);
+    Route::post('/konsultan/kirim/mobile', [MemoControllers::class, 'storeFromMobile']);
     Route::post('/cek-memo', [MemoControllers::class, 'cekMemo']);
     Route::post('/read/{id}', [MemoControllers::class, 'update']);
     Route::post('/respon/{id}', [MemoControllers::class, 'responMemo']);
-    Route::post('/cek-konsultan',[MemoControllers::class, 'cekMemoKonsultan']);
-    Route::post('/read-konsultan',[MemoControllers::class, 'readKonsultan']);
+    Route::post('/cek-konsultan', [MemoControllers::class, 'cekMemoKonsultan']);
+    Route::post('/read-konsultan', [MemoControllers::class, 'readKonsultan']);
 
 });

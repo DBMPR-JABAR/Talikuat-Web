@@ -13,19 +13,62 @@ class LaporanController extends Controller
 {
     private $PATH_FILE_DB = "public/lampiran/file_lap";
 
-    public function getAllLaporanHarian()
+    public function getAllLaporanHarian(Request $req)
     {
+        $query = DB::table('master_laporan_harian')
+            ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
+            ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
+            ->where(function ($query) use ($req) {
+                return $query->where('master_laporan_harian.tanggal', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('master_laporan_harian.volume', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('master_laporan_harian.bobot', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('detail_laporan_harian_pekerjaan.no_pekerjaan', 'like', '%' . $req->keyword . '%')
+                    ->orWhere('detail_laporan_harian_pekerjaan.jenis_pekerjaan', 'like', '%' . $req->keyword . '%');
+            });
 
-        $result = DB::table('master_laporan_harian as master')
-            ->leftJoin('detail_laporan_harian_pekerjaan as detail', 'master.no_trans', '=', 'detail.no_trans')
-            ->select('master.*', 'detail.jenis_pekerjaan', 'detail.no_pekerjaan', 'detail.satuan', 'detail.volume')
-            ->get();
+        switch ($req->type) {
+            case 'KONTRAKTOR':
+                $result = $query
+                    ->where('master_laporan_harian.nama_kontraktor', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'KONSULTAN':
+                $result = $query
+                    ->where('master_laporan_harian.nama_konsultan', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'ADMIN-UPTD':
+                $result = $query
+                    ->where('master_laporan_harian.unor', '=', $req->value)
+                    ->paginate();
+                break;
+            case 'PPK':
+                $result = $query
+                    ->where('master_laporan_harian.nama_lengkap', '=', $req->value)
+                    ->paginate();
+                break;
+            default:
+                $result = $query->paginate();
+                break;
+        }
+
+        foreach ($result as $item) {
+            $item->gambar = $item->gambar != null ? Storage::url($item->gambar) : null;
+            $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
+            $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
+            $item->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_peralatan = DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $item->no_trans)->get();
+        }
 
         return response()->json([
             'status' => 'success',
-            'code' => '200',
+            'code' => 200,
             'result' => $result
-        ]);
+        ], Response::HTTP_OK);
     }
 
     public function getLaporanProgressKegiatanTerbaru()

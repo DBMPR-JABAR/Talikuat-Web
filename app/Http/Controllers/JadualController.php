@@ -498,11 +498,27 @@ class JadualController extends Controller
 
     public function excelToData(Request $request)
     {
-
-        $file = $request->file('jadual_excel_file');
+        try {
+            $file = $request->file('jadual_excel_file');
 
         $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
-
+        $nmp= $list_jadual[0]['no_mata_pembayaran'];
+        if (!$nmp) {
+            return response()->json([
+                'status' => 'error',
+                'code' => '500',
+                'result'=>'Format Salah'
+            ],500);
+        }else{
+        
+        $master_nmp = DB::table('master_jenis_pekerjaan')->where('id',$nmp)->first();
+        if (!$master_nmp) {
+            return response()->json([
+                'status' => 'error',
+                'code' => '500',
+                'result' => 'Nomor Mata Pembayaran Salah Atau Tidak Terdaftar Pada Talikuat Mohon Hubungi Admin UPTD'
+            ],500);
+        }
         foreach ($list_jadual as $jadual) {
             $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
             $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
@@ -515,6 +531,15 @@ class JadualController extends Controller
             'code' => '200',
             'result' => $list_jadual
         ]);
+    }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error array',
+                'code' => '500',
+                'result' => $th->getMessage()
+            ],500);
+        }
+        
     }
 
 

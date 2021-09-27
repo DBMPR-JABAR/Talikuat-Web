@@ -13,8 +13,7 @@ class DataUmumController extends Controller
     public function index()
     {
         //
-        $data = DataUmum::all();
-        // dd($data);
+        $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
         return view('admin.input_data.data_umum.index',compact('data'));
     }
     public function create()
