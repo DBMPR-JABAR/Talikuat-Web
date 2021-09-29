@@ -51,4 +51,8 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterAdmin', 'user_detail_id');
     }
+    public function uptd()
+    {
+        return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
+    }
 }

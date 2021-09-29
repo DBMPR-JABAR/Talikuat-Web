@@ -37,6 +37,8 @@ Route::prefix('admin')->group(function () {
             //route dashboard
             Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
             Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
+            Route::get('/user_admin',[MasterAdminController::class,'index'])->name('user_admin.index');
+            Route::post('/user_admin/store',[MasterAdminController::class,'store'])->name('store.user_admin');
     
             Route::prefix('user')->group(function (){
                 Route::get('/',[UserController::class,'index'])->name('user.index');

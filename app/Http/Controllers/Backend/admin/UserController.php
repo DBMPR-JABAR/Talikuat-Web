@@ -314,14 +314,13 @@ class UserController extends Controller
             }
         }
         $data = User::find($id);
-        $kontraktors = MasterKontraktor::all();
-        $konsultans = MasterKonsultan::all();
+        
         $rule_user = UserRule::all();
         $uptd = Uptd::all();
 
         // dd($data->user_detail->kontraktor);
         // dd($data);
-        return view('admin.user.form',compact('data','kontraktors','konsultans','rule_user','uptd'));
+        return view('admin.user.form',compact('data','rule_user','uptd'));
     }
 
     /**
@@ -357,7 +356,6 @@ class UserController extends Controller
             $failed = "Akun Gagal Diupdate!";
             $update_user = User::find($id)->update($data);
         }else if($desc == 'profiles'){
-            // dd($request->uptd);
             $this->validate($request,[
                 'nama'=> 'required',
                 'tgl_lahir'=> 'required',
@@ -379,6 +377,7 @@ class UserController extends Controller
                 'rule_user' => 'required',
             ]);
             // dd($request->all());
+            // dd($request->rule_user);
 
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
             $email = $update_user->user->email;
@@ -443,10 +442,12 @@ class UserController extends Controller
             if($request->input('rule_user') == 2){
                 $update_ppk = MasterPpk::firstOrNew(['user_detail_id'=> $update_deet->id]);
                 $update_ppk->uptd_id = $request->input('uptd');
+                $update_ppk->nama = $request->input('nama');
                 $update_ppk->save();
             }else if($request->input('rule_user') == 3){
                 $update_master_admin = MasterAdmin::firstOrNew(['user_detail_id'=> $update_deet->id]);
                 $update_master_admin->uptd_id = $request->input('uptd');
+                $update_master_admin->nama = $request->input('nama');
                 $update_master_admin->save();
                 // $update_deet->master_admin->firstOrNew(['uptd_id' =>$request->input('uptd')]);
             }

@@ -6,7 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Backend\Province as Province;
 use App\Models\Backend\City as City;
 use App\Models\Backend\Uptd;
-
+use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterKonsultan;
 use View;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,9 @@ class AppServiceProvider extends ServiceProvider
         });
         View::composer('*', function ($view) {
             $uptd_list = Uptd::whereBetween('id', [1, 6])->get();
-            $view->with(['uptd_list'=> $uptd_list]);
+            $kontraktors = MasterKontraktor::all();
+            $konsultans = MasterKonsultan::where('is_delete',null)->get();
+            $view->with(['uptd_list'=> $uptd_list, 'kontraktors'=>$kontraktors, 'konsultans'=>$konsultans]);
         });
     }
 }

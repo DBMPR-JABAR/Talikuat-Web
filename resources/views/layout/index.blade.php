@@ -145,7 +145,14 @@
                                     <a
                                         class="nav-link"
                                         href="{{ route('user.index') }}"
-                                        >Users</a
+                                        >All Users</a
+                                    >
+                                </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('user_admin.index') }}"
+                                        >Admin</a
                                     >
                                 </li>
                                 <li class="nav-item">
@@ -153,6 +160,13 @@
                                         class="nav-link"
                                         href="{{ route('masterppk.index') }}"
                                         >PPK</a
+                                    >
+                                </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('masterppk.index') }}"
+                                        >MK</a
                                     >
                                 </li>
                                 <li class="nav-item">
@@ -654,6 +668,15 @@
         <script src="{{ asset('assets/js/dashboard.js') }}"></script>
         <!-- End custom js for this page -->
         <script src="{{ asset('vendor/datatables.min.js') }}"></script>
+        <script>
+            $('.drop-down-show-hide').hide();
+        
+            $('#dropDown').change(function () {
+                $('.drop-down-show-hide').hide()    
+                $('#' + this.value).show();
+        
+            });
+        </script>
         @yield('script')
         <script>
             function setDataSelect(id, url, id_select, text, valueOption, textOption) {

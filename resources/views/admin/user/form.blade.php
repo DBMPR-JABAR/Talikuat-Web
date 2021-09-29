@@ -1,6 +1,13 @@
 @extends('layout.index') 
 @section('title','Akun & Profile')
 @section('header')
+<style>
+    select[readonly] {
+  background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+  pointer-events: none;
+  touch-action: none;
+}
+</style>
 @endsection 
 
 @section('page-header')
@@ -235,7 +242,7 @@
                         @if (@$data->user_detail->konsultan || @$data->user_detail->rule->category == "KONSULTAN")
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <select class="form-control" name="konsultan" @if ( Auth::user()->id != 1) disabled @endif>
+                            <select class="form-control" name="konsultan" @if ( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
                                 <option value="">Select</option> 
                                 @foreach ($konsultans as $no =>$konsultan)
                                     <option value="{{ $konsultan->id }}" @if (@$data->user_detail->konsultan_id != null && $konsultan->id == $data->user_detail->konsultan_id) selected @endif>{{ $konsultan->nama }}</option> 
@@ -245,7 +252,7 @@
                         @elseif (@$data->user_detail->kontraktor || @$data->user_detail->rule->category == "KONTRAKTOR")
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <select class="form-control" name="kontraktor" @if ( Auth::user()->id != 1) disabled @endif>
+                            <select class="form-control" name="kontraktor" @if ( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
                                 <option value="">Select</option>
                                 @foreach ($kontraktors as $no =>$kontraktor)
                                     <option value="{{ $kontraktor->id }}" @if (@$data->user_detail->kontraktor_id != null && $kontraktor->id == $data->user_detail->kontraktor_id) selected @endif>{{ $kontraktor->nama }}</option> 
@@ -256,7 +263,7 @@
 
                         <div class="form-group">
                             <label>Jabatan</label>
-                            <select class="form-control" name="rule_user" @if ( Auth::user()->id != 1) disabled @endif>
+                            <select class="form-control" name="rule_user" @if ( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
                                 <option value="">Select</option>
                                 @foreach ($rule_user as $no =>$rule)
                                 <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
@@ -265,7 +272,7 @@
                         </div>
                         <div class="form-group">
                             <label>Unit </label>
-                            <select class="form-control" name="uptd" @if( Auth::user()->id != 1) disabled @endif>
+                            <select class="form-control" name="uptd" @if( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
                                 <option value="">Select</option>
                                 @if (@$data->user_detail->rule_user_id == 2)
                                     @foreach ($uptd as $no =>$uptd)

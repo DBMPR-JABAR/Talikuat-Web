@@ -20,9 +20,9 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Users</h4>
+                <h4 class="card-title">Data User Admin</h4>
                 @if (Request::segment(3) != 'trash')
-                    {{-- <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a> --}}
+                    <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
                     <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
                 @else
                     <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
@@ -35,11 +35,9 @@
                         <tr>
                             <th class="text-center" style="width: 5%"> No </th>
                             <th class="text-center"> Name </th>
-                            {{-- <th class="text-center"> Progress </th> --}}
-                            <th class="text-center"> NIK </th>
-                            <th class="text-center"> NIP </th>
-                            <th class="text-center"> Email Verified </th>
-                            <th class="text-center"> Account Verified </th>
+                            <th class="text-center"> Jabatan </th>
+                            <th class="text-center"> Keterangan </th>
+                            <th class="text-center"> E-mail </th>
                             <th class="text-center"> Action </th>
 
                         </tr>
@@ -52,26 +50,20 @@
                             {{-- <td class="py-1"><img src="../../../assets/images/faces-clipart/pic-1.png" alt="image"></td> --}}
                             <td class="text-center">{{ ++$data}}</td>
                             <td>{{ @$item->user->name }} </td>
-                            {{-- <td>
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            </td> --}}
-                            <td> {{ @$item->user->profile->nik }} </td>
-                            <td> {{ @$item->user->profile->nip }} </td>
-                            <td class="text-center"> 
-                                @if($item->email_verified_at)
-                                <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
-                                @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
+                            <td> {{ @$item->rule->rule }} </td>
+                            <td> 
+                                @if (@$item->rule->id == 3)
+                                {{ @$item->uptd->nama }}
+                                @elseif (@$item->rule->id == 9)
+                                {{ @$item->konsultan->nama }}
+                                @elseif (@$item->rule->id == 10)  
+                                {{ @$item->kontraktor->nama }}
                                 @endif
+                                {{-- {{ @$item->user->profile->nip }}  --}}
                             </td>
-                            <td class="text-center">
-                                @if($item->account_verified_at)
-                                <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
-                                @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
-                                @endif
+                           
+                            <td >
+                                {{ @$item->user->email }}
                             </td>
 
                             <td class="text-center"> 
@@ -103,17 +95,81 @@
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
 
-                <form action="{{ route('store.user') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('store.user_admin') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
+                        <h4 class="modal-title">Tambah Admin</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body p-5">
-
+                        <div class="form-group">
+                            
+                            <label>Role</label>
+                            <select
+                                name="rule"
+                                class="form-control"
+                                required
+                                id="dropDown"
+                                value="{{ old('unit') }}">
+                            <option value="" selected>Pilih Role</option>
+                            <option value="ADMIN" >ADMINISTRATOR</option>
+                            <option value="ADMIN-KONSULTAN" >ADMINISTRATOR KONSULTAN</option>
+                            <option value="ADMIN-KONTRAKTOR" >ADMINISTRATOR KONTRAKTOR</option>
+                            </select>
+                        </div>
+                        <div id="ADMIN" class="drop-down-show-hide">
+                            <div class="form-group ">
+                                <label>Unit</label>
+                                <select
+                                    name="unit"
+                                    class="form-control"
+                                    value="{{ old('unit') }}">
+                                <option value="" selected>Pilih Semua</option>
+                                @foreach (@$uptd_list as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div id="ADMIN-KONTRAKTOR" class="drop-down-show-hide">
+                            <div class="form-group">
+                                <label>Perusahaan</label>
+                                <select class="form-control" name="kontraktor" >
+                                    <option value="">Select</option>
+                                    @foreach ($kontraktors as $no =>$kontraktor)
+                                        <option value="{{ $kontraktor->id }}" >{{ $kontraktor->nama }}</option> 
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group ">
+                                <label>Unit</label>
+                                <select
+                                    name="unit_kontraktor"
+                                    class="form-control"
+                                    value="{{ old('unit') }}">
+                                <option value="" selected>Pilih <i class="devicons devicons-unity_small"></i></option>
+                                @foreach (@$uptd_list as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div id="ADMIN-KONSULTAN" class="drop-down-show-hide">
+                            <div class="form-group">
+                                <label>Perusahaan</label>
+                                <select class="form-control" name="konsultan" >
+                                    <option value="">Select</option> 
+                                    @foreach ($konsultans as $no =>$konsultan)
+                                        <option value="{{ $konsultan->id }}" >{{ $konsultan->nama }}</option> 
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                        </div>
                         <div class="form-group">
                             <label>Nama</label>
                             <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan name" class="form-control @error('name') is-invalid @enderror" required>
@@ -150,6 +206,7 @@
                             <label>No Telp</label>
                             <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
                         </div>
+                        
                         
                     </div>
 
@@ -213,6 +270,7 @@
 @endsection
 
 @section('script')
+
 <script>
     $(document).ready(function() {
         $('#delModal').on('show.bs.modal', function(event) {
