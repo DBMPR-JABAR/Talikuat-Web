@@ -12,7 +12,7 @@ class CurvaControllers extends Controller
     {
         $tes = array();
         $jadual = DB::table('jadual')->select('id', 'nmp')->where('id_data_umum', $id)->get();
-        $data = DB::table('data_umum')->where('id', $id)->get();
+        $data = DB::table('data_umum')->where('id', $id)->first();
         foreach ($jadual as $e) {
             $dataJadual = DB::table('detail_jadual')->where('id_jadual', $e->id)->orderBy('tgl', 'asc')->get();
             foreach ($dataJadual as $q) {
@@ -26,10 +26,11 @@ class CurvaControllers extends Controller
             ['id_data_umum', $id],
             ['reason_delete', null]
         ])->get();
+
         return response()->json([
             "curva" => $tes,
             "data_umum" => $data,
-            "laporan" => [$laporan]
+            "laporan" => [$laporan],
         ]);
 
     }
