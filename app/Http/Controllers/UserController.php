@@ -421,7 +421,7 @@ class UserController extends Controller
                 'user' => $member->nik,
                 'pass' => '202cb962ac59075b964b07152d234b70',
                 'id_member' => $member->id_member,
-                'level' => $member->jabatan,
+                'level' => $member->akses,
             ]);
 
         }
