@@ -48,7 +48,7 @@
                     <div class="card-block">
                         <div class="form-group">
                             <label>Pemda</label>
-                            <input type="text" name="pemda" id="pemda" value="{{ @$data->pemda }}" class="form-control" required>
+                            <input type="text" name="pemda" id="pemda" value="{{ @$data->pemda ? : "PEMERINTAH PROVINSI JAWA BARAT"}}" class="form-control" required>
                             @error('pemda')
                                 <div class="invalid-feedback" style="display: block; color:red">
                                     {{ $message }}
@@ -65,15 +65,63 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Nama Kegiatan</label>
-                            <input type="text" name="nm_paket" id="nm_paket" value="{{ @$data->nm_paket }}" class="form-control" required>
-                            @error('nm_paket')
+                            <label>Unor</label>
+                            <select
+                            name="unit"
+                            id="unit"
+                            class="form-control"
+                            required
+                            value="{{ old('unit') }}"
+                            onchange="ubahOption()">
+                            <option value="" selected>Pilih Unit</option>
+                            @foreach (@$uptd_list as $item)
+                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach
+                            </select>
+                            @error('unit')
                                 <div class="invalid-feedback" style="display: block; color:red">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
-                       
+                        <div class="form-group">
+                            <label>Ruas</label>
+                            <select
+                            name="ruas"
+                            id="ruas"
+                            class="form-control"
+                            required
+                            value="{{ old('ruas') }}">
+                            <option value="" selected>Pilih Ruas</option>
+                            @foreach (@$uptd_list as $item)
+                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach
+                            </select>
+                            @error('ruas')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>PPK</label>
+                            <select
+                            name="ppk"
+                            id="ppk"
+                            class="form-control"
+                            required
+                            value="{{ old('ppk') }}">
+                            <option value="" selected>Pilih ppk</option>
+                            @foreach (@$uptd_list as $item)
+                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach
+                            </select>
+                            @error('ppk')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         @if(Request::segment(3) == 'edit') 
                         <i style="color :red; font-size: 10px;">Biarkan jika tidak ada perubahan</i>
                         @endif
@@ -90,5 +138,26 @@
 @endsection
 
 @section('script')
+<script>
+    function ubahOption() {
 
+    //untuk select Ruas
+    id = document.getElementById("unit").value
+    url = "{{ url('getRuasByUptd') }}"
+    id_select = '#ruas'
+    text = '-- pilih ruas --'
+    option = 'nama_ruas_jalan'
+    value = 'id_ruas_jalan'
+    setDataSelect(id, url, id_select, text, value, option)
+
+    //untuk select PPK
+    id1 = document.getElementById("unit").value
+    url1 = "{{ url('getPpkByUptd') }}"
+    id_select1 = '#ppk'
+    text1 = '-- pilih PPK --'
+    option1 = 'nama'
+    value1 = 'user_detail_id'
+    setDataSelect(id1, url1, id_select1, text1, value1, option1)
+    }
+</script>
 @endsection

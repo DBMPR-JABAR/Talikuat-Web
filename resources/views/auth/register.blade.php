@@ -15,7 +15,7 @@
     <body>
         @include('flashalert.index')
         <div class="container mt-5">
-            <form action="" method="POST">
+            <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="card">
                     <div class="card-header">Data User</div>
@@ -24,36 +24,20 @@
                             <label
                                 for="staticEmail"
                                 class="col-sm-2 col-form-label"
-                                >Nama Depan :</label
+                                >Nama Lengkap :</label
                             >
                             <div class="col-sm-10">
                                 <input
                                     type="text"
-                                    name="nm_dpn"
+                                    name="name"
                                     class="form-control"
-                                    placeholder="Nama Depan"
+                                    placeholder="Nama Lengkap"
                                     required
-                                    value="{{ old('nm_dpn') }}"
+                                    value="{{ old('name') }}"
                                 />
                             </div>
                         </div>
-                        <div class="mb-1 row">
-                            <label
-                                for="staticEmail"
-                                class="col-sm-2 col-form-label"
-                                >Nama Belakang :</label
-                            >
-                            <div class="col-sm-10">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="nm_blkg"
-                                    placeholder="Nama Belakang"
-                                    required
-                                    value="{{ old('nm_blkg') }}"
-                                />
-                            </div>
-                        </div>
+                        
                         <div class="mb-1 row">
                             <label
                                 for="staticEmail"
@@ -94,43 +78,57 @@
                             <label
                                 for="staticEmail"
                                 class="col-sm-2 col-form-label"
-                                >NIP / NIK :</label
+                                >NIK :</label
                             >
                             <div class="col-sm-10">
-                                @if(Session::get('nik'))
                                 <input
                                     type="text"
                                     class="form-control"
                                     id="nik"
                                     placeholder="327051XXXXXX"
                                     name="nik"
-                                    required
                                     value="{{ old('nik') }}"
-                                    oninput="removeErr('#nik','#errNik')"
+                                    {{-- oninput="removeErr('#nik','#errNik')" --}}
                                 />
-                                <span class="err-msg text-danger" id="errNik"
-                                    >NIP/NIK Sudah Terdaftar</span
-                                >
-                                @else
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="nik"
-                                    placeholder="327051XXXXXX"
-                                    name="nik"
-                                    required
-                                />
-                                @endif
+                               
+                                @error('nik')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="mb-1 row">
                             <label
                                 for="staticEmail"
                                 class="col-sm-2 col-form-label"
-                                >Email</label
+                                >NIP :</label
                             >
                             <div class="col-sm-10">
-                                @if(Session::get('email'))
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nip"
+                                    placeholder="327051XXXXXX"
+                                    name="nip"
+                                    
+                                    value="{{ old('nip') }}"
+                                    {{-- oninput="removeErr('#nip','#errnip')" --}}
+                                />
+                                
+                                @error('nip')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="mb-1 row">
+                            <label
+                                for="staticEmail"
+                                class="col-sm-2 col-form-label"
+                                >Email :</label>
+                            <div class="col-sm-10">
                                 <input
                                     type="email"
                                     class="form-control"
@@ -139,41 +137,36 @@
                                     required
                                     id="email"
                                     value="{{ old('email') }}"
-                                    oninput="removeErr('#email','#errEmail')"
+                                    {{-- oninput="removeErr('#email','#errEmail')" --}}
                                 />
-                                <span class="err-msg text-danger" id="errEmail"
-                                    >Email Sudah Terdaftar</span
-                                >
-                                @else
-                                <input
-                                    type="email"
-                                    class="form-control"
-                                    placeholder="example@example.com"
-                                    name="email"
-                                    required
-                                />
-                                @endif
+                                
+                                @error('email')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="mb-1 row">
-                            <label
-                                for="staticEmail"
-                                class="col-sm-2 col-form-label"
-                                >Jabatan :</label
-                            >
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Password :</label>
                             <div class="col-sm-10">
-                                <select
-                                    name="jabatan"
-                                    class="form-control"
-                                    required
-                                    value="{{ old('jabatan') }}"
-                                >
-                                    <option selected></option>
-                                    <option value="ADMIN">ADMIN</option>
-                                    <option value="DIREKTUR">DIREKTUR</option>
-                                </select>
+                                
+                                <input type="password" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password"
+                                    class="form-control @error('password') is-invalid @enderror">
+                                @error('password')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                         </div>
+                        <div class="mb-1 row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Ulangi Password :</label>
+                            <div class="col-sm-10">
+                                <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Kembali Password" class="form-control" required>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
                 <div class="card">
@@ -181,8 +174,7 @@
                     <div class="card-body">
                         <div class="mb-1 row">
                             <label for="jenis" class="col-sm-2 col-form-label"
-                                >Jenis Perusahaan</label
-                            >
+                                >Jenis Perusahaan</label>
                             <div class="col-sm-10">
                                 <select
                                     name="role"
@@ -206,8 +198,7 @@
                         </div>
                         <div class="mb-1 row" id="unor">
                             <label for="jenis" class="col-sm-2 col-form-label"
-                                >Unit :</label
-                            >
+                                >Unit :</label>
                             <div class="col-sm-10">
                                 <select
                                     name="unit"
@@ -216,46 +207,37 @@
                                     value="{{ old('unit') }}"
                                 >
                                     <option value="" selected></option>
-                                    <option
-                                        value="UPTD PENGELOLAAN JALAN DAN JEMBATAN WILAYAH PELAYANAN - I"
-                                    >
-                                        UPTD PENGELOLAAN JALAN DAN JEMBATAN
-                                        WILAYAH PELAYANAN - I
-                                    </option>
-                                    <option
-                                        value="UPTD PENGELOLAAN JALAN DAN JEMBATAN WILAYAH PELAYANAN - II"
-                                    >
-                                        UPTD PENGELOLAAN JALAN DAN JEMBATAN
-                                        WILAYAH PELAYANAN - II
-                                    </option>
-                                    <option
-                                        value="UPTD PENGELOLAAN JALAN DAN JEMBATAN WILAYAH PELAYANAN - III"
-                                    >
-                                        UPTD PENGELOLAAN JALAN DAN JEMBATAN
-                                        WILAYAH PELAYANAN - III
-                                    </option>
-                                    <option
-                                        value="UPTD PENGELOLAAN JALAN DAN JEMBATAN WILAYAH PELAYANAN - IV"
-                                    >
-                                        UPTD PENGELOLAAN JALAN DAN JEMBATAN
-                                        WILAYAH PELAYANAN - IV
-                                    </option>
-                                    <option
-                                        value="UPTD PENGELOLAAN JALAN DAN JEMBATAN WILAYAH PELAYANAN - V"
-                                    >
-                                        UPTD PENGELOLAAN JALAN DAN JEMBATAN
-                                        WILAYAH PELAYANAN - V
-                                    </option>
-                                    <option
-                                        value="UPTD PENGELOLAAN JALAN DAN JEMBATAN WILAYAH PELAYANAN - VI"
-                                    >
-                                        UPTD PENGELOLAAN JALAN DAN JEMBATAN
-                                        WILAYAH PELAYANAN - VI
-                                    </option>
+                                    @foreach (@$uptd_list as $item)
+                                        <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                                    @endforeach
+                                    
                                 </select>
                             </div>
                         </div>
                         <div class="wrap-jenis" id="konsultan">
+                            <div class="mb-1 row">
+                                <label
+                                    for="staticEmail"
+                                    class="col-sm-2 col-form-label"
+                                    >Jabatan :</label>
+                                <div class="col-sm-10">
+                                    <select
+                                        name="jabatan_konsultan"
+                                        class="form-control"
+                                        id="jabatan_konsultan"
+                                        value="{{ old('jabatan_konsultan') }}"
+                                        placeholder="Jabatan Anda">
+                                        <option value="" selected>Jabatan Anda</option>
+                                        <option value="ADMIN">Admin</option>
+                                        <option value="DIREKTUR">Direktur</option>
+                                    </select>
+                                    @error('jabatan_konsultan')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="mb-1 row">
                                 <label
                                     for="staticEmail"
@@ -290,6 +272,7 @@
                                     @endif
                                 </div>
                             </div>
+                            
                             <div class="mb-1 row">
                                 <label
                                     for="staticEmail"
@@ -326,8 +309,75 @@
                                     />
                                 </div>
                             </div>
+                            <div class="mb-1 row">
+                                <label
+                                    for="npwp"
+                                    class="col-sm-2 col-form-label"
+                                    >NPWP :</label
+                                >
+                                <div class="col-sm-10">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="npwp"
+                                        name="npwp_konsultan"
+                                        placeholder="12.345.674.9-629.000"
+                                        data-inputmask="'mask': '9999 9999 9999 9999'"
+                                        value="{{ old('npwp') }}"
+                                    />
+                                    @error('npwp_konsultan')
+                                        <div class="invalid-feedback" style="display: block; color:red">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="mb-1 row">
+                                <label
+                                    for="tlp_perusahaan"
+                                    class="col-sm-2 col-form-label"
+                                    >No. Telp :</label
+                                >
+                                <div class="col-sm-10">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="tlp_perusahaan_konsultan"
+                                        placeholder="022-250XXXXX"
+                                        value="{{ old('tlp_perusahaan') }}"
+                                    />
+                                    @error('tlp_perusahaan_konsultan')
+                                        <div class="invalid-feedback" style="display: block; color:red">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="wrap-jenis" id="kontraktor">
+                            <div class="mb-1 row">
+                                <label
+                                    for="staticEmail"
+                                    class="col-sm-2 col-form-label"
+                                    >Jabatan :</label>
+                                    <div class="col-sm-10">
+                                        <select
+                                            name="jabatan_kontraktor"
+                                            class="form-control"
+                                            id="jabatan_kontraktor"
+                                            value="{{ old('jabatan_kontraktor') }}"
+                                            placeholder="Jabatan Anda">
+                                            <option value="" selected>Jabatan Anda</option>
+                                            <option value="ADMIN">Admin</option>
+                                            <option value="DIREKTUR">Direktur</option>
+                                        </select>
+                                        @error('jabatan_kontraktor')
+                                        <div class="invalid-feedback" style="display: block; color:red">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                            </div>
                             <div class="mb-1 row">
                                 <label
                                     for="staticEmail"
@@ -362,6 +412,7 @@
                                     @endif
                                 </div>
                             </div>
+                            
                             <div class="mb-1 row">
                                 <label
                                     for="staticEmail"
@@ -408,16 +459,22 @@
                                     <input
                                         type="text"
                                         class="form-control"
-                                        id="npwp"
+                                        id="npwp_kontraktor"
                                         name="npwp"
                                         placeholder="12.345.674.9-629.000"
+                                        data-inputmask="'mask': '9999 9999 9999 9999'"
                                         value="{{ old('npwp') }}"
                                     />
+                                    @error('npwp')
+                                        <div class="invalid-feedback" style="display: block; color:red">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="mb-1 row">
                                 <label
-                                    for="npwp"
+                                    for="tlp_perusahaan"
                                     class="col-sm-2 col-form-label"
                                     >No. Telp :</label
                                 >
@@ -429,11 +486,16 @@
                                         placeholder="022-250XXXXX"
                                         value="{{ old('tlp_perusahaan') }}"
                                     />
+                                    @error('tlp_perusahaan')
+                                        <div class="invalid-feedback" style="display: block; color:red">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="mb-1 row">
                                 <label
-                                    for="npwp"
+                                    for="bank"
                                     class="col-sm-2 col-form-label"
                                     >Bank :</label
                                 >
@@ -449,7 +511,7 @@
                             </div>
                             <div class="mb-1 row">
                                 <label
-                                    for="npwp"
+                                    for="norek"
                                     class="col-sm-2 col-form-label"
                                     >No. Rekening :</label
                                 >
@@ -464,22 +526,7 @@
                                     />
                                 </div>
                             </div>
-                            <div class="mb-1 row">
-                                <label
-                                    for="npwp"
-                                    class="col-sm-2 col-form-label"
-                                    >Nama GS :</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Nama Gs"
-                                        name="nm_gs"
-                                        value="{{ old('nm_gs') }}"
-                                    />
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -495,5 +542,15 @@
                 asset('vendor/bootstrap/js/bootstrap.min.js')
             }}"></script>
         <script src="{{ asset('assets/custom/register.js') }}"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+        
+        <script>
+            $(document).ready(function(){
+            $('#npwp').mask('00.000.000.0-000.000');
+            $('#npwp_kontraktor').mask('00.000.000.0-000.000');
+
+            });
+        </script>
     </body>
 </html>

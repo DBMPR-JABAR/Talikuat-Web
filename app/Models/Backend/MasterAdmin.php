@@ -5,13 +5,12 @@ namespace App\Models\Backend;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MasterPpk extends Model
+class MasterAdmin extends Model
 {
     use HasFactory;
     protected $connection= 'mysql';
-    protected $table = 'master_ppk';
+    protected $table = 'master_admin';
     protected $guarded = [];
-
     public function uptd()
     {
         return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');

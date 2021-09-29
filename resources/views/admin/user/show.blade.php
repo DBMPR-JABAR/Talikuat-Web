@@ -177,12 +177,21 @@
                                             </tr>
                                             <tr>
                                                 <td width="20%">UNIT</td>
-                                                <td>{{ Str::upper(@$data->uptd->nama) }}</td>
+                                                <td>
+                                                    {{-- {{ Str::upper(@$data->uptd->nama) }} --}}
+                                                    @if (@$data->user_detail->rule_user_id == 2)
+                                                        {{ Str::upper(@$data->user_detail->ppk->uptd->nama) }} 
+                                                    @elseif (@$data->user_detail->rule_user_id == 3)
+                                                        {{ Str::upper(@$data->user_detail->master_admin->uptd->nama) }} 
+                                                    @else
+                                                    {{ Str::upper(@$data->uptd->nama) }} 
+                                                    @endif
+                                                </td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td>SUP</td>
                                                 <td>{{ @$profile->sup }}</td>
-                                            </tr>
+                                            </tr> --}}
                                             
                                             <tr>
                                                 <td>Tanggal Mulai</td>
@@ -217,7 +226,7 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <label>Rule User</label>
-                                    <select class="form-control" name="rule_user" required>
+                                    <select class="form-control" name="rule_user" required @if( Auth::user()->id != 1) disabled @endif>
         
                                         <option value="">Select</option>
                                         @foreach ($rule_user as $no =>$rule)

@@ -232,20 +232,20 @@
                 </div>
                 <div class="card-body">
                     <div class="card-block">
-                        @if (@$data->user_detail->konsultan)
+                        @if (@$data->user_detail->konsultan || @$data->user_detail->rule->category == "KONSULTAN")
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <select class="form-control" name="konsultan" @if(Request::segment(2) != 'user') disabled @endif>
+                            <select class="form-control" name="konsultan" @if ( Auth::user()->id != 1) disabled @endif>
                                 <option value="">Select</option> 
                                 @foreach ($konsultans as $no =>$konsultan)
                                     <option value="{{ $konsultan->id }}" @if (@$data->user_detail->konsultan_id != null && $konsultan->id == $data->user_detail->konsultan_id) selected @endif>{{ $konsultan->nama }}</option> 
                                 @endforeach
                             </select>
                         </div>
-                        @elseif (@$data->user_detail->kontraktor)
+                        @elseif (@$data->user_detail->kontraktor || @$data->user_detail->rule->category == "KONTRAKTOR")
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <select class="form-control" name="kontraktor" @if(Request::segment(2) != 'user') disabled @endif>
+                            <select class="form-control" name="kontraktor" @if ( Auth::user()->id != 1) disabled @endif>
                                 <option value="">Select</option>
                                 @foreach ($kontraktors as $no =>$kontraktor)
                                     <option value="{{ $kontraktor->id }}" @if (@$data->user_detail->kontraktor_id != null && $kontraktor->id == $data->user_detail->kontraktor_id) selected @endif>{{ $kontraktor->nama }}</option> 
@@ -256,7 +256,7 @@
 
                         <div class="form-group">
                             <label>Jabatan</label>
-                            <select class="form-control" name="rule_user" @if(Request::segment(2) != 'user') disabled @endif>
+                            <select class="form-control" name="rule_user" @if ( Auth::user()->id != 1) disabled @endif>
                                 <option value="">Select</option>
                                 @foreach ($rule_user as $no =>$rule)
                                 <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
@@ -264,14 +264,27 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Unit</label>
-                            <select class="form-control" name="uptd">
+                            <label>Unit </label>
+                            <select class="form-control" name="uptd" @if( Auth::user()->id != 1) disabled @endif>
                                 <option value="">Select</option>
-                                @foreach ($uptd as $no =>$uptd)
-                                <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
-                                @endforeach  
+                                @if (@$data->user_detail->rule_user_id == 2)
+                                    @foreach ($uptd as $no =>$uptd)
+                                    <option value="{{ $uptd->id }}" @if (@$data->user_detail->ppk->uptd_id != null && $uptd->id == @$data->user_detail->ppk->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                    @endforeach
+                                @elseif (@$data->user_detail->rule_user_id == 3)
+                                    @foreach ($uptd as $no =>$uptd)
+                                    <option value="{{ $uptd->id }}" @if (@$data->user_detail->master_admin->uptd_id != null && $uptd->id == @$data->user_detail->master_admin->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                    @endforeach
+                                @else
+                                    @foreach ($uptd as $no =>$uptd)
+                                    <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                    @endforeach  
+                                @endif
                             </select>
                         </div>
+                            
+                        {{-- @if (@$data->user_detail->rule_user_id == 2 || @$data->user_detail->rule_user_id == 3)
+                        @endif --}}
                         <div class="form-group">
                             <label>Tanggal Mulai</label>
                             <input name="tgl_mulai_kerja" placeholder="Tanggal Mulai Kerja" type="date"
@@ -416,5 +429,19 @@
 @endsection
 
 @section('script')
+<script>
+    function ubahOption() {
 
+    //untuk select SUP
+    id = document.getElementById("province").value
+    url = "{{ url('getCity') }}"
+    id_select = '#city'
+    text = '-- pilih kota --'
+    option = 'name'
+    value = 'id'
+
+    setDataSelect(id, url, id_select, text, value, option)
+
+    }
+</script>
 @endsection

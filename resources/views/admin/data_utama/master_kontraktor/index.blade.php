@@ -182,9 +182,9 @@
                             <input
                                 type="text"
                                 name="npwp"
-                                id="npwm"
+                                id="npwp"
                                 value="{{ old('npwm') }}"
-                                placeholder="Masukkan NPWP"
+                                placeholder="12.345.674.9-629.000"
                                 class="form-control"
                                 required
                             />
@@ -218,7 +218,7 @@
                                 class="form-control"
                             />
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>General Superintendent</label>
                             <div class="d-flex" id="ie">
                                 <input
@@ -241,7 +241,7 @@
                                     ></i>
                                 </button>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="modal-footer">
@@ -339,8 +339,12 @@
     </div>
 </div>
 @endsection @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
 <script>
     $(document).ready(function () {
+        $('#npwp').mask('00.000.000.0-000.000');
+
         $("#dataKontraktor").DataTable();
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);

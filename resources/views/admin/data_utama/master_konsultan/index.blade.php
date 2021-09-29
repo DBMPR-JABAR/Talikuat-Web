@@ -181,6 +181,18 @@
                             </div>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label>NPWP</label>
+                            <input
+                                type="text"
+                                name="npwp"
+                                id="npwp"
+                                value="{{ old('npwm') }}"
+                                placeholder="12.345.674.9-629.000"
+                                class="form-control"
+                                
+                            />
+                        </div>
                         {{-- <div class="form-group">
                             <label>Nama Site Engineering</label>
                             <div class="d-flex" id="se">
@@ -303,8 +315,12 @@
 </div>
 @endsection @section('script')
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
 <script>
     $(document).ready(function () {
+        $('#npwp').mask('00.000.000.0-000.000');
+
         $("#dataKonsultan").DataTable({
             responsive: true,
         });
