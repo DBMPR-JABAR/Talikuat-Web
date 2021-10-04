@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\MemoMail;
+use App\Mail\TestEmail;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -293,12 +294,24 @@ class MemoControllers extends Controller
 
                 $ppk = DB::table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
                 pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $ppk->nm_member);
-                if ($ppk->email != null) Mail::to($ppk->email)->send(new MemoMail($bodyEmail));
+                if ($ppk->email != null) {
+                    try {
+                        Mail::to($ppk->email)->send(new MemoMail($bodyEmail));
+                    } catch (\Exception $e) {
+
+                    }
+                }
 
                 $list_kontraktor = DB::table('member')->where('perusahaan', '=', $kontrak->penyedia)->get();
                 foreach ($list_kontraktor as $kontraktor) {
                     pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $kontraktor->nm_member);
-                    if ($kontraktor->email != null) Mail::to($kontraktor->email)->send(new MemoMail($bodyEmail));
+                    if ($kontraktor->email != null) {
+                        try {
+                            Mail::to($kontraktor->email)->send(new MemoMail($bodyEmail));
+                        } catch (\Exception $e) {
+
+                        }
+                    }
                 }
 
             } else if ($req->tembusan_ppk == 'true') {
@@ -317,7 +330,13 @@ class MemoControllers extends Controller
 
                 $ppk = DB::table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
                 pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $ppk->nm_member);
-                if ($ppk->email != null) Mail::to($ppk->email)->send(new MemoMail($bodyEmail));
+                if ($ppk->email != null) {
+                    try {
+                        Mail::to($ppk->email)->send(new MemoMail($bodyEmail));
+                    } catch (\Exception $e) {
+
+                    }
+                }
 
             }
 
