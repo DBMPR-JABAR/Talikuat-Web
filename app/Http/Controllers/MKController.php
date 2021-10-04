@@ -151,31 +151,24 @@ class MKController extends Controller
         }
 
         if ($req->isAccepted == "true") {
-//            $get_data = DB::table('request')->where('id', $req->id)->first();
-//            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
-//            foreach ($mailto as $email) {
-//                dump($email->nm_member);
-//                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh MK", $email->nm_member);
-//            }
-//            dd("END");
-//            DB::table('request')->where('id', $req->id)->update([
-//                "mk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
-//                "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
-//                "status" => 4,
-//            ]);
-//            if ($req->catatan != NULL) {
-//                DB::table('request')->where('id', $req->id)->update([
-//                    "catatan_mk" => $req->catatan
-//                ]);
-//            }
-//            DB::table('history_request')->insert([
-//                "username" => "MK",
-//                "id_request" => $req->id,
-//                "user_id" => $req->userId,
-//                "class" => "sukses",
-//                "keterangan" => "Request Telah Disetujui Oleh MK",
-//                "created_at" => \Carbon\Carbon::now()
-//            ]);
+            DB::table('request')->where('id', $req->id)->update([
+                "mk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
+                "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "status" => 4,
+            ]);
+            if ($req->catatan != NULL) {
+                DB::table('request')->where('id', $req->id)->update([
+                    "catatan_mk" => $req->catatan
+                ]);
+            }
+            DB::table('history_request')->insert([
+                "username" => "MK",
+                "id_request" => $req->id,
+                "user_id" => $req->userId,
+                "class" => "sukses",
+                "keterangan" => "Request Telah Disetujui Oleh MK",
+                "created_at" => \Carbon\Carbon::now()
+            ]);
             $get_data = DB::table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
