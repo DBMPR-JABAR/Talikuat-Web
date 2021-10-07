@@ -47,6 +47,10 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');
     }
+    public function mk()
+    {
+        return $this->hasMany('App\Models\Backend\MasterMk', 'user_detail_id')->orderBy('uptd_id', 'asc');
+    }
     public function master_admin()
     {
         return $this->hasOne('App\Models\Backend\MasterAdmin', 'user_detail_id');

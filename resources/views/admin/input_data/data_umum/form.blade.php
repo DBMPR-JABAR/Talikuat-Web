@@ -93,9 +93,6 @@
                             required
                             value="{{ old('ruas') }}">
                             <option value="" selected>Pilih Ruas</option>
-                            @foreach (@$uptd_list as $item)
-                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
-                            @endforeach
                             </select>
                             @error('ruas')
                                 <div class="invalid-feedback" style="display: block; color:red">
@@ -106,17 +103,87 @@
                         <div class="form-group">
                             <label>PPK</label>
                             <select
-                            name="ppk"
+                            name="ppk_user_id"
                             id="ppk"
                             class="form-control"
                             required
                             value="{{ old('ppk') }}">
                             <option value="" selected>Pilih ppk</option>
-                            @foreach (@$uptd_list as $item)
-                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
-                            @endforeach
+                            
                             </select>
                             @error('ppk')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Konsultan Supervisi</label>
+                            <select
+                            name="konsultan_id"
+                            id="konsultan_id"
+                            class="form-control"
+                            required
+                            onchange="ubahOption2()"
+                            value="{{ old('konsultan_id') }}">
+                            <option value="" selected>Pilih Penyedia Jasa</option>
+                            @foreach (@$konsultans as $item)
+                            <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach 
+                            </select>
+                            @error('konsultan_id')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Field Team</label>
+                            <select
+                            name="ft_id"
+                            id="ft"
+                            class="form-control"
+                            required
+                            value="{{ old('ft') }}">
+                            <option value="" selected>Pilih ft</option>
+                            </select>
+                            @error('ft')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Penyedia Jasa</label>
+                            <select
+                            name="kontraktor_id"
+                            id="kontraktor_id"
+                            class="form-control"
+                            required
+                            onchange="ubahOption1()"
+                            value="{{ old('kontraktor_id') }}">
+                            <option value="" selected>Pilih Penyedia Jasa</option>
+                            @foreach (@$kontraktors as $item)
+                            <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach 
+                            </select>
+                            @error('kontraktor_id')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>General Superintendent</label>
+                            <select
+                            name="gs_user_id"
+                            id="gs"
+                            class="form-control"
+                            required
+                            value="{{ old('gs_user_id') }}">
+                            <option value="" selected>Pilih gs</option>
+                            </select>
+                            @error('gs_user_id')
                                 <div class="invalid-feedback" style="display: block; color:red">
                                     {{ $message }}
                                 </div>
@@ -158,6 +225,30 @@
     option1 = 'nama'
     value1 = 'user_detail_id'
     setDataSelect(id1, url1, id_select1, text1, value1, option1)
+    }
+    function ubahOption1() {
+
+    //untuk select Ruas
+    id = document.getElementById("kontraktor_id").value
+    url = "{{ url('getGsByKontraktor') }}"
+    id_select = '#gs'
+    text = '-- pilih GS --'
+    option = 'gs_user_id'
+    value = 'id'
+    setDataSelect(id, url, id_select, text, value, option)
+
+    }
+    function ubahOption2() {
+
+    //untuk select Ruas
+    id = document.getElementById("konsultan_id").value
+    url = "{{ url('getFtByKonsultan') }}"
+    id_select = '#ft'
+    text = '-- pilih ft --'
+    option = 'se_user_id'
+    value = 'id'
+    setDataSelect(id, url, id_select, text, value, option)
+
     }
 </script>
 @endsection

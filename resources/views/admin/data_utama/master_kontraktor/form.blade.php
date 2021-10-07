@@ -360,13 +360,13 @@
                                 <option value="5">Direktur</option>
                                 @endif 
                                 @if($data_pengguna->where('rule_user_id',10)->count() < 6)
-                                <option value="9">Admin</option>
+                                <option value="10">Admin</option>
                                 @endif                               
                                 <option value="11">General Superintendent</option>
 
                             </select>
                         </div>
-                        <div id="9" class="drop-down-show-hide">
+                        <div id="10" class="drop-down-show-hide">
                             <div class="form-group ">
                                 <label>Unit</label>
                                 <select

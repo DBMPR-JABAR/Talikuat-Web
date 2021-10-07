@@ -27,6 +27,9 @@ Route::get('/', function () {
 Route::get('getCity', [DropdownAddressController::class, 'getCity']);
 Route::get('getRuasByUptd', [DropdownDataController::class, 'getRuasByUptd']);
 Route::get('getPpkByUptd', [DropdownDataController::class, 'getPpkByUptd']);
+Route::get('getGsByKontraktor', [DropdownDataController::class, 'getGsByKontraktor']);
+Route::get('getFtByKonsultan', [DropdownDataController::class, 'getFtByKonsultan']);
+
 
 Route::prefix('admin')->group(function () {
 
@@ -39,6 +42,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
             Route::get('/user_admin',[MasterAdminController::class,'index'])->name('user_admin.index');
             Route::post('/user_admin/store',[MasterAdminController::class,'store'])->name('store.user_admin');
+            Route::get('/user_mk',[MasterMkController::class,'index'])->name('user_mk.index');
+            Route::post('/user_mk/store',[MasterMkController::class,'store'])->name('store.user_mk');
     
             Route::prefix('user')->group(function (){
                 Route::get('/',[UserController::class,'index'])->name('user.index');

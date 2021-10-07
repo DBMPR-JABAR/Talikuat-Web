@@ -165,7 +165,7 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{ route('masterppk.index') }}"
+                                        href="{{ route('user_mk.index') }}"
                                         >MK</a
                                     >
                                 </li>

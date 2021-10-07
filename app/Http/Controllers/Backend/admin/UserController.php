@@ -215,6 +215,19 @@ class UserController extends Controller
                 'rule' => 'required',
             ]);
         }
+        if($request->rule == 10){
+            $validator = Validator::make($request->all(), ['unit_kontraktor' => 'required']);
+            if($id)
+            $kontraktor_temp = MasterKontraktor::where('id',$id)->pluck('nama')->first();
+         
+            if(UserDetail::where('kontraktor_id',$id)->where('rule_user_id',10)->count() >= 6){
+                storeLogActivity(declarLog(1, 'Users Admin Kontraktor', $request->email. '. Slot Admin Kontraktor '.$kontraktor_temp.' Sudah Penuh'));
+                return back()->with(['error'=>'Slot Admin Kontraktor '.$kontraktor_temp.' Tersebut Sudah Penuh!!']);
+            }else if (UserDetail::where('kontraktor_id',$id)->where('rule_user_id',10)->where('uptd_id',$request->unit_kontraktor)->exists()){
+                storeLogActivity(declarLog(1, 'Users Admin Kontraktor', $request->email. '. Kontraktor '.$kontraktor_temp.' di UPTD '.$request->unit_kontraktor.' sudah memiliki admin'));
+                return back()->with(['error'=>'Kontraktor '.$kontraktor_temp.' di UPTD '.$request->unit_kontraktor.' Sudah Memiliki Admin!!']);
+            }
+        }
         if ($validator->fails()) {
             storeLogActivity(declarLog(1, 'User Kontraktor', $request->email.': '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
@@ -236,8 +249,16 @@ class UserController extends Controller
         $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id]);
         $create_detail->rule_user_id = $request->rule;
         $create_detail->kontraktor_id = $id;
+        $create_detail->uptd_id = $request->unit_kontraktor;
+        $create_profile->created_by = Auth::user()->id;
         $create_detail->save();
-
+        if($request->rule == 10){
+            $create_master_admin = MasterAdmin::firstOrNew(['user_detail_id'=> $create_detail->id]);
+            $create_master_admin->uptd_id = $request->unit_kontraktor;
+            $create_master_admin->nama = $request->input('name');
+            $create_master_admin->created_by = Auth::user()->id;
+            $create_master_admin->save();
+        }
         if($request->rule == 11){
             $create_detail->user_gs_detail()->create([
                 'kontraktor_id' => $id,
@@ -377,7 +398,7 @@ class UserController extends Controller
                 'rule_user' => 'required',
             ]);
             // dd($request->all());
-            // dd($request->rule_user);
+            // dd($request->uptd_mk);
 
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
             $email = $update_user->user->email;
@@ -398,6 +419,8 @@ class UserController extends Controller
             }
             if($request->input('rule_user') == 2 || $request->input('rule_user') == 3){
                 $validator = Validator::make($request->all(), ['uptd' =>'required' ]);
+            }else if($request->input('rule_user') == 12){
+                $validator = Validator::make($request->all(), ['uptd_mk' =>'required' ]);
             }
             if ($validator->fails()){
                 storeLogActivity(declarLog(2, 'Users', $email.': '.$validator->messages()->first() ));
@@ -450,6 +473,12 @@ class UserController extends Controller
                 $update_master_admin->nama = $request->input('nama');
                 $update_master_admin->save();
                 // $update_deet->master_admin->firstOrNew(['uptd_id' =>$request->input('uptd')]);
+            }else if($request->input('rule_user') == 12){
+                for($x = 0 ; $x< count($request->uptd_mk) ; $x++){
+                    $temp_unit=['uptd_id' => $request->uptd_mk[$x]];
+                    $update_deet->mk()->updateOrCreate($temp_unit);
+                }
+                $update_deet->mk()->whereNotIn('uptd_id',$request->uptd_mk)->delete();
             }
 
         }

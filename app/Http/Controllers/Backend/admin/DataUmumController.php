@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Backend\DataUmum;
 
 
+
 class DataUmumController extends Controller
 {
     //
@@ -32,16 +33,44 @@ class DataUmumController extends Controller
             'pemda'=> 'required',
             'opd'=> 'required',
             'uptd_id'=> 'required',
+            'kategori_paket_id'=> 'required',
+            'nm_paket'=> 'required',
+            'no_kontrak'=> 'required',
+            'nilai_kontrak'=> 'required',
+            'no_spmk'=> 'required',
+            'tgl_spmk'=> 'required',            
+            'ppk_kegiatan'=> 'required',
+            
+            'kontraktor_id'=> 'required',                        
+            'konsultan_id'=> 'required',       
+            'ft_id'=> 'required',                        
+            'gs_user_id'=> 'required',                        
+            'ppk_user_id'=> 'required',  
+            
+            'ruas_jalan_id'=> 'required',  
+            'tgl_kontrak'=> 'required',  
+            'panjang_km'=> 'required',  
+            'lama_waktu'=> 'required',  
+
+            
         ]);
         if ($validator->fails()) {
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $temp =([
             
-            'opd'=>$request->opd,
-            'uptd_id'=>$request->uptd_id,
-            'created_by'=>Auth::user()->id,
-
+            'pemda'=> 'required',
+            'opd'=> 'required',
+            'uptd_id'=> 'required',
+            'kategori_paket_id'=> 'required',
+            'nm_paket'=> 'required',
+            'no_kontrak'=> 'required',
+            'nilai_kontrak'=> 'required',
+            'no_spmk'=> 'required',
+            'tgl_spmk'=> 'required',            
+            'ppk_kegiatan'=> 'required',
+            'kontraktor_id'=> 'required',                        
+            'konsultan_id'=> 'required',                        
         ]);
         $ppk = MasterJenisPekerjaan::create($temp);
 

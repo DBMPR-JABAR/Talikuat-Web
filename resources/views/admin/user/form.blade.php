@@ -270,26 +270,36 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Unit </label>
-                            <select class="form-control" name="uptd" @if( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
-                                <option value="">Select</option>
-                                @if (@$data->user_detail->rule_user_id == 2)
-                                    @foreach ($uptd as $no =>$uptd)
-                                    <option value="{{ $uptd->id }}" @if (@$data->user_detail->ppk->uptd_id != null && $uptd->id == @$data->user_detail->ppk->uptd_id) selected @endif>{{ $uptd->nama }}</option>
-                                    @endforeach
-                                @elseif (@$data->user_detail->rule_user_id == 3)
-                                    @foreach ($uptd as $no =>$uptd)
-                                    <option value="{{ $uptd->id }}" @if (@$data->user_detail->master_admin->uptd_id != null && $uptd->id == @$data->user_detail->master_admin->uptd_id) selected @endif>{{ $uptd->nama }}</option>
-                                    @endforeach
-                                @else
-                                    @foreach ($uptd as $no =>$uptd)
-                                    <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
-                                    @endforeach  
-                                @endif
-                            </select>
-                        </div>
-                            
+                        
+                        @if(@$data->user_detail->rule_user_id == 12)
+                        
+                            @foreach (@$uptd_list as $no => $item)
+                            <input type="checkbox" id="uptd{{ $item->id }}" name="uptd_mk[]" value="{{ $item->id }}" @if(in_array($item->id, @$data->user_detail->mk()->pluck('uptd_id')->toArray(), true)) checked @endif>
+                            <label for="uptd{{ $item->id }}">UPTD {{ $item->id }}</label>
+                            @if(++$no % 3 == 0) <br> @endif
+                            @endforeach
+                            <br>
+                        @else
+                            <div class="form-group">
+                                <label>Unit </label>
+                                <select class="form-control" name="uptd" @if( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
+                                    <option value="">Select</option>
+                                    @if (@$data->user_detail->rule_user_id == 2)
+                                        @foreach ($uptd as $no =>$uptd)
+                                        <option value="{{ $uptd->id }}" @if (@$data->user_detail->ppk->uptd_id != null && $uptd->id == @$data->user_detail->ppk->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                        @endforeach
+                                    @elseif (@$data->user_detail->rule_user_id == 3)
+                                        @foreach ($uptd as $no =>$uptd)
+                                        <option value="{{ $uptd->id }}" @if (@$data->user_detail->master_admin->uptd_id != null && $uptd->id == @$data->user_detail->master_admin->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                        @endforeach
+                                    @else
+                                        @foreach ($uptd as $no =>$uptd)
+                                        <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                        @endforeach  
+                                    @endif
+                                </select>
+                            </div>
+                        @endif
                         {{-- @if (@$data->user_detail->rule_user_id == 2 || @$data->user_detail->rule_user_id == 3)
                         @endif --}}
                         <div class="form-group">

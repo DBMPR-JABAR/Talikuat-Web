@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
         });
         View::composer('*', function ($view) {
             $uptd_list = Uptd::whereBetween('id', [1, 6])->get();
-            $kontraktors = MasterKontraktor::all();
+            $kontraktors = MasterKontraktor::where('is_delete',null)->get();
             $konsultans = MasterKonsultan::where('is_delete',null)->get();
             $view->with(['uptd_list'=> $uptd_list, 'kontraktors'=>$kontraktors, 'konsultans'=>$konsultans]);
         });
