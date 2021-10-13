@@ -230,6 +230,10 @@ Route::prefix('/permintaan')->group(function () {
 
     Route::post('/mk/responserequest', [MKController::class, 'responMK']);
 
+    Route::post('/mk/responserequest/mobile', [MKController::class, 'responseRequestMkFromMobile']);
+
+    Route::post('/updaterequest/revisimk/mobile', [MKController::class, 'revisiResponseRequestMkFromMobile']);
+
     Route::post('/ppk/responserequest', [PermintaanController::class, 'responReqPpk']);
 
     Route::post('/konsultan/responserequest/mobile', [PermintaanController::class, 'responReqKonsultanFromMobile']);
@@ -433,7 +437,6 @@ Route::prefix('utils')->group(function () {
     Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
     Route::post('check-volume', [UtilsControllers::class, 'checkVolume']);
     Route::post('volume-adendum', [UtilsControllers::class, 'volumeAdendum']);
-
 
 
 });

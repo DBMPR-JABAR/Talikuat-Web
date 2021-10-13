@@ -183,8 +183,17 @@
                                                         {{ Str::upper(@$data->user_detail->ppk->uptd->nama) }} 
                                                     @elseif (@$data->user_detail->rule_user_id == 3)
                                                         {{ Str::upper(@$data->user_detail->master_admin->uptd->nama) }} 
+                                                    @elseif (@$data->user_detail->rule_user_id == 12)
+                                                       
+                                                        @foreach (@$data->user_detail->mk as $num => $mk)
+                                                            {{ @$mk->uptd->nama }}
+                                                            @if(++$num != @$data->user_detail->mk->count())
+                                                                <br>
+                                                            @endif
+                                                            {{-- {{ ++$num }}/{{ @$item->mk->count() }} --}}
+                                                        @endforeach
                                                     @else
-                                                    {{ Str::upper(@$data->uptd->nama) }} 
+                                                    {{ Str::upper(@$data->user_detail->uptd->nama) }} 
                                                     @endif
                                                 </td>
                                             </tr>
@@ -208,7 +217,7 @@
                 </div>
             </div>
 
-            @if(Request::segment(3) == 'verified')
+            @if(Request::segment(3) == 'verified' && @$data->user_detail->account_verified_at == null)
             <div class="card">
                 <div class="card-header ">
                     <h4 class="card-title">Verified</h4>

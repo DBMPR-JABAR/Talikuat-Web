@@ -158,7 +158,8 @@
                     
                     <tr>
                         <td style="width: 20%">Direktur</td>
-                        <td >:
+                        <td style="width: 1%">:</td>
+                        <td>
                             @if($data_pengguna->where('rule_user_id',5)->first())
                             {{ old('nama_direktur', @$data_pengguna->where('rule_user_id',5)->first()->user->name) }}
                             @else
@@ -169,9 +170,20 @@
                     
                     <tr>
                         <td>Admin</td>
-                        <td >:
-                            @if($data_pengguna->where('rule_user_id',10)->first())
+                        <td >:</td>
+                        <td>
+                            @if($data_pengguna->where('rule_user_id',10)->count() == 1)
                             {{ old('nama_admin', @$data_pengguna->where('rule_user_id',10)->first()->user->name) }}
+                            @elseif ($data_pengguna->where('rule_user_id',10)->count() > 1)
+                            <table class="table ">
+                                @foreach ($data_pengguna->where('rule_user_id',10) as $data_admin)
+                                <tr>
+                                    <td>{{ $data_admin->user->name }}</td>
+                                    <td>{{ $data_admin->uptd->nama }}</td>
+                                </tr>
+                                    
+                                @endforeach
+                            </table>
                             @else
                             No Data
                             @endif
@@ -179,7 +191,8 @@
                     </tr>
                     <tr>
                         <td>General Superintendent</td>
-                        <td >:
+                        <td >:</td>
+                        <td>
                             @if(count($data->kontraktor_gs)>=1)
                             {{ count(@$data->kontraktor_gs) }} Orang
                             @else
@@ -341,17 +354,31 @@
                     <div class="modal-body p-5">
                         <div class="form-group">
                             <label>Jabatan</label>
-                            <select class="form-control" name="rule" required>
+                            <select class="form-control" name="rule" id="dropDown" required>
                                 <option value="">Select</option>
                                 @if(!$data_pengguna->where('rule_user_id',5)->first())
                                 <option value="5">Direktur</option>
                                 @endif 
-                                @if(!$data_pengguna->where('rule_user_id',10)->first())
-                                <option value="9">Admin</option>
+                                @if($data_pengguna->where('rule_user_id',10)->count() < 6)
+                                <option value="10">Admin</option>
                                 @endif                               
                                 <option value="11">General Superintendent</option>
 
                             </select>
+                        </div>
+                        <div id="10" class="drop-down-show-hide">
+                            <div class="form-group ">
+                                <label>Unit</label>
+                                <select
+                                    name="unit_kontraktor"
+                                    class="form-control"
+                                    value="{{ old('unit') }}">
+                                <option value="" selected>Pilih Unit</option>
+                                @foreach (@$uptd_list as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                                @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Nama</label>

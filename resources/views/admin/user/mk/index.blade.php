@@ -20,10 +20,10 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Users</h4>
+                <h4 class="card-title">Data User Manajemen Konstruksi</h4>
                 @if (Request::segment(3) != 'trash')
-                    {{-- <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a> --}}
-                    <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                    {{-- <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a> --}}
                 @else
                     <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
 
@@ -35,11 +35,8 @@
                         <tr>
                             <th class="text-center" style="width: 5%"> No </th>
                             <th class="text-center"> Name </th>
-                            {{-- <th class="text-center"> Progress </th> --}}
-                            <th class="text-center"> NIK </th>
-                            <th class="text-center"> NIP </th>
-                            <th class="text-center"> Email Verified </th>
-                            <th class="text-center"> Account Verified </th>
+                            <th class="text-center"> E-mail </th>
+                            <th class="text-center"> UPTD </th>
                             <th class="text-center"> Action </th>
 
                         </tr>
@@ -52,26 +49,16 @@
                             {{-- <td class="py-1"><img src="../../../assets/images/faces-clipart/pic-1.png" alt="image"></td> --}}
                             <td class="text-center">{{ ++$data}}</td>
                             <td>{{ @$item->user->name }} </td>
-                            {{-- <td>
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            </td> --}}
-                            <td> {{ @$item->user->profile->nik }} </td>
-                            <td> {{ @$item->user->profile->nip }} </td>
-                            <td class="text-center"> 
-                                @if($item->email_verified_at)
-                                <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
-                                @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
-                                @endif
-                            </td>
+                            <td> {{ @$item->user->email}} </td>
                             <td class="text-center">
-                                @if($item->account_verified_at)
-                                <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
-                                @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
-                                @endif
+                                {{-- {{ @$item->user->email }} --}}
+                                @foreach (@$item->mk as $num => $mk)
+                                    UPTD {{ @$mk->uptd_id }}
+                                    @if(++$num != $item->mk->count())
+                                        <br>
+                                    @endif
+                                    {{-- {{ ++$num }}/{{ @$item->mk->count() }} --}}
+                                @endforeach
                             </td>
 
                             <td class="text-center"> 
@@ -103,17 +90,17 @@
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
 
-                <form action="{{ route('store.user') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('store.user_mk') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
+                        <h4 class="modal-title">Tambah MK</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body p-5">
-
+                        
                         <div class="form-group">
                             <label>Nama</label>
                             <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan name" class="form-control @error('name') is-invalid @enderror" required>
@@ -150,6 +137,14 @@
                             <label>No Telp</label>
                             <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
                         </div>
+                        Unit<br>
+                        @foreach (@$uptd_list as $no => $item)
+                        
+                        <input type="checkbox" id="uptd{{ $item->id }}" name="unit[]" value="{{ $item->id }}" >
+                        <label for="uptd{{ $item->id }}">UPTD {{ $item->id }}</label>
+                        @if(++$no % 3 == 0) <br> @endif
+                        @endforeach
+                       
                         
                     </div>
 
@@ -213,6 +208,7 @@
 @endsection
 
 @section('script')
+
 <script>
     $(document).ready(function() {
         $('#delModal').on('show.bs.modal', function(event) {
