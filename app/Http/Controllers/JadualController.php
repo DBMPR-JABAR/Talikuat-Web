@@ -388,6 +388,7 @@ class JadualController extends Controller
 
     public function insertJadual(Request $req)
     {
+        dd($req->nmp);
         date_default_timezone_set('Asia/Jakarta');
         $validator = Validator::make($req->all(), [
             // Data Umum

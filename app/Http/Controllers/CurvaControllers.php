@@ -11,6 +11,7 @@ class CurvaControllers extends Controller
     public function GetDataUmum($id)
     {
         $tes = array();
+        $adendum = array();
         $jadual = DB::table('jadual')->select('id', 'nmp')->where('id_data_umum', $id)->get();
         $data = DB::table('data_umum')->where('id', $id)->first();
         foreach ($jadual as $e) {
@@ -26,7 +27,12 @@ class CurvaControllers extends Controller
             ['id_data_umum', $id],
             ['reason_delete', null]
         ])->get();
+        $db_adendum = DB::table('jadual_adendum')->where('id_data_umum',$data->id)->get();
+        if ($db_adendum) {
+            foreach ($db_adendum as $data_jadual) {
 
+            }
+        }
         return response()->json([
             "curva" => $tes,
             "data_umum" => $data,
