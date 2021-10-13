@@ -30,7 +30,7 @@ class CurvaControllers extends Controller
         $db_adendum = DB::table('jadual_adendum')->where('id_data_umum',$data->id)->get();
         if ($db_adendum) {
             foreach ($db_adendum as $data_jadual) {
-
+                
             }
         }
         return response()->json([
