@@ -591,9 +591,9 @@ class PermintaanController extends Controller
         DB::beginTransaction();
         try {
             if ($req->adendum == null) {
-                DB::table('jadual')->where('id', $req->id_jadual)->update([
-                    "tgl_req" => \Carbon\Carbon::now()
-                ]);
+                // DB::table('jadual')->where('id', $req->id_jadual)->update([
+                //     "tgl_req" => \Carbon\Carbon::now()
+                // ]);
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
                 $id = DB::table('request')->insertGetId([
@@ -667,9 +667,9 @@ class PermintaanController extends Controller
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
             } else {
-                DB::table('jadual_adendum')->where('id', $req->id_jadual)->update([
-                    "tgl_req" => \Carbon\Carbon::now()
-                ]);
+                // DB::table('jadual_adendum')->where('id', $req->id_jadual)->update([
+                //     "tgl_req" => \Carbon\Carbon::now()
+                // ]);
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
                 $id = DB::table('request')->insertGetId([
@@ -1428,6 +1428,7 @@ class PermintaanController extends Controller
 
     public function responReqKonsultan(Request $req)
     {
+       
         try {
             date_default_timezone_set('Asia/Jakarta');
             $validator = Validator::make($req->all(), [
