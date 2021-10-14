@@ -959,7 +959,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+                //pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
         } else {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
@@ -977,7 +977,7 @@ class LaporanController extends Controller
             ]);
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+                ////pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
         }
 
@@ -1008,7 +1008,7 @@ class LaporanController extends Controller
             ]);
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+                //pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
         } else {
             DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
@@ -1026,7 +1026,7 @@ class LaporanController extends Controller
             ]);
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
+                ////pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
         }
 
@@ -1075,12 +1075,12 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
-                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                ////pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
@@ -1112,7 +1112,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
@@ -1171,12 +1171,12 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
-                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                ////pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
@@ -1210,7 +1210,7 @@ class LaporanController extends Controller
             }
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
             return response()->json([
                 "code" => 200
@@ -1262,12 +1262,12 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
             return response()->json([
@@ -1299,7 +1299,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
             return response()->json([
@@ -1359,12 +1359,12 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
             return response()->json([
@@ -1399,7 +1399,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
             return response()->json([
@@ -1439,7 +1439,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
-                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
@@ -1472,7 +1472,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                ////pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
@@ -1529,7 +1529,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
-                pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
@@ -1561,7 +1561,7 @@ class LaporanController extends Controller
 
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
             return response()->json([
