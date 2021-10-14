@@ -42,6 +42,23 @@ class MKController extends Controller
             $get_data = DB::table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
+                "status" => "Mengirim",
+                "revisi" => "",
+                "username" => "MK",
+                "no_dokumen" => $req->id,
+                "kegiatan" => $get_data->nama_kegiatan,
+                "lokasi" => $get_data->lokasi_sta,
+                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
+                "volume" => $get_data->volume,
+                "note" => ""
+            ];
+            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            foreach ($mailto as $email) {
+                //pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . "MK", $email->nm_member);
+                Mail::to($email->email)->send(new TestEmail($bodyEmail));
+            }
+            $bodyEmail = [
+                "role" => "MK",
                 "status" => "Menyetujui",
                 "revisi" => "",
                 "username" => "MK",
@@ -72,23 +89,6 @@ class MKController extends Controller
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
-                Mail::to($email->email)->send(new TestEmail($bodyEmail));
-            }
-            $bodyEmail = [
-                "role" => "MK",
-                "status" => "Mengirim",
-                "revisi" => "",
-                "username" => "MK",
-                "no_dokumen" => $req->id,
-                "kegiatan" => $get_data->nama_kegiatan,
-                "lokasi" => $get_data->lokasi_sta,
-                "jenis_pekerjaan" => $get_data->jenis_pekerjaan,
-                "volume" => $get_data->volume,
-                "note" => ""
-            ];
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
-            foreach ($mailto as $email) {
-                //pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
             return response()->json([
