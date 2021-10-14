@@ -6,7 +6,6 @@ use App\Mail\TestEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -55,7 +54,7 @@ class MKController extends Controller
             ];
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
             $bodyEmail = [
@@ -72,7 +71,7 @@ class MKController extends Controller
             ];
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
             $bodyEmail = [
@@ -89,7 +88,7 @@ class MKController extends Controller
             ];
             $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
-                pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . "MK", $email->nm_member);
+                //pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
             return response()->json([
@@ -125,7 +124,7 @@ class MKController extends Controller
             ];
             $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
-                pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
+                //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
             return response()->json([
