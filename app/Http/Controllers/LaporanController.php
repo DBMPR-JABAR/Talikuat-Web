@@ -830,6 +830,7 @@ class LaporanController extends Controller
             }
             DB::table('master_laporan_harian')->where('no_trans', $req->lapId)->update([
                 "tanggal" => $req->tanggal,
+                "volume" => $req->volume,
             ]);
             DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->lapId)->update([
                 "no_pekerjaan" => $req->no_pekerjaan,
