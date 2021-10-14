@@ -591,9 +591,9 @@ class PermintaanController extends Controller
         DB::beginTransaction();
         try {
             if ($req->adendum == null) {
-                // DB::table('jadual')->where('id', $req->id_jadual)->update([
-                //     "tgl_req" => \Carbon\Carbon::now()
-                // ]);
+                DB::table('jadual')->where('id', $req->id_jadual)->update([
+                    "tgl_req" => $req->pelaksanaan_tgl
+                 ]);
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
                 $id = DB::table('request')->insertGetId([
