@@ -162,13 +162,13 @@
                                         >PPK</a
                                     >
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a
                                         class="nav-link"
                                         href="{{ route('user_mk.index') }}"
                                         >MK</a
                                     >
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -221,7 +221,15 @@
                                         >Konsultan</a
                                     >
                                 </li>
-                                
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{
+                                            route('mastermk.index')
+                                        }}"
+                                        >Manajemen Konstruksi</a
+                                    >
+                                </li>
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"

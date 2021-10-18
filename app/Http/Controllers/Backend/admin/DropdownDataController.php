@@ -32,14 +32,24 @@ class DropdownDataController extends Controller
     public function getFtByKonsultan(Request $request)
     {
         $id_ft = $request->id;
-        $ft = FieldTeam::where('konsultan_id', $id_ft)->get();
+        $ft = FieldTeam::where('konsultan_id', $id_ft)->where('is_delete', null)->get();
+        foreach($ft as $data){
+            $temp['se'] = $data->user_se->name;
+            $temp['ie'] = $data->user_ie->name;
+            $data->se = '(SE)'.$temp['se'].' - (IE)'.$temp['ie'];
+        }
         return response()->json($ft);
 
     }
     public function getGsByKontraktor(Request $request)
     {
         $id_gs = $request->id;
-        $gs = GeneralSuperintendent::where('kontraktor_id', $id_gs)->get();
+        // $gs = GeneralSuperintendent::where('kontraktor_id', $id_gs)->where('is_delete', null)->get();
+        $gs = GeneralSuperintendent::where('kontraktor_id', $id_gs)->where('is_delete', null)->get();
+        foreach($gs as $data){
+            $temp = $data->user_gs->name;
+            $data->gs = $temp;
+        }
         return response()->json($gs);
 
     }

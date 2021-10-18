@@ -120,6 +120,22 @@ Route::prefix('admin')->group(function () {
                 Route::get('/trash/{desc}/{id}',[MasterKonsultanController::class,'move_to_trash']);
 
             });
+            route::prefix('/master_mk')->group(function(){
+                Route::get('/',[MasterMkController::class,'index'])->name('mastermk.index');
+                Route::get('/detail/{id}',[MasterMkController::class,'show'])->name('show.mastermk');
+                Route::get('/create',[MasterMkController::class,'create'])->name('create.mastermk');
+                Route::post('/store',[MasterMkController::class,'store'])->name('store.mastermk');
+                Route::get('/edit/{id}',[MasterMkController::class,'edit'])->name('edit.mastermk');
+                Route::put('/update/{id}',[MasterMkController::class,'update'])->name('update.mastermk');
+
+                Route::post('/user/store/{id}',[MasterMkController::class,'store_user'])->name('store.user.mk');
+
+                Route::get('/trash_ft/{desc}/{id}',[MasterMkController::class,'move_to_trash_ft']);
+
+                Route::get('/trash',[MasterMkController::class,'trash'])->name('trash.mastermk');
+                Route::get('/trash/{desc}/{id}',[MasterMkController::class,'move_to_trash']);
+
+            });
             route::prefix('/master_ppk')->group(function(){
                 Route::get('/',[MasterPpkController::class,'index'])->name('masterppk.index');
                 Route::get('/detail/{id}',[MasterPpkController::class,'show'])->name('show.masterppk');

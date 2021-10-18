@@ -149,14 +149,18 @@ class MasterKontraktorController extends Controller
         $create_detail_gs->kontraktor_id = $request->company;
         $create_detail_gs->rule_user_id = 11;
         $create_detail_gs->save();
-        $create_user_gs->user_rule()->attach(11);
-        
-        $save_gs = KontraktorGs::create([
+        $create_detail_gs->gs()->create([
             'kontraktor_id'=>$request->company,
-            'gs_user_id'=>$create_user_gs->id,
+            // 'gs_user_id'=>$create_user_gs->id,
             'created_by'=>Auth::user()->id,
         ]);
-        if($save_gs){
+        $create_user_gs->user_rule()->attach(11);
+        // $save_gs = KontraktorGs::create([
+        //     'kontraktor_id'=>$request->company,
+        //     'gs_user_id'=>$create_user_gs->id,
+        //     'created_by'=>Auth::user()->id,
+        // ]);
+        if($create_detail_gs){
             // dd($update_konsultan);
             storeLogActivity(declarLog(1, 'General Superintendent', $save_gs->kontraktor->nama, 1));
             return back()->with(['success' => 'GS Berhasil Di Tambahkan!']);
@@ -206,7 +210,6 @@ class MasterKontraktorController extends Controller
     public function update(Request $request, $id)
     {
         //
-     
          $validator = Validator::make($request->all(), [
             'npwp' => Rule::unique('master_kontraktor', 'npwp')->ignore($id),
             'nama'=> 'required',
@@ -274,7 +277,8 @@ class MasterKontraktorController extends Controller
                     'id'=> $id_gs,
                     'kontraktor_id'=> $id,
                 ]);
-                $update_details->gs_user_id = $request->nm_gs[$y];
+                // dd($update_details);
+                $update_details->gs_user_detail_id = $request->nm_gs[$y];
                 $update_details->updated_by=Auth::user()->id;
                 $update_details->save();
             }

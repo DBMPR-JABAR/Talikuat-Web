@@ -13,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\Backend\MasterKonsultanFt as FieldTeam;
+
+
 
 
 
@@ -49,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
             $uptd_list = Uptd::whereBetween('id', [1, 6])->get();
             $kontraktors = MasterKontraktor::where('is_delete',null)->get();
             $konsultans = MasterKonsultan::where('is_delete',null)->get();
+
+            
             $view->with(['uptd_list'=> $uptd_list, 'kontraktors'=>$kontraktors, 'konsultans'=>$konsultans]);
         });
     }

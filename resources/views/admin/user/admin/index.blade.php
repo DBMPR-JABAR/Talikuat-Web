@@ -36,8 +36,8 @@
                             <th class="text-center" style="width: 5%"> No </th>
                             <th class="text-center"> Name </th>
                             <th class="text-center"> Jabatan </th>
-                            <th class="text-center"> Keterangan </th>
                             <th class="text-center"> E-mail </th>
+                            <th class="text-center"> Keterangan </th>
                             <th class="text-center"> Action </th>
 
                         </tr>
@@ -51,6 +51,10 @@
                             <td class="text-center">{{ ++$data}}</td>
                             <td>{{ @$item->user->name }} </td>
                             <td> {{ @$item->rule->rule }} </td>
+                            
+                            <td >
+                                {{ @$item->user->email }}
+                            </td>
                             <td> 
                                 @if (@$item->rule->id == 3)
                                 {{ @$item->uptd->nama }}
@@ -58,12 +62,12 @@
                                 {{ @$item->konsultan->nama }}
                                 @elseif (@$item->rule->id == 10)  
                                 {{ @$item->kontraktor->nama }}
+                                @elseif (@$item->rule->id == 13)  
+                                    @foreach ($item->lists_uptd as $lists_uptd)
+                                    {{ $lists_uptd->uptd->nama }}<br>
+                                    @endforeach
                                 @endif
                                 {{-- {{ @$item->user->profile->nip }}  --}}
-                            </td>
-                           
-                            <td >
-                                {{ @$item->user->email }}
                             </td>
 
                             <td class="text-center"> 

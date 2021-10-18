@@ -38,6 +38,10 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterKontraktorGs', 'gs_user_id','user_id');
     }
+    public function gs()
+    {
+        return $this->hasOne('App\Models\Backend\MasterKontraktorGs', 'gs_user_detail_id');
+    }
     public function konsultan()
     {
         return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');
@@ -47,9 +51,9 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');
     }
-    public function mk()
+    public function lists_uptd()
     {
-        return $this->hasMany('App\Models\Backend\MasterMk', 'user_detail_id')->orderBy('uptd_id', 'asc');
+        return $this->hasMany('App\Models\Backend\UserDetailUptd', 'user_detail_id')->orderBy('uptd_id', 'asc');
     }
     public function master_admin()
     {

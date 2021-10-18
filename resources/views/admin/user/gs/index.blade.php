@@ -53,7 +53,7 @@
                                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             </td> --}}
-                            <td> {{ @$item->user_gs->name }} </td>
+                            <td> {{ @$item->user_gs_detail->user->name }} </td>
                             
                             <td class="text-center">
                                 @if($item->ft_verified_at)

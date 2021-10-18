@@ -86,43 +86,43 @@
                                             <div class="col-md-12">
                                                 <label style="font-style: italic">General Superintendent</label> 
                                                 @if(Request::segment(4) != 'verified')
-                                                <a type='button' href='{{ url('admin/user/edit/detail',@$data->user_gs->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i>Edit Data GS</a>
+                                                <a type='button' href='{{ url('admin/user/edit/detail',@$data->user_gs_detail->user->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i>Edit Data GS</a>
                                                 @endif
                                                 <table class="table table-striped mt-2">
     
                                                     <tr>
                                                         <td width="20%">Nama Lengkap</td>
-                                                        <td >{!! Str::title(@$data->user_gs->profile->nama) !!}</td>
+                                                        <td >{!! Str::title(@$data->user_gs_detail->user->profile->nama) !!}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>NIK</td>
-                                                        <td >{{ old('nik', @$data->user_gs->profile->nik) }}</td>
+                                                        <td >{{ old('nik', @$data->user_gs_detail->user->profile->nik) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>NIP</td>
-                                                        <td >{{ old('nip', @$data->user_gs->profile->nip) }}</td>
+                                                        <td >{{ old('nip', @$data->user_gs_detail->user->profile->nip) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Tempat / Tanggal Lahir</td>
-                                                        <td >{{ old('tgl_lahir', @$data->user_gs->profile->tgl_lahir) }}</td>
+                                                        <td >{{ old('tgl_lahir', @$data->user_gs_detail->user->profile->tgl_lahir) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Jenis Kelamin</td>
-                                                        <td>{{ old('jenis_kelamin', @$data->user_gs->profile->jenis_kelamin) }}</td>
+                                                        <td>{{ old('jenis_kelamin', @$data->user_gs_detail->user->profile->jenis_kelamin) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Agama</td>
                                                         <td >
-                                                            {{ old('agama', @$data->user_gs->profile->agama) }}
+                                                            {{ old('agama', @$data->user_gs_detail->user->profile->agama) }}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Telepon</td>
-                                                        <td >{{ old('phone', @$data->user_gs->profile->no_tlp) }}</td>
+                                                        <td >{{ old('phone', @$data->user_gs_detail->user->profile->no_tlp) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Telepon Rumah</td>
-                                                        <td >{{ old('phone', @$data->user_gs->profile->no_tlp_rumah) }}</td>
+                                                        <td >{{ old('phone', @$data->user_gs_detail->user->profile->no_tlp_rumah) }}</td>
                                                     </tr>
             
                                                 </table>

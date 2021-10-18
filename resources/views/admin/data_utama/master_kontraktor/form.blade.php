@@ -299,7 +299,7 @@
                                             
                                             @foreach ($data_user as $dat)
                                                 @if($dat->rule_user_id ==11)
-                                                    <option value="{{ $dat->user_id }}" @if(@$item->gs_user_id != null && $dat->user_id == @$item->gs_user_id) selected @endif>{{ @$dat->user->name }}</option>
+                                                    <option value="{{ $dat->id }}" @if(@$item->gs_user_detail_id != null && $dat->id == @$item->gs_user_detail_id) selected @endif>{{ @$dat->user->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>

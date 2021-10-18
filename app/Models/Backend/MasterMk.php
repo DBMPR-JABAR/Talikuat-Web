@@ -11,12 +11,16 @@ class MasterMk extends Model
     protected $connection= 'mysql';
     protected $table = 'master_mk';
     protected $guarded = [];
-    public function uptd()
+    // public function uptd()
+    // {
+    //     return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
+    // }
+    // public function user_detail()
+    // {
+    //     return $this->belongsTo('App\Models\Backend\UserDetail', 'user_detail_id','id');
+    // }
+    public function user_lists()
     {
-        return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
-    }
-    public function user_detail()
-    {
-        return $this->belongsTo('App\Models\Backend\UserDetail', 'user_detail_id','id');
+        return $this->hasMany('App\Models\Backend\UserDetail', 'mk_id');
     }
 }

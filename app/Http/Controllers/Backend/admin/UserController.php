@@ -260,9 +260,14 @@ class UserController extends Controller
             $create_master_admin->save();
         }
         if($request->rule == 11){
-            $create_detail->user_gs_detail()->create([
-                'kontraktor_id' => $id,
-                'created_by' => Auth::user()->id
+            // $create_detail->user_gs_detail()->create([
+            //     'kontraktor_id' => $id,
+            //     'created_by' => Auth::user()->id
+            // ]);
+            $create_detail->gs()->create([
+                'kontraktor_id'=>$id,
+                // 'gs_user_id'=>$create_user->id,
+                'created_by'=>Auth::user()->id,
             ]);
             $create_user->user_rule()->attach(11);
 

@@ -28,7 +28,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header ">
-                <h4 class="card-title">PPK</h4>
+                <h4 class="card-title">Data Umum</h4>
                 <div class="card-header-right">
                     <ul class="list-unstyled card-option">
                         {{-- <li><i class="feather icon-maximize full-card"></i></li> --}}
@@ -65,9 +65,27 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label>Kategori Paket Kegiatan</label>
+                            <select
+                            name="kategori_paket_id"
+                            class="form-control"
+                            required
+                            value="{{ old('kategori_paket_id') }}">
+                            <option value="" selected>Pilih Kategori</option>
+                            @foreach (@$uptd_list as $item)
+                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @endforeach
+                            </select>
+                            @error('unit')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label>Unor</label>
                             <select
-                            name="unit"
+                            name="uptd_id"
                             id="unit"
                             class="form-control"
                             required
@@ -84,21 +102,88 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Ruas</label>
-                            <select
-                            name="ruas"
-                            id="ruas"
-                            class="form-control"
-                            required
-                            value="{{ old('ruas') }}">
-                            <option value="" selected>Pilih Ruas</option>
-                            </select>
-                            @error('ruas')
-                                <div class="invalid-feedback" style="display: block; color:red">
-                                    {{ $message }}
+                        
+                        <div class="card mb-3">
+                            <div class="card-header">
+                              Ruas
+                            </div>
+                            <div class="card-body">
+                                
+                                <div class="form-group row">
+                                    <div class="col-md-9 col-sm-9">
+                                        <select
+                                        name="ruas"
+                                        id="ruas"
+                                        class="form-control"
+                                        required
+                                        value="{{ old('ruas') }}">
+                                        <option value="" selected>Pilih Ruas</option>
+                                        </select>
+                                        @error('ruas')
+                                            <div class="invalid-feedback" style="display: block; color:red">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                   
+                                    <div class="col-md-3 col-sm-3"> 
+                                        {{-- <a href="javascript:void(0)" data-toggle="modal"><button class="btn btn-primary addMoreRuas btn-mini waves-effect waves-light" data-toggle="tooltip" title="Tambah Ruas"><i class="fa fa-plus"></i></button></a> --}}
+                                        <p>
+                                            <input type="button" class="btn btn-primary btn-mini waves-effect waves-light" data-toggle="tooltip" title="Tambah Ruas" value="Tambah Ruas">
+                                            {{-- <input type="button" value="Insert row"> --}}
+                                        </p>
+                                    </div>
                                 </div>
-                            @enderror
+                                
+                               
+                                <table class="table-bordered" id="myTable" >
+                                    <!--<table class="table table-bordered table-hover " id="invoiceItem7">-->								
+                                    <thead>
+                                        <tr class="well">
+                                            <th>Ruas Jalan</th>
+                                            <th>Segmen Jalan</th>
+                                            <th>Koordinat Awal Lat</th>
+                                            <th>Koordinat Awal Long</th>
+                                            <th>Koordinat Akhir Lat</th>
+                                            <th>Koordinat Akhir Long</th>
+                                            <th>Cek Lokasi</th>
+                                            <th>Hapus</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        {{-- <tr>
+                                            
+                                            <td>
+                                                <input type="text" class="form-control" id="ruas_jalan" name="ruas_jalan[]" autocomplete="off">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" id="segment_jalan" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required="">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" id="lat_awal" name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required="">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" id="long_awal" name="long_awal[]" autocomplete="off" placeholder="107.12345" required="">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" id="lat_akhir" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" required="">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" id="long_akhir" name="long_akhir[]" autocomplete="off" placeholder="107.12345" required="">
+                                            </td>
+                                            <td>
+                                                <button type="button" onclick="cekLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button>
+                                            </td>
+                                            <td>
+                                                <input type="button" value="Delete" />
+                                            </td>
+                                        </tr> --}}
+                                    </tbody>
+                                
+                                  </table>
+                                
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>PPK</label>
@@ -233,7 +318,7 @@
     url = "{{ url('getGsByKontraktor') }}"
     id_select = '#gs'
     text = '-- pilih GS --'
-    option = 'gs_user_id'
+    option = 'gs'
     value = 'id'
     setDataSelect(id, url, id_select, text, value, option)
 
@@ -245,10 +330,40 @@
     url = "{{ url('getFtByKonsultan') }}"
     id_select = '#ft'
     text = '-- pilih ft --'
-    option = 'se_user_id'
+    option = 'se'
     value = 'id'
     setDataSelect(id, url, id_select, text, value, option)
 
     }
+</script>
+<script>
+    $('#myTable').on('click', 'input[type="button"]', function () {
+    $(this).closest('tr').remove();
+    })
+    $('p input[type="button"]').click(function () {
+        $('#myTable').append('<tr></tr><td><input type="text" class="form-control" id="ruas_jalan" name="id_ruas_jalan[]" autocomplete="off"></td><td><input type="text" class="form-control" id="segment_jalan" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required=""></td><td><input type="text" class="form-control" id="lat_awal" name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required=""></td><td><input type="text" class="form-control" id="long_awal" name="long_awal[]" autocomplete="off" placeholder="107.12345" required=""></td><td><input type="text" class="form-control" id="lat_akhir" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" required=""></td><td><input type="text" class="form-control" id="long_akhir" name="long_akhir[]" autocomplete="off" placeholder="107.12345" required=""></td><td><button type="button" onclick="cekLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button></td><td><input type="button" value="Delete" /></td></tr>')
+    });
+ 
+
+
+    $(document).ready(function(){
+        var maxGroupRuas = 8;
+       
+        $(".addMoreRuas").click(function(){
+            if($('body').find('.fieldGroupRuas').length < maxGroupRuas){
+                var fieldHTML = '<div class="form-group row fieldGroupRuas">'+$(".fieldGroupCopyRuas").html()+'</div>';
+                $('body').find('.fieldGroupRuas:last').after(fieldHTML);
+            }else{
+                alert('Maximum '+maxGroupRuas+' groups are allowed.');
+            }
+        });
+        
+        //remove fields group
+        $("body").on("click",".removeRuas",function(){ 
+            $(this).parents(".fieldGroupRuas").remove();
+        });
+
+       
+    });
 </script>
 @endsection
