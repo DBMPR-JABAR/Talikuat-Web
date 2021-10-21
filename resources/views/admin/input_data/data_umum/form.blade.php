@@ -38,10 +38,10 @@
             </div>
             <div class="card-body">
                 @if(Request::segment(3) == 'edit') 
-                <form action="{{route('update.masterppk',$data->id)}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('update.dataumum',$data->id)}}" method="post" enctype="multipart/form-data">
                 @method('PUT')
                 @else 
-                <form action="{{route('store.masterppk')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('store.dataumum')}}" method="post" enctype="multipart/form-data">
               
                 @endif
                     @csrf
@@ -57,7 +57,7 @@
                         </div>
                         <div class="form-group">
                             <label>OPD</label>
-                            <input type="text" name="opd" id="opd" value="{{ @$data->opd }}" class="form-control" required>
+                            <input type="text" name="opd" id="opd" value="{{ @$data->opd ? : 'DINAS BINA MARGA DAN PENATAAN RUANG' }}" class="form-control" required>
                             @error('opd')
                                 <div class="invalid-feedback" style="display: block; color:red">
                                     {{ $message }}
@@ -72,11 +72,20 @@
                             required
                             value="{{ old('kategori_paket_id') }}">
                             <option value="" selected>Pilih Kategori</option>
-                            @foreach (@$uptd_list as $item)
-                                <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                            @foreach (@$temp_kategori as $item)
+                                <option value="{{ $item->id }}" >{{ $item->nama_kategori }}</option>
                             @endforeach
                             </select>
                             @error('unit')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Kegiatan / Paket</label>
+                            <input type="text" name="nm_paket" id="nm_paket" value="{{ @$data->nm_paket }}" class="form-control" required>
+                            @error('nm_paket')
                                 <div class="invalid-feedback" style="display: block; color:red">
                                     {{ $message }}
                                 </div>
@@ -186,6 +195,78 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label>No.Kontrak</label>
+                            <input type="text" name="no_kontrak" id="no_kontrak" value="{{ @$data->no_kontrak }}" class="form-control" required>
+                            @error('no_kontrak')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Kontrak</label>
+                            <input type="date" name="tgl_kontrak" id="tgl_kontrak" value="{{ @$data->tgl_kontrak }}" class="form-control" required>
+                            @error('tgl_kontrak')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Nilai Kontrak</label>
+                            <input type="text" name="nilai_kontrak" id="nilai_kontrak" value="{{ @$data->nilai_kontrak }}" class="form-control" required>
+                            @error('nilai_kontrak')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>No. SPMK</label>
+                            <input type="text" name="no_spmk" id="no_spmk" value="{{ @$data->no_spmk }}" class="form-control" required>
+                            @error('no_spmk')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal SPMK</label>
+                            <input type="date" name="tgl_spmk" id="tgl_spmk" value="{{ @$data->tgl_spmk }}" class="form-control" required>
+                            @error('tgl_spmk')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Panjang KM</label>
+                            <input type="text" name="panjang_km" id="panjang_km" value="{{ @$data->panjang_km }}" placeholder="....Km" class="form-control" required>
+                            @error('panjang_km')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Waktu Pelaksanaan</label>
+                            <input type="text" name="lama_waktu" id="lama_waktu" value="{{ @$data->lama_waktu }}" class="form-control" required>
+                            @error('lama_waktu')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>PPK Kegiatan</label>
+                            <input type="text" name="ppk_kegiatan" id="ppk_kegiatan" value="{{ @$data->ppk_kegiatan }}" class="form-control" required>
+                            @error('ppk_kegiatan')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label>PPK</label>
                             <select
                             name="ppk_user_id"
@@ -261,14 +342,14 @@
                         <div class="form-group">
                             <label>General Superintendent</label>
                             <select
-                            name="gs_user_id"
+                            name="gs_user_detail_id"
                             id="gs"
                             class="form-control"
                             required
-                            value="{{ old('gs_user_id') }}">
+                            value="{{ old('gs_user_detail_id') }}">
                             <option value="" selected>Pilih gs</option>
                             </select>
-                            @error('gs_user_id')
+                            @error('gs_user_detail_id')
                                 <div class="invalid-feedback" style="display: block; color:red">
                                     {{ $message }}
                                 </div>
@@ -341,7 +422,7 @@
     $(this).closest('tr').remove();
     })
     $('p input[type="button"]').click(function () {
-        $('#myTable').append('<tr></tr><td><input type="text" class="form-control" id="ruas_jalan" name="id_ruas_jalan[]" autocomplete="off"></td><td><input type="text" class="form-control" id="segment_jalan" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required=""></td><td><input type="text" class="form-control" id="lat_awal" name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required=""></td><td><input type="text" class="form-control" id="long_awal" name="long_awal[]" autocomplete="off" placeholder="107.12345" required=""></td><td><input type="text" class="form-control" id="lat_akhir" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" required=""></td><td><input type="text" class="form-control" id="long_akhir" name="long_akhir[]" autocomplete="off" placeholder="107.12345" required=""></td><td><button type="button" onclick="cekLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button></td><td><input type="button" value="Delete" /></td></tr>')
+        $('#myTable').append('<tr></tr><td><input type="text" class="form-control" id="ruas_jalan" name="id_ruas_jalan[]" autocomplete="off"></td><td><input type="text" class="form-control" id="segment_jalan" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" ></td><td><input type="text" class="form-control" id="lat_awal" name="lat_awal[]" autocomplete="off" placeholder="-7.123456" ></td><td><input type="text" class="form-control" id="long_awal" name="long_awal[]" autocomplete="off" placeholder="107.12345" ></td><td><input type="text" class="form-control" id="lat_akhir" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" ></td><td><input type="text" class="form-control" id="long_akhir" name="long_akhir[]" autocomplete="off" placeholder="107.12345" ></td><td><button type="button" onclick="cekLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button></td><td><input type="button" value="Delete" /></td></tr>')
     });
  
 

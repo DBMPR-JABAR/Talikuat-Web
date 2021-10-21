@@ -160,13 +160,13 @@ Route::prefix('admin')->group(function () {
             });
             route::prefix('/data_umum')->group(function(){
                 Route::get('/',[DataUmumController::class,'index'])->name('dataumum.index');
-                Route::get('/detail/{id}',[MasterJenisPekerjaanController::class,'show'])->name('show.masterjenispekerjaan');
+                Route::get('/detail/{id}',[DataUmumController::class,'show'])->name('show.dataumum');
                 Route::get('/create',[DataUmumController::class,'create'])->name('create.dataumum');
-                Route::post('/store',[MasterJenisPekerjaanController::class,'store'])->name('store.masterjenispekerjaan');
-                Route::get('/edit/{id}',[MasterJenisPekerjaanController::class,'edit'])->name('edit.masterjenispekerjaan');
-                Route::put('/update/{id}',[MasterJenisPekerjaanController::class,'update'])->name('update.masterjenispekerjaan');
-                Route::get('/trash',[MasterJenisPekerjaanController::class,'trash'])->name('trash.masterjenispekerjaan');
-                Route::get('/trash/{desc}/{id}',[MasterJenisPekerjaanController::class,'move_to_trash']);
+                Route::post('/store',[DataUmumController::class,'store'])->name('store.dataumum');
+                Route::get('/edit/{id}',[DataUmumController::class,'edit'])->name('edit.dataumum');
+                Route::put('/update/{id}',[DataUmumController::class,'update'])->name('update.dataumum');
+                Route::get('/trash',[DataUmumController::class,'trash'])->name('trash.dataumum');
+                Route::get('/trash/{desc}/{id}',[DataUmumController::class,'move_to_trash']);
 
             });
             Route::get('activity/{id}', [LogControllers::class,'getLogUser'])->name('log.user.index');

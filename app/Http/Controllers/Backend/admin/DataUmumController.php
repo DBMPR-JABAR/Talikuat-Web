@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Backend\admin;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Backend\DataUmum;
+use App\Models\Backend\KategoriPaket;
 
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class DataUmumController extends Controller
 {
@@ -20,15 +26,14 @@ class DataUmumController extends Controller
     public function create()
     {
         //
-        
+        $temp_kategori = KategoriPaket::all();
         $data =[];
         // dd($data);
-        return view('admin.input_data.data_umum.form',compact('data'));
+        return view('admin.input_data.data_umum.form',compact('data','temp_kategori'));
     }
     public function store(Request $request)
     {
 
-        dd("ok");
         $validator = Validator::make($request->all(), [
             'pemda'=> 'required',
             'opd'=> 'required',
@@ -44,15 +49,19 @@ class DataUmumController extends Controller
             'kontraktor_id'=> 'required',                        
             'konsultan_id'=> 'required',       
             'ft_id'=> 'required',                        
-            'gs_user_id'=> 'required',                        
+            'gs_user_detail_id'=> 'required',                        
             'ppk_user_id'=> 'required',  
             
-            'ruas_jalan_id'=> 'required',  
+            'ruas'=> 'required',  
             'tgl_kontrak'=> 'required',  
             'panjang_km'=> 'required',  
             'lama_waktu'=> 'required',  
 
         ]);
+
+        echo $validator->messages()->first();
+        dd($request->ruas);
+
         if ($validator->fails()) {
             storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak').' '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
@@ -60,21 +69,24 @@ class DataUmumController extends Controller
         $temp =([
             'pemda'=> $request->input('pemda'),
             'opd'=> $request->input('opd'),
-            'uptd_id'=> $request->input('uptd_id'),
+            'id_uptd'=> $request->input('uptd_id'),
             'kategori_paket_id'=> $request->input('kategori_paket_id'),
             'nm_paket'=> $request->input('nm_paket'),
             'no_kontrak'=> $request->input('no_kontrak'),
+            'tgl_kontrak'=> $request->input('tgl_kontrak'),            
             'no_spmk'=> $request->input('no_spmk'),
             'tgl_spmk'=> $request->input('tgl_spmk'),            
             'ppk_kegiatan'=> $request->input('ppk_kegiatan'),  
             'created_by' => Auth::user()->id,
+            
         ]);
+
         $data_umum = DataUmum::create($temp);
         $data_umum->detail()->create([
             'kontraktor_id'=> $request->input('kontraktor_id'),                        
             'konsultan_id'=> $request->input('konsultan_id'),       
             'ft_id'=> $request->input('ft_id'),                        
-            'gs_user_id'=> $request->input('gs_user_id'),                        
+            'gs_user_detail_id'=> $request->input('gs_user_detail_id'),                        
             'ppk_user_id'=> $request->input('ppk_user_id'),
             'nilai_kontrak'=> $request->input('nilai_kontrak'),
             'tanggal'=> $request->input('tanggal'),  
@@ -84,10 +96,12 @@ class DataUmumController extends Controller
             'created_by' => Auth::user()->id,
         ]);
         for($i =0 ; $i<count($request->id_ruas_jalan) ; $i++){
-            if($request->id_ruas_jalan[$i] && $request->segment_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
+            if($request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
+
+            // if($request->id_ruas_jalan[$i] && $request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
                 $data_umum->ruas()->create([
-                    'id_ruas_jalan'=> $request->id_ruas_jalan[$i],  
-                    'segment_jalan'=> $request->segment_jalan[$i],  
+                    'id_ruas_jalan'=> $request->ruas,  
+                    'segment_jalan'=> $request->segmen_jalan[$i],  
                     'lat_awal'=> $request->lat_awal[$i],  
                     'long_awal'=> $request->long_awal[$i],  
                     'lat_akhir'=> $request->lat_akhir[$i],  
@@ -95,6 +109,8 @@ class DataUmumController extends Controller
                 ]);
             }
         }
+        dd(count($request->id_ruas_jalan));
+
         if($data_umum){
             storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak'),1 ));
 

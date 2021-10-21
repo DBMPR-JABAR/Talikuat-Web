@@ -47,7 +47,7 @@ class DropdownDataController extends Controller
         // $gs = GeneralSuperintendent::where('kontraktor_id', $id_gs)->where('is_delete', null)->get();
         $gs = GeneralSuperintendent::where('kontraktor_id', $id_gs)->where('is_delete', null)->get();
         foreach($gs as $data){
-            $temp = $data->user_gs->name;
+            $temp = $data->user_gs_detail->user->name;
             $data->gs = $temp;
         }
         return response()->json($gs);
