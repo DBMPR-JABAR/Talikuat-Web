@@ -15,6 +15,7 @@ use App\Http\Controllers\MemoControllers;
 use App\Http\Controllers\MergePdf;
 use App\Http\Controllers\MKController;
 use App\Http\Controllers\PaketController;
+use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\PpkController;
 use App\Http\Controllers\RuasJalanController;
@@ -439,9 +440,13 @@ Route::prefix('utils')->group(function () {
     Route::get('preview-pdf', [UtilsControllers::class, 'previewPdf']);
     Route::post('check-volume', [UtilsControllers::class, 'checkVolume']);
     Route::post('volume-adendum', [UtilsControllers::class, 'volumeAdendum']);
+});
+Route::prefix('penilaian')->group(function () {
 
+    Route::post('penyedia', [PenilaianController::class, 'store']);
 
 });
+
 Route::prefix('memo')->group(function () {
 
     Route::get('/unread-memo', [MemoControllers::class, 'getUnreadMemo']);
