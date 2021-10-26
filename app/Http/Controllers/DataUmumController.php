@@ -506,21 +506,7 @@ class DataUmumController extends Controller
                 "is_adendum" => 1
             ]);
 
-            $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
-
-            foreach ($get_data_ruas as $data) {
-                DB::table('data_umum_ruas_adendum')->insert([
-                    "id_data_umum_adendum" => $data->id_data_umum,
-                    "ruas_jalan" => $data->ruas_jalan,
-                    "segment_jalan" => $data->segment_jalan,
-                    "lat_awal" => $data->lat_awal,
-                    "long_awal" => $data->long_awal,
-                    "lat_akhir" => $data->lat_akhir,
-                    "long_akhir" => $data->long_akhir,
-                    "adendum" => "Adendum 1",
-                    "created_at" => \Carbon\Carbon::now()
-                ]);
-            }
+            
             DB::table('request')->where('nama_kegiatan',$get_data->nm_paket)->update([
                 'disabled'=>1
             ]);
