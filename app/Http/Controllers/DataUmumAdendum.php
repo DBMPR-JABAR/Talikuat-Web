@@ -19,6 +19,8 @@ class DataUmumAdendum extends Controller
                 "tgl_adendum" => $req->tgl_adendum,
                 "panjang_km" => $req->panjang_km,
                 "lama_waktu" => $req->lama_waktu,
+                "tgl_pho"=>$req->tgl_pho,
+                "no_kontrak"=>$req->no_kontrak,
                 "updated_at" => \Carbon\Carbon::now()
             ]);
             for ($i = 0; $i < count($req->ruas_jalan); $i++) {
