@@ -11,7 +11,6 @@ class DataUmumAdendum extends Controller
     public function updateAdendum(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $dataUmum = DB::table('data_umum_adendum')->where('id', $req->id)->first();
         DB::beginTransaction();
         try {
             DB::table('data_umum_adendum')->where('id', $req->id)->update([
@@ -23,6 +22,7 @@ class DataUmumAdendum extends Controller
                 "no_kontrak"=>$req->no_kontrak,
                 "updated_at" => \Carbon\Carbon::now()
             ]);
+            DB::table('data_umum_ruas_adendum')->where('id_data_umum_adendum',$req->id)->delete();
             for ($i = 0; $i < count($req->ruas_jalan); $i++) {
                 DB::table("data_umum_ruas_adendum")->insert([
                     "id_data_umum_adendum" => $req->id,
