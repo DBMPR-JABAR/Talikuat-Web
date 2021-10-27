@@ -443,6 +443,10 @@ Route::prefix('utils')->group(function () {
 });
 Route::prefix('penilaian')->group(function () {
 
+    Route::get('/periode-penilaian/{id}', [PenilaianController::class, 'getPeriodePenilaian']);
+    Route::get('/mobilisasi', [PenilaianController::class, 'getPenilaianMobilisasi']);
+    Route::post('/store/mobile', [PenilaianController::class, 'storeFromMobile']);
+    Route::get('/list-penilaian/{id}', [PenilaianController::class, 'getListPenilaian']);
     Route::post('penyedia', [PenilaianController::class, 'store']);
 
 });
