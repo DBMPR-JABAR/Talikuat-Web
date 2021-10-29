@@ -101,6 +101,7 @@ class JadualAdendumControllers extends Controller
                         "bobot" => $req->bobot[$i],
                         "koefisien" => $req->koefisien[$i],
                         "nilai" => $req->nilai[$i],
+                        "adendum" => $getDataumum->adendum,
                         "created_at" => \Carbon\Carbon::now()
                     ]
                 );
