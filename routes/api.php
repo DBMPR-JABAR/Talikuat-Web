@@ -201,6 +201,8 @@ Route::prefix('/jadual')->group(function () {
 
 Route::prefix('/permintaan')->group(function () {
 
+    Route::get('/volume-realisasi/{id}', [PermintaanController::class, 'getTotalRealisasiVolume']);
+
     Route::get('/getAllPermintaan', [PermintaanController::class, 'getAllPermintaan']);
 
     Route::get('/getLatestPermintaan', [PermintaanController::class, 'getLatestPermintaan']);

@@ -19,6 +19,7 @@ class PermintaanController extends Controller
     public function getAllPermintaan(Request $request)
     {
         $query = DB::table('request')
+            ->whereNull('reason_delete')
             ->where(function ($query) use ($request) {
                 return $query->where('jenis_pekerjaan', 'like', '%' . $request->keyword . '%')
                     ->orWhere('volume', 'like', '%' . $request->keyword . '%')
@@ -100,7 +101,8 @@ class PermintaanController extends Controller
     {
         $query = DB::table('request')
             ->limit(5)
-            ->orderBy('id', 'desc');
+            ->orderBy('id', 'desc')
+            ->whereNull('reason_delete');
 
         switch ($request->type) {
             case 'KONTRAKTOR':
@@ -141,6 +143,7 @@ class PermintaanController extends Controller
         $keyword = $request->query("keyword");
 
         $result = DB::table("request")
+            ->whereNull('reason_delete')
             ->where("nama_kegiatan", "like", "%" . $keyword . "%")
             ->orWhere("id", $keyword)
             ->orWhere("diajukan_tgl", "like", "%" . $keyword . "%")
@@ -160,8 +163,9 @@ class PermintaanController extends Controller
     {
         try {
             $result = DB::table('request')
-                ->selectRaw('request.*, jadual.ruas_jalan')
-                ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
+                ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
+                ->leftJoin('jadual', 'request.id_jadual', '=', 'jadual.id')
+                ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
                 ->where('request.id', '=', $id)
                 ->first();
 
@@ -214,8 +218,9 @@ class PermintaanController extends Controller
     public function getPermintaanByDataUmumId($id)
     {
         $result = DB::table('request')
-            ->selectRaw('request.*, jadual.ruas_jalan')
-            ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
+            ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
+            ->leftJoin('jadual', 'request.id_jadual', '=', 'jadual.id')
+            ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
             ->where('jadual.id_data_umum', '=', $id)
             ->whereNotNull('jadual.tgl_req')
             ->get();
@@ -593,7 +598,7 @@ class PermintaanController extends Controller
             if ($req->adendum == null) {
                 DB::table('jadual')->where('id', $req->id_jadual)->update([
                     "tgl_req" => $req->pelaksanaan_tgl
-                 ]);
+                ]);
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
                 $id = DB::table('request')->insertGetId([
@@ -1428,7 +1433,7 @@ class PermintaanController extends Controller
 
     public function responReqKonsultan(Request $req)
     {
-       
+
         try {
             date_default_timezone_set('Asia/Jakarta');
             $validator = Validator::make($req->all(), [
@@ -1442,7 +1447,7 @@ class PermintaanController extends Controller
                     'result' => $validator->errors()->first()
                 ], 400);
             }
-    
+
             if ($req->laporan == 1) {
                 DB::table('request')->where('id', $req->id)->update([
                     "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
@@ -1587,7 +1592,7 @@ class PermintaanController extends Controller
                 'error' => $th->getMessage()
             ], 400);
         }
-       
+
     }
 
     public function responseReqPpkFromMobile(Request $req)
@@ -2170,6 +2175,21 @@ class PermintaanController extends Controller
             "status" => "success",
             "code" => 200,
             "result" => DB::table('history_request')->where('id_request', $id)->get()
+        ]);
+    }
+
+    public function getTotalRealisasiVolume($id)
+    {
+        $total = DB::table('request')
+            ->selectRaw("request.volume as request_volume, SUM(master_laporan_harian.volume) as total_harian_volume")
+            ->join('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
+            ->where('request.id', '=', $id)
+            ->first();
+
+        return response()->json([
+            "status" => "success",
+            "code" => 200,
+            "result" => $total
         ]);
     }
 }
