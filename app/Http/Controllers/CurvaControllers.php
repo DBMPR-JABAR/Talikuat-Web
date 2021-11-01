@@ -27,16 +27,33 @@ class CurvaControllers extends Controller
             ['id_data_umum', $id],
             ['reason_delete', null]
         ])->get();
-        $db_adendum = DB::table('jadual_adendum')->where('id_data_umum',$data->id)->get();
-        if ($db_adendum) {
-            foreach ($db_adendum as $data_jadual) {
-                
+        if ($data->is_adendum == 1) {
+            $data_umum_adendum = DB::table('data_umum_adendum')->where('id_data_umum',$id)->orderByDesc('id')->first();
+            $jadual_adendum = DB::table('jadual_adendum')->where('id_data_umum',$id)->get();
+            $count = DB::table('jadual_adendum')->where('id_data_umum',$id)->groupBy('adendum')->get();
+            foreach ($jadual_adendum as $j_adendum){
+                $data_jadual_adendum =DB::table('detail_jadual_adendum')->where('id_jadual', $j_adendum->id)->orderBy('tgl', 'asc')->get();
+                foreach ($data_jadual_adendum as $j) {
+                    $str = $j->nilai = str_replace(',', '.', $j->nilai);
+                    $j->nilai = floatval($str);
+                }
+                array_push($adendum, $data_jadual_adendum);
             }
+            
+            return response()->json([
+                "jadual_awal" => $tes,
+                "jadual_adendum"=>$adendum,
+                "jumlah_adendum"=>count($count),
+                "data_umum" => $data_umum_adendum,
+                "laporan" => $laporan,
+            ]);
+        
         }
+       
         return response()->json([
             "curva" => $tes,
             "data_umum" => $data,
-            "laporan" => [$laporan],
+            "laporan" => $laporan,
         ]);
 
     }

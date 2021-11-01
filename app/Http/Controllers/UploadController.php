@@ -18,7 +18,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_dkh' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_dkh' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -176,7 +176,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_kontrak' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_kontrak' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -235,7 +235,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_spmk' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_spmk' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -294,7 +294,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_syarat_umum' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_syarat_umum' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -353,7 +353,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_syarat_khusus' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_syarat_khusus' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -412,7 +412,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_jpp' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_jpp' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -471,7 +471,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_rencana' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_rencana' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -530,7 +530,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_sppbj' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_sppbj' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -589,7 +589,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_spl' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_spl' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -648,7 +648,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_spek_umum' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_spek_umum' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -707,7 +707,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_jaminan' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_jaminan' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
@@ -766,7 +766,7 @@ class UploadController extends Controller
     {
 
         $valid = validator::make($req->all(), [
-            'file_spkmp' => 'required|mimes:pdf,xlx,xls|max:5048'
+            'file_spkmp' => 'required|mimes:pdf,xlx,xls|max:17048'
         ]);
 
         if ($valid->fails()) {
