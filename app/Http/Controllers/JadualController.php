@@ -43,6 +43,22 @@ class JadualController extends Controller
             ->where('id', '=', $id)
             ->first();
 
+        $requestedVolume = DB::table('request')
+            ->selectRaw('SUM(volume) as requested_volume')
+            ->where('id_jadual', '=', $id)
+            ->whereNull('reason_delete')
+            ->first();
+
+        $realizationVolume = DB::table('master_laporan_harian')
+            ->selectRaw('SUM(volume) as realization_volume')
+            ->where('id_jadual', '=', $id)
+            ->whereNull('reason_delete')
+            ->first();
+
+        $result->requested_volume = $requestedVolume->requested_volume != null ? $requestedVolume->requested_volume : 0;
+        $result->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
+        $result->is_requestable = ($result->requested_volume == $result->realization_volume) && (floatval($result->volume) > $result->realization_volume);
+
         return response()->json([
             'status' => 'success',
             'code' => '200',
@@ -434,65 +450,65 @@ class JadualController extends Controller
         $nilai_kon = preg_replace('/\./', '', str_replace("Rp. ", "", $req->nilai_kontrak));
 
         try {
-        DB::beginTransaction();
-        $get_id = DB::table('jadual')->insertGetId([
-            "id_data_umum" => $req->id_data_umum,
-            "nmp" => $req->nmp[0],
-            "user" => $req->user_id,
-            "unor" => $req->unor,
-            "nm_paket" => $req->nm_paket,
-            "ruas_jalan" => $req->ruas_jalan,
-            "lama_waktu" => $waktu,
-            "ppk" => $req->ppk,
-            "nm_ppk" => $req->nama_ppk,
-            "penyedia" => $req->penyedia,
-            "konsultan" => $req->konsultan,
-            "nilai_kontrak" => str_replace(",", ".", $nilai_kon),
-            "panjang_km" => $panjang,
-            "created_at" => \Carbon\Carbon::now(),
-            "satuan" => $req->satuan[0],
-            "harga_satuan" => str_replace(',', '.', $harga),
-            "volume" => $req->volume[0],
-            "jumlah_harga" => str_replace(',', '.', $total),
-            "bobot" => $req->bobot[0],
-            "uraian" => $req->uraian[0],
-            "id_uptd" => $req->id_uptd,
-            'field_team_konsultan' => $getDataumum->field_team_konsultan
-        ]);
+            DB::beginTransaction();
+            $get_id = DB::table('jadual')->insertGetId([
+                "id_data_umum" => $req->id_data_umum,
+                "nmp" => $req->nmp[0],
+                "user" => $req->user_id,
+                "unor" => $req->unor,
+                "nm_paket" => $req->nm_paket,
+                "ruas_jalan" => $req->ruas_jalan,
+                "lama_waktu" => $waktu,
+                "ppk" => $req->ppk,
+                "nm_ppk" => $req->nama_ppk,
+                "penyedia" => $req->penyedia,
+                "konsultan" => $req->konsultan,
+                "nilai_kontrak" => str_replace(",", ".", $nilai_kon),
+                "panjang_km" => $panjang,
+                "created_at" => \Carbon\Carbon::now(),
+                "satuan" => $req->satuan[0],
+                "harga_satuan" => str_replace(',', '.', $harga),
+                "volume" => $req->volume[0],
+                "jumlah_harga" => str_replace(',', '.', $total),
+                "bobot" => $req->bobot[0],
+                "uraian" => $req->uraian[0],
+                "id_uptd" => $req->id_uptd,
+                'field_team_konsultan' => $getDataumum->field_team_konsultan
+            ]);
 
-        for ($i = 0; $i < count($req->nmp); $i++) {
-            $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
-            $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
-            DB::table('detail_jadual')->insert(
-                [
-                    "id_jadual" => $get_id,
-                    "tgl" => $req->tgl[$i],
-                    "nmp" => $req->nmp[$i],
-                    "uraian" => $req->uraian[$i],
-                    "satuan" => $req->satuan[$i],
-                    "harga_satuan" => str_replace(',', '.', $harga),
-                    "volume" => $req->volume[$i],
-                    "jumlah_harga" => str_replace(',', '.', $total),
-                    "bobot" => $req->bobot[$i],
-                    "koefisien" => $req->koefisien[$i],
-                    "nilai" => $req->nilai[$i],
-                    "created_at" => \Carbon\Carbon::now()
-                ]);
-        }
-        DB::commit();
-        return response()->json([
-            'status' => 'success',
-            'code' => '200',
-            'result' => 'Data Tersimpan'
-        ]);
-        }catch (\Throwable $e) {
+            for ($i = 0; $i < count($req->nmp); $i++) {
+                $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
+                $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
+                DB::table('detail_jadual')->insert(
+                    [
+                        "id_jadual" => $get_id,
+                        "tgl" => $req->tgl[$i],
+                        "nmp" => $req->nmp[$i],
+                        "uraian" => $req->uraian[$i],
+                        "satuan" => $req->satuan[$i],
+                        "harga_satuan" => str_replace(',', '.', $harga),
+                        "volume" => $req->volume[$i],
+                        "jumlah_harga" => str_replace(',', '.', $total),
+                        "bobot" => $req->bobot[$i],
+                        "koefisien" => $req->koefisien[$i],
+                        "nilai" => $req->nilai[$i],
+                        "created_at" => \Carbon\Carbon::now()
+                    ]);
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'code' => '200',
+                'result' => 'Data Tersimpan'
+            ]);
+        } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 'Failed',
                 'code' => '201',
                 'result' => 'Data Gagal',
-                'message'=>$e->getMessage()
-            ],201);
+                'message' => $e->getMessage()
+            ], 201);
         }
     }
 
@@ -501,45 +517,45 @@ class JadualController extends Controller
         try {
             $file = $request->file('jadual_excel_file');
 
-        $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
-        $nmp= $list_jadual[0]['no_mata_pembayaran'];
-        if (!$nmp) {
-            return response()->json([
-                'status' => 'error',
-                'code' => '500',
-                'result'=>'Format Salah'
-            ],500);
-        }else{
-        
-        $master_nmp = DB::table('master_jenis_pekerjaan')->where('id',$nmp)->first();
-        if (!$master_nmp) {
-            return response()->json([
-                'status' => 'error',
-                'code' => '500',
-                'result' => 'Nomor Mata Pembayaran Salah Atau Tidak Terdaftar Pada Talikuat Mohon Hubungi Admin UPTD'
-            ],500);
-        }
-        foreach ($list_jadual as $jadual) {
-            $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
-            $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
-            $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
-            $jadual['tanggal'] = date("Y-n-d", Date::excelToTimestamp($jadual['tanggal']));
-        }
+            $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
+            $nmp = $list_jadual[0]['no_mata_pembayaran'];
+            if (!$nmp) {
+                return response()->json([
+                    'status' => 'error',
+                    'code' => '500',
+                    'result' => 'Format Salah'
+                ], 500);
+            } else {
 
-        return response()->json([
-            'status' => 'success',
-            'code' => '200',
-            'result' => $list_jadual
-        ]);
-    }
+                $master_nmp = DB::table('master_jenis_pekerjaan')->where('id', $nmp)->first();
+                if (!$master_nmp) {
+                    return response()->json([
+                        'status' => 'error',
+                        'code' => '500',
+                        'result' => 'Nomor Mata Pembayaran Salah Atau Tidak Terdaftar Pada Talikuat Mohon Hubungi Admin UPTD'
+                    ], 500);
+                }
+                foreach ($list_jadual as $jadual) {
+                    $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
+                    $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
+                    $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
+                    $jadual['tanggal'] = date("Y-n-d", Date::excelToTimestamp($jadual['tanggal']));
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'code' => '200',
+                    'result' => $list_jadual
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error array',
                 'code' => '500',
                 'result' => $th->getMessage()
-            ],500);
+            ], 500);
         }
-        
+
     }
 
 
@@ -622,6 +638,24 @@ class JadualController extends Controller
             ->groupBy('jadual.id')
             ->get();
 
+        foreach ($result as $jadual) {
+            $requestedVolume = DB::table('request')
+                ->selectRaw('SUM(volume) as requested_volume')
+                ->where('id_jadual', '=', $jadual->id)
+                ->whereNull('reason_delete')
+                ->first();
+
+            $realizationVolume = DB::table('master_laporan_harian')
+                ->selectRaw('SUM(volume) as realization_volume')
+                ->where('id_jadual', '=', $jadual->id)
+                ->whereNull('reason_delete')
+                ->first();
+
+            $jadual->requested_volume = $requestedVolume->requested_volume != null ? $requestedVolume->requested_volume : 0;
+            $jadual->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
+            $jadual->is_requestable = ($jadual->requested_volume == $jadual->realization_volume) && (floatval($jadual->volume) > $jadual->realization_volume);
+        }
+
         return response()->json([
             'status' => 'success',
             'code' => 200,
@@ -635,6 +669,24 @@ class JadualController extends Controller
             ->where('id_data_umum', '=', $id)
             ->whereNull('tgl_req')
             ->get();
+
+        foreach ($result as $jadual) {
+            $requestedVolume = DB::table('request')
+                ->selectRaw('SUM(volume) as requested_volume')
+                ->where('id_jadual', '=', $jadual->id)
+                ->whereNull('reason_delete')
+                ->first();
+
+            $realizationVolume = DB::table('master_laporan_harian')
+                ->selectRaw('SUM(volume) as realization_volume')
+                ->where('id_jadual', '=', $jadual->id)
+                ->whereNull('reason_delete')
+                ->first();
+
+            $jadual->requested_volume = $requestedVolume->requested_volume != null ? $requestedVolume->requested_volume : 0;
+            $jadual->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
+            $jadual->is_requestable = ($jadual->requested_volume == $jadual->realization_volume) && (floatval($jadual->volume) > $jadual->realization_volume);
+        }
 
         return response()->json([
             'status' => 'success',
