@@ -40,7 +40,7 @@ if (!function_exists('pushNotification')) {
                         "title" => $title,
                         "description" => $descrition
                     ],
-                    "to" => "cHcIRX14QXqfUOL80nbVpr:APA91bG2kdJwR-1j0hKFbOejNSD9Ugbqb217KlaKVW7lrAoMJzDiup34ufBJXsDXKSs3nttJm7HOy_CMi7PCkhFNuO9ytkOo46i9Ajjfz7uGPfs03L-FJKubhMvAYP7IMqoTQ6UQwykV"
+                    "to" => $result->device_mobile_token
                 ]
             ]);
         }

@@ -40,7 +40,9 @@ class JadualController extends Controller
     public function getJadualById($id)
     {
         $result = DB::table('jadual')
-            ->where('id', '=', $id)
+            ->selectRaw('jadual.*, detail_jadual.tgl')
+            ->join('detail_jadual', 'detail_jadual.id_jadual', '=', 'jadual.id')
+            ->where('jadual.id', '=', $id)
             ->first();
 
         $requestedVolume = DB::table('request')
