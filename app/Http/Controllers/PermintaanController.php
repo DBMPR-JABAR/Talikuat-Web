@@ -223,9 +223,10 @@ class PermintaanController extends Controller
     {
         $result = DB::table('request')
             ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
-            ->leftJoin('jadual', 'request.id_jadual', '=', 'jadual.id')
+            ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
             ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
             ->where('jadual.id_data_umum', '=', $id)
+            ->whereNull('request.reason_delete')
             ->whereNotNull('jadual.tgl_req')
             ->groupBy('request.id')
             ->get();
