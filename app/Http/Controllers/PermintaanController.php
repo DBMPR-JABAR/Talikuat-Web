@@ -19,36 +19,40 @@ class PermintaanController extends Controller
     public function getAllPermintaan(Request $request)
     {
         $query = DB::table('request')
-            ->whereNull('reason_delete')
+            ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
+            ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
+            ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
+            ->whereNull('request.reason_delete')
             ->where(function ($query) use ($request) {
-                return $query->where('jenis_pekerjaan', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('volume', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('diajukan_tgl', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('pelaksanaan_tgl', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('lokasi_sta', 'like', '%' . $request->keyword . '%');
-            });
+                return $query->where('request.jenis_pekerjaan', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('request.volume', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('request.diajukan_tgl', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('request.pelaksanaan_tgl', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('request.lokasi_sta', 'like', '%' . $request->keyword . '%');
+            })
+            ->groupBy('request.id');
 
         //        $query = DB::table('request');
 
         switch ($request->type) {
             case 'KONTRAKTOR':
                 $result = $query
-                    ->where('nama_kontraktor', '=', $request->value)
+                    ->where('request.nama_kontraktor', '=', $request->value)
                     ->paginate();
                 break;
             case 'KONSULTAN':
                 $result = $query
-                    ->where('nama_direksi', '=', $request->value)
+                    ->where('request.nama_direksi', '=', $request->value)
                     ->paginate();
                 break;
             case 'ADMIN-UPTD':
                 $result = $query
-                    ->where('unor', '=', $request->value)
+                    ->where('request.unor', '=', $request->value)
                     ->paginate();
                 break;
             case 'PPK':
                 $result = $query
-                    ->where('nama_ppk', '=', $request->value)
+                    ->where('request.nama_ppk', '=', $request->value)
                     ->paginate();
                 break;
             default:
@@ -223,6 +227,7 @@ class PermintaanController extends Controller
             ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
             ->where('jadual.id_data_umum', '=', $id)
             ->whereNotNull('jadual.tgl_req')
+            ->groupBy('request.id')
             ->get();
 
         foreach ($result as $item) {
