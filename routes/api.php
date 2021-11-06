@@ -472,3 +472,9 @@ Route::prefix('memo')->group(function () {
     Route::post('/read-konsultan', [MemoControllers::class, 'readKonsultan']);
 
 });
+
+Route::prefix('notif')->group(function () {
+    Route::post('post-notification', function (Request $req) {
+        pushNotification($req->title, $req->desc, $req->username);
+    });
+});

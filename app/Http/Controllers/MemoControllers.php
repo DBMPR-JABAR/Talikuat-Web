@@ -302,18 +302,6 @@ class MemoControllers extends Controller
                     }
                 }
 
-                $list_kontraktor = DB::table('member')->where('perusahaan', '=', $kontrak->penyedia)->get();
-                foreach ($list_kontraktor as $kontraktor) {
-                    pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $kontraktor->nm_member);
-                    if ($kontraktor->email != null) {
-                        try {
-                            Mail::to($kontraktor->email)->send(new MemoMail($bodyEmail));
-                        } catch (\Exception $e) {
-
-                        }
-                    }
-                }
-
             } else if ($req->tembusan_ppk == 'true') {
 
                 $bodyEmail = [
@@ -338,6 +326,18 @@ class MemoControllers extends Controller
                     }
                 }
 
+            }
+
+            $list_kontraktor = DB::table('member')->where('perusahaan', '=', $kontrak->penyedia)->get();
+            foreach ($list_kontraktor as $kontraktor) {
+                pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $kontraktor->nm_member);
+                if ($kontraktor->email != null) {
+                    try {
+                        Mail::to($kontraktor->email)->send(new MemoMail($bodyEmail));
+                    } catch (\Exception $e) {
+
+                    }
+                }
             }
 
             return response()->json([

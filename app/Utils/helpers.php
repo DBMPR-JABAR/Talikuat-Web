@@ -25,6 +25,7 @@ if (!function_exists('pushNotification')) {
         $result = DB::table('fcm_token')->where('username', '=', $username)->first();
 
         if ($result != null) {
+
             $client = new Client([
                 'base_uri' => 'https://fcm.googleapis.com/fcm/',
                 'headers' => [
@@ -33,13 +34,13 @@ if (!function_exists('pushNotification')) {
                 ],
             ]);
 
-            $client->post('send', [
+            $response = $client->post('send', [
                 "json" => [
                     "data" => [
                         "title" => $title,
                         "description" => $descrition
                     ],
-                    "to" => $result->device_mobile_token
+                    "to" => "cHcIRX14QXqfUOL80nbVpr:APA91bG2kdJwR-1j0hKFbOejNSD9Ugbqb217KlaKVW7lrAoMJzDiup34ufBJXsDXKSs3nttJm7HOy_CMi7PCkhFNuO9ytkOo46i9Ajjfz7uGPfs03L-FJKubhMvAYP7IMqoTQ6UQwykV"
                 ]
             ]);
         }
