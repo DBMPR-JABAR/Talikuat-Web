@@ -602,9 +602,20 @@ class PermintaanController extends Controller
         DB::beginTransaction();
         try {
             if ($req->adendum == null) {
-                DB::table('jadual')->where('id', $req->id_jadual)->update([
-                    "tgl_req" => $req->pelaksanaan_tgl
-                ]);
+                $getJadual = DB::table('jadual')->where('id', $req->id_jadual)->first();
+                if (!$getJadual->volume_request ) {
+                    $volume = $getJadual->volume_request + $req->perkiraan_volume;
+                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                        "tgl_req" => $req->pelaksanaan_tgl,
+                        "volume_request"=>$volume
+                    ]);
+                }else{
+                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                        "tgl_req" => $req->pelaksanaan_tgl,
+                        "volume_request"=>$getJadual->volume - $req->perkiraan_volume
+                    ]);
+                }
+ 
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
                 $id = DB::table('request')->insertGetId([
@@ -678,9 +689,19 @@ class PermintaanController extends Controller
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
             } else {
-                // DB::table('jadual_adendum')->where('id', $req->id_jadual)->update([
-                //     "tgl_req" => \Carbon\Carbon::now()
-                // ]);
+                $getJadual = DB::table('jadual_adendum')->where('id', $req->id_jadual)->first();
+                if (!$getJadual->volume_request ) {
+                    $volume = $getJadual->volume_request + $req->perkiraan_volume;
+                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                        "tgl_req" => $req->pelaksanaan_tgl,
+                        "volume_request"=>$volume
+                    ]);
+                }else{
+                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                        "tgl_req" => $req->pelaksanaan_tgl,
+                        "volume_request"=>$getJadual->volume - $req->perkiraan_volume
+                    ]);
+                }
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
                 $id = DB::table('request')->insertGetId([
@@ -775,7 +796,6 @@ class PermintaanController extends Controller
         if ($req->file('sketsa')) {
             $file = $req->file('sketsa');
             $name = time() . "_" . $file->getClientOriginalName();
-
             DB::table('request')->where('id', $req->id)->update([
                 "nama_kegiatan" => $req->kegiatan,
                 "unor" => $req->unor,
@@ -865,6 +885,10 @@ class PermintaanController extends Controller
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
         }
+        $get_request = DB::table('request')->where('id',$req->id)->first();
+        DB::table('jadual')->where('id',$get_request->id_jadual)->update([
+            'volume_request'=>$req->perkiraan_volume
+        ]);
 
         return response()->json([
             'code' => 200
@@ -2164,11 +2188,12 @@ class PermintaanController extends Controller
         DB::table('request')->where('id', $req->id)->update([
             'reason_delete' => $req->alasan
         ]);
-        $getId = DB::table('request')->where('id', $req->id)->first();
+        $getReq = DB::table('request')->where('id', $req->id)->first();
 
-
-        DB::table('jadual')->where('id', $getId->id_jadual)->update([
-            'tgl_req' => NULL
+        $getJadual = DB::table('jadual')->where('id',$getReq->id_jadual)->first();
+        DB::table('jadual')->where('id', $getReq->id_jadual)->update([
+            'tgl_req' => NULL,
+            'volume_request'=>$getJadual->volume_request - $getReq->volume
         ]);
         return response()->json([
             'code' => 200

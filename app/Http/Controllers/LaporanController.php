@@ -328,8 +328,12 @@ class LaporanController extends Controller
         $file = $req->file('soft');
         $name = time() . "_" . $file->getClientOriginalName();
         $getTeam = DB::table('request')->where('id', $req->permohonan)->first();
+        $countRequest = DB::table('request')->where('id_jadual',$req->id_jadual)->count();
         DB::beginTransaction();
         try {
+            DB::table('request')->where('id',$req->permohonan)->update([
+                'volume_terlapor'=>(float) $getTeam->volume_terlapor+(float) $req->volume
+            ]);
             $id = DB::table('master_laporan_harian')->insertGetId([
                 "real_date" => \Carbon\Carbon::now(),
                 "user" => $req->user,
@@ -458,6 +462,19 @@ class LaporanController extends Controller
                 "id_laporan" => $id,
                 "class" => "kirim"
             ]);
+            if ($countRequest < 1) {
+                if ($getTeam->volume_terlapor == ($getTeam->volume+($getTeam->volume*10/100))) {
+                    DB::table('request')->where('id',$req->permohonan)->update([
+                        'disabled'=>1
+                    ]);
+                }
+            }else{
+                if ($getTeam->volume_terlapor ==$getTeam->volume) {
+                    DB::table('request')->where('id',$req->permohonan)->update([
+                        'disabled'=>1
+                    ]);
+                }
+            }
             DB::commit();
             return response()->json([
                 'code' => 200
@@ -818,7 +835,12 @@ class LaporanController extends Controller
     public function editLaporan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
+        $get_laporan = DB::table('master_laporan_harian')->where('id',$req->lapId)->first();
+        $get_request = DB::table('request')->where('id',$get_laporan->id_request)->first();
         try {
+            DB::table('request')->where('id',$get_laporan->id_request)->update([
+                "volume_terlapor"=>$get_request->volume_terlapor - $req->volume
+            ]);
             if ($req->file('soft')) {
                 $file = $req->file('soft');
                 $name = time() . "_" . $file->getClientOriginalName();
@@ -832,6 +854,7 @@ class LaporanController extends Controller
                 "tanggal" => $req->tanggal,
                 "volume" => $req->volume,
             ]);
+
             DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->lapId)->update([
                 "no_pekerjaan" => $req->no_pekerjaan,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
@@ -1583,17 +1606,14 @@ class LaporanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
+        $getLaporan =DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->id)->first();
+        $getRequest = DB::table('request')->where('id',$getLaporan->id_request)->first();
+        DB::table('request')->where('id',$getLaporan->id_request)->update([
+            'volume_terlapor'=>$getRequest->volume_terlapor - $getLaporan->volume
+        ]);
         DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
             'reason_delete' => $req->alasan
         ]);
-        // DB::table('detail_laporan_harian_pekerjaan')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_bahan')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_tkerja')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_cuaca')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_beton')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_hotmix')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_peralatan')->where('no_trans',$id)->delete();
-        // DB::table('detail_laporan_harian_tkerja')->where('no_trans',$id)->delete();
 
         return response()->json([
             'code' => 200
