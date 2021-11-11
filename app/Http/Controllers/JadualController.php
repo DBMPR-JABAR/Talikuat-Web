@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Imports\JadualImport;
+use Brick\Math\Exception\DivisionByZeroException;
 use Carbon\Carbon;
+use DivisionByZeroError;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -59,7 +61,31 @@ class JadualController extends Controller
 
         $result->requested_volume = $requestedVolume->requested_volume != null ? $requestedVolume->requested_volume : 0;
         $result->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
-        $result->is_requestable = ($result->requested_volume == $result->realization_volume) && (floatval($result->volume) > $result->realization_volume);
+
+        try {
+            $lastRequest = DB::table('request')->where('id_jadual', '=', $result->id)->orderByDesc('id')->whereNull('reason_delete')->first();
+
+            $isRequestable = null;
+            $percentage = 0;
+
+            if ($lastRequest == null) {
+                $isRequestable = true;
+            } else {
+                $totalRequestVolumeRealization = DB::table('master_laporan_harian')
+                    ->selectRaw('SUM(master_laporan_harian.volume) as realization_volume')
+                    ->whereNull('reason_delete')
+                    ->where('id_request', '=', $lastRequest->id)
+                    ->first()
+                    ->realization_volume;
+
+                $percentage = ($totalRequestVolumeRealization / $lastRequest->volume) * 100;
+            }
+
+        } catch (DivisionByZeroError | \Exception $e) {
+            $percentage = 0;
+        }
+
+        $result->is_requestable = $isRequestable != null ? $isRequestable : ($percentage >= 90 && (floatval($result->volume) * 1.1 < $result->realization_volume));
 
         return response()->json([
             'status' => 'success',
@@ -641,6 +667,7 @@ class JadualController extends Controller
             ->get();
 
         foreach ($result as $jadual) {
+
             $requestedVolume = DB::table('request')
                 ->selectRaw('SUM(volume) as requested_volume')
                 ->where('id_jadual', '=', $jadual->id)
@@ -655,7 +682,32 @@ class JadualController extends Controller
 
             $jadual->requested_volume = $requestedVolume->requested_volume != null ? $requestedVolume->requested_volume : 0;
             $jadual->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
-            $jadual->is_requestable = ($jadual->requested_volume == $jadual->realization_volume) && (floatval($jadual->volume) > $jadual->realization_volume);
+
+            try {
+                $lastRequest = DB::table('request')->where('id_jadual', '=', $jadual->id)->orderByDesc('id')->whereNull('reason_delete')->first();
+
+                $isRequestable = null;
+                $percentage = 0;
+
+                if ($lastRequest == null) {
+                    $isRequestable = true;
+                } else {
+                    $totalRequestVolumeRealization = DB::table('master_laporan_harian')
+                        ->selectRaw('SUM(master_laporan_harian.volume) as realization_volume')
+                        ->whereNull('reason_delete')
+                        ->where('id_request', '=', $lastRequest->id)
+                        ->first()
+                        ->realization_volume;
+
+                    $percentage = ($totalRequestVolumeRealization / $lastRequest->volume) * 100;
+                }
+
+            } catch (DivisionByZeroError | \Exception $e) {
+                $percentage = 0;
+            }
+
+            $jadual->is_requestable = $isRequestable != null ? $isRequestable : ($percentage >= 90 && (floatval($jadual->volume) * 1.1 < $jadual->realization_volume));
+
         }
 
         return response()->json([
