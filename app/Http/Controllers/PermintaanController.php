@@ -23,6 +23,7 @@ class PermintaanController extends Controller
             ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
             ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
             ->whereNull('request.reason_delete')
+            ->orderByDesc('id')
             ->where(function ($query) use ($request) {
                 return $query->where('request.jenis_pekerjaan', 'like', '%' . $request->keyword . '%')
                     ->orWhere('request.volume', 'like', '%' . $request->keyword . '%')
@@ -66,6 +67,15 @@ class PermintaanController extends Controller
             $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
             $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
             $item->checklist = $item->checklist != null ? Storage::url($item->checklist) : null;
+
+            $sqlIsActive = DB::select("SELECT NOT EXISTS(SELECT id FROM request WHERE id_jadual = " . $item->id_jadual . " AND id > " . $item->id . ") as is_active");
+            $sqlSumRealizationRequestVolume = DB::table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $item->id)->first();
+
+            if ($sqlIsActive[0]->is_active && $sqlSumRealizationRequestVolume->realization_volume < $item->volume) {
+                $item->is_active = true;
+            } else {
+                $item->is_active = false;
+            }
 
             $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
             $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
@@ -173,6 +183,15 @@ class PermintaanController extends Controller
                 ->where('request.id', '=', $id)
                 ->first();
 
+            $sqlIsActive = DB::select("SELECT NOT EXISTS(SELECT id FROM request WHERE id_jadual = " . $result->id_jadual . " AND id > " . $result->id . ") as is_active");
+            $sqlSumRealizationRequestVolume = DB::table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $result->id)->first();
+
+            if ($sqlIsActive[0]->is_active && $sqlSumRealizationRequestVolume->realization_volume < $result->volume) {
+                $result->is_active = true;
+            } else {
+                $result->is_active = false;
+            }
+
             $result->sketsa = Storage::url($result->sketsa);
             $result->metode_kerja = $result->metode_kerja != null ? Storage::url($result->metode_kerja) : null;
             $result->foto_konsultan = $result->foto_konsultan != null ? Storage::url($result->foto_konsultan) : null;
@@ -229,6 +248,7 @@ class PermintaanController extends Controller
             ->whereNull('request.reason_delete')
             ->whereNotNull('jadual.tgl_req')
             ->groupBy('request.id')
+            ->orderByDesc('id')
             ->get();
 
         foreach ($result as $item) {
@@ -237,6 +257,15 @@ class PermintaanController extends Controller
             $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
             $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
             $item->checklist = $item->checklist != null ? Storage::url($item->checklist) : null;
+
+            $sqlIsActive = DB::select("SELECT NOT EXISTS(SELECT id FROM request WHERE id_jadual = " . $item->id_jadual . " AND id > " . $item->id . ") as is_active");
+            $sqlSumRealizationRequestVolume = DB::table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $item->id)->first();
+
+            if ($sqlIsActive[0]->is_active && $sqlSumRealizationRequestVolume->realization_volume < $item->volume) {
+                $item->is_active = true;
+            } else {
+                $item->is_active = false;
+            }
 
             $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
             $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
