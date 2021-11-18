@@ -945,6 +945,7 @@ class PermintaanController extends Controller
                 "status" => 2,
                 "ditolak" => 0,
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "tgl_kirim_to_konsultan" => \Carbon\Carbon::now()
             ]);
             DB::table('history_request')->insert([
                 "username" => $req->username,
@@ -1020,6 +1021,7 @@ class PermintaanController extends Controller
                 "status" => 2,
                 "ditolak" => 0,
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
+                "tgl_kirim_to_konsultan" => \Carbon\Carbon::now()
             ]);
             DB::table('history_request')->insert([
                 "username" => $req->username,
@@ -1663,7 +1665,6 @@ class PermintaanController extends Controller
                 'error' => $th->getMessage()
             ], 400);
         }
-
     }
 
     public function responseReqPpkFromMobile(Request $req)

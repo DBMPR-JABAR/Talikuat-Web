@@ -78,7 +78,6 @@ Route::prefix('/user')->group(function () {
     Route::get('/aktivasiuser/{id}', [UserController::class, 'aktivasiUser']);
 
     Route::post('/update-profile', [UserController::class, 'updateProfile']);
-
 });
 
 Route::prefix('/kontraktor')->group(function () {
@@ -260,8 +259,6 @@ Route::prefix('/permintaan')->group(function () {
     Route::post('/delete-permintaan', [PermintaanController::class, 'deletePermintaan']);
 
     Route::get('/getHistoryLogPermintaan/{id}', [PermintaanController::class, 'getHistoryLogPermintaan']);
-
-
 });
 
 Route::prefix('laporan')->group(function () {
@@ -425,8 +422,6 @@ Route::prefix('adendum')->group(function () {
     Route::get('/getJadualbyNmp/{id}', [JadualAdendumControllers::class, 'getJadualbyNmp']);
     Route::post('/update-jadual', [JadualAdendumControllers::class, 'updateJadualAdendum']);
     Route::post('/delete-jadual', [JadualAdendumControllers::class, 'deleteJadual']);
-
-
 });
 
 Route::prefix('curva')->group(function () {
@@ -450,7 +445,6 @@ Route::prefix('penilaian')->group(function () {
     Route::post('/store/mobile', [PenilaianController::class, 'storeFromMobile']);
     Route::get('/list-penilaian/{id}', [PenilaianController::class, 'getListPenilaian']);
     Route::post('penyedia', [PenilaianController::class, 'store']);
-
 });
 
 Route::prefix('memo')->group(function () {
@@ -470,7 +464,6 @@ Route::prefix('memo')->group(function () {
     Route::post('/respon/{id}', [MemoControllers::class, 'responMemo']);
     Route::post('/cek-konsultan', [MemoControllers::class, 'cekMemoKonsultan']);
     Route::post('/read-konsultan', [MemoControllers::class, 'readKonsultan']);
-
 });
 
 Route::prefix('notif')->group(function () {
