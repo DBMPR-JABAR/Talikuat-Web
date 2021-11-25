@@ -410,7 +410,7 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
-            "nm_se" => (count($getSE) != 0) ? $getSE->nama : '',
+            "nm_se" => ($getSE != null) ? $getSE->nama : '',
             'field_team_konsultan' => $req->nama_se,
             "nm_gs" => $req->input("nm_gs"),
             "is_adendum" => 0,
