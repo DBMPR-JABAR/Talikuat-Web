@@ -410,8 +410,8 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
-            "nm_se" => ($getSE != null) ? $getSE->nama : '',
-            'field_team_konsultan' => ($getSE != null) ? $getSE->nama : null,
+            "nm_se" => $req->nama_se,
+            'field_team_konsultan' => $getSE->id,
             "nm_gs" => $req->input("nm_gs"),
             "is_adendum" => 0,
             "updated_at" => \Carbon\Carbon::now()
@@ -425,7 +425,7 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
-            'field_team_konsultan' => ($getSE != null) ? $getSE->nama : null,
+            'field_team_konsultan' => $getSE->id,
         ]);
         DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
         for ($i = 0; $i < count($req->ruas_jalan); $i++) {
