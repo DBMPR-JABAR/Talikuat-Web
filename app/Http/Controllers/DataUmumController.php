@@ -410,7 +410,7 @@ class DataUmumController extends Controller
             "penyedia" => $req->input("penyedia"),
             "konsultan" => $req->input("konsultan"),
             "nm_ppk" => $req->input("nm_ppk"),
-            "nm_se" => $getSE->nama,
+            "nm_se" => ($getSE->nama != null) ? $getSE->nama : '',
             'field_team_konsultan' => $req->nama_se,
             "nm_gs" => $req->input("nm_gs"),
             "is_adendum" => 0,
@@ -450,7 +450,7 @@ class DataUmumController extends Controller
     public function addAdendum(Request $req)
     {
         $curva = DB::table('jadual')->where('id_data_umum', $req->id)->sum('bobot');
-        if (number_format($curva,2,'.','') != 100.00 ) {
+        if (number_format($curva, 2, '.', '') != 100.00) {
             return response()->json([
                 'status' => 'failed',
                 'code' => '503',
@@ -506,9 +506,9 @@ class DataUmumController extends Controller
                 "is_adendum" => 1
             ]);
 
-            
-            DB::table('request')->where('nama_kegiatan',$get_data->nm_paket)->update([
-                'disabled'=>1
+
+            DB::table('request')->where('nama_kegiatan', $get_data->nm_paket)->update([
+                'disabled' => 1
             ]);
 
             DB::commit();
