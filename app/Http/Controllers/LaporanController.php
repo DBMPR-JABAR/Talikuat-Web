@@ -328,11 +328,11 @@ class LaporanController extends Controller
         $file = $req->file('soft');
         $name = time() . "_" . $file->getClientOriginalName();
         $getTeam = DB::table('request')->where('id', $req->permohonan)->first();
-        $countRequest = DB::table('request')->where('id_jadual',$req->id_jadual)->count();
+        $countRequest = DB::table('request')->where('id_jadual', $req->id_jadual)->count();
         DB::beginTransaction();
         try {
-            DB::table('request')->where('id',$req->permohonan)->update([
-                'volume_terlapor'=>(float) $getTeam->volume_terlapor+(float) $req->volume
+            DB::table('request')->where('id', $req->permohonan)->update([
+                'volume_terlapor' => (float) $getTeam->volume_terlapor + (float) $req->volume
             ]);
             $id = DB::table('master_laporan_harian')->insertGetId([
                 "real_date" => \Carbon\Carbon::now(),
@@ -463,15 +463,15 @@ class LaporanController extends Controller
                 "class" => "kirim"
             ]);
             if ($countRequest < 1) {
-                if ($getTeam->volume_terlapor == ($getTeam->volume+($getTeam->volume*10/100))) {
-                    DB::table('request')->where('id',$req->permohonan)->update([
-                        'disabled'=>1
+                if ($getTeam->volume_terlapor == ($getTeam->volume + ($getTeam->volume * 10 / 100))) {
+                    DB::table('request')->where('id', $req->permohonan)->update([
+                        'disabled' => 1
                     ]);
                 }
-            }else{
-                if ($getTeam->volume_terlapor ==$getTeam->volume) {
-                    DB::table('request')->where('id',$req->permohonan)->update([
-                        'disabled'=>1
+            } else {
+                if ($getTeam->volume_terlapor == $getTeam->volume) {
+                    DB::table('request')->where('id', $req->permohonan)->update([
+                        'disabled' => 1
                     ]);
                 }
             }
@@ -820,7 +820,6 @@ class LaporanController extends Controller
                 'code' => 201,
                 'result' => "Berhasil mengubah laporan harian"
             ], Response::HTTP_CREATED);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -835,11 +834,11 @@ class LaporanController extends Controller
     public function editLaporan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $get_laporan = DB::table('master_laporan_harian')->where('id',$req->lapId)->first();
-        $get_request = DB::table('request')->where('id',$get_laporan->id_request)->first();
+        $get_laporan = DB::table('master_laporan_harian')->where('no_trans', $req->lapId)->first();
+        $get_request = DB::table('request')->where('id', $get_laporan->id_request)->first();
         try {
-            DB::table('request')->where('id',$get_laporan->id_request)->update([
-                "volume_terlapor"=>$get_request->volume_terlapor - $req->volume
+            DB::table('request')->where('id', $get_laporan->id_request)->update([
+                "volume_terlapor" => $get_request->volume_terlapor - $req->volume
             ]);
             if ($req->file('soft')) {
                 $file = $req->file('soft');
@@ -1606,10 +1605,10 @@ class LaporanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
-        $getLaporan =DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->id)->first();
-        $getRequest = DB::table('request')->where('id',$getLaporan->id_request)->first();
-        DB::table('request')->where('id',$getLaporan->id_request)->update([
-            'volume_terlapor'=>$getRequest->volume_terlapor - $getLaporan->volume
+        $getLaporan = DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->id)->first();
+        $getRequest = DB::table('request')->where('id', $getLaporan->id_request)->first();
+        DB::table('request')->where('id', $getLaporan->id_request)->update([
+            'volume_terlapor' => $getRequest->volume_terlapor - $getLaporan->volume
         ]);
         DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
             'reason_delete' => $req->alasan
