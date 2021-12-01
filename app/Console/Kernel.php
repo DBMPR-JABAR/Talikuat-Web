@@ -107,7 +107,7 @@ class Kernel extends ConsoleKernel
                     }
                 }
                 info('cron job execute [bypass_permintaan]');
-                $laporan_harian = DB::table('master-laporan_harian')->get();
+                $laporan_harian = DB::table('master_laporan_harian')->get();
                 foreach ($laporan_harian as $laporan) {
                     $laporan_konsultan = date("d-m-Y", strtotime($laporan->tgl_kirim_to_konsultan));
                     $date_lock_konsultan = date("d-m-Y", strtotime($laporan_konsultan . '+2 days'));
