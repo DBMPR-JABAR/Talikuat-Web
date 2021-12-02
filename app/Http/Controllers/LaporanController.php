@@ -1605,7 +1605,7 @@ class LaporanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
-        $getLaporan = DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->id)->first();
+        $getLaporan = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
         $getRequest = DB::table('request')->where('id', $getLaporan->id_request)->first();
         DB::table('request')->where('id', $getLaporan->id_request)->update([
             'volume_terlapor' => $getRequest->volume_terlapor - $getLaporan->volume
