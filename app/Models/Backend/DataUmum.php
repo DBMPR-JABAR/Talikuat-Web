@@ -24,4 +24,12 @@ class DataUmum extends Model
     {
         return $this->hasMany('App\Models\Backend\DataUmumRuas', 'data_umum_id');
     }
+    public function uptd()
+    {
+        return $this->belongsTo('App\Models\Backend\Uptd', 'id_uptd','id');
+    }
+    public function kategori_paket()
+    {
+        return $this->belongsTo('App\Models\Backend\KategoriPaket', 'kategori_paket_id','id');
+    }
 }

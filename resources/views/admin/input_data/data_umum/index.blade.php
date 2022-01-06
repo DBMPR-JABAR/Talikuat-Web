@@ -83,8 +83,9 @@
                     <td style="width: 10px">{{ +(+$no) + 1 }}</td>
                     <td>{!! $item->no_kontrak !!}</td>
                     <td>{!! $item->nm_paket !!}</td>
-                    <td>{!! $item->unor !!}</td>
-                    <td>{!! $item->kategori !!}</td>
+                    <td>{!! @$item->uptd->description ? : $item->unor !!}</td>
+                    <td>{!! @$item->kategori_paket->nama_kategori ? : $item->kategori !!}</td>
+
                     <td>{!! $item->nm_paket !!}</td>
                     <td>{!! $item->penyedia !!}</td>
                     <td>{!! $item->nm_ppk !!}</td>

@@ -20,7 +20,9 @@ class DataUmumController extends Controller
     public function index()
     {
         //
-        $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
+        // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
+        $data = DataUmum::latest()->get();
+        // dd($data);   
         return view('admin.input_data.data_umum.index',compact('data'));
     }
     public function create()
@@ -40,8 +42,14 @@ class DataUmumController extends Controller
             'uptd_id'=> 'required',
             'kategori_paket_id'=> 'required',
             'nm_paket'=> 'required',
-            'no_kontrak'=> 'required',
-            'no_spmk'=> 'required',
+            'no_kontrak'=> [
+                'required',
+                Rule::unique(DataUmum::class, 'no_kontrak'),
+            ],
+            'no_spmk'=> [
+                'required',
+                Rule::unique(DataUmum::class, 'no_spmk'),
+            ],
             'tgl_spmk'=> 'required',            
             'ppk_kegiatan'=> 'required',
             
@@ -59,8 +67,8 @@ class DataUmumController extends Controller
 
         ]);
 
-        echo $validator->messages()->first();
-        dd($request->ruas);
+        // echo $validator->messages()->first();
+        // dd($request->ruas);
 
         if ($validator->fails()) {
             storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak').' '.$validator->messages()->first()));

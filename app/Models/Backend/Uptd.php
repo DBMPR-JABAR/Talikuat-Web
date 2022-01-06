@@ -15,4 +15,8 @@ class Uptd extends Model
     {
         return $this->hasOne('App\Models\Backend\User', 'uptd_id');
     }
+    public function data_umum()
+    {
+        return $this->HasMany('App\Models\Backend\DataUmum', 'id_uptd');
+    }
 }
