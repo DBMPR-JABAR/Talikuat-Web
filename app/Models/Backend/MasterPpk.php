@@ -16,8 +16,9 @@ class MasterPpk extends Model
     {
         return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
     }
-    public function user_detail()
+    public function user_ppk_detail()
     {
         return $this->belongsTo('App\Models\Backend\UserDetail', 'user_detail_id','id');
     }
+    
 }

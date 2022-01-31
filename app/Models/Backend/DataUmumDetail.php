@@ -11,4 +11,25 @@ class DataUmumDetail extends Model
     protected $connection= 'mysql';
     protected $table = 'data_umum_detail';
     protected $guarded = [];
+
+    public function konsultan()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');
+    }
+    public function ft()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterKonsultanFt', 'ft_id');
+    }
+    public function kontraktor()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterKontraktor', 'kontraktor_id');
+    }
+    public function gs()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterKontraktorGs', 'gs_id');
+    }
+    public function ppk()
+    {
+        return $this->belongsTo('App\Models\Backend\MasterPpk', 'ppk_id');
+    }
 }

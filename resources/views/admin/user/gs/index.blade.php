@@ -56,7 +56,7 @@
                             <td> {{ @$item->user_gs_detail->user->name }} </td>
                             
                             <td class="text-center">
-                                @if($item->ft_verified_at)
+                                @if($item->gs_verified_at)
                                 <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
                                 @else
                                 <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
