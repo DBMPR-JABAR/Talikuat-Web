@@ -21,49 +21,49 @@ class DataUmumController extends Controller
     {
         //
         // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
-        $data = DataUmum::latest()->get();
-        // dd($data);   
-        return view('admin.input_data.data_umum.index',compact('data'));
+        $data = DataUmum::latest()->with('ruas')->get();
+
+        return view('admin.input_data.data_umum.index', compact('data'));
     }
     public function create()
     {
         //
         $temp_kategori = KategoriPaket::all();
-        $data =[];
+        $data = [];
         // dd($data);
-        return view('admin.input_data.data_umum.form',compact('data','temp_kategori'));
+        return view('admin.input_data.data_umum.form', compact('data', 'temp_kategori'));
     }
     public function store(Request $request)
     {
-
+        dd($request->all());
         $validator = Validator::make($request->all(), [
-            'pemda'=> 'required',
-            'opd'=> 'required',
-            'uptd_id'=> 'required',
-            'kategori_paket_id'=> 'required',
-            'nm_paket'=> 'required',
-            'no_kontrak'=> [
+            'pemda' => 'required',
+            'opd' => 'required',
+            'uptd_id' => 'required',
+            'kategori_paket_id' => 'required',
+            'nm_paket' => 'required',
+            'no_kontrak' => [
                 'required',
                 Rule::unique(DataUmum::class, 'no_kontrak'),
             ],
-            'no_spmk'=> [
+            'no_spmk' => [
                 'required',
                 Rule::unique(DataUmum::class, 'no_spmk'),
             ],
-            'tgl_spmk'=> 'required',            
-            'ppk_kegiatan'=> 'required',
-            
-            'nilai_kontrak'=> 'required',
-            'kontraktor_id'=> 'required',                        
-            'konsultan_id'=> 'required',       
-            'ft_id'=> 'required',                        
-            'gs_user_detail_id'=> 'required',                        
-            'ppk_user_id'=> 'required',  
-            
-            'ruas'=> 'required',  
-            'tgl_kontrak'=> 'required',  
-            'panjang_km'=> 'required',  
-            'lama_waktu'=> 'required',  
+            'tgl_spmk' => 'required',
+            'ppk_kegiatan' => 'required',
+
+            'nilai_kontrak' => 'required',
+            'kontraktor_id' => 'required',
+            'konsultan_id' => 'required',
+            'ft_id' => 'required',
+            'gs_user_detail_id' => 'required',
+            'ppk_user_id' => 'required',
+
+            'ruas' => 'required',
+            'tgl_kontrak' => 'required',
+            'panjang_km' => 'required',
+            'lama_waktu' => 'required',
 
         ]);
 
@@ -71,60 +71,59 @@ class DataUmumController extends Controller
         // dd($request->ruas);
 
         if ($validator->fails()) {
-            storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak').' '.$validator->messages()->first()));
-            return back()->with(['error'=>$validator->messages()->first()]);
+            storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak') . ' ' . $validator->messages()->first()));
+            return back()->with(['error' => $validator->messages()->first()]);
         }
-        $temp =([
-            'pemda'=> $request->input('pemda'),
-            'opd'=> $request->input('opd'),
-            'id_uptd'=> $request->input('uptd_id'),
-            'kategori_paket_id'=> $request->input('kategori_paket_id'),
-            'nm_paket'=> $request->input('nm_paket'),
-            'no_kontrak'=> $request->input('no_kontrak'),
-            'tgl_kontrak'=> $request->input('tgl_kontrak'),            
-            'no_spmk'=> $request->input('no_spmk'),
-            'tgl_spmk'=> $request->input('tgl_spmk'),            
-            'ppk_kegiatan'=> $request->input('ppk_kegiatan'),  
+        $temp = ([
+            'pemda' => $request->input('pemda'),
+            'opd' => $request->input('opd'),
+            'id_uptd' => $request->input('uptd_id'),
+            'kategori_paket_id' => $request->input('kategori_paket_id'),
+            'nm_paket' => $request->input('nm_paket'),
+            'no_kontrak' => $request->input('no_kontrak'),
+            'tgl_kontrak' => $request->input('tgl_kontrak'),
+            'no_spmk' => $request->input('no_spmk'),
+            'tgl_spmk' => $request->input('tgl_spmk'),
+            'ppk_kegiatan' => $request->input('ppk_kegiatan'),
             'created_by' => Auth::user()->id,
-            
+
         ]);
 
         $data_umum = DataUmum::create($temp);
         $data_umum->detail()->create([
-            'kontraktor_id'=> $request->input('kontraktor_id'),                        
-            'konsultan_id'=> $request->input('konsultan_id'),       
-            'ft_id'=> $request->input('ft_id'),                        
-            'gs_user_detail_id'=> $request->input('gs_user_detail_id'),                        
-            'ppk_user_id'=> $request->input('ppk_user_id'),
-            'nilai_kontrak'=> $request->input('nilai_kontrak'),
-            'tanggal'=> $request->input('tanggal'),  
-            'panjang_km'=> $request->input('panjang_km'),  
-            'lama_waktu'=> $request->input('lama_waktu'), 
-            'is_active'=> 1, 
+            'kontraktor_id' => $request->input('kontraktor_id'),
+            'konsultan_id' => $request->input('konsultan_id'),
+            'ft_id' => $request->input('ft_id'),
+            'gs_user_detail_id' => $request->input('gs_user_detail_id'),
+            'ppk_user_id' => $request->input('ppk_user_id'),
+            'nilai_kontrak' => $request->input('nilai_kontrak'),
+            'tanggal' => $request->input('tanggal'),
+            'panjang_km' => $request->input('panjang_km'),
+            'lama_waktu' => $request->input('lama_waktu'),
+            'is_active' => 1,
             'created_by' => Auth::user()->id,
         ]);
-        for($i =0 ; $i<count($request->id_ruas_jalan) ; $i++){
-            if($request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
+        for ($i = 0; $i < count($request->id_ruas_jalan); $i++) {
+            if ($request->segmen_jalan[$i] && $request->lat_awal[$i] && $request->long_awal[$i] && $request->lat_akhir[$i] && $request->long_akhir[$i]) {
 
-            // if($request->id_ruas_jalan[$i] && $request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
+                // if($request->id_ruas_jalan[$i] && $request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
                 $data_umum->ruas()->create([
-                    'id_ruas_jalan'=> $request->ruas,  
-                    'segment_jalan'=> $request->segmen_jalan[$i],  
-                    'lat_awal'=> $request->lat_awal[$i],  
-                    'long_awal'=> $request->long_awal[$i],  
-                    'lat_akhir'=> $request->lat_akhir[$i],  
-                    'long_akhir'=> $request->long_akhir[$i],  
+                    'id_ruas_jalan' => $request->ruas,
+                    'segment_jalan' => $request->segmen_jalan[$i],
+                    'lat_awal' => $request->lat_awal[$i],
+                    'long_awal' => $request->long_awal[$i],
+                    'lat_akhir' => $request->lat_akhir[$i],
+                    'long_akhir' => $request->long_akhir[$i],
                 ]);
             }
         }
         dd(count($request->id_ruas_jalan));
 
-        if($data_umum){
-            storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak'),1 ));
+        if ($data_umum) {
+            storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak'), 1));
 
             return redirect()->route('masterjenispekerjaan.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else
+        } else
             return redirect()->route('masterjenispekerjaan.index')->with(['danger' => 'Data Gagal Disimpan!']);
-    
     }
 }

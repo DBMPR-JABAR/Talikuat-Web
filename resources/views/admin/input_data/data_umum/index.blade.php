@@ -58,7 +58,7 @@
             @endif
         </div>
     </div>
-    <div class="container">
+    <div class="w-100">
         <table
             class="display responsive"
             id="dataKontraktor"
@@ -66,7 +66,6 @@
         >
             <thead>
                 <tr>
-                    <th style="width: 10px">No</th>
                     <th>No Kontrak</th>
                     <th>Nama Kegiatan</th>
                     <th>Unor</th>
@@ -80,11 +79,13 @@
             <tbody>
                 @foreach ($data as $no => $item)
                 <tr>
-                    <td style="width: 10px">{{ +(+$no) + 1 }}</td>
                     <td>{!! $item->no_kontrak !!}</td>
                     <td>{!! $item->nm_paket !!}</td>
                     <td>{!! @$item->uptd->description ? : $item->unor !!}</td>
-                    <td>{!! @$item->kategori_paket->nama_kategori ? : $item->kategori !!}</td>
+                    <td>
+                        {!! @$item->kategori_paket->nama_kategori ? :
+                        $item->kategori !!}
+                    </td>
 
                     <td>{!! $item->nm_paket !!}</td>
                     <td>{!! $item->penyedia !!}</td>
@@ -93,20 +94,14 @@
                         @if (Request::segment(3) != 'trash')
                         <a
                             type="button"
-                            href="route('show.masterkontraktor',$item->id) }}"
-                            class="
-                                btn btn-sm btn-success
-                                waves-effect waves-light
-                            "
+                            href="{{route('show.masterkontraktor',$item->id) }}"
+                            class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
                         <a
                             type="button"
-                            href="route('edit.masterkontraktor',$item->id) }}"
-                            class="
-                                btn btn-sm btn-warning
-                                waves-effect waves-light
-                            "
+                            href="{{route('edit.masterkontraktor',$item->id) }}"
+                            class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>
                         @else
@@ -115,10 +110,7 @@
                             href="#Restore"
                             data-toggle="modal"
                             data-id="{{$item->id}}"
-                            class="
-                                btn btn-sm btn-success
-                                waves-effect waves-light
-                            "
+                            class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-backup-restore menu-icon"></i
                             >Restore</a
                         >
@@ -128,10 +120,7 @@
                             href="#delModal"
                             data-toggle="modal"
                             data-id="{{$item->id}}"
-                            class="
-                                btn btn-sm btn-danger
-                                waves-effect waves-light
-                            "
+                            class="btn btn-sm btn-danger waves-effect waves-light"
                             ><i class="mdi mdi-delete menu-icon"></i></a
                         ><br />
                     </td>
@@ -225,11 +214,6 @@
     $(document).ready(function () {
         $("#dataKontraktor").DataTable({
             responsive: true,
-            columnDefs: [
-                { responsivePriority: 1, targets: 0 },
-                { responsivePriority: 2, targets: 1 },
-                { responsivePriority: 3, targets: -1 },
-            ],
         });
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
