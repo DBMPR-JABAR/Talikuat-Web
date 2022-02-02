@@ -322,9 +322,10 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('vendor/jquery-validation-1.19.3/dist/jquery.validate.js') }}"></script>
 <script>
     function ubahOption() {
-        $('input[title="Tambah Ruas"]').prop('disabled',false);
+        $('input[title="Tambah Ruas"]').prop('disabled', false);
         $('#myTable tbody tr').remove()
 
         //untuk select Ruas
@@ -344,9 +345,9 @@
         option1 = 'nama'
         value1 = 'user_detail_id'
         setDataSelect(id1, url1, id_select1, text1, value1, option1)
-        
 
-        
+
+
     }
     function ubahOption1() {
 
@@ -379,42 +380,43 @@
     })
     $('p input[type="button"]').click(function () {
         var text = $('#ruas').val()
-        if ($('#ruas').val() == '-- pilih ruas --') 
-         return alert('Ruas Belum Dipilih')
-        
+        if ($('#ruas').val() == '-- pilih ruas --')
+            return alert('Ruas Belum Dipilih')
+
         $('#myTable tbody').append(`
         <tr>
-        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off"></td>
-        <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg"></td>
-        <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" ></td>
-        <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" ></td>
-        <td><input type="text" class="form-control" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" ></td>
-        <td><input type="text" class="form-control" name="long_akhir[]" autocomplete="off" placeholder="107.12345" ></td>
+        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required></td>
+        <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required></td>
+        <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required></td>
+        <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" required></td>
+        <td><input type="text" class="form-control" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" required></td>
+        <td><input type="text" class="form-control" name="long_akhir[]" autocomplete="off" placeholder="107.12345" required></td>
         <td><button type="button" onclick="checkLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button></td>
         <td><button type="button" class="badge badge-sm badge-danger" style="background-color:red;">Delete</button></td>
         </tr>`)
     });
-    function formatRupiah(angka, prefix){
-			var number_string = angka.replace(/[^,\d]/g, '').toString(),
-			split   		= number_string.split(','),
-			sisa     		= split[0].length % 3,
-			rupiah     		= split[0].substr(0, sisa),
-			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
- 
-			// tambahkan titik jika yang di input sudah menjadi angka ribuan
-			if(ribuan){
-				separator = sisa ? '.' : '';
-				rupiah += separator + ribuan.join('.');
-			}
- 
-			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-		}
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
 
 
     $(document).ready(function () {
         $('select').select2({
-            theme: "classic"
+            theme: "classic",
+            width: 'resolve'
         })
 
 
@@ -428,17 +430,102 @@
                 alert('Maximum ' + maxGroupRuas + ' groups are allowed.');
             }
         });
-       $('#nilai_kontrak').keyup( (e)=> { 
+        $('#nilai_kontrak').keyup((e) => {
             let nilaiKontrak = $('#nilai_kontrak')
-            nilaiKontrak.val(formatRupiah(nilaiKontrak.val(),"Rp"))
-            
-       });
+            nilaiKontrak.val(formatRupiah(nilaiKontrak.val(), "Rp"))
+
+        });
 
         //remove fields group
         $("body").on("click", ".removeRuas", function () {
             $(this).parents(".fieldGroupRuas").remove();
         });
 
+
+        console.log($('.error'))
+
+        $("#createData").validate({
+            errorClass: "text-danger error mt-2",
+            rules: {
+                ppk_user_id: {
+                    required: true,
+                    digits: true
+                },
+                ft_id: {
+                    required: true,
+                    digits: true
+                },
+                konsultan_id: {
+                    required: true,
+                    digits: true
+                },
+                gs_user_detail_id: {
+                    required: true,
+                    digits: true
+                },
+                kontraktor_id: {
+                    required: true,
+                    digits: true
+                },
+                nm_paket: {
+                    required: true,
+                },
+            },
+            messages: {
+                ppk_user_id: {
+                    required: 'PPK Belum dipilih',
+                    digits: 'PPK Belum dipilih'
+                },
+                ft_id: {
+                    required: 'Field Team Belum dipilih',
+                    digits: 'Field Team Belum dipilih'
+                },
+                konsultan_id: {
+                    required: 'Konsultan Belum dipilih',
+                    digits: 'Konsultan Belum dipilih'
+                },
+                gs_user_detail_id: {
+                    required: 'General Superintendent Belum dipilih',
+                    digits: 'General Superintendent Belum dipilih'
+                },
+                kontraktor_id: {
+                    required: 'Kontraktor Belum dipilih',
+                    digits: 'Kontraktor Belum dipilih'
+                },
+                kategori_paket_id:{
+                    required: 'Kategori Belum dipilih',
+                },
+                uptd_id:{
+                    required: 'UPTD Belum dipilih',
+                },
+                ruas:{
+                    required: 'Ruas Jalan Belum dipilih',
+                },
+                nm_paket: {
+                    required: 'Nama Paket Tidak Boleh Kosong',
+                },
+
+                no_kontrak: { required: 'Nomor Kontrak Tidak Boleh Kosong' },
+                tgl_kontrak: { required: 'Tanggal Kontrak Tidak Boleh Kosong' },
+                nilai_kontrak: { required: 'Nilai Kontrak Tidak Boleh Kosong' },
+                no_spmk: { required: 'Nomor SPMK Tidak Boleh Kosong' },
+                tgl_spmk: { required: 'Tanggal Kontrak Tidak Boleh Kosong' },
+                Panjang_km: { required: 'Tidak Boleh Kosong' },
+                lama_waktu: { required: 'Waktu Pelaksanaan Tidak Boleh Kosong' },
+                ppk_kegiatan: { required: 'PPK Kegiatan Tidak Boleh Kosong' },
+
+            },
+            highlight: function (element, errorClass) {
+                $(element).removeClass(errorClass);
+            }
+        });
+    });
+
+    $(document).keypress(function (e) {
+        $('.error').hide();
+    });
+    $(document).change(function (e) {
+        $('.error').hide();
     });
     function PopupCenter(url, title, w, h) {
         var dualScreenLeft =
@@ -479,7 +566,7 @@
     }
     function checkLok(e) {
         var parents = $(e).closest('tr')
-        var row = parents.find('input'); 
+        var row = parents.find('input');
         var latawal = row[2].value;
         var longawal = row[3].value;
         var latakhir = row[4].value;
@@ -489,15 +576,7 @@
         var destination = "&destination=" + latakhir + "," + longakhir;
         var newUrl = new URL(url + origin + destination);
         PopupCenter(newUrl, "Google Maps", 1200, 650);
-
-
     }
-    $('form').submit( (e) => {
-        if ($('input[name^=lat_awal]').length === 0) 
-        return;
-        alert('kosong');
-        e.preventDefault();
-    });
-    
+
 </script>
 @endsection
