@@ -22,4 +22,8 @@ class UserRule extends Model
     {
         return $this->belongsToMany('App\Models\Backend\UserRule', 'user_rule_user', 'rule_user_id', 'user_id');
     }
+    public function permissions()
+    {
+        return $this->belongsToMany('App\Models\Backend\Permission', 'rule_has_permission','rule_id','permission_id');
+    }
 }

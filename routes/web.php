@@ -44,7 +44,16 @@ Route::prefix('admin')->group(function () {
             Route::post('/user_admin/store',[MasterAdminController::class,'store'])->name('store.user_admin');
             Route::get('/user_mk',[MasterMkController::class,'index'])->name('user_mk.index');
             Route::post('/user_mk/store',[MasterMkController::class,'store'])->name('store.user_mk');
-    
+            Route::get('/role&permission',[RoleController::class,'index'])->name('role.index');
+            
+            Route::prefix('role')->group(function (){
+                Route::get('/create',[RoleController::class,'create'])->name('role.create');
+            });
+            Route::prefix('permission')->group(function (){
+            });
+            Route::prefix('feature')->group(function (){
+                Route::post('store',[FeatureController::class,'store'])->name('store.feature');
+            });
             Route::prefix('user')->group(function (){
                 Route::get('/',[UserController::class,'index'])->name('user.index');
                 Route::post('store',[UserController::class,'store'])->name('store.user');
@@ -74,7 +83,6 @@ Route::prefix('admin')->group(function () {
                     Route::get('/index',[UserController::class,'index_gs'])->name('user.gs.index');
                     Route::get('/trash',[MasterKontraktorController::class,'trash_gs'])->name('user.gs.trash');
                     Route::get('/{id}',[UserController::class,'show_gs'])->name('show.user.gs');     
-
                     Route::get('verified/{id}',[UserController::class,'show_gs'])->name('verified.user.gs');
                     Route::post('verified/{id}',[VerifiedController::class,'verified_gs'])->name('verified.user.gs.store');
 

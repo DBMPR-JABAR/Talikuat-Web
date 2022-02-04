@@ -109,7 +109,6 @@ class UserController extends Controller
         }
         if ($validator->fails()) {
             storeLogActivity(declarLog(1, 'Users', $request->email.' '.$validator->messages()->first()));
-
             return back()->with(['error'=>$validator->messages()->first()]);
         }
         $create_user = User::firstOrNew(['email'=> $request->email]);

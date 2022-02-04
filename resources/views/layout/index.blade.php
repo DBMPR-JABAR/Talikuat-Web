@@ -183,6 +183,13 @@
                                         >General Superintendent</a
                                     >
                                 </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('role.index') }}"
+                                        >Role & Permission</a
+                                    >
+                                </li>
                             </ul>
                         </div>
                     </li>
