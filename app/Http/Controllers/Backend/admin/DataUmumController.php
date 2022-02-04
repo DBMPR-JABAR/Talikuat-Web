@@ -21,7 +21,7 @@ class DataUmumController extends Controller
     {
         //
         // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
-        $data = DataUmum::latest()->with('ruas')->get();
+        $data = DataUmum::latest()->with('detail')->get();
 
         return view('admin.input_data.data_umum.index', compact('data'));
     }

@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Backend\admin;
 
-use App\Http\Controllers\Backend\admin\MasterKonsultan;
-use App\Http\Controllers\Backend\admin\MasterPpk;
+use App\Http\Controllers\Backend\PusatUnduhanControllers;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -170,6 +169,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('pusat_unduhan.index');
 
 
 

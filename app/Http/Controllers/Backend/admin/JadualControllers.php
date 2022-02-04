@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Backend\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Backend\DataUmum;
 use Illuminate\Http\Request;
 
-class PusatUnduhanControllers extends Controller
+class JadualControllers extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +14,7 @@ class PusatUnduhanControllers extends Controller
      */
     public function index()
     {
-        $data = DataUmum::latest()->get();
-
-        return view('unduhan.index', ['data' => $data]);
+        //
     }
 
     /**

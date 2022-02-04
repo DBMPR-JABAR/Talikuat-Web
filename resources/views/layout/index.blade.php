@@ -296,7 +296,7 @@
                     <li class="nav-item">
                         <a
                             class="nav-link"
-                            href="pages/forms/basic_elements.html"
+                            href="{{route('pusat_unduhan.index')}}"
                         >
                             <i class="mdi mdi-cloud-download menu-icon"></i>
                             <span class="menu-title">Pusat Unduhan</span>
