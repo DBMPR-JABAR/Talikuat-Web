@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\jadualCollection;
 use App\Imports\JadualImport;
 use Brick\Math\Exception\DivisionByZeroException;
 use Carbon\Carbon;
@@ -80,7 +81,6 @@ class JadualController extends Controller
 
                 $percentage = ($totalRequestVolumeRealization / $lastRequest->volume) * 100;
             }
-
         } catch (DivisionByZeroError | \Exception $e) {
             $percentage = 0;
         }
@@ -419,7 +419,6 @@ class JadualController extends Controller
                 'code' => 200,
                 'result' => 'Berhasil upload jadual'
             ], Response::HTTP_OK);
-
         } catch (\Exception $exception) {
             DB::rollBack();
             return response()->json([
@@ -521,7 +520,8 @@ class JadualController extends Controller
                         "koefisien" => $req->koefisien[$i],
                         "nilai" => $req->nilai[$i],
                         "created_at" => \Carbon\Carbon::now()
-                    ]);
+                    ]
+                );
             }
             DB::commit();
             return response()->json([
@@ -533,10 +533,10 @@ class JadualController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 'Failed',
-                'code' => '201',
+                'code' => '500',
                 'result' => 'Data Gagal',
                 'message' => $e->getMessage()
-            ], 201);
+            ], 500);
         }
     }
 
@@ -545,7 +545,12 @@ class JadualController extends Controller
         try {
             $file = $request->file('jadual_excel_file');
 
-            $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
+            $list_jadual = Excel::toCollection(new JadualImport, $file);
+            return response()->json([
+                'status' => 'success',
+                'code' => '200',
+                'result' => $list_jadual
+            ]);
             $nmp = $list_jadual[0]['no_mata_pembayaran'];
             if (!$nmp) {
                 return response()->json([
@@ -554,7 +559,6 @@ class JadualController extends Controller
                     'result' => 'Format Salah'
                 ], 500);
             } else {
-
                 $master_nmp = DB::table('master_jenis_pekerjaan')->where('id', $nmp)->first();
                 if (!$master_nmp) {
                     return response()->json([
@@ -583,7 +587,6 @@ class JadualController extends Controller
                 'result' => $th->getMessage()
             ], 500);
         }
-
     }
 
 
@@ -650,7 +653,8 @@ class JadualController extends Controller
                     "koefisien" => $req->koefisien[$i],
                     "nilai" => $req->nilai[$i],
                     "created_at" => \Carbon\Carbon::now()
-                ]);
+                ]
+            );
         }
         return response()->json([
             "code" => 200
@@ -701,13 +705,11 @@ class JadualController extends Controller
 
                     $percentage = ($totalRequestVolumeRealization / $lastRequest->volume) * 100;
                 }
-
             } catch (DivisionByZeroError | \Exception $e) {
                 $percentage = 0;
             }
 
             $jadual->is_requestable = $isRequestable != null ? $isRequestable : ($percentage >= 90 && (floatval($jadual->volume) * 1.1 < $jadual->realization_volume));
-
         }
 
         return response()->json([
