@@ -46,6 +46,12 @@ Route::prefix('admin')->group(function () {
             
             Route::prefix('role')->group(function (){
                 Route::get('/create',[RoleController::class,'create'])->name('role.create');
+                Route::post('/store',[RoleController::class,'store'])->name('store.role');
+                Route::get('/edit/{id}',[RoleController::class,'edit'])->name('role.edit');
+                Route::put('/update/{id}',[RoleController::class,'update'])->name('update.role');
+                Route::get('/delete/{id}',[RoleController::class,'destroy'])->name('role.delete');
+
+
             });
             Route::prefix('permission')->group(function (){
             });

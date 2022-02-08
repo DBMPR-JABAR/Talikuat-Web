@@ -25,11 +25,11 @@
                     class="btn btn-mat btn-primary mb-3"
                     ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
                 >
-                <a
+                {{-- <a
                     href="{{ route('trash.masterppk') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-delete menu-icon"></i> Trash</a
-                >
+                > --}}
                 @else
                 <a
                     href="{{ route('masterppk.index') }}"
@@ -49,7 +49,7 @@
                             <th style="width: 5%">No</th>
                             <th>Name</th>
                             <th>Permission</th>
-                            <th style="width: 25%">Aksi</th>
+                            <th style="width: 10%">Aksi</th>
 
                         </tr>
                     </thead>
@@ -62,13 +62,16 @@
                                 {!! $role->rule !!}
                             </td>
                             <td>
-                               
+                                @foreach ($role->permissions as $permission)
+                                    <button  class="btn btn-secondary mb-1" style="font-size: 11px !important;" disabled>{!! $permission->name !!}</button> 
+                                    
+                                @endforeach
+
                             </td>
                             
                             <td>
-                                <a type='button' href='{{ route('show.masterppk',$role->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
-                                <a type='button' href='{{ route('edit.masterppk',$role->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
-                                <a type='button' href='#delModal' data-toggle='modal' data-id='{{$role->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                <a type='button' href='{{ route('role.edit',$role->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                <a type='button' href='#delModalRole' data-toggle='modal' data-id='{{$role->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                             </td>
                         </tr>
                         @endforeach
@@ -88,11 +91,11 @@
                     class="btn btn-mat btn-primary mb-3"
                     ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
                 >
-                <a
+                {{-- <a
                     href="{{ route('trash.masterppk') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-delete menu-icon"></i> Trash</a
-                >
+                > --}}
                 @else
                 <a
                     href="{{ route('masterppk.index') }}"
@@ -126,7 +129,7 @@
                             <td class="text-center">
                                 <a type='button' href='{{ route('show.masterppk',$feature->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
                                 <a type='button' href='{{ route('edit.masterppk',$feature->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
-                                <a type='button' href='#delModal' data-toggle='modal' data-id='{{$feature->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                <a type='button' href='#delModalRole' data-toggle='modal' data-id='{{$feature->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                             </td>
                         </tr>
                         @endforeach
@@ -146,11 +149,11 @@
                     class="btn btn-mat btn-primary mb-3"
                     ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
                 >
-                <a
+                {{-- <a
                     href="{{ route('trash.masterppk') }}"
                     class="btn btn-mat btn-danger mb-3"
                     ><i class="mdi mdi-delete menu-icon"></i> Trash</a
-                >
+                > --}}
                 @else
                 <a
                     href="{{ route('masterppk.index') }}"
@@ -185,7 +188,7 @@
                             <td class="text-center">
                                 <a type='button' href='{{ route('show.masterppk',$permission->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
                                 <a type='button' href='{{ route('edit.masterppk',$permission->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
-                                <a type='button' href='#delModal' data-toggle='modal' data-id='{{$permission->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                <a type='button' href='#delModalRole' data-toggle='modal' data-id='{{$permission->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
                             </td>
                         </tr>
                         @endforeach
@@ -241,11 +244,11 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="delModalRole" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Pindahkan Data User ke Sampah</h4>
+                    <h4 class="modal-title">Hapus Data Role</h4>
                     <button
                         type="button"
                         class="close"
@@ -269,10 +272,10 @@
                         Tutup
                     </button>
                     <a
-                        id="delHref"
+                        id="delHrefRole"
                         href=""
                         class="btn btn-danger waves-effect waves-light"
-                        >Pindahkan</a
+                        >Hapus</a
                     >
                 </div>
             </div>
@@ -323,14 +326,14 @@
         $("#dataPermission").DataTable();
         $("#dataFeature").DataTable();
 
-        $("#delModal").on("show.bs.modal", function (event) {
+        $("#delModalRole").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
             const id = link.data("id");
             console.log(id);
-            const url = `{{ url('admin/master_ppk/trash/move_to_trash') }}/` + id;
+            const url = `{{ url('admin/role/delete') }}/` + id;
             console.log(url);
             const modal = $(this);
-            modal.find(".modal-footer #delHref").attr("href", url);
+            modal.find(".modal-footer #delHrefRole").attr("href", url);
         });
         $("#Restore").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);

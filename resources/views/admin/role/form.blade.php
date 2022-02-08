@@ -40,10 +40,10 @@
             </div>
             <div class="card-body">
                 @if(Request::segment(3) == 'edit') 
-                <form action="{{route('update.masterkontraktor',$data->id)}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('update.role',$data->id)}}" method="post" enctype="multipart/form-data">
                 @method('PUT')
                 @else 
-                <form action="{{route('store.masterkontraktor')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('store.role')}}" method="post" enctype="multipart/form-data">
               
                 @endif
                     @csrf
@@ -51,8 +51,9 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label>Nama Role</label>
-                                <input type="text" name="nama" id="nama" value="{{ @$data->nama }}" class="form-control" required>
-                                @error('nama')
+                                <input type="text" name="description" value="{{ @$data->description }}" class="form-control" style="text-transform:uppercase" required>
+                                
+                                @error('description')
                                     <div class="invalid-feedback" style="display: block; color:red">
                                         {{ $message }}
                                     </div>
@@ -64,15 +65,18 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label>Permissions</label>
-                                @foreach ($features as $feature)
+                                @foreach ($feature_category as $category)
                                     <br>
-                                    {{ $feature->name }}
+                                    {{ $category->name }}
                                     <br>
-                                    @foreach ($feature->permission as $permission)
+                                    @foreach ($category->features as $feature)
+                                        @foreach ($feature->permission as $permission)
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" value="">{{ $permission->name }} &nbsp;
+                                            <input type="checkbox" name="permission[]" value="{{ $permission->id }}" @if(@$data->description && @$data->permissions->contains(@$permission))  checked @endif>&nbsp;{{ $permission->name }} &nbsp;
                                         </label>
+                                        @endforeach
                                     @endforeach
+                                    
                                 @endforeach
                                 
                                 @error('telp')
