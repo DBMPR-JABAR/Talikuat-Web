@@ -38,21 +38,21 @@ Route::prefix('admin')->group(function () {
             //route dashboard
             Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
             Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
-            Route::get('/user_admin',[MasterAdminController::class,'index'])->name('user_admin.index');
-            Route::post('/user_admin/store',[MasterAdminController::class,'store'])->name('store.user_admin');
-            Route::get('/user_mk',[MasterMkController::class,'index'])->name('user_mk.index');
-            Route::post('/user_mk/store',[MasterMkController::class,'store'])->name('store.user_mk');
-            Route::get('/role&permission',[RoleController::class,'index'])->name('role.index');
-            
-            Route::prefix('role')->group(function (){
-                Route::get('/create',[RoleController::class,'create'])->name('role.create');
+            Route::get('/user_admin', [MasterAdminController::class, 'index'])->name('user_admin.index');
+            Route::post('/user_admin/store', [MasterAdminController::class, 'store'])->name('store.user_admin');
+            Route::get('/user_mk', [MasterMkController::class, 'index'])->name('user_mk.index');
+            Route::post('/user_mk/store', [MasterMkController::class, 'store'])->name('store.user_mk');
+            Route::get('/role&permission', [RoleController::class, 'index'])->name('role.index');
+
+            Route::prefix('role')->group(function () {
+                Route::get('/create', [RoleController::class, 'create'])->name('role.create');
             });
-            Route::prefix('permission')->group(function (){
+            Route::prefix('permission')->group(function () {
             });
-            Route::prefix('feature')->group(function (){
-                Route::post('store',[FeatureController::class,'store'])->name('store.feature');
+            Route::prefix('feature')->group(function () {
+                Route::post('store', [FeatureController::class, 'store'])->name('store.feature');
             });
-        
+
             Route::prefix('user')->group(function () {
                 Route::get('/', [UserController::class, 'index'])->name('user.index');
                 Route::post('store', [UserController::class, 'store'])->name('store.user');
@@ -170,6 +170,10 @@ Route::prefix('admin')->group(function () {
                 Route::get('/trash/{desc}/{id}', [DataUmumController::class, 'move_to_trash']);
                 Route::get('/addendum/{id}', [DataUmumAddendumControllers::class, 'create'])->name('create.addendum');
             });
+
+            Route::resource('jadual', JadualControllers::class);
+            Route::get('/jadual/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create');
+
             Route::get('activity/{id}', [LogControllers::class, 'getLogUser'])->name('log.user.index');
             Route::prefix('log')->group(function () {
                 Route::get('/', [LogControllers::class, 'index'])->name('log.index');

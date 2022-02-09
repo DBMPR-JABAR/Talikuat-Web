@@ -165,7 +165,7 @@ Route::prefix('/jadual')->group(function () {
 
     Route::post('/parseJadualExcelFile', [JadualController::class, 'parseJadualExcelFile']);
 
-    Route::post('/exceltodata', [JadualController::class, 'exceltodata']);
+    Route::post('/exceltodata', [JadualController::class, 'exceltodata'])->name('jadual.exceltodata');
 
     Route::post('/insertJadualFromMobile', [JadualController::class, 'insertJadualFromMobile']);
 

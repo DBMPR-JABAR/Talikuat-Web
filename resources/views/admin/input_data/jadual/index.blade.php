@@ -1,4 +1,4 @@
-@extends('layout.index') @section('title','Data Umum') @section('header')
+@extends('layout.index') @section('title','Jadual') @section('header')
 <link
     rel="stylesheet"
     href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
@@ -19,23 +19,21 @@
 
 @endsection @section('page-header')
 <div class="page-header">
-    <h3 class="page-title">Data Umum</h3>
+    <h3 class="page-title">Jadual Pekerjaan</h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('admin.home') }}">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-                Data Umum
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Jadual</li>
         </ol>
     </nav>
 </div>
 @endsection @section('content')
 <div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
+    <!-- <div class="col-lg-12 grid-margin stretch-card">
         <div class="container">
-            <h4 class="card-title">Data Umum</h4>
+            <h4 class="card-title">Jadual</h4>
             @if (Request::segment(3) != 'trash')
             <a
                 href="{{ route('create.dataumum') }}"
@@ -57,7 +55,7 @@
             >
             @endif
         </div>
-    </div>
+    </div> -->
     <div class="w-100">
         <table
             class="display responsive"
@@ -91,39 +89,18 @@
                     <td>{!! $item->detail->kontraktor->nama !!}</td>
                     <td>{!! $item->detail->ppk !!}</td>
                     <td>
-                        @if (Request::segment(3) != 'trash')
                         <a
                             type="button"
-                            href="{{route('show.dataumum',$item->id) }}"
+                            href="{{route('jadual.show',$item->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
                         <a
                             type="button"
-                            href="{{route('edit.dataumum',$item->id) }}"
+                            href="{{route('jadual.create',$item->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>
-
-                        @else
-                        <a
-                            type="button"
-                            href="#Restore"
-                            data-toggle="modal"
-                            data-id="{{$item->id}}"
-                            class="btn btn-sm btn-success waves-effect waves-light"
-                            ><i class="mdi mdi-backup-restore menu-icon"></i
-                            >Restore</a
-                        >
-                        @endif
-                        <a
-                            type="button"
-                            href="#delModal"
-                            data-toggle="modal"
-                            data-id="{{$item->id}}"
-                            class="btn btn-sm btn-danger waves-effect waves-light"
-                            ><i class="mdi mdi-delete menu-icon"></i></a
-                        ><br />
                     </td>
                 </tr>
                 @endforeach
@@ -136,7 +113,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Pindahkan Data Umum ke Sampah</h4>
+                    <h4 class="modal-title">Pindahkan Jadual ke Sampah</h4>
                     <button
                         type="button"
                         class="close"
@@ -173,7 +150,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Kembalikan Data Umum</h4>
+                    <h4 class="modal-title">Kembalikan Jadual</h4>
                     <button
                         type="button"
                         class="close"
