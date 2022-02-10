@@ -292,7 +292,7 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/dropdowns.html"
+                                        href="{{ route('jadual.index') }}"
                                         >Jadual Pekerjaan</a
                                     >
                                 </li>
@@ -316,7 +316,7 @@
                     <li class="nav-item">
                         <a
                             class="nav-link"
-                            href="{{route('pusat_unduhan.index')}}"
+                            href="{{ route('pusat_unduhan.index') }}"
                         >
                             <i class="mdi mdi-cloud-download menu-icon"></i>
                             <span class="menu-title">Pusat Unduhan</span>

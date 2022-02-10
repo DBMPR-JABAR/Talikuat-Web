@@ -14,7 +14,8 @@ class DataUmum extends Model
 
     public function detail()
     {
-        return $this->hasOne('App\Models\Backend\DataUmumDetail', 'data_umum_id')->where('is_active', 1);
+        $detail = $this->hasOne('App\Models\Backend\DataUmumDetail', 'data_umum_id')->where('is_active', 1);
+        return $detail->with('konsultan')->with('ft')->with('kontraktor')->with('gs')->with('ppk');
     }
     public function list_details()
     {

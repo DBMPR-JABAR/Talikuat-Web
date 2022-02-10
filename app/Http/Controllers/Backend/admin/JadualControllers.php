@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Backend\DataUmum;
 use Illuminate\Http\Request;
 
 class JadualControllers extends Controller
@@ -14,7 +15,9 @@ class JadualControllers extends Controller
      */
     public function index()
     {
-        //
+
+        $data = DataUmum::latest()->with('detail')->with('uptd')->with('ruas')->get();
+        return view('admin.input_data.jadual.index', compact('data'));
     }
 
     /**
@@ -22,9 +25,14 @@ class JadualControllers extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+
+        $data = DataUmum::where([[
+            'id', $id
+        ]])->with('kategori_paket')->with('uptd')->with('ruas')->with('detail')->first();
+
+        return view('admin.input_data.jadual.create', compact('data'));
     }
 
     /**
@@ -46,7 +54,6 @@ class JadualControllers extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
