@@ -52,7 +52,8 @@ Route::prefix('admin')->group(function () {
                 Route::get('/delete/{id}',[RoleController::class,'destroy'])->name('role.delete');
 
             });
-           
+            Route::prefix('permission')->group(function (){
+            });
             Route::prefix('feature')->group(function (){
                 Route::post('store',[FeatureController::class,'store'])->name('store.feature');
             });
@@ -181,6 +182,13 @@ Route::prefix('admin')->group(function () {
             Route::prefix('log')->group(function () {
                 Route::get('/', [LogControllers::class, 'index'])->name('log.index');
             });
+            Route::prefix('jadwal')->group(function (){
+                Route::get('/', [JadualControllers::class, 'index'])->name('jadwal.index');
+                Route::get('/show/{id}', [JadualControllers::class, 'index'])->name('jadwal.show');
+                Route::get('/create/{id}', [JadualControllers::class, 'index'])->name('jadwal.create');
+
+
+            });   
         });
     });
 });

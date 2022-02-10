@@ -91,13 +91,13 @@
                     <td>
                         <a
                             type="button"
-                            href="{{route('jadual.show',$item->id) }}"
+                            href="{{route('jadwal.show',$item->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
                         <a
                             type="button"
-                            href="{{route('jadual.create',$item->id) }}"
+                            href="{{route('jadwal.create',$item->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>

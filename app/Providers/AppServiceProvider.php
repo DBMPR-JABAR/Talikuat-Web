@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
 
         
         View::composer('*', function ($view) {
+            $user_policy = "";
             if (Auth::user()) {
                 $user_policy = User::find(Auth::user()->id);
             }

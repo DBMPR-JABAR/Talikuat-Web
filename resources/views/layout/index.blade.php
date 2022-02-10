@@ -292,8 +292,8 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{ route('jadual.index') }}"
-                                        >Jadual Pekerjaan</a
+                                        href="{{ route('jadwal.index') }}"
+                                        >Jadwal Pekerjaan</a
                                     >
                                 </li>
                                 <li class="nav-item">
