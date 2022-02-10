@@ -58,6 +58,9 @@ Route::prefix('admin')->group(function () {
             Route::prefix('feature')->group(function (){
                 Route::post('store',[FeatureController::class,'store'])->name('store.feature');
             });
+            Route::prefix('feature_category')->group(function (){
+                Route::post('store',[FeatureCategoryController::class,'store'])->name('store.feature_category');
+            });
         
             Route::prefix('user')->group(function () {
                 Route::get('/', [UserController::class, 'index'])->name('user.index');

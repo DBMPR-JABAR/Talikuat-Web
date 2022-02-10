@@ -62,8 +62,6 @@ class FeatureController extends Controller
         ]);
         storeLogActivity(declarLog(1, 'Feature', $request->name,1 ));
         return redirect(route('role.index'))->with(['success'=>'Berhasil Menambahkan Feature!!']);
-
-
     }
 
     /**

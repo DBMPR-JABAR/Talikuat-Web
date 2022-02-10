@@ -84,3 +84,18 @@ if (! function_exists('storeLogActivity')) {
         return $store;
     }
 }
+if (! function_exists('user_policy')) {         
+    /**
+     * user_policy
+     *
+     * @param  mixed $tanggal
+     * @return void
+     */
+    function user_policy() {
+        
+        if (Auth::user()) {
+            $user_policy = App\Models\Backend\User::find(Auth::user()->id);
+        }
+        return $user_policy;
+    }
+}

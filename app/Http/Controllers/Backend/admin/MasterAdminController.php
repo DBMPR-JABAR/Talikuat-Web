@@ -29,6 +29,7 @@ class MasterAdminController extends Controller
     public function index()
     {
         //
+        $this->authorize('viewUserAdmin', Auth::user());
         $data = UserDetail::where('is_delete',null)->whereIn('rule_user_id',[1,3,9,10,13])->get();
         // dd($data);
         return view('admin.user.admin.index',compact('data'));

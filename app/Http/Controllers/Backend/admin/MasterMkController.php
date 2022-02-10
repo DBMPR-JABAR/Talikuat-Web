@@ -30,6 +30,7 @@ class MasterMkController extends Controller
     public function index()
     {
         //
+        $this->authorize('viewUserMk', Auth::user());
         $data = MasterMk::all()->where('is_delete','!=',1);
         return view('admin.data_utama.master_mk.index',compact('data'));
         

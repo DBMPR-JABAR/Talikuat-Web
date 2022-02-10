@@ -37,6 +37,7 @@ class UserController extends Controller
     public function index()
     {
         //
+        $this->authorize('viewAllUser', User::class);
         $data = UserDetail::where('is_delete',null)->get();
         // dd($data);
 
@@ -45,6 +46,7 @@ class UserController extends Controller
     public function index_ft()
     {
         //
+        $this->authorize('viewUserFt', Auth::user());
         $company = MasterKonsultan::all()->where('is_delete','!=',1);
         
         $data = KonsultanFt::where('is_delete',null)->get();
@@ -54,8 +56,8 @@ class UserController extends Controller
     public function index_gs()
     {
         //
+        $this->authorize('viewUserGs', Auth::user());
         $company = MasterKontraktor::all()->where('is_delete','!=',1);
-        
         $data = KontraktorGs::where('is_delete',null)->get();
         // dd($data);
         return view('admin.user.gs.index',compact('data','company'));

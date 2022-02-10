@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -25,8 +26,10 @@ class RoleController extends Controller
         $roles = Role::get();
         $features = Feature::get();
         $permissions = Permission::get();
-
-        return view('admin.role.index', compact('roles','features','permissions'));
+        $feature_categories = FeatureCategory::get();
+        // print_r(Auth::user()->user_detail->role->permissions()->pluck('name'));
+        // dd(Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.index'));
+        return view('admin.role.index', compact('roles','features','feature_categories','permissions'));
 
     }
 
