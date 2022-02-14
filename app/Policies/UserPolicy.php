@@ -36,6 +36,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.delete');
     }
+    public function restoreAllUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.restore');
+    }
 
     //feature user admin
     public function viewUserAdmin()
@@ -53,6 +57,10 @@ class UserPolicy
     public function deleteUserAdmin()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-admin.delete');
+    }
+    public function restoreUserAdmin()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-admin.restore');
     }
 
     //feature user ppk
@@ -72,6 +80,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ppk.delete');
     }
+    public function restoreUserPpk()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ppk.restore');
+    }
 
     //feature user ft
     public function viewUserFt()
@@ -89,6 +101,10 @@ class UserPolicy
     public function deleteUserFt()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ft.delete');
+    }
+    public function restoreUserFt()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ft.restore');
     }
 
     //feature user gs
@@ -108,6 +124,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-gs.delete');
     }
+    public function restoreUserGs()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-gs.restore');
+    }
 
     //feature user mk
     public function viewUserMk()
@@ -125,6 +145,10 @@ class UserPolicy
     public function deleteUserMk()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.delete');
+    }
+    public function restoreUserMk()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.restore');
     }
 
     //feature role
@@ -144,6 +168,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('role.delete');
     }
+    public function restoreRole()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('role.restore');
+    }
 
     //feature role
     public function viewPermission()
@@ -161,6 +189,10 @@ class UserPolicy
     public function deletePermission()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permission.delete');
+    }
+    public function restorePermission()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permission.restore');
     }
 
     //feature kontraktor
@@ -180,6 +212,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('kontraktor.delete');
     }
+    public function restoreKontraktor()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('kontraktor.restore');
+    }
 
     //feature konsultan
     public function viewKonsultan()
@@ -197,6 +233,10 @@ class UserPolicy
     public function deleteKonsultan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('konsultan.delete');
+    }
+    public function restoreKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('konsultan.restore');
     }
 
     //feature mk
@@ -216,6 +256,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('mk.delete');
     }
+    public function restoreMk()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('mk.restore');
+    }
 
     //feature mk
     public function viewJenisPekerjaan()
@@ -233,6 +277,10 @@ class UserPolicy
     public function deleteJenisPekerjaan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jenis-pekerjaan.delete');
+    }
+    public function restoreJenisPekerjaan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jenis-pekerjaan.restore');
     }
 
     //feature jenis-pekerjaan
@@ -252,6 +300,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('data-umum.delete');
     }
+    public function restoreDataUmum()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('data-umum.restore');
+    }
 
     //feature jadwal
     public function viewJadwal()
@@ -269,6 +321,10 @@ class UserPolicy
     public function deleteJadwal()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jadwal.delete');
+    }
+    public function restoreJadwal()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jadwal.restore');
     }
 
     //feature permintaan
@@ -288,6 +344,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permintaan.delete');
     }
+    public function restorePermintaan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permintaan.restore');
+    }
 
     //feature laporan harian
     public function viewLaporanHarian()
@@ -305,6 +365,10 @@ class UserPolicy
     public function deleteLaporanHarian()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-harian.delete');
+    }
+    public function restoreLaporanHarian()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-harian.restore');
     }
 
     //feature laporan harian
@@ -324,6 +388,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('pusat-unduhan.delete');
     }
+    public function restorePusatUnduhan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('pusat-unduhan.restore');
+    }
 
     //feature log
     public function viewLog()
@@ -341,5 +409,9 @@ class UserPolicy
     public function deleteLog()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('log.delete');
+    }
+    public function restoreLog()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('log.restore');
     }
 }

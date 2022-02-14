@@ -58,7 +58,8 @@ class FeatureController extends Controller
             ['name' => $temp['slug'].'.index','guard_name'=>'web'],
             ['name' => $temp['slug'].'.crete','guard_name'=>'web'],
             ['name' => $temp['slug'].'.edit','guard_name'=>'web'],
-            ['name' => $temp['slug'].'.delete','guard_name'=>'web']
+            ['name' => $temp['slug'].'.delete','guard_name'=>'web'],
+            ['name' => $temp['slug'].'.restore','guard_name'=>'web']
         ]);
         storeLogActivity(declarLog(1, 'Feature', $request->name,1 ));
         return redirect(route('role.index'))->with(['success'=>'Berhasil Menambahkan Feature!!']);
