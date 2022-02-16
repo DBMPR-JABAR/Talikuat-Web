@@ -34,9 +34,12 @@ class MasterAdminController extends Controller
         // dd($data);
         return view('admin.user.admin.index',compact('data'));
     }
+    
     public function store(Request $request)
     {
         //
+        $this->authorize('createUserAdmin', Auth::user());
+
         $user = User::select('name','email','password','id')->where('email', $request->email)->first();
         if($user){
             if(!$user->user_detail){
@@ -134,5 +137,13 @@ class MasterAdminController extends Controller
 
         return redirect(route('user_admin.index'))->with(['success'=>'Berhasil Menambahkan User!!']);
 
+    }
+    public function trash()
+    {
+        //
+        $this->authorize('restoreUserAdmin', Auth::user());
+        $data = UserDetail::where('is_delete',1)->whereIn('rule_user_id',[1,3,9,10,13])->get();
+        // dd($data);
+        return view('admin.user.admin.index',compact('data'));
     }
 }

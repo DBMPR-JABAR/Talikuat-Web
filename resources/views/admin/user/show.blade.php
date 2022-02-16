@@ -218,60 +218,64 @@
             </div>
 
             @if(Request::segment(3) == 'verified' && @$data->user_detail->account_verified_at == null)
-            <div class="card">
-                <div class="card-header ">
-                    <h4 class="card-title">Verified</h4>
-                    <div class="card-header-right">
-                        <ul class="list-unstyled card-option">
-                            {{-- <li><i class="feather icon-maximize full-card"></i></li> --}}
-                            <li><i class="feather icon-minus minimize-card"></i></li>
-                        </ul>
+                @can('viewVerificationUser',Auth::user())
+                <div class="card">
+                    <div class="card-header ">
+                        <h4 class="card-title">Verified</h4>
+                        <div class="card-header-right">
+                            <ul class="list-unstyled card-option">
+                                {{-- <li><i class="feather icon-maximize full-card"></i></li> --}}
+                                <li><i class="feather icon-minus minimize-card"></i></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <form action="{{url('admin/user/verified/'.@$data->id)}}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <div class="card-block">
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <label>Rule User</label>
-                                    <select class="form-control" name="rule_user" required @if( Auth::user()->id != 1) disabled @endif>
-        
-                                        <option value="">Select</option>
-                                        @foreach ($rule_user as $no =>$rule)
-                                        <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
-                                        @endforeach
-                                        
-                                    </select>
+                    <div class="card-body">
+                        <form action="{{url('admin/user/verified/'.@$data->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="card-block">
+                                <div class="form-group row">
+                                    <div class="col-md-12">
+                                        <label>Rule User</label>
+                                        <select class="form-control" name="rule_user" required @if( Auth::user()->id != 1) disabled @endif>
+            
+                                            <option value="">Select</option>
+                                            @foreach ($rule_user as $no =>$rule)
+                                            <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
+                                            @endforeach
+                                            
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                           
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <label >Verifikasi Akun (<i style="color :red; font-size: 10px;">Dengan Memilih Setuju maka Akun Dapat Digunakan!!</i>)</label>
-                                
+                            
+                                <div class="form-group row">
+                                    <div class="col-md-12">
+                                        <label >Verifikasi Akun (<i style="color :red; font-size: 10px;">Dengan Memilih Setuju maka Akun Dapat Digunakan!!</i>)</label>
+                                    
 
-                                    <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="verified" id="verified1" value="1" > Setuju <i class="input-helper"></i></label>
+                                        <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="verified" id="verified1" value="1" > Setuju <i class="input-helper"></i></label>
+                                        </div>
+                                        
+                                        <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="verified" id="verified2" value="0" checked=""> Tidak Setuju <i class="input-helper"></i></label>
+                                        </div>
                                     </div>
                                     
-                                    <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="verified" id="verified2" value="0" checked=""> Tidak Setuju <i class="input-helper"></i></label>
-                                    </div>
                                 </div>
                                 
                             </div>
-                            
-                        </div>
-                        <button type="submit" class="btn btn-responsive btn-primary"><i class="fa fa-paper-plane"></i> Submit</button>
-                        <a href="{{ url()->previous() }}"><button type="button" class="btn btn-danger waves-effect "
-                            data-dismiss="modal">Kembali</button></a>
-                    </form>
+                            @can('createVerificationUser',Auth::user())
+                            <button type="submit" class="btn btn-responsive btn-primary"><i class="fa fa-paper-plane"></i> Submit</button>
+                            @endcan
+                            <a href="{{ url()->previous() }}"><button type="button" class="btn btn-danger waves-effect "
+                                data-dismiss="modal">Kembali</button></a>
+                        </form>
+                    </div>
+        
                 </div>
-    
-            </div>
+                @endcan
             @else
             <a href="{{ url()->previous() }}"><button type="button" class="btn btn-danger waves-effect "
                 data-dismiss="modal">Kembali</button></a>

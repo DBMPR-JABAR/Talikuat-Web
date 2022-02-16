@@ -23,7 +23,9 @@
                 <h4 class="card-title">Data Users</h4>
                 @if (Request::segment(3) != 'trash')
                     {{-- <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a> --}}
+                    @can('restoreAllUser',Auth::user())
                     <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    @endcan
                 @else
                     <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
 
@@ -81,11 +83,19 @@
                                 @else 
                                     @if($item->account_verified_at)
                                         <a type='button' href='{{ route('show.user',$item->user->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
+                                        @can('editAllUser',Auth::user())
                                         <a type='button' href='{{ url('admin/user/edit/detail',$item->user->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                        @endcan
                                     @else
+                                        
+                                        @can('viewVerificationUser',Auth::user())
                                         <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        @endcan
+                                       
                                     @endif
+                                        @can('deleteAllUser',Auth::user())
                                         <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                        @endcan
                                 @endif
                             </td>
 

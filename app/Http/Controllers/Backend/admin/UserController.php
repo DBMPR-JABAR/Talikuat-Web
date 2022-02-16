@@ -570,6 +570,7 @@ class UserController extends Controller
     public function trash()
     {
         //
+        // $this->authorize('restoreAllUser', Auth::user());
         $data = UserDetail::where('is_delete',1)->get();
         // dd($data);
         return view('admin.user.index',compact('data'));
@@ -580,10 +581,12 @@ class UserController extends Controller
 
         $user = UserDetail::find($id);
         if($desc == 'restore'){
+            $this->authorize('restoreAllUser', Auth::user());
             $user->is_delete = null;
             storeLogActivity(declarLog(4, 'Users', $user->user->email,1 ));
             $message = 'Data Berhasil Dikembalikan! ';
         }elseif($desc == 'move_to_trash'){
+            $this->authorize('deleteAllUser', Auth::user());
             $user->is_delete = 1;
             storeLogActivity(declarLog(3, 'Users', $user->user->email,1 ));
             $message = 'Data Berhasil di Pindahkan! ';

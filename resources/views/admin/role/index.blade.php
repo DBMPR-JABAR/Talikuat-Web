@@ -15,16 +15,19 @@
 </div>
 @endsection @section('content')
 <div class="row">
+    @can('viewRole',Auth::user())
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Role</h4>
                 @if (Request::segment(3) != 'trash')
-                <a
-                    href="{{ route('role.create') }}"
-                    class="btn btn-mat btn-primary mb-3"
-                    ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
-                >
+                    @can('createRole',Auth::user())
+                    <a
+                        href="{{ route('role.create') }}"
+                        class="btn btn-mat btn-primary mb-3"
+                        ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
+                    >
+                    @endcan
                 {{-- <a
                     href="{{ route('trash.masterppk') }}"
                     class="btn btn-mat btn-danger mb-3"
@@ -70,8 +73,12 @@
                             </td>
                             
                             <td>
+                                @can('editRole',Auth::user())
                                 <a type='button' href='{{ route('role.edit',$role->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                @endcan
+                                @can('deleteRole',Auth::user())
                                 <a type='button' href='#delModalRole' data-toggle='modal' data-id='{{$role->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach
@@ -80,6 +87,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('viewPermission',Auth::user())
     <div class="col-lg-3 col-md-3 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -144,12 +153,14 @@
             <div class="card-body">
                 <h4 class="card-title">Feature</h4>
                 @if (Request::segment(3) != 'trash')
+                @can('createPermission',Auth::user())
                 <a
                     data-toggle="modal"
                     href="#addModalFeature"
                     class="btn btn-mat btn-primary mb-3"
                     ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
                 >
+                @endcan
                 {{-- <a
                     href="{{ route('trash.masterppk') }}"
                     class="btn btn-mat btn-danger mb-3"
@@ -260,6 +271,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 <div class="modal-only">
     

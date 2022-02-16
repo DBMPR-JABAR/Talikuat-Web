@@ -20,6 +20,28 @@ class UserPolicy
         //
     }
     //feature all user
+    public function viewVerificationUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.index');
+    }
+    public function createVerificationUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.create');
+    }
+    public function editVerificationUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.edit');
+    }
+    public function deleteVerificationUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.delete');
+    }
+    public function restoreVerificationUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.restore');
+    }
+
+    //feature all user
     public function viewAllUser()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.index');
@@ -40,6 +62,7 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.restore');
     }
+
 
     //feature user admin
     public function viewUserAdmin()
