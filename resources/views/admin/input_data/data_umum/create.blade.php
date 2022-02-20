@@ -441,9 +441,6 @@
             $(this).parents(".fieldGroupRuas").remove();
         });
 
-
-        console.log($('.error'))
-
         $("#createData").validate({
             errorClass: "text-danger error mt-2",
             rules: {
@@ -577,6 +574,8 @@
         var newUrl = new URL(url + origin + destination);
         PopupCenter(newUrl, "Google Maps", 1200, 650);
     }
+
+
 
 </script>
 @endsection

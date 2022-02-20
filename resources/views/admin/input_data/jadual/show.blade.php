@@ -328,7 +328,7 @@
                     <div class="contianer text-center">
                         <div class="row" id="dataJadual"></div>
                     </div>
-                    <form action="{{ route('jadual.store') }}" method="post">
+                    <form action="{{ route('jadual.create') }}" method="post">
                         @csrf
                         <div class="row" id="upload">
                             <div class="col-md-6 p-2">
@@ -340,7 +340,6 @@
                                             type="file"
                                             class="form-control"
                                             id="fileJadual"
-                                            name="file_jadual"
                                             aria-describedby="inputGroupFileAddon04"
                                             aria-label="Upload"
                                         />
@@ -379,14 +378,13 @@
                                 >
                             </div>
                         </div>
-                    
+                    </form>
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-icon-text">
+                <button type="button" class="btn btn-primary btn-icon-text">
                     <i class="mdi mdi-file-check btn-icon-prepend"></i> Simpan
                 </button>
-            </form>
                 <button type="button" class="btn btn-warning btn-icon-text">
                     <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
                 </button>

@@ -24,7 +24,7 @@ class JadualImport implements ToModel, WithHeadingRow, WithCalculatedFormulas
             'satuan' => $row['Satuan'],
             'harga_satuan' => $row['Harga Satuan'],
             'volume' => $row['Volume'],
-            'jumlah_harga' => $row['Jumlah Harga'],
+            'jumlah_harga' => $row['Jumlah Harga (Rp.)'],
             'bobot' => $row['Bobot'],
             'koefesien' => $row['Koefisien'],
             'nilai' => $row['Nilai']

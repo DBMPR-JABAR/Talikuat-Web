@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Imports\jadualCollection;
 use App\Imports\JadualImport;
+use App\Models\Backend\DataUmum;
+use App\Models\TempFileJadual;
 use Brick\Math\Exception\DivisionByZeroException;
 use Carbon\Carbon;
 use DivisionByZeroError;
@@ -11,12 +13,14 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class JadualController extends Controller
 {
+    private $PATH_FILE_DB = "public/lampiran/jadual/";
     public function getAllJadual()
     {
 
@@ -545,7 +549,16 @@ class JadualController extends Controller
         try {
             $file = $request->file('jadual_excel_file');
             $list_jadual = Excel::toCollection(new JadualImport, $file);
+            $data_umum = DataUmum::where('id', $request->id)->with('detail')->first();
 
+            $name = time() . "_" . $file->getClientOriginalName();
+
+
+            TempFileJadual::create([
+                'id_data_umum' => $request->id,
+                'file_name' => $name,
+            ]);
+            Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             foreach ($list_jadual as $items) {
                 $master_nmp = DB::table('master_jenis_pekerjaan')->where('kd_jenis_pekerjaan', $items[0]['no_mata_pembayaran'])->first();
                 if (!$master_nmp) {
@@ -557,10 +570,17 @@ class JadualController extends Controller
                 }
             }
 
+            foreach ($list_jadual as $val) {
+                foreach ($val as $item) {
+                    $item['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($item['tanggal']));
+                    $item['tanggal'] = date('Y-m-d', strtotime($item['tanggal']));
+                }
+            }
             return response()->json([
                 'status' => 'success',
                 'code' => '200',
-                'result' => $list_jadual
+                'data_umum' => $data_umum,
+                'curva' => $list_jadual
             ]);
         } catch (\Throwable $e) {
             return response()->json([

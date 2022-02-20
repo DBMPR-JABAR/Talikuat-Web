@@ -176,7 +176,7 @@ Route::prefix('admin')->group(function () {
             });
 
             Route::resource('jadual', JadualControllers::class);
-            Route::get('/jadual/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create');
+            Route::get('/jadual/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create.awal');
 
             Route::get('activity/{id}', [LogControllers::class, 'getLogUser'])->name('log.user.index');
             Route::prefix('log')->group(function () {

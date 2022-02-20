@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Backend\DataUmum;
 use App\Models\Backend\KategoriPaket;
-
+use App\Models\Backend\Uptd;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -20,7 +20,6 @@ class DataUmumController extends Controller
         //
         // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
         $data = DataUmum::latest()->with('detail')->with('uptd')->with('ruas')->get();
-
 
         return view('admin.input_data.data_umum.index', compact('data'));
     }
@@ -215,5 +214,23 @@ class DataUmumController extends Controller
             storeLogActivity(declarLog(1, 'Data Umum', $req->input('no_kontrak') . " | " . $e->getMessage()));
             return redirect()->route('dataumum.index')->with(['danger' => 'Data Gagal Diubah!']);
         }
+    }
+
+    public function edit($id)
+    {
+        $data = DataUmum::where([[
+            'id', $id
+        ]])->with('kategori_paket')->with('uptd')->with('ruas')->with('detail')->first();
+        $kategori_paket = KategoriPaket::all();
+        $unit = Uptd::all();
+
+        return view('admin.input_data.data_umum.edit')->with(
+            [
+                'data' => $data,
+                'kategori_paket' => $kategori_paket,
+                'unit' => $unit
+
+            ]
+        );
     }
 }
