@@ -346,8 +346,8 @@
                                         />
                                         <input
                                             type="hidden"
-                                            name="id_data_umum"
-                                            value="{{$data->id}}"
+                                            name="data_umum_detail_id"
+                                            value="{{$data->detail->id}}"
                                         />
                                         <button
                                             class="btn btn-success"
@@ -379,7 +379,7 @@
                                 >
                             </div>
                         </div>
-                    
+                   
                 </div>
             </div>
             <div class="card-footer">
@@ -387,12 +387,16 @@
                     <i class="mdi mdi-file-check btn-icon-prepend"></i> Simpan
                 </button>
             </form>
-                <button type="button" class="btn btn-warning btn-icon-text">
-                    <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
-                </button>
+                <a href="{{route('jadual.delete.file',$data->detail->id)}}">
+                    <button type="button" class="btn btn-warning btn-icon-text">
+                        <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
+                    </button></a
+                >
             </div>
+            
         </div>
     </div>
+     </form>
     @endsection @section('script')
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
@@ -432,7 +436,7 @@
                     "jadual_excel_file",
                     $("#fileJadual")[0].files[0]
                 );
-                formData.append("id", "{{$data->id}}");
+                formData.append("id", "{{$data->detail->id}}");
                 formData.append("_token", "{{ csrf_token() }}");
                 $.ajax({
                     url: "{{ route('jadual.exceltodata') }}",

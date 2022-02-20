@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $no => $item)
+                @foreach ($data as $item)
                 <tr>
                     <td>{!! $item->no_kontrak !!}</td>
                     <td>{!! $item->nm_paket !!}</td>
@@ -87,16 +87,26 @@
                     <td>
                         <a
                             type="button"
-                            href="{{route('jadwal.show',$item->id) }}"
+                            href="{{route('jadual.show',$item->detail->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
+                        @if($item->detail->jadual != null)
                         <a
                             type="button"
-                            href="{{route('jadwal.create',$item->id) }}"
+                            href="{{route('jadual.edit',$item->detail->id) }}"
+                            class="btn btn-sm btn-primary waves-effect waves-light"
+                            ><i class="mdi mdi-pencil menu-icon"></i
+                        ></a>
+                        @else
+                        <a
+                            type="button"
+                            href="{{ route('jadual.create',$item->detail->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>
+
+                        @endif
                     </td>
                 </tr>
                 @endforeach

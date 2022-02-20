@@ -555,7 +555,7 @@ class JadualController extends Controller
 
 
             TempFileJadual::create([
-                'id_data_umum' => $request->id,
+                'data_umum_detail_id' => $request->id,
                 'file_name' => $name,
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);

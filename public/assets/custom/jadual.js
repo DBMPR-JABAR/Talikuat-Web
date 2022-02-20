@@ -24,26 +24,6 @@ function render(sumJadual, laporan, jadualAdendum, jmlMinggu) {
             tension: 0.1,
         },
     ];
-    if (jadualAdendum) {
-        for (let i = 0; i < jadualAdendum.length; i++) {
-            datasets.push({
-                label: "Adendum " + (i + 1),
-                data: jadualAdendum[i],
-                fill: false,
-                borderColor: getRandomColor(i),
-                tension: 0.1,
-            });
-            if (i == jadualAdendum.length - 1) {
-                datasets.push({
-                    label: "Realisasi",
-                    data: laporan,
-                    fill: false,
-                    borderColor: "#ff0000",
-                    tension: 0.1,
-                });
-            }
-        }
-    }
 
     massPopChart = new Chart(chart, {
         type: "line",
