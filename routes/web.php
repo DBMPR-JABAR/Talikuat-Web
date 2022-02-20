@@ -30,7 +30,6 @@ Route::get('getFtByKonsultan', [DropdownDataController::class, 'getFtByKonsultan
 
 
 Route::prefix('admin')->group(function () {
-
     //group route with middleware "auth"
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'account.verified'], function () {
