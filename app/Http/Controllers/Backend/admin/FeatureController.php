@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class FeatureController extends Controller
 {
@@ -41,8 +42,11 @@ class FeatureController extends Controller
     public function store(Request $request)
     {
         //
+        $this->authorize('createPermission', Auth::user());
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:mysql.features'
+            'name' => 'required|unique:mysql.features',
+            'feature_category' => 'required'
         ]);
         if ($validator->fails()) {
             storeLogActivity(declarLog(1, 'Features', $validator->messages()->first()));
@@ -50,20 +54,20 @@ class FeatureController extends Controller
         }
         $temp = [
             'name' => $request->name,
-            'slug' => Str::slug($request->name,'-')
+            'slug' => Str::slug($request->name,'-'),
+            'feature_category_id' =>$request->feature_category
         ];
         // dd($temp);->sync($tagIds);
         $feature = Feature::create($temp);
         $feature->permission()->createMany([
             ['name' => $temp['slug'].'.index','guard_name'=>'web'],
-            ['name' => $temp['slug'].'.crete','guard_name'=>'web'],
+            ['name' => $temp['slug'].'.create','guard_name'=>'web'],
             ['name' => $temp['slug'].'.edit','guard_name'=>'web'],
-            ['name' => $temp['slug'].'.delete','guard_name'=>'web']
+            ['name' => $temp['slug'].'.delete','guard_name'=>'web'],
+            ['name' => $temp['slug'].'.restore','guard_name'=>'web']
         ]);
         storeLogActivity(declarLog(1, 'Feature', $request->name,1 ));
         return redirect(route('role.index'))->with(['success'=>'Berhasil Menambahkan Feature!!']);
-
-
     }
 
     /**

@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                @dd($data) @foreach ($data as $no => $item)
+                @foreach ($data as $no => $item)
                 <tr>
                     <td>{!! $item->no_kontrak !!}</td>
                     <td>{!! $item->nm_paket !!}</td>
@@ -83,17 +83,17 @@
 
                     <td>{!! $item->ruas[0]->id_ruas_jalan !!}</td>
                     <td>{!! $item->detail->kontraktor->nama !!}</td>
-                    <td>{!! $item->detail->ppk->nama !!}</td>
+                    <td>{!! @$item->detail->ppk->nama !!}</td>
                     <td>
                         <a
                             type="button"
-                            href="{{route('jadual.show',$item->id) }}"
+                            href="{{route('jadwal.show',$item->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
                         <a
                             type="button"
-                            href="{{route('jadual.create.awal',$item->id) }}"
+                            href="{{route('jadwal.create',$item->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>

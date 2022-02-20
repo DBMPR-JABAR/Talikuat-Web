@@ -293,6 +293,8 @@ class MasterKonsultanController extends Controller
     }
     public function store_ft_Second(Request $request)
     {
+        $this->authorize('createUserFt', Auth::user());
+
         $storage = $this->store_ft_first($request, $request->company);
         return $storage;
         
@@ -396,6 +398,7 @@ class MasterKonsultanController extends Controller
     public function trash_ft()
     {
         //
+        $this->authorize('restoreUserFt', Auth::user());
         $data = KonsultanFt::where('is_delete',1)->get();
         $company = MasterKonsultan::all()->where('is_delete','!=',1);
 
@@ -410,6 +413,7 @@ class MasterKonsultanController extends Controller
    
         $konsultan = MasterKonsultan::find($id);
         if($desc == 'restore'){
+            $this->authorize('restoreUserFt', Auth::user());
             $ft->is_delete = null;
             $ft->user_se_detail->update(['is_delete'=>null]);
             $ft->user_ie_detail->update(['is_delete'=>null]);

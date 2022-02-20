@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Backend\Province as Province;
 use App\Models\Backend\City as City;
 use App\Models\Backend\Uptd;
+use App\Models\Backend\User;
 use App\Models\Backend\MasterKontraktor;
 use App\Models\Backend\MasterKonsultan;
 use App\Models\Backend\MasterKonsultanFt as FieldTeam;
@@ -41,7 +42,14 @@ class AppServiceProvider extends ServiceProvider
         //
 
         
+        View::composer('*', function ($view) {
+            $user_policy = "";
+            if (Auth::user()) {
+                $user_policy = User::find(Auth::user()->id);
+            }
 
+            $view->with(['user_policy'=> $user_policy]);
+        });
         View::composer('*', function ($view) {
             $provinces = Province::pluck('name','id');
             $cities = City::pluck('name','id');

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -22,11 +23,15 @@ class RoleController extends Controller
     public function index()
     {
         //
+        
         $roles = Role::get();
         $features = Feature::get();
         $permissions = Permission::get();
-
-        return view('admin.role.index', compact('roles','features','permissions'));
+        $feature_categories = FeatureCategory::get();
+        
+        // print_r(Auth::user()->user_detail->role->permissions()->pluck('name'));
+        // dd(Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.index'));
+        return view('admin.role.index', compact('roles','features','feature_categories','permissions'));
 
     }
 
@@ -38,6 +43,8 @@ class RoleController extends Controller
     public function create()
     {
         //
+        $this->authorize('createRole', Auth::user());
+
         $feature_category = FeatureCategory::get();
         return view('admin.role.form',compact('feature_category'));
 
@@ -52,6 +59,8 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
+        $this->authorize('createRole', Auth::user());
+
         $request->description= Str::upper($request->description);
         $validator = Validator::make($request->all(), [
             'description' => 'required|unique:mysql.rule_user',
@@ -90,6 +99,8 @@ class RoleController extends Controller
     public function edit($id)
     {
         //
+        $this->authorize('editRole', Auth::user());
+
         $feature_category = FeatureCategory::get();
         $data = Role::find($id);
         // dd($data);
@@ -106,6 +117,8 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->authorize('editRole', Auth::user());
+
         $request->description= Str::upper($request->description);
         $validator = Validator::make($request->all(), [
             'description' => 'required|unique:mysql.rule_user,description,'.$id,
@@ -133,6 +146,8 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('deleteRole', Auth::user());
+
         $role = Role::findOrFail($id);
         storeLogActivity(declarLog(3, 'Role User', $role->description,1 ));
         $message = 'Data Berhasil di Hapus! ';

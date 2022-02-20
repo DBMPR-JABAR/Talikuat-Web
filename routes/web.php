@@ -40,6 +40,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
             Route::get('/user_admin', [MasterAdminController::class, 'index'])->name('user_admin.index');
             Route::post('/user_admin/store', [MasterAdminController::class, 'store'])->name('store.user_admin');
+            Route::get('/user_admin/trash', [MasterAdminController::class, 'trash'])->name('user_admin.trash');
+
             Route::get('/user_mk', [MasterMkController::class, 'index'])->name('user_mk.index');
             Route::post('/user_mk/store', [MasterMkController::class, 'store'])->name('store.user_mk');
             Route::get('/role&permission', [RoleController::class, 'index'])->name('role.index');
@@ -55,6 +57,9 @@ Route::prefix('admin')->group(function () {
             });
             Route::prefix('feature')->group(function () {
                 Route::post('store', [FeatureController::class, 'store'])->name('store.feature');
+            });
+            Route::prefix('feature_category')->group(function () {
+                Route::post('store', [FeatureCategoryController::class, 'store'])->name('store.feature_category');
             });
 
             Route::prefix('user')->group(function () {
@@ -174,13 +179,14 @@ Route::prefix('admin')->group(function () {
                 Route::get('/trash/{desc}/{id}', [DataUmumController::class, 'move_to_trash']);
                 Route::get('/addendum/{id}', [DataUmumAddendumControllers::class, 'create'])->name('create.addendum');
             });
-
-            Route::resource('jadual', JadualControllers::class);
-            Route::get('/jadual/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create.awal');
-
             Route::get('activity/{id}', [LogControllers::class, 'getLogUser'])->name('log.user.index');
             Route::prefix('log')->group(function () {
                 Route::get('/', [LogControllers::class, 'index'])->name('log.index');
+            });
+            Route::prefix('jadwal')->group(function () {
+                Route::get('/', [JadualControllers::class, 'index'])->name('jadwal.index');
+                Route::get('/show/{id}', [JadualControllers::class, 'index'])->name('jadwal.show');
+                Route::get('/create/{id}', [JadualControllers::class, 'index'])->name('jadwal.create');
             });
         });
     });
