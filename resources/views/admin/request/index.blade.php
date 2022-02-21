@@ -201,9 +201,9 @@
                       <tr>
                 
                         <td><input class="itemRow3" type="checkbox"></td>
-                        <td><input type="text" value="Jembatan Bailey" name="jenis_peralatan[]" id="jenis_peralatan_1" class="form-control" autocomplete="off" readonly=""></td>
-                        <td><input type="text" value="1" name="jumlah_peralatan[]" id="jumlah_peralatan_1" class="form-control" autocomplete="off" readonly=""></td>
-                        <td><input type="text" value="unit" name="satuan_peralatan[]" id="satuan_peralatan_1" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="jenis_peralatan[]" id="jenis_peralatan_1" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="jumlah_peralatan[]" id="jumlah_peralatan_1" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="satuan_peralatan[]" id="satuan_peralatan_1" class="form-control" autocomplete="off" readonly=""></td>
     
                       </tr>	
                                   
@@ -247,16 +247,16 @@
                       <tr>
                 
                         <td><input class="itemRow6" type="checkbox"></td>
-                        <td><input type="text" value="Mandor" name="tenaga_kerja[]" id="tenaga_kerja_1" class="form-control" autocomplete="off" readonly=""></td>
-                        <td><input type="text" value="1" name="jumlah_tk[]" id="jumlah_tk_1" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="tenaga_kerja[]" id="tenaga_kerja_1" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="jumlah_tk[]" id="jumlah_tk_1" class="form-control" autocomplete="off" readonly=""></td>
     
                       </tr>	
                                           
                       <tr>
                 
                         <td><input class="itemRow6" type="checkbox"></td>
-                        <td><input type="text" value="Pekerja" name="tenaga_kerja[]" id="tenaga_kerja_2" class="form-control" autocomplete="off" readonly=""></td>
-                        <td><input type="text" value="10" name="jumlah_tk[]" id="jumlah_tk_2" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="tenaga_kerja[]" id="tenaga_kerja_2" class="form-control" autocomplete="off" readonly=""></td>
+                        <td><input type="text" value="" name="jumlah_tk[]" id="jumlah_tk_2" class="form-control" autocomplete="off" readonly=""></td>
     
                       </tr>	
                                   
@@ -274,25 +274,25 @@
                         <label class="col-sm-2 col-form-label">Shop Drawing Penyedia Jasa</label>
                         <div class="col-sm-10">
                         <div class="container mt-5">
-                          <img src="http://124.81.122.131/talikuat-api/storage/app/public/lampiran/file_req/1623065080_jbt sementara.jpg" style="border:1px solid black" width="80%">
+                          <img src="" style="border:1px solid black" width="80%">
                         </div>
                         </div>
-                      </div>
+                </div>
                         
                       <div class="form-group row">
-                            <label for="inputExperience" class="col-sm-2 col-form-label">Catatan Konsultan</label>
+                            <label for="inputExperience" class="col-sm-2 col-form-label">Catatan Direksi Lapangan</label>
                             <div class="col-sm-10">
-                              <textarea class="form-control" id="catatan" name="catatan" placeholder="K3 Harus selalu diperhatikan" readonly=""></textarea>
+                              <textarea class="form-control" id="catatan" name="catatan" placeholder="" readonly=""></textarea>
                             </div>
-                          </div>
+                      </div>
                             
                                                             
                       <div class="form-group row">
-                            <label for="inputExperience" class="col-sm-2 col-form-label">Catatan PPK</label>
+                            <label for="inputExperience" class="col-sm-2 col-form-label">Catatan Pejabat Pembuat Komitmen</label>
                             <div class="col-sm-10">
-                              <textarea class="form-control" id="catatan" name="catatan" placeholder="lanjutkan" readonly=""></textarea>
+                              <textarea class="form-control" id="catatan" name="catatan" placeholder="" readonly=""></textarea>
                             </div>
-                          </div>
+                      </div>
                             
                                    
           </div>
