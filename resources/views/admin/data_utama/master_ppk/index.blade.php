@@ -20,17 +20,16 @@
             <div class="card-body">
                 <h4 class="card-title">Data PPK</h4>
                 @if (Request::segment(3) != 'trash')
-                <a
-                    data-toggle="modal"
-                    href="#addModal"
-                    class="btn btn-mat btn-primary mb-3"
-                    ><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
-                >
-                <a
-                    href="{{ route('trash.masterppk') }}"
-                    class="btn btn-mat btn-danger mb-3"
-                    ><i class="mdi mdi-delete menu-icon"></i> Trash</a
-                >
+                    @can('createUserPpk',Auth::user())
+                    <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                    @endcan
+                    @can('restoreUserPpk',Auth::user())
+                    <a
+                        href="{{ route('trash.masterppk') }}"
+                        class="btn btn-mat btn-danger mb-3"
+                        ><i class="mdi mdi-delete menu-icon"></i> Trash</a
+                    >
+                    @endcan
                 @else
                 <a
                     href="{{ route('masterppk.index') }}"
@@ -61,27 +60,34 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>
-                                {!! $item->user_detail->user->name !!}
+                                {!! $item->user_ppk_detail->user->name !!}
                             </td>
                             <td>
                                 {!! $item->uptd->nama !!}
                             </td>
                             <td>
-                                {!! $item->user_detail->user->email !!}
+                                {!! $item->user_ppk_detail->user->email !!}
                             </td>
                             <td>
 
                                 @if (Request::segment(3) == 'trash')
-                                <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @can('restoreUserPpk',Auth::user())
+                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @endcan
                                 @else
-                                    @if($item->user_detail->account_verified_at)
+                                    @if($item->user_ppk_detail->account_verified_at)
                                         <a type='button' href='{{ route('show.masterppk',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
+                                        @can('restoreUserPpk',Auth::user())
                                         <a type='button' href='{{ route('edit.masterppk',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                        @endcan
                                     @else
-                                        <a type='button' href='{{ route('verified.user',$item->user_detail->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        @can('viewVerificationUser',Auth::user())
+                                        <a type='button' href='{{ route('verified.user',$item->user_ppk_detail->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        @endcan
                                     @endif
-
-                                <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                    @can('deleteUserPpk',Auth::user())
+                                    <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                    @endcan
                                 @endif
 
                             </td>
@@ -94,6 +100,7 @@
     </div>
 </div>
 <div class="modal-only">
+    @can('createUserPpk',Auth::user())
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
@@ -179,6 +186,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('deleteUserPpk',Auth::user())
     <div class="modal fade" id="delModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -216,6 +225,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('restoreUserPpk',Auth::user())
     <div class="modal fade" id="Restore" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -253,6 +264,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 @endsection @section('script')
 <script>

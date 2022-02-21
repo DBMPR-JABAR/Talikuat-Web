@@ -39,17 +39,20 @@ class MasterMkController extends Controller
     {
         //
         $data = UserDetail::where('is_delete',null)->where('rule_user_id',12)->get();
+        $company = MasterMk::all()->where('is_delete','!=',1);
         // dd($data);
-        return view('admin.user.mk.index',compact('data'));
+        return view('admin.user.mk.index',compact('data','company'));
     }
     public function store(Request $request)
     {
+        $this->authorize('createMk', Auth::user());
         
         // dd($request->nm_ie);
         $validator = Validator::make($request->all(), [
             'nama'=> 'required',
             'alamat'=> 'required',
             'nama_direktur'=> '',
+            'telp'=> '',
             'npwp' => 'unique:master_mk',
            
         ]);
@@ -63,6 +66,7 @@ class MasterMkController extends Controller
             'alamat'=>$request->alamat,
             'nama_direktur'=>$request->nama_direktur,
             'npwp'=>$request->npwp,
+            'telp'=>$request->telp,
             'created_by'=>Auth::user()->id,
         ]);
         $konsultan = MasterMk::create($temp);
@@ -86,9 +90,8 @@ class MasterMkController extends Controller
                     'email' => 'email|required|string',
                     'password' => 'confirmed',
                     'name'=> 'required',
-                    'no_tlp'=> '',
-                    
-                    'rule'=> 'required'
+                    'no_tlp'=> '',   
+                    'rule'=> ''
                 ]);
 
             }else{
@@ -101,8 +104,7 @@ class MasterMkController extends Controller
                 'password' => 'confirmed',
                 'name'=> 'required',
                 'no_tlp'=> '',
-                
-                'rule'=> 'required'
+                'rule'=> ''
             ]);
         }
         if($request->rule == 13)
@@ -112,7 +114,8 @@ class MasterMkController extends Controller
             storeLogActivity(declarLog(1, 'Users MK', $request->email.' '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
-
+        $mk_id = $id ? : $request->mk_id;
+        dd($mk_id);
         $create_user = User::firstOrNew(['email'=> $request->email]);
         $create_user->name = $request->input('name');
         $create_user->password = Hash::make($request->input('password'));
@@ -146,14 +149,20 @@ class MasterMkController extends Controller
     }
     public function edit($id)
     {
-        //
-        $data = MasterMk::find($id);
-        // dd($data_pengguna);
-        return view('admin.data_utama.master_mk.form',compact('data'));
+        $this->authorize('editMk', Auth::user());
+        if(Auth::user()->user_detail->role->id == 1 || Auth::user()->user_detail->mk_id == $id){
+            $data = MasterMk::find($id);
+            // dd($data_pengguna);
+            return view('admin.data_utama.master_mk.form',compact('data'));
+        }else{
+            storeLogActivity(declarLog(2, 'Manajemen Konstruksi', 'Ilegal Akses'));
+            return back()->with(['error'=>'Somethink when wrong']);
+        }
     }
     public function update(Request $request, $id)
     {
-        //
+        $this->authorize('editMk', Auth::user());
+
         $validator = Validator::make($request->all(), [
             'nama'=> 'required',
             'alamat'=> 'required',

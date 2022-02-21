@@ -97,6 +97,7 @@ class MasterKontraktorController extends Controller
     }
     public function store_gs(Request $request)
     {
+        $this->authorize('createUserGs', Auth::user());
 
         $user = User::select('name', 'email', 'password', 'id')->where('email', $request->email_gs)->first();
         if ($user) {
@@ -331,6 +332,8 @@ class MasterKontraktorController extends Controller
     public function trash_gs()
     {
         //
+        $this->authorize('restoreUserGs', Auth::user());
+
         $data = KontraktorGs::where('is_delete', 1)->get();
         $company = MasterKontraktor::all()->where('is_delete', '!=', 1);
 
@@ -345,6 +348,7 @@ class MasterKontraktorController extends Controller
         $message = 'Somethink When Wrong!';
         if ($desc == 'restore') {
             // dd($gs);
+            $this->authorize('restoreUserGs', Auth::user());
             $gs->is_delete = null;
             $gs->user_gs_detail->update(['is_delete' => null]);
             $message = 'Data Berhasil Dikembalikan!';

@@ -191,6 +191,10 @@
                                 
                             />
                         </div>
+                        <div class="form-group ">
+                            <label>No Telp</label>
+                            <input type="text" name="telp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
+                        </div>
                         {{-- <div class="form-group">
                             <label>Nama Site Engineering</label>
                             <div class="d-flex" id="se">

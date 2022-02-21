@@ -166,7 +166,7 @@
                                     >
                                 </li>
                                 @endcan
-                                {{-- @can('viewUserMk',Auth::user())
+                                @can('viewUserMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -175,7 +175,7 @@
                                     >
                                 </li>
                                 @endcan
-                                --}}
+                               
                                 @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a
