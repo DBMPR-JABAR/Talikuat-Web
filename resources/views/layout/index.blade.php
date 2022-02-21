@@ -147,8 +147,7 @@
                                         >All Users</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewUserAdmin',Auth::user())
+                                @endcan @can('viewUserAdmin',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -156,8 +155,7 @@
                                         >Admin</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewUserPpk',Auth::user())
+                                @endcan @can('viewUserPpk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -165,8 +163,7 @@
                                         >PPK</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewUserMk',Auth::user())
+                                @endcan {{-- @can('viewUserMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -174,9 +171,7 @@
                                         >MK</a
                                     >
                                 </li>
-                                @endcan
-                               
-                                @can('viewUserFt',Auth::user())
+                                @endcan --}} @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -184,8 +179,7 @@
                                         >Field Team</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewUserGs',Auth::user())
+                                @endcan @can('viewUserGs',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -193,8 +187,8 @@
                                         >General Superintendent</a
                                     >
                                 </li>
-                                @endcan
-                                @canany(['viewRole', 'viewPermission'], Auth::user())
+                                @endcan @canany(['viewRole', 'viewPermission'],
+                                Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -292,7 +286,7 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{ route('jadwal.index') }}"
+                                        href="{{ route('jadual.index') }}"
                                         >Jadwal Pekerjaan</a
                                     >
                                 </li>

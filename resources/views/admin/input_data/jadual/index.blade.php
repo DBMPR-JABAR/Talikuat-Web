@@ -57,11 +57,7 @@
         </div>
     </div> -->
     <div class="w-100">
-        <table
-            class="display responsive"
-            id="dataKontraktor"
-            style="width: 100%"
-        >
+        <table class="display responsive" id="dataJadual" style="width: 100%">
             <thead>
                 <tr>
                     <th>No Kontrak</th>
@@ -75,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $no => $item)
+                @foreach ($data as $item)
                 <tr>
                     <td>{!! $item->no_kontrak !!}</td>
                     <td>{!! $item->nm_paket !!}</td>
@@ -87,20 +83,30 @@
 
                     <td>{!! $item->ruas[0]->id_ruas_jalan !!}</td>
                     <td>{!! $item->detail->kontraktor->nama !!}</td>
-                    <td>{!! $item->detail->ppk !!}</td>
+                    <td>{!! @$item->detail->ppk->nama !!}</td>
                     <td>
                         <a
                             type="button"
-                            href="{{route('jadwal.show',$item->id) }}"
+                            href="{{route('jadual.show',$item->detail->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
+                        @if($item->detail->jadual != null)
                         <a
                             type="button"
-                            href="{{route('jadwal.create',$item->id) }}"
+                            href="{{route('jadual.edit',$item->detail->id) }}"
+                            class="btn btn-sm btn-primary waves-effect waves-light"
+                            ><i class="mdi mdi-pencil menu-icon"></i
+                        ></a>
+                        @else
+                        <a
+                            type="button"
+                            href="{{ route('jadual.create',$item->detail->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>
+
+                        @endif
                     </td>
                 </tr>
                 @endforeach
@@ -146,43 +152,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="Restore" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Kembalikan Jadual</h4>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <p>Apakah anda yakin?</p>
-                </div>
-
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-default waves-effect"
-                        data-dismiss="modal"
-                    >
-                        Tutup
-                    </button>
-                    <a
-                        id="resHref"
-                        href=""
-                        class="btn btn-danger waves-effect waves-light"
-                        >Restore</a
-                    >
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection @section('script')
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
@@ -190,29 +159,8 @@
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#dataKontraktor").DataTable({
+        $("#dataJadual").DataTable({
             responsive: true,
-        });
-        $("#delModal").on("show.bs.modal", function (event) {
-            const link = $(event.relatedTarget);
-            const id = link.data("id");
-            console.log(id);
-            const url =
-                `{{ url('admin/master_kontraktor/trash/move_to_trash') }}/` +
-                id;
-            console.log(url);
-            const modal = $(this);
-            modal.find(".modal-footer #delHref").attr("href", url);
-        });
-        $("#Restore").on("show.bs.modal", function (event) {
-            const link = $(event.relatedTarget);
-            const id = link.data("id");
-            console.log(id);
-            const url =
-                `{{ url('admin/master_kontraktor/trash/restore') }}/` + id;
-            console.log(url);
-            const modal = $(this);
-            modal.find(".modal-footer #resHref").attr("href", url);
         });
     });
 </script>

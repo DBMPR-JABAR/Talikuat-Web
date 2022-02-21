@@ -102,7 +102,7 @@
                             type="button"
                             href="{{route('edit.dataumum',$item->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
-                            ><i class="mdi mdi-table-edit menu-icon"></i
+                            ><i class="mdi mdi-grease-pencil"></i
                         ></a>
 
                         @else

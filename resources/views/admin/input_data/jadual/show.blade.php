@@ -328,7 +328,7 @@
                     <div class="contianer text-center">
                         <div class="row" id="dataJadual"></div>
                     </div>
-                    <form action="{{ route('jadual.store') }}" method="post">
+                    <form action="{{ route('jadual.create') }}" method="post">
                         @csrf
                         <div class="row" id="upload">
                             <div class="col-md-6 p-2">
@@ -340,14 +340,13 @@
                                             type="file"
                                             class="form-control"
                                             id="fileJadual"
-                                            name="file_jadual"
                                             aria-describedby="inputGroupFileAddon04"
                                             aria-label="Upload"
                                         />
                                         <input
                                             type="hidden"
-                                            name="data_umum_detail_id"
-                                            value="{{$data->detail->id}}"
+                                            name="id_data_umum"
+                                            value="{{$data->id}}"
                                         />
                                         <button
                                             class="btn btn-success"
@@ -379,24 +378,19 @@
                                 >
                             </div>
                         </div>
-                   
+                    </form>
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-icon-text">
+                <button type="button" class="btn btn-primary btn-icon-text">
                     <i class="mdi mdi-file-check btn-icon-prepend"></i> Simpan
                 </button>
-            </form>
-                <a href="{{route('jadual.delete.file',$data->detail->id)}}">
-                    <button type="button" class="btn btn-warning btn-icon-text">
-                        <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
-                    </button></a
-                >
+                <button type="button" class="btn btn-warning btn-icon-text">
+                    <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
+                </button>
             </div>
-            
         </div>
     </div>
-     </form>
     @endsection @section('script')
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
@@ -436,7 +430,7 @@
                     "jadual_excel_file",
                     $("#fileJadual")[0].files[0]
                 );
-                formData.append("id", "{{$data->detail->id}}");
+                formData.append("id", "{{$data->id}}");
                 formData.append("_token", "{{ csrf_token() }}");
                 $.ajax({
                     url: "{{ route('jadual.exceltodata') }}",
