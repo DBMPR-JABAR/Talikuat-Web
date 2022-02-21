@@ -85,19 +85,26 @@
                     <td>{!! $item->detail->kontraktor->nama !!}</td>
                     <td>{!! @$item->detail->ppk->nama !!}</td>
                     <td>
+                        @if($item->detail->jadual != null)
                         <a
                             type="button"
                             href="{{route('jadual.show',$item->detail->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
-                        @if($item->detail->jadual != null)
                         <a
                             type="button"
                             href="{{route('jadual.edit',$item->detail->id) }}"
                             class="btn btn-sm btn-primary waves-effect waves-light"
                             ><i class="mdi mdi-pencil menu-icon"></i
                         ></a>
+                        <a
+                            type="button"
+                            href="{{route('request.create',$item->detail->id) }}"
+                            class="btn btn-sm btn-dark waves-effect waves-light"
+                            ><i class="mdi mdi-file-document"></i
+                        ></a>
+
                         @else
                         <a
                             type="button"

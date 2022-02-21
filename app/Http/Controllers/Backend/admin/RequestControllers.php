@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Backend\Jadual;
+use App\Models\Backend\Request as BackendRequest;
 use Illuminate\Http\Request;
 
 class RequestControllers extends Controller
@@ -22,9 +24,10 @@ class RequestControllers extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $jadual = Jadual::where('data_umum_detail_id', $id)->first();
+        return view('admin.request.create', compact('jadual'));
     }
 
     /**
