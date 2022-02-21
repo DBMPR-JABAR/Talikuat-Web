@@ -133,16 +133,9 @@ class MasterMkController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => 'email|required|string|unique:db_users_dbmpr.users',
                 'password' => 'confirmed',
-<<<<<<< HEAD
                 'name'=> 'required',
                 'no_tlp'=> '',
                 'rule'=> ''
-=======
-                'name' => 'required',
-                'no_tlp' => '',
-
-                'rule' => 'required'
->>>>>>> ca436ad033941c051c63c51bbc9beb6478a4040f
             ]);
         }
         if ($request->rule == 13)
