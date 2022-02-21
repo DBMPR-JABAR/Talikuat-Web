@@ -22,11 +22,14 @@
             <div class="card-body">
                 <h4 class="card-title">Data User Admin</h4>
                 @if (Request::segment(3) != 'trash')
+                    @can('createUserAdmin',Auth::user())
                     <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
-                    <a href="{{ route('user.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    @endcan
+                    @can('restoreUserAdmin',Auth::user())
+                    <a href="{{ route('user_admin.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    @endcan
                 @else
-                    <a href="{{ route('user.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
-
+                    <a href="{{ route('user_admin.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
                 @endif
                 </p>
                 <div class="table-responsive">
@@ -72,16 +75,24 @@
 
                             <td class="text-center"> 
                                 @if (Request::segment(3) == 'trash')
+                                @can('restoreUserAdmin',Auth::user())
                                 <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                @endcan
                                 {{-- <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i>Delete</a> --}}
                                 @else 
                                     @if($item->account_verified_at)
                                         <a type='button' href='{{ route('show.user',$item->user->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
+                                        @can('editUserAdmin',Auth::user())
                                         <a type='button' href='{{ url('admin/user/edit/detail',$item->user->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
+                                        @endcan
                                     @else
+                                        @can('viewVerificationUser',Auth::user())
                                         <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        @endcan
                                     @endif
+                                        @can('deleteUserAdmin',Auth::user())
                                         <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                        @endcan
                                 @endif
                             </td>
 

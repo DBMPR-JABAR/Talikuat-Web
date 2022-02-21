@@ -113,8 +113,9 @@
                         <i style="color :red; font-size: 10px;">Biarkan jika tidak ada perubahan</i>
                         @endif
                     </div>
-                    
+                    @can('editMk',Auth::user())
                     <button type="submit" class="btn btn-responsive btn-primary"><i class="fa fa-paper-plane"></i> Save</button>
+                    @endcan
                 </form>
             </div>
 
@@ -143,7 +144,7 @@
                     </tr>
                     
                     <tr>
-                        <td>Admin</td>
+                        <td>Manajemen Konstruksi</td>
                         <td >:</td>
                         <td>
                             {{-- @if($data->user_lists->where('rule_user_id',13)->count() == 1)
@@ -154,9 +155,9 @@
                                 <tr>
                                     <td>{{ $data_admin->user->name }}</td>
                                     <td>
-                                    @foreach ($data_admin->lists_uptd as $lists_uptd)
+                                    {{-- @foreach ($data_admin->lists_uptd as $lists_uptd)
                                     {{ $lists_uptd->uptd->nama }}<br>
-                                    @endforeach
+                                    @endforeach --}}
                                     
                                     </td>
                                 </tr>
@@ -194,17 +195,16 @@
                         <div class="form-group">
                             <label>Jabatan</label>
                             <select class="form-control" name="rule" id="dropDown" required>
-                                <option value="">Select</option>
-                                @if(!$data->user_lists->where('rule_user_id',12)->first())
-                                <option value="12">Direktur</option>
+                                @if(!$data->user_lists->where('rule_user_id',13)->first())
+                                <option value="13">Direktur</option>
                                 @endif 
-                                @if($data->user_lists->where('rule_user_id',13)->count() < 6)
-                                <option value="13">Admin</option>
+                                @if($data->user_lists->where('rule_user_id',12)->count() < 6)
+                                <option value="12">Manajemen Konstruksi</option>
                                 @endif                               
                                 
                             </select>
                         </div>
-                        <div id="13" class="drop-down-show-hide">
+                        <div id="12" class="drop-down-show-hide">
                             <label>Unit</label><br>
                             @foreach (@$uptd_list as $no => $item)
                         

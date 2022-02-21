@@ -1,4 +1,4 @@
-@extends('layout.index') @section('title','Kontraktor') @section('header')
+@extends('layout.index') @section('title','Data Umum') @section('header')
 <link
     rel="stylesheet"
     href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
@@ -81,15 +81,15 @@
                 <tr>
                     <td>{!! $item->no_kontrak !!}</td>
                     <td>{!! $item->nm_paket !!}</td>
-                    <td>{!! @$item->uptd->description ? : $item->unor !!}</td>
+                    <td>{!! $item->uptd->nama !!}</td>
                     <td>
                         {!! @$item->kategori_paket->nama_kategori ? :
                         $item->kategori !!}
                     </td>
 
-                    <td>{!! $item->nm_paket !!}</td>
-                    <td>{!! $item->penyedia !!}</td>
-                    <td>{!! $item->nm_ppk !!}</td>
+                    <td>{!! $item->ruas[0]->id_ruas_jalan !!}</td>
+                    <td>{!! $item->detail->kontraktor->nama !!}</td>
+                    <td>{!! $item->detail->ppk !!}</td>
                     <td>
                         @if (Request::segment(3) != 'trash')
                         <a
@@ -102,8 +102,9 @@
                             type="button"
                             href="{{route('edit.dataumum',$item->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
-                            ><i class="mdi mdi-table-edit menu-icon"></i
+                            ><i class="mdi mdi-grease-pencil"></i
                         ></a>
+
                         @else
                         <a
                             type="button"

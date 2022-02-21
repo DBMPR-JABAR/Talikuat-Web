@@ -16,7 +16,7 @@ class UserDetail extends Model
     {
         return $this->belongsTo('App\Models\Backend\User', 'user_id');
     }
-    public function rule()
+    public function role()
     {
         return $this->belongsTo('App\Models\Backend\UserRule', 'rule_user_id');
         // return $this->belongsToMany('App\Models\Backend\UserRule', 'user_rule_user', 'user_id', 'rule_user_id','user_id');

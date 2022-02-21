@@ -2,7 +2,8 @@
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">
-        @if(Request::segment(3) == 'edit') Edit @else Create @endif Data Umum
+        @if(Request::segment(3) == 'edit') Edit @elseif (Request::segment(3) ==
+        'detail') Detail @else Create @endif Data Umum
     </h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -320,7 +321,7 @@
                             step="1"
                             name="lama_waktu"
                             id="lama_waktu"
-                            value="{{ @$data->detail->lama_waktu }}"
+                            value="{{ @$data->detail->lama_waktu }} Hari"
                             class="form-control"
                             required
                             autocomplete="off"
@@ -365,7 +366,13 @@
                             required
                             value="{{ old('ppk') }}"
                         >
-                            <option selected disabled>Pilih PPK</option>
+                            <option
+                                selected
+                                disabled
+                                value="{{$data->detail->ppk_id}}"
+                            >
+                                {{@$data->detail->ppk->nama}}
+                            </option>
                         </select>
                         @error('ppk')
                         <div
@@ -386,14 +393,13 @@
                             onchange="ubahOption2()"
                             value="{{ old('konsultan_id') }}"
                         >
-                            <option selected disabled>
-                                Pilih Penyedia Jasa
+                            <option
+                                selected
+                                disabled
+                                value="{{$data->detail->konsultan_id}}"
+                            >
+                                {{$data->detail->konsultan->nama}}
                             </option>
-                            @foreach (@$konsultans as $item)
-                            <option value="{{ $item->id }}">
-                                {{ $item->nama }}
-                            </option>
-                            @endforeach
                         </select>
                         @error('konsultan_id')
                         <div
@@ -413,7 +419,13 @@
                             required
                             value="{{ old('ft') }}"
                         >
-                            <option selected disabled>Pilih ft</option>
+                            <option
+                                selected
+                                disabled
+                                value="{{$data->detail->ft_id}}"
+                            >
+                                {{$data->detail->ft->se}}
+                            </option>
                         </select>
                         @error('ft')
                         <div
@@ -434,14 +446,13 @@
                             onchange="ubahOption1()"
                             value="{{ old('kontraktor_id') }}"
                         >
-                            <option selected disabled>
-                                Pilih Penyedia Jasa
+                            <option
+                                selected
+                                disabled
+                                value="{{$data->detail->kontraktor_id}}"
+                            >
+                                {{$data->detail->kontraktor->nama}}
                             </option>
-                            @foreach (@$kontraktors as $item)
-                            <option value="{{ $item->id }}">
-                                {{ $item->nama }}
-                            </option>
-                            @endforeach
                         </select>
                         @error('kontraktor_id')
                         <div
@@ -461,7 +472,13 @@
                             required
                             value="{{ old('gs_user_detail_id') }}"
                         >
-                            <option selected disabled>Pilih gs</option>
+                            <option
+                                selected
+                                disabled
+                                value="{{$data->detail->gs_id}}"
+                            >
+                                {{$data->detail->gs->nama}}
+                            </option>
                         </select>
                         @error('gs_user_detail_id')
                         <div

@@ -139,6 +139,7 @@
                         </a>
                         <div class="collapse" id="ui-basic1">
                             <ul class="nav flex-column sub-menu">
+                                @can('viewAllUser',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -146,6 +147,7 @@
                                         >All Users</a
                                     >
                                 </li>
+                                @endcan @can('viewUserAdmin',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -153,6 +155,7 @@
                                         >Admin</a
                                     >
                                 </li>
+                                @endcan @can('viewUserPpk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -160,7 +163,7 @@
                                         >PPK</a
                                     >
                                 </li>
-                                {{--
+                                @endcan {{-- @can('viewUserMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -168,7 +171,7 @@
                                         >MK</a
                                     >
                                 </li>
-                                --}}
+                                @endcan --}} @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -176,6 +179,7 @@
                                         >Field Team</a
                                     >
                                 </li>
+                                @endcan @can('viewUserGs',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -183,6 +187,8 @@
                                         >General Superintendent</a
                                     >
                                 </li>
+                                @endcan @canany(['viewRole', 'viewPermission'],
+                                Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -190,6 +196,7 @@
                                         >Role & Permission</a
                                     >
                                 </li>
+                                @endcanany
                             </ul>
                         </div>
                     </li>
@@ -279,8 +286,8 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/dropdowns.html"
-                                        >Jadual Pekerjaan</a
+                                        href="{{ route('jadual.index') }}"
+                                        >Jadwal Pekerjaan</a
                                     >
                                 </li>
                                 <li class="nav-item">
@@ -303,7 +310,7 @@
                     <li class="nav-item">
                         <a
                             class="nav-link"
-                            href="{{route('pusat_unduhan.index')}}"
+                            href="{{ route('pusat_unduhan.index') }}"
                         >
                             <i class="mdi mdi-cloud-download menu-icon"></i>
                             <span class="menu-title">Pusat Unduhan</span>

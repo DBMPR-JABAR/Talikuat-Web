@@ -18,6 +18,8 @@ class VerifiedController extends Controller
     public function verified_ft(Request $request, $id)
     {
         // dd($id);
+        $this->authorize('createVerificationUser', Auth::user());
+
         $this->validate($request,[
             'verified'=> 'required',
         ]);
@@ -46,6 +48,8 @@ class VerifiedController extends Controller
     public function verified_gs(Request $request, $id)
     {
         // dd($id);
+        $this->authorize('createVerificationUser', Auth::user());
+
         $this->validate($request,[
             'verified'=> 'required',
         ]);

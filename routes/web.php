@@ -30,7 +30,6 @@ Route::get('getFtByKonsultan', [DropdownDataController::class, 'getFtByKonsultan
 
 
 Route::prefix('admin')->group(function () {
-
     //group route with middleware "auth"
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'account.verified'], function () {
@@ -38,21 +37,30 @@ Route::prefix('admin')->group(function () {
             //route dashboard
             Route::get('/dashboard', [DashboardControllers::class, 'index'])->name('admin.dashboard.index');
             Route::get('/', [DashboardControllers::class, 'index'])->name('admin.home');
-            Route::get('/user_admin',[MasterAdminController::class,'index'])->name('user_admin.index');
-            Route::post('/user_admin/store',[MasterAdminController::class,'store'])->name('store.user_admin');
-            Route::get('/user_mk',[MasterMkController::class,'index'])->name('user_mk.index');
-            Route::post('/user_mk/store',[MasterMkController::class,'store'])->name('store.user_mk');
-            Route::get('/role&permission',[RoleController::class,'index'])->name('role.index');
-            
-            Route::prefix('role')->group(function (){
-                Route::get('/create',[RoleController::class,'create'])->name('role.create');
+            Route::get('/user_admin', [MasterAdminController::class, 'index'])->name('user_admin.index');
+            Route::post('/user_admin/store', [MasterAdminController::class, 'store'])->name('store.user_admin');
+            Route::get('/user_admin/trash', [MasterAdminController::class, 'trash'])->name('user_admin.trash');
+
+            Route::get('/user_mk', [MasterMkController::class, 'index_user'])->name('user_mk.index');
+            Route::post('/user_mk/store', [MasterMkController::class, 'store'])->name('store.user_mk');
+            Route::get('/role&permission', [RoleController::class, 'index'])->name('role.index');
+
+            Route::prefix('role')->group(function () {
+                Route::get('/create', [RoleController::class, 'create'])->name('role.create');
+                Route::post('/store', [RoleController::class, 'store'])->name('store.role');
+                Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
+                Route::put('/update/{id}', [RoleController::class, 'update'])->name('update.role');
+                Route::get('/delete/{id}', [RoleController::class, 'destroy'])->name('role.delete');
             });
-            Route::prefix('permission')->group(function (){
+            Route::prefix('permission')->group(function () {
             });
-            Route::prefix('feature')->group(function (){
-                Route::post('store',[FeatureController::class,'store'])->name('store.feature');
+            Route::prefix('feature')->group(function () {
+                Route::post('store', [FeatureController::class, 'store'])->name('store.feature');
             });
-        
+            Route::prefix('feature_category')->group(function () {
+                Route::post('store', [FeatureCategoryController::class, 'store'])->name('store.feature_category');
+            });
+
             Route::prefix('user')->group(function () {
                 Route::get('/', [UserController::class, 'index'])->name('user.index');
                 Route::post('store', [UserController::class, 'store'])->name('store.user');
@@ -174,6 +182,10 @@ Route::prefix('admin')->group(function () {
             Route::prefix('log')->group(function () {
                 Route::get('/', [LogControllers::class, 'index'])->name('log.index');
             });
+
+            Route::resource('jadual', JadualControllers::class);
+            Route::get('/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create');
+            Route::get('/delete/file/{id}', [JadualControllers::class, 'deleteFile'])->name('jadual.delete.file');
         });
     });
 });

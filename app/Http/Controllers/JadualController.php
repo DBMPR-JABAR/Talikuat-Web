@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Imports\jadualCollection;
 use App\Imports\JadualImport;
+use App\Models\Backend\DataUmum;
+use App\Models\TempFileJadual;
 use Brick\Math\Exception\DivisionByZeroException;
 use Carbon\Carbon;
 use DivisionByZeroError;
@@ -11,12 +13,14 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class JadualController extends Controller
 {
+    private $PATH_FILE_DB = "public/lampiran/jadual/";
     public function getAllJadual()
     {
 
@@ -544,47 +548,45 @@ class JadualController extends Controller
     {
         try {
             $file = $request->file('jadual_excel_file');
-
             $list_jadual = Excel::toCollection(new JadualImport, $file);
-            return response()->json([
-                'status' => 'success',
-                'code' => '200',
-                'result' => $list_jadual
+            $data_umum = DataUmum::where('id', $request->id)->with('detail')->first();
+
+            $name = time() . "_" . $file->getClientOriginalName();
+
+
+            TempFileJadual::create([
+                'data_umum_detail_id' => $request->id,
+                'file_name' => $name,
             ]);
-            $nmp = $list_jadual[0]['no_mata_pembayaran'];
-            if (!$nmp) {
-                return response()->json([
-                    'status' => 'error',
-                    'code' => '500',
-                    'result' => 'Format Salah'
-                ], 500);
-            } else {
-                $master_nmp = DB::table('master_jenis_pekerjaan')->where('id', $nmp)->first();
+            Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+            foreach ($list_jadual as $items) {
+                $master_nmp = DB::table('master_jenis_pekerjaan')->where('kd_jenis_pekerjaan', $items[0]['no_mata_pembayaran'])->first();
                 if (!$master_nmp) {
                     return response()->json([
                         'status' => 'error',
                         'code' => '500',
-                        'result' => 'Nomor Mata Pembayaran Salah Atau Tidak Terdaftar Pada Talikuat Mohon Hubungi Admin UPTD'
+                        'message' => 'Nomor Mata Pembayaran ' . $items[0]['no_mata_pembayaran'] . ' Salah Atau Tidak Terdaftar Pada Talikuat Mohon Hubungi Admin UPTD'
                     ], 500);
                 }
-                foreach ($list_jadual as $jadual) {
-                    $jadual['harga_satuan_rp'] = number_format($jadual['harga_satuan_rp'], 2, ',', '.');
-                    $jadual['jumlah_harga_rp'] = number_format($jadual['jumlah_harga_rp'], 2, ',', '.');
-                    $jadual['bobot'] = number_format($jadual['bobot'], 3, ',', '.');
-                    $jadual['tanggal'] = date("Y-n-d", Date::excelToTimestamp($jadual['tanggal']));
-                }
-
-                return response()->json([
-                    'status' => 'success',
-                    'code' => '200',
-                    'result' => $list_jadual
-                ]);
             }
-        } catch (\Throwable $th) {
+
+            foreach ($list_jadual as $val) {
+                foreach ($val as $item) {
+                    $item['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($item['tanggal']));
+                    $item['tanggal'] = date('Y-m-d', strtotime($item['tanggal']));
+                }
+            }
             return response()->json([
-                'status' => 'error array',
+                'status' => 'success',
+                'code' => '200',
+                'data_umum' => $data_umum,
+                'curva' => $list_jadual
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'failed',
                 'code' => '500',
-                'result' => $th->getMessage()
+                'message' => $e->getMessage()
             ], 500);
         }
     }

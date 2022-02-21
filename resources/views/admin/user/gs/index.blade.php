@@ -22,8 +22,12 @@
             <div class="card-body">
                 <h4 class="card-title">Data General Superintendent</h4>
                 @if (Request::segment(4) != 'trash')
+                    @can('createUserGs',Auth::user())
                     <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                    @endcan
+                    @can('restoreUserGs',Auth::user())
                     <a href="{{ route('user.gs.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    @endcan
                 @else
                     <a href="{{ route('user.gs.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
 
@@ -65,15 +69,21 @@
 
                             <td class="text-center"> 
                                 @if (Request::segment(4) == 'trash')
-                                <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @can('restoreUserGs',Auth::user())
+                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @endcan
                                 {{-- <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i>Delete</a> --}}
                                 @else 
                                     @if($item->gs_verified_at)
                                         <a type='button' href='{{ route('show.user.gs',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
                                     @else
+                                        @can('viewVerificationUser',Auth::user())
                                         <a type='button' href='{{ route('verified.user.gs',$item->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        @endcan
                                     @endif
+                                    @can('deleteUserGs',Auth::user())
                                     <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-mini btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
+                                    @endcan
 
                                 @endif
                             </td>
@@ -88,6 +98,7 @@
     </div>
 </div>
 <div class="modal-only">
+    @can('createUserGs',Auth::user())
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
@@ -193,6 +204,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('deleteUserGs',Auth::user())
     <div class="modal fade" id="delModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -232,6 +245,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('restoreUserGs',Auth::user())
     <div class="modal fade" id="Restore" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -255,6 +270,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 @endsection
 

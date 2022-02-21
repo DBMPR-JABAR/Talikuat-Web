@@ -17,4 +17,8 @@ class Feature extends Model
     {
         return $this->hasMany('App\Models\Backend\Permission', 'feature_id');
     }
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Backend\FeatureCategory', 'feature_category_id');
+    }
 }

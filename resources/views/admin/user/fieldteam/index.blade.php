@@ -22,11 +22,16 @@
             <div class="card-body">
                 <h4 class="card-title">Data Field Team</h4>
                 @if (Request::segment(4) != 'trash')
+                    @can('createUserFt',Auth::user())
                     <a data-toggle="modal" href="#addModal" class="btn btn-mat btn-primary mb-3"><i class="mdi mdi-account-plus menu-icon"></i> Tambah</a>
+                    @endcan
+                    @can('restoreUserFt',Auth::user())
                     <a href="{{ route('user.ft.trash') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-delete menu-icon"></i> Trash</a>
+                    @endcan
                 @else
+                    @can('viewUserFt',Auth::user())
                     <a href="{{ route('user.ft.index') }}" class="btn btn-mat btn-danger mb-3"><i class="mdi mdi-undo menu-icon"></i> Kembali</a>
-
+                    @endcan
                 @endif
                 </p>
                 <div class="table-responsive">
@@ -67,16 +72,21 @@
 
                             <td class="text-center"> 
                                 @if (Request::segment(4) == 'trash')
-                                <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @can('restoreUserFt',Auth::user())
+                                    <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
+                                    @endcan
                                 {{-- <a type='button' href='#delModal' data-toggle='modal' data-id='' class='btn btn-sm btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i>Delete</a> --}}
                                 @else 
                                     @if($item->ft_verified_at)
                                         <a type='button' href='{{ route('show.user.ft',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-account-search menu-icon"></i></a>
                                     @else
+                                        @can('viewVerificationUser',Auth::user())
                                         <a type='button' href='{{ route('verified.user.ft',$item->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        @endcan
                                     @endif
+                                    @can('deleteUserFt',Auth::user())
                                     <a type='button' href='#delModal' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-mini btn-danger waves-effect waves-light'><i class="mdi mdi-delete menu-icon"></i></a><br/>
-
+                                    @endcan
                                 @endif
                             </td>
 
@@ -90,6 +100,7 @@
     </div>
 </div>
 <div class="modal-only">
+    @can('createUserFt',Auth::user())
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -229,6 +240,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('deleteUserFt',Auth::user())
     <div class="modal fade" id="delModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -268,6 +281,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('restoreUserFt',Auth::user())
     <div class="modal fade" id="Restore" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -291,6 +306,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 @endsection
 

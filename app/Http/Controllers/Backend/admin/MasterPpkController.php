@@ -32,6 +32,7 @@ class MasterPpkController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewUserPpk', Auth::user());
         $data = MasterPpk::all()->where('is_delete','!=',1);
         return view('admin.data_utama.master_ppk.index',compact('data'));
     }
@@ -56,6 +57,8 @@ class MasterPpkController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('createUserPpk', Auth::user());
+
         //
         // $validator = Validator::make($request->all(), [
         //     'nama'=> 'required',
@@ -217,6 +220,8 @@ class MasterPpkController extends Controller
     public function trash()
     {
         //
+        $this->authorize('restoreUserPpk', Auth::user());
+
         $data = MasterPpk::where('is_delete',1)->get();
         // dd($data);
         return view('admin.data_utama.master_ppk.index', compact('data'));
@@ -228,9 +233,13 @@ class MasterPpkController extends Controller
 
         $user = MasterPpk::find($id);
         if($desc == 'restore'){
+            $this->authorize('restoreUserPpk', Auth::user());
+            $user->user_detail()->update(['is_delete' => null]);
             $user->is_delete = null;
             $message = 'Data Berhasil Dikembalikan! ';
         }elseif($desc == 'move_to_trash'){
+            $this->authorize('deleteUserPpk', Auth::user());
+            $user->user_detail->update(['is_delete' => 1]);
             $user->is_delete = 1;
             $message = 'Data Berhasil di Pindahkan! ';
         }

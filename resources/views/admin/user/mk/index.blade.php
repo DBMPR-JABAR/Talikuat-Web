@@ -52,13 +52,13 @@
                             <td> {{ @$item->user->email}} </td>
                             <td class="text-center">
                                 {{-- {{ @$item->user->email }} --}}
-                                @foreach (@$item->mk as $num => $mk)
+                                {{-- @foreach (@$item->mk as $num => $mk)
                                     UPTD {{ @$mk->uptd_id }}
                                     @if(++$num != $item->mk->count())
                                         <br>
                                     @endif
+                                @endforeach --}}
                                     {{-- {{ ++$num }}/{{ @$item->mk->count() }} --}}
-                                @endforeach
                             </td>
 
                             <td class="text-center"> 
@@ -102,8 +102,24 @@
                     <div class="modal-body p-5">
                         
                         <div class="form-group">
+                            <label>Perusahaan</label>
+                            <select class="form-control" name="company" id="company" required>
+                                <option value="">Select</option>
+                                @foreach ($company as $it)
+                                <option value="{{ $it->id }}" >{{ $it->nama }}</option>
+                                    
+                                @endforeach
+                            </select>
+                            @error('company')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        {{-- <label class="mb-3" style="font-weight: bold"> General Superintendent</label> --}}
+                        <div class="form-group">
                             <label>Nama</label>
-                            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan name" class="form-control @error('name') is-invalid @enderror" required>
+                            <input type="text" required name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan Nama Lengkap" class="form-control @error('name') is-invalid @enderror" >
                             @error('name')
                             <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
@@ -112,27 +128,36 @@
                         </div>
                         <div class="form-group">
                             <label>E-mail</label>
-                            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder="Masukkan email" class="form-control @error('email') is-invalid @enderror" required>
+                            <input type="email" required name="email" id="email" value="{{ old('email') }}" placeholder="Masukkan e-mail" class="form-control @error('email') is-invalid @enderror" >
                             @error('email')
                             <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" required>
-                            @error('password')
-                            <div class="invalid-feedback" style="display: block; color:red">
-                                {{ $message }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" required minlength="8" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" >
+                                    @error('password')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
                             </div>
-                            @enderror
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Ulangi Password</label>
+                                    <input type="password" minlength="8" required name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                                        class="form-control" >
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Ulangi Password</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
-                                class="form-control" required>
-                        </div>
+                       
                         <div class="form-group ">
                             <label>No Telp</label>
                             <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
