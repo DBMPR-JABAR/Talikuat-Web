@@ -6,7 +6,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">     
             <li class="breadcrumb-item active" aria-current="page">
-                <a href="/talikuat/public/admin/dashboard">Dashboard</a> / Pusat Unduhan
+                <a href="/Talikuat-Backend/public/admin/dashboard">Dashboard</a> / Pusat Unduhan
             </li>
         </ol>
     </nav>
@@ -25,8 +25,7 @@
                 >
                     <thead class="table-dark">
                         <tr>
-                            
-                            <th>No</th>
+                            <th style="width: 3%">No</th>
                             <th>Unor</th>
                             <th>Nomor Kontrak</th>                            
                             <th>Nama Paket</th>
@@ -37,7 +36,7 @@
                     <tbody>
                         @foreach ($data as $no => $item)
                         <tr>
-                            <td style="width: 10px">{{ +(+$no) + 1 }}</td>
+                            <td style="text-align: center;">{{ +(+$no) + 1 }}</td>
                             <td>{{ $item->unor }}</td>
                             <td>{{ $item->no_kontrak }}</td>
                             <td>{{ $item->nm_paket }}</td>
@@ -46,11 +45,10 @@
                                 <button type="button" class="btn btn-outline-danger" style="width: 100px !important; font-size: 11px !important;" data-toggle="modal" data-target="#exampleModal" data-whatever="Detail Addendum : {{ $item->nm_paket }}">Addendum</button>  
                             </td>
                         </tr>@endforeach 
-
                     </tbody>
                 </table>
+            </div>
         </div>
-    </div>
     </div>
 </div>
   
@@ -143,7 +141,7 @@
             </div> --}}
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Kembali</button>
           <button type="button" class="btn btn-info">Unduh Semua</button>
         </div>
       </div>

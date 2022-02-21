@@ -180,7 +180,7 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('pusat_unduhan.index');
 
-
+Route::get('/request', [RequestControllers::class, 'index'])->name('request.index');
 
 Route::get('/email', function () {
     return view('email_memo');

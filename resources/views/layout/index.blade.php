@@ -286,7 +286,7 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/typography.html"
+                                        href="{{ route('request.index') }}"
                                         >Permintaan</a
                                     >
                                 </li>
