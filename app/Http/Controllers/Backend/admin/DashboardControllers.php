@@ -18,23 +18,21 @@ class DashboardControllers extends Controller
      */
     public function index()
     {
-        // dd(Auth::user()->profile->nip);
-        if(!Auth::user()->profile->no_tlp || (Auth::user()->profile->nip == null && Auth::user()->profile->nik == null) ){
-            return redirect(url('admin/profile/edit', Auth::user()->id))->with(['warning'=>'Lengkapi Data Terlebih Dahulu']);
+        if (!Auth::user()->profile->no_tlp || (Auth::user()->profile->nip == null && Auth::user()->profile->nik == null)) {
+            return redirect(url('admin/profile/edit', Auth::user()->id))->with(['warning' => 'Lengkapi Data Terlebih Dahulu']);
         }
 
         $peyedia = DB::table('master_kontraktor')->count();
         $konsultan = DB::table('master_konsultan')->count();
         $dataUmum = DB::table('data_umum')->count();
         $ppk = DB::table('master_ppk')->count();
-    
-        return view('admin.dashboard.index',[
-            'penyedia'=>$peyedia,
-            'konsultan'=>$konsultan,
-            'dataUmum'=>$dataUmum,
-            'ppk'=>$ppk
+
+        return view('admin.dashboard.index', [
+            'penyedia' => $peyedia,
+            'konsultan' => $konsultan,
+            'dataUmum' => $dataUmum,
+            'ppk' => $ppk
         ]);
-        
     }
 
     /**
