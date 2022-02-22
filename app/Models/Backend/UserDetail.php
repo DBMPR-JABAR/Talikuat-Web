@@ -51,10 +51,10 @@ class UserDetail extends Model
     {
         return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');
     }
-    public function lists_uptd()
-    {
-        return $this->hasMany('App\Models\Backend\UserDetailUptd', 'user_detail_id')->orderBy('uptd_id', 'asc');
-    }
+    // public function lists_uptd()
+    // {
+    //     return $this->hasMany('App\Models\Backend\UserDetailUptd', 'user_detail_id')->orderBy('uptd_id', 'asc');
+    // }
     public function master_admin()
     {
         return $this->hasOne('App\Models\Backend\MasterAdmin', 'user_detail_id');
@@ -62,5 +62,11 @@ class UserDetail extends Model
     public function uptd()
     {
         return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
+    }
+    public function list_uptd()
+    {
+        // return $this->belongsToMany('App\Models\Backend\Uptd', 'user_detail_has_uptd','user_detail_id','uptd_id');
+        return $this->belongsToMany('App\Models\Backend\Uptd', 'db_tali_kuat.user_detail_has_uptd', 'user_detail_id', 'uptd_id');
+
     }
 }

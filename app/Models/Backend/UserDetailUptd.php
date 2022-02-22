@@ -10,7 +10,7 @@ class UserDetailUptd extends Model
     use HasFactory;
     
     protected $connection= 'mysql';
-    protected $table = 'user_details_uptd';
+    protected $table = 'user_detail_has_uptd';
     protected $guarded = [];
     public function uptd()
     {

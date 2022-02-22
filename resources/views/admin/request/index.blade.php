@@ -18,7 +18,7 @@
 </style>
 @endsection @section('page-header')
 <div class="page-header">
-    <h3 class="page-title">Request</h3>
+    <h4 class="page-title">Request</h4>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">
@@ -36,11 +36,11 @@
                 <table class="display responsive">
                     <thead>
                         <tr>
-                            <th style="width: 3%; text-align: center">No.</th>
                             <th>No. Dokumen Diajukan Tanggal</th>
-                            <th>Nama Paket</th>
+                            <th>Unor</th>
+                            <th>Nomor Kontrak</th>
+                            <th>Nama Kegiatan</th>
                             <th>Lokasi/Sta Jenis Pekerjaan Perkiraan Volume</th>
-                            <th>Shop Drawing</th>
                             <th>Foto dan Catatan</th>
                             <th>Status Dokumen</th>
                             <th style="width: 5%">Aksi</th>
@@ -48,11 +48,15 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="text-align: center">1</td>
                             <td>
                                 FRM-01/SOP/DBMPR-1<br />
                                 2021-05-31
                             </td>
+                            <td>
+                                UPTD Pengelolaan Jalan dan Jembatan Wilayah
+                                Pelayanan - V
+                            </td>
+                            <td>602.1/375/KTR/PPK.PPJ/PJ2WP.V</td>
                             <td>
                                 1 M Pekerjaan Penggantian Jembatan Ciroke Ruas
                                 Jalan Ciawigebang - Bts.Cirebon/Kuningan (Waled)
@@ -62,13 +66,6 @@
                                 Km.Cn.58+420<br />
                                 1.8.(2) - Jembatan Sementara<br />
                                 1.00 (LS)
-                            </td>
-                            <td>
-                                <img
-                                    src="..."
-                                    alt="..."
-                                    class="img-thumbnail"
-                                />
                             </td>
                             <td>
                                 <button
@@ -98,7 +95,7 @@
                                     data-target="#exampleModalApproval"
                                     data-whatever="Approval :"
                                 >
-                                    Approval
+                                    Respon
                                 </button>
                             </td>
                         </tr>
@@ -136,29 +133,8 @@
             <div class="modal-body">
                 <form>
                     <div class="card card-danger">
-                        <div class="card-header">
+                        <div class="card-header bg-secondary">
                             <h3 class="card-title">Data</h3>
-
-                            <div class="card-tools">
-                                <button
-                                    type="button"
-                                    class="btn btn-tool"
-                                    data-card-widget="collapse"
-                                    data-toggle="tooltip"
-                                    title="Collapse"
-                                >
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-tool"
-                                    data-card-widget="remove"
-                                    data-toggle="tooltip"
-                                    title="Remove"
-                                >
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
                         </div>
                         <div class="card-body" style="display: block">
                             <div class="form-group row">
@@ -271,99 +247,70 @@
                                     />
                                 </div>
                             </div>
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Bahan / Material</h3>
 
-                                    <div class="card-tools">
-                                        <button
-                                            type="button"
-                                            class="btn btn-tool"
-                                            data-card-widget="collapse"
-                                            data-toggle="tooltip"
-                                            title="Collapse"
-                                        >
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-tool"
-                                            data-card-widget="remove"
-                                            data-toggle="tooltip"
-                                            title="Remove"
-                                        >
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
+                            <!-- Bahan Material -->
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h3 class="card-title">Bahan / Material</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div
-                                            class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
-                                        >
+                                        <div class="col">
                                             <table
-                                                class="table table-bordered table-hover"
+                                                class="table table-bordered table-striped"
                                                 id="invoiceItem1"
                                             >
+                                                <thead>
+                                                    <th>Bahan Digunakan</th>
+                                                    <th>Volume</th>
+                                                    <th>Satuan</th>
+                                                </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <th width="2%">
-                                                            <input
-                                                                id="checkAll1"
-                                                                class="formcontrol"
-                                                                type="checkbox"
-                                                            />
-                                                        </th>
-                                                        <th width="38%">
-                                                            Bahan Digunakan
-                                                        </th>
-                                                        <th width="15%">
-                                                            Volume
-                                                        </th>
-                                                        <th width="15%">
-                                                            Satuan
-                                                        </th>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <input
-                                                                class="itemRow1"
-                                                                type="checkbox"
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 40%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value=""
-                                                                name="bahan[]"
-                                                                id="bahan_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 20%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value=""
-                                                                name="volume_bahan[]"
-                                                                id="volume_bahan_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value=""
-                                                                name="satuan_bahan[]"
-                                                                id="satuan_bahan_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 20%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -371,106 +318,72 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="card-footer"></div>
-                                <!-- /.card-footer-->
                             </div>
                             <!-- /.card -->
 
-                            <!-- Default box -->
-                            <div class="card card-primary">
-                                <div class="card-header">
+                            <!-- Peralatan -->
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
                                     <h3 class="card-title">Peralatan</h3>
-
-                                    <div class="card-tools">
-                                        <button
-                                            type="button"
-                                            class="btn btn-tool"
-                                            data-card-widget="collapse"
-                                            data-toggle="tooltip"
-                                            title="Collapse"
-                                        >
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-tool"
-                                            data-card-widget="remove"
-                                            data-toggle="tooltip"
-                                            title="Remove"
-                                        >
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div
-                                            class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
-                                        >
+                                        <div class="col">
                                             <table
-                                                class="table table-bordered table-hover"
-                                                id="invoiceItem3"
+                                                class="table table-bordered table-striped"
+                                                id="invoiceItem1"
                                             >
+                                                <thead>
+                                                    <th>Bahan Digunakan</th>
+                                                    <th>Volume</th>
+                                                    <th>Satuan</th>
+                                                </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <th width="2%">
-                                                            <input
-                                                                id="checkAll3"
-                                                                class="formcontrol"
-                                                                type="checkbox"
-                                                            />
-                                                        </th>
-                                                        <th width="38%">
-                                                            Jenis Peralatan
-                                                        </th>
-                                                        <th width="15%">
-                                                            Jumlah
-                                                        </th>
-                                                        <th width="15%">
-                                                            Satuan
-                                                        </th>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <input
-                                                                class="itemRow3"
-                                                                type="checkbox"
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 40%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="Jembatan Bailey"
-                                                                name="jenis_peralatan[]"
-                                                                id="jenis_peralatan_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 20%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="1"
-                                                                name="jumlah_peralatan[]"
-                                                                id="jumlah_peralatan_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="unit"
-                                                                name="satuan_peralatan[]"
-                                                                id="satuan_peralatan_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 20%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -478,123 +391,72 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="card-footer"></div>
-                                <!-- /.card-footer-->
                             </div>
                             <!-- /.card -->
 
-                            <!-- Default box -->
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Tenaga Kerja</h3>
-
-                                    <div class="card-tools">
-                                        <button
-                                            type="button"
-                                            class="btn btn-tool"
-                                            data-card-widget="collapse"
-                                            data-toggle="tooltip"
-                                            title="Collapse"
-                                        >
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-tool"
-                                            data-card-widget="remove"
-                                            data-toggle="tooltip"
-                                            title="Remove"
-                                        >
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
+                            <!-- Tenaga Kerja -->
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h3 class="card-title">Bahan / Material</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div
-                                            class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
-                                        >
+                                        <div class="col">
                                             <table
-                                                class="table table-bordered table-hover"
-                                                id="invoiceItem6"
+                                                class="table table-bordered table-striped"
+                                                id="invoiceItem1"
                                             >
+                                                <thead>
+                                                    <th>Bahan Digunakan</th>
+                                                    <th>Volume</th>
+                                                    <th>Satuan</th>
+                                                </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <th width="2%">
-                                                            <input
-                                                                id="checkAll6"
-                                                                class="formcontrol"
-                                                                type="checkbox"
-                                                            />
-                                                        </th>
-                                                        <th width="38%">
-                                                            Tenaga Kerja
-                                                        </th>
-                                                        <th width="15%">
-                                                            Jumlah
-                                                        </th>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <input
-                                                                class="itemRow6"
-                                                                type="checkbox"
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 40%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="Mandor"
-                                                                name="tenaga_kerja[]"
-                                                                id="tenaga_kerja_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 20%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="1"
-                                                                name="jumlah_tk[]"
-                                                                id="jumlah_tk_1"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <input
-                                                                class="itemRow6"
-                                                                type="checkbox"
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="Pekerja"
-                                                                name="tenaga_kerja[]"
-                                                                id="tenaga_kerja_2"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                value="10"
-                                                                name="jumlah_tk[]"
-                                                                id="jumlah_tk_2"
-                                                                class="form-control"
-                                                                autocomplete="off"
-                                                                readonly=""
-                                                            />
+                                                        <td
+                                                            style="
+                                                                width: 20%;
+                                                                padding: 10px;
+                                                            "
+                                                        >
+                                                            <div class="col">
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Default input"
+                                                                    aria-label="default input example"
+                                                                />
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -602,10 +464,8 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="card-footer"></div>
-                                <!-- /.card-footer-->
                             </div>
+
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label"
                                     >Shop Drawing Penyedia Jasa</label
@@ -613,7 +473,7 @@
                                 <div class="col-sm-10">
                                     <div class="container mt-5">
                                         <img
-                                            src="http://124.81.122.131/talikuat-api/storage/app/public/lampiran/file_req/1623065080_jbt sementara.jpg"
+                                            src=""
                                             style="border: 1px solid black"
                                             width="80%"
                                         />
@@ -625,14 +485,14 @@
                                 <label
                                     for="inputExperience"
                                     class="col-sm-2 col-form-label"
-                                    >Catatan Konsultan</label
+                                    >Catatan Direksi Lapangan</label
                                 >
                                 <div class="col-sm-10">
                                     <textarea
                                         class="form-control"
                                         id="catatan"
                                         name="catatan"
-                                        placeholder="K3 Harus selalu diperhatikan"
+                                        placeholder=""
                                         readonly=""
                                     ></textarea>
                                 </div>
@@ -642,14 +502,15 @@
                                 <label
                                     for="inputExperience"
                                     class="col-sm-2 col-form-label"
-                                    >Catatan PPK</label
+                                    >Catatan Pejabat Pembuat Komitmen
+                                    (PPK)</label
                                 >
                                 <div class="col-sm-10">
                                     <textarea
                                         class="form-control"
                                         id="catatan"
                                         name="catatan"
-                                        placeholder="lanjutkan"
+                                        placeholder=""
                                         readonly=""
                                     ></textarea>
                                 </div>
@@ -723,7 +584,7 @@
                                 Kembali
                             </button>
                             <button type="button" class="btn btn-success">
-                                Kirim Approval
+                                Kirim Respon
                             </button>
                         </div>
                     </div>
@@ -791,7 +652,7 @@
                                 Kembali
                             </button>
                             <button type="button" class="btn btn-success">
-                                Kirim Approval
+                                Kirim Respon
                             </button>
                         </div>
                     </div>
@@ -877,9 +738,14 @@
         $("#request").DataTable({
             responsive: true,
             columns: [
-                { responsivePriority: 1 },
-                { responsivePriority: 2 },
+                { responsivePriority: 4 },
                 { responsivePriority: 3 },
+                { responsivePriority: 2 },
+                { responsivePriority: 1 },
+                { responsivePriority: 5 },
+                { responsivePriority: 6 },
+                { responsivePriority: 7 },
+                { responsivePriority: 8 },
             ],
         });
     });

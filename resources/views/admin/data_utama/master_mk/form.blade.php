@@ -61,8 +61,8 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label>Nama Direktur</label>
-                                @if($data->user_lists->where('rule_user_id',12)->first())
-                                <br>{{ old('nama_direktur', @$data->user_lists->where('rule_user_id',12)->first()->user->name) }}
+                                @if($data->user_lists->where('rule_user_id',13)->first())
+                                <br>{{ old('nama_direktur', @$data->user_lists->where('rule_user_id',13)->first()->user->name) }}
                                 @else
                                 
                                 <input type="text" name="nama_direktur" id="nama_direktur" value="{{ @$data->nama_direktur }}" class="form-control">
@@ -135,8 +135,8 @@
                         <td style="width: 20%">Direktur</td>
                         <td style="width: 1%">:</td>
                         <td>
-                            @if($data->user_lists->where('rule_user_id',12)->first())
-                            {{ old('nama_direktur', @$data->user_lists->where('rule_user_id',12)->first()->user->name) }}
+                            @if($data->user_lists->where('rule_user_id',13)->first())
+                            {{ old('nama_direktur', @$data->user_lists->where('rule_user_id',13)->first()->user->name) }}
                             @else
                             No Data
                             @endif
@@ -149,15 +149,19 @@
                         <td>
                             {{-- @if($data->user_lists->where('rule_user_id',13)->count() == 1)
                             {{ old('nama_admin', @$data->user_lists->where('rule_user_id',13)->first()->user->name) }} --}}
-                            @if ($data->user_lists->where('rule_user_id',13)->count() >= 1)
+                            @if ($data->user_lists->where('rule_user_id',12)->count() >= 1)
                             <table class="table ">
-                                @foreach ($data->user_lists->where('rule_user_id',13) as $data_admin)
+                                @foreach ($data->user_lists->where('rule_user_id',12) as $data_admin)
                                 <tr>
                                     <td>{{ $data_admin->user->name }}</td>
                                     <td>
-                                    {{-- @foreach ($data_admin->lists_uptd as $lists_uptd)
-                                    {{ $lists_uptd->uptd->nama }}<br>
-                                    @endforeach --}}
+                                        {{-- {{ isset($data_admin->list_uptd) }} --}}
+                                    @if (isset($data_admin->list_uptd))
+                                    @foreach ($data_admin->list_uptd as $list_uptd)
+                                    {{ $list_uptd->nama }}<br>
+                                    @endforeach
+                                        
+                                    @endif
                                     
                                     </td>
                                 </tr>
@@ -195,6 +199,8 @@
                         <div class="form-group">
                             <label>Jabatan</label>
                             <select class="form-control" name="rule" id="dropDown" required>
+                                <option value="">Pilih Jabatan</option>
+
                                 @if(!$data->user_lists->where('rule_user_id',13)->first())
                                 <option value="13">Direktur</option>
                                 @endif 
@@ -246,7 +252,7 @@
                         </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" required>
+                            <input type="password" minlength="8" name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password" class="form-control @error('password') is-invalid @enderror" required>
                             @error('password')
                             <div class="invalid-feedback" style="display: block; color:red">
                                 {{ $message }}
@@ -255,7 +261,7 @@
                         </div>
                         <div class="form-group">
                             <label>Ulangi Password</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
+                            <input type="password" minlength="8" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Masukkan Konfirmasi Password Baru"
                                 class="form-control" required>
                         </div>
                         <div class="form-group ">
