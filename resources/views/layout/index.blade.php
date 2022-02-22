@@ -125,6 +125,7 @@
                         </a>
                     </li>
                     --}}
+                    @canany(['viewAllUser','viewUserAdmin','viewUserPpk','viewUserMk','viewUserFt','viewUserGs','viewRole', 'viewPermission'], Auth::user())
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -163,7 +164,8 @@
                                         >PPK</a
                                     >
                                 </li>
-                                @endcan {{-- @can('viewUserMk',Auth::user())
+                                @endcan 
+                                @can('viewUserMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -171,7 +173,8 @@
                                         >MK</a
                                     >
                                 </li>
-                                @endcan --}} @can('viewUserFt',Auth::user())
+                                @endcan 
+                                @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -187,8 +190,8 @@
                                         >General Superintendent</a
                                     >
                                 </li>
-                                @endcan @canany(['viewRole', 'viewPermission'],
-                                Auth::user())
+                                @endcan 
+                                @canany(['viewRole', 'viewPermission'], Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -200,6 +203,9 @@
                             </ul>
                         </div>
                     </li>
+                    @endcanany
+                    
+                    
                     <li class="nav-item">
                         <a
                             class="nav-link"

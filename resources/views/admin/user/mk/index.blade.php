@@ -50,15 +50,12 @@
                             <td class="text-center">{{ ++$data}}</td>
                             <td>{{ @$item->user->name }} </td>
                             <td> {{ @$item->user->email}} </td>
-                            <td class="text-center">
-                                {{-- {{ @$item->user->email }} --}}
-                                {{-- @foreach (@$item->mk as $num => $mk)
-                                    UPTD {{ @$mk->uptd_id }}
-                                    @if(++$num != $item->mk->count())
-                                        <br>
-                                    @endif
-                                @endforeach --}}
-                                    {{-- {{ ++$num }}/{{ @$item->mk->count() }} --}}
+                            <td>
+                                @if (isset($item->list_uptd))
+                                    @foreach ($item->list_uptd as $list_uptd)
+                                    {{ $list_uptd->nama }}<br>
+                                    @endforeach    
+                                @endif
                             </td>
 
                             <td class="text-center"> 
