@@ -18,7 +18,7 @@
 </style>
 @endsection @section('page-header')
 <div class="page-header">
-    <h3 class="page-title">Request</h3>
+    <h4 class="page-title">Request</h4>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">
@@ -34,15 +34,16 @@
         <div class="card">
             <div class="card-body">
                 <table
-                    class="display responsive"
+                    class="display responsive table-striped"
                     style="width: 100%"
                     id="request"
                 >
                     <thead>
                         <tr>
-                            <th style="width: 3%; text-align: center">No.</th>
                             <th>No. Dokumen Diajukan Tanggal</th>
-                            <th>Nama Paket</th>
+                            <th>Unor</th>
+                            <th>Nomor Kontrak</th>
+                            <th>Nama Kegiatan</th>
                             <th>Lokasi/Sta Jenis Pekerjaan Perkiraan Volume</th>
                             <th>Foto dan Catatan</th>
                             <th>Status Dokumen</th>
@@ -51,11 +52,15 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="text-align: center">1</td>
                             <td>
                                 FRM-01/SOP/DBMPR-1<br />
                                 2021-05-31
                             </td>
+                            <td>
+                                UPTD Pengelolaan Jalan dan Jembatan Wilayah
+                                Pelayanan - V
+                            </td>
+                            <td>602.1/375/KTR/PPK.PPJ/PJ2WP.V</td>
                             <td>
                                 1 M Pekerjaan Penggantian Jembatan Ciroke Ruas
                                 Jalan Ciawigebang - Bts.Cirebon/Kuningan (Waled)
@@ -737,9 +742,14 @@
         $("#request").DataTable({
             responsive: true,
             columns: [
-                { responsivePriority: 1 },
-                { responsivePriority: 2 },
+                { responsivePriority: 4 },
                 { responsivePriority: 3 },
+                { responsivePriority: 2 },
+                { responsivePriority: 1 },
+                { responsivePriority: 5 },
+                { responsivePriority: 6 },
+                { responsivePriority: 7 },
+                { responsivePriority: 8 },
             ],
         });
     });
