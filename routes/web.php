@@ -182,17 +182,17 @@ Route::prefix('admin')->group(function () {
             Route::prefix('log')->group(function () {
                 Route::get('/', [LogControllers::class, 'index'])->name('log.index');
             });
-
             Route::resource('jadual', JadualControllers::class);
-            Route::get('/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create');
+            Route::get('/jadual/create/{id}', [JadualControllers::class, 'create'])->name('jadual.create');
             Route::get('/delete/file/{id}', [JadualControllers::class, 'deleteFile'])->name('jadual.delete.file');
+            Route::resource('request', RequestControllers::class);
+            Route::get('/request/create/{id}', [RequestControllers::class, 'create'])->name('request.create');
         });
     });
 });
 
 Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('pusat_unduhan.index');
 
-Route::get('/request', [RequestControllers::class, 'index'])->name('request.index');
 
 Route::get('/email', function () {
     return view('email_memo');

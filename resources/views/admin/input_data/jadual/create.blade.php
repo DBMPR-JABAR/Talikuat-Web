@@ -1,10 +1,6 @@
 @extends('layout.index') @section('title','Jadual') @section('header')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css"
-/>
+
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">
