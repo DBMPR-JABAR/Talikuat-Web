@@ -11,4 +11,9 @@ class Jadual extends Model
     protected $connection = 'mysql';
     protected $table = 'jadual';
     protected $guarded = [];
+
+    public function detail()
+    {
+        return $this->hasMany('App\Models\Backend\JadualDetail', 'jadual_id');
+    }
 }

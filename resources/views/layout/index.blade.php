@@ -61,6 +61,10 @@
             href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
             rel="stylesheet"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
+        />
         <style>
             @media only screen and (max-width: 646px) {
                 .table-striped {
@@ -88,6 +92,7 @@
                 }
             }
         </style>
+
         @yield('header')
     </head>
     <body>
@@ -98,12 +103,12 @@
                 >
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="{{ asset('assets/images/logo.svg') }}"
+                            src="{{ asset('assets/images/talikuat.png') }}"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="{{ asset('assets/images/logo-mini.svg') }}"
+                            src="{{ asset('assets/images/talikuat.png') }}"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
@@ -367,7 +372,9 @@
                         <a
                             class="navbar-brand brand-logo-mini align-self-center d-lg-none"
                             href="index.html"
-                            ><img src="assets/images/logo-mini.svg" alt="logo"
+                            ><img
+                                src="{{ asset('assets/images/talikuat.png') }}"
+                                alt="logo"
                         /></a>
                         <button
                             class="navbar-toggler navbar-toggler align-self-center mr-2"
@@ -621,15 +628,25 @@
         <!-- End custom js for this page -->
         <script src="{{ asset('vendor/datatables.min.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
         <script>
-            $(".drop-down-show-hide").hide();
-
-            $("#dropDown").change(function () {
+            $(document).ready(function () {
+                $("table.display").DataTable({
+                    responsive: true,
+                });
+                $("select").select2({
+                    theme: "classic",
+                    width: "resolve",
+                });
                 $(".drop-down-show-hide").hide();
-                $("#" + this.value).show();
+                $("#dropDown").change(function () {
+                    $(".drop-down-show-hide").hide();
+                    $("#" + this.value).show();
+                });
             });
         </script>
-        @yield('script')
         <script>
             function setDataSelect(
                 id,
@@ -664,5 +681,6 @@
                 });
             }
         </script>
+        @yield('script')
     </body>
 </html>

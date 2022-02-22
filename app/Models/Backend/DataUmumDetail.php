@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DataUmumDetail extends Model
 {
     use HasFactory;
-    protected $connection= 'mysql';
+    protected $connection = 'mysql';
     protected $table = 'data_umum_detail';
     protected $guarded = [];
 
@@ -31,5 +31,10 @@ class DataUmumDetail extends Model
     public function ppk()
     {
         return $this->belongsTo('App\Models\Backend\MasterPpk', 'ppk_id');
+    }
+
+    public function jadualItems()
+    {
+        return $this->hasMany('App\Models\Backend\Jadual', 'data_umum_detail_id');
     }
 }

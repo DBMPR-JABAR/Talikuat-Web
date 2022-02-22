@@ -87,7 +87,7 @@ class JadualControllers extends Controller
                     'total_harga' => $val[0]['jumlah_harga_rp'],
                     'bobot' => $val[0]['bobot'],
                     'koefisien' => $val[0]['koefisien'],
-                    'total_volume' => $val[0]['volume'],
+                    'total_volume' => number_format($val[0]['volume'], 2, '.', '')
                 ]);
                 foreach ($val as $item) {
                     if (!is_string($item['tanggal'])) {

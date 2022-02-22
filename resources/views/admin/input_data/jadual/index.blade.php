@@ -1,16 +1,5 @@
 @extends('layout.index') @section('title','Jadual') @section('header')
-<link
-    rel="stylesheet"
-    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
-/>
-<link
-    rel="stylesheet"
-    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
-/>
-<link
-    rel="stylesheet"
-    href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css"
-/>
+
 <style>
     th {
         width: fit-content !important;
@@ -88,19 +77,19 @@
                         @if($item->detail->jadual != null)
                         <a
                             type="button"
-                            href="{{route('jadual.show',$item->detail->id) }}"
+                            href="{{route('jadual.show',$item->id) }}"
                             class="btn btn-sm btn-success waves-effect waves-light"
                             ><i class="mdi mdi-search-web menu-icon"></i
                         ></a>
                         <a
                             type="button"
-                            href="{{route('jadual.edit',$item->detail->id) }}"
+                            href="{{route('jadual.edit',$item->id) }}"
                             class="btn btn-sm btn-primary waves-effect waves-light"
                             ><i class="mdi mdi-pencil menu-icon"></i
                         ></a>
                         <a
                             type="button"
-                            href="{{route('request.create',$item->detail->id) }}"
+                            href="{{route('request.create',$item->id) }}"
                             class="btn btn-sm btn-dark waves-effect waves-light"
                             ><i class="mdi mdi-file-document"></i
                         ></a>
@@ -108,7 +97,7 @@
                         @else
                         <a
                             type="button"
-                            href="{{ route('jadual.create',$item->detail->id) }}"
+                            href="{{ route('jadual.create',$item->id) }}"
                             class="btn btn-sm btn-warning waves-effect waves-light"
                             ><i class="mdi mdi-table-edit menu-icon"></i
                         ></a>
@@ -160,15 +149,4 @@
         </div>
     </div>
 </div>
-@endsection @section('script')
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#dataJadual").DataTable({
-            responsive: true,
-        });
-    });
-</script>
 @endsection

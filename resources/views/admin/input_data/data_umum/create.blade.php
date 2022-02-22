@@ -414,12 +414,6 @@
 
 
     $(document).ready(function () {
-        $('select').select2({
-            theme: "classic",
-            width: 'resolve'
-        })
-
-
         var maxGroupRuas = 8;
 
         $(".addMoreRuas").click(function () {

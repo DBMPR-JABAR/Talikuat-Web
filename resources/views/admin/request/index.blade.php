@@ -33,11 +33,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <table
-                    class="display responsive"
-                    style="width: 100%"
-                    id="request"
-                >
+                <table class="display responsive">
                     <thead>
                         <tr>
                             <th style="width: 3%; text-align: center">No.</th>

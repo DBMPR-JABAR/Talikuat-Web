@@ -17,6 +17,12 @@ class DataUmum extends Model
         $detail = $this->hasOne('App\Models\Backend\DataUmumDetail', 'data_umum_id')->where('is_active', 1);
         return $detail->with('konsultan')->with('ft')->with('kontraktor')->with('gs')->with('ppk');
     }
+    public function jadual()
+    {
+        $detail = $this->hasOne('App\Models\Backend\DataUmumDetail', 'data_umum_id')->where('is_active', 1);
+        return $detail->with('jadualItems');
+    }
+
     public function list_details()
     {
         return $this->hasMany('App\Models\Backend\DataUmumDetail', 'data_umum_id');

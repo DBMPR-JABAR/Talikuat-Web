@@ -1,4 +1,61 @@
 @extends('layout.index') @section('title','Request') @section('header')
+<style>
+    .box {
+        position: relative;
+        background: #ffffff;
+        width: 100%;
+    }
+    .box-header {
+        color: #444;
+        display: block;
+        padding: 10px;
+        position: relative;
+        border-bottom: 1px solid #f4f4f4;
+        margin-bottom: 10px;
+    }
+    .box-tools {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+    .dropzone-wrapper {
+        border: 2px dashed #91b0b3;
+        color: #92b0b3;
+        position: relative;
+        height: 150px;
+    }
+    .dropzone-desc {
+        position: absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        width: 40%;
+        top: 50px;
+        font-size: 16px;
+    }
+    .dropzone,
+    .dropzone:focus {
+        position: absolute;
+        outline: none !important;
+        width: 100%;
+        height: 150px;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .dropzone-wrapper:hover,
+    .dropzone-wrapper.dragover {
+        background: #ecf0f5;
+    }
+    .preview-zone {
+        text-align: center;
+    }
+    .preview-zone .box {
+        box-shadow: none;
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+</style>
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">
@@ -27,7 +84,8 @@
 @endsection @section('content')
 <div class="row">
     <div class="col">
-        <form>
+        <form action="{{ route('request.store') }}">
+            @csrf
             <div class="card">
                 <div class="card-body" style="display: block">
                     <div class="form-group row">
@@ -38,18 +96,13 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                id="kegiatan"
-                                name="kegiatan"
-                                value=""
-                                required="required"
-                                readonly=""
+                                value="{{$data->nm_paket}}"
+                                readonly
                             />
                             <input
-                                id="unor"
                                 type="hidden"
-                                value=""
-                                class="form-control"
-                                name="unor"
+                                value="{{$data->detail->id}}"
+                                name="data_umum_detail_id"
                             />
                         </div>
                     </div>
@@ -62,11 +115,8 @@
                             <input
                                 type="date"
                                 class="form-control"
-                                id="diajukan_tgl"
                                 name="diajukan_tgl"
-                                value=""
-                                required="required"
-                                readonly=""
+                                required
                             />
                         </div>
                     </div>
@@ -79,11 +129,8 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                id="lokasi_sta"
                                 name="lokasi_sta"
-                                value=""
-                                required="required"
-                                readonly=""
+                                required
                             />
                         </div>
                     </div>
@@ -93,15 +140,21 @@
                             >Jenis Pekerjaan</label
                         >
                         <div class="col-sm-10">
-                            <input
-                                type="text"
+                            <select
+                                name="jadual_id"
                                 class="form-control"
-                                id="jenis_pekerjaan"
-                                name="jenis_pekerjaan"
-                                value=""
-                                required="required"
-                                readonly=""
-                            />
+                                required
+                                onchange="getVolumeJadual(this.value)"
+                            >
+                                <option selected disabled>
+                                    Jenis Pekerjaan
+                                </option>
+                                @foreach ($data->jadual->jadualItems as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->nmp .' - '. $item->uraian }}
+                                </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -112,15 +165,16 @@
                         <div class="col-sm-10">
                             <div class="input-group mb-3">
                                 <input
-                                    type="text"
+                                    type="number"
                                     class="form-control"
-                                    id="perkiraan_volume"
-                                    name="perkiraan_volume"
-                                    value=""
-                                    required="required"
-                                    readonly=""
+                                    name="volume"
+                                    step="0.001"
+                                    required
+                                    id="volume"
+                                    oninput="replace(this.value)"
                                 />
                             </div>
+                            <p class="fs-6 text-danger"></p>
                         </div>
                     </div>
 
@@ -132,14 +186,66 @@
                             <input
                                 type="date"
                                 class="form-control"
-                                id="pelaksanaan_tgl"
                                 name="pelaksanaan_tgl"
-                                value=""
-                                required="required"
-                                readonly=""
+                                required
                             />
                         </div>
                     </div>
+
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Upload File Shop Drawing</label
+                                        >
+                                        <div class="preview-zone hidden">
+                                            <div class="box box-solid">
+                                                <div
+                                                    class="box-header with-border"
+                                                >
+                                                    <div>
+                                                        <b>Preview</b>
+                                                    </div>
+                                                    <div
+                                                        class="box-tools pull-right"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-danger btn-xs remove-preview"
+                                                        >
+                                                            <i
+                                                                class="fa fa-times"
+                                                            ></i>
+                                                            Reset
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body"></div>
+                                            </div>
+                                        </div>
+                                        <div class="dropzone-wrapper">
+                                            <div class="dropzone-desc">
+                                                <i
+                                                    class="glyphicon glyphicon-download-alt"
+                                                ></i>
+                                                <p>Pilih Image Atau Video</p>
+                                            </div>
+                                            <input
+                                                type="file"
+                                                name="file_shop_drawing"
+                                                class="dropzone"
+                                                multiple
+                                                accept="image/*,video/*"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Bahan Material -->
                     <div class="card mb-3">
                         <div class="card-header bg-secondary">
@@ -150,7 +256,7 @@
                                 <div class="col">
                                     <table
                                         class="table table-bordered table-striped"
-                                        id="invoiceItem1"
+                                        id="tableBahan"
                                     >
                                         <thead>
                                             <th>Bahan Digunakan</th>
@@ -169,8 +275,24 @@
                                                         <input
                                                             class="form-control"
                                                             type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
+                                                            placeholder="Sement"
+                                                            name="bahan_material[]"
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td
+                                                    style="
+                                                        width: 20%;
+                                                        padding: 10px;
+                                                    "
+                                                >
+                                                    <div class="col">
+                                                        <input
+                                                            class="form-control"
+                                                            type="number"
+                                                            placeholder="2.00"
+                                                            step="0.001"
+                                                            name="volume_material[]"
                                                         />
                                                     </div>
                                                 </td>
@@ -184,23 +306,8 @@
                                                         <input
                                                             class="form-control"
                                                             type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td
-                                                    style="
-                                                        width: 20%;
-                                                        padding: 10px;
-                                                    "
-                                                >
-                                                    <div class="col">
-                                                        <input
-                                                            class="form-control"
-                                                            type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
+                                                            placeholder="Sack"
+                                                            name="satuan_material[]"
                                                         />
                                                     </div>
                                                 </td>
@@ -211,7 +318,117 @@
                             </div>
                         </div>
 
-                        <div class="card-footer bg-secondary"></div>
+                        <div class="card-footer bg-secondary">
+                            <div class="row">
+                                <div class="col">
+                                    <button
+                                        class="btn btn-sm btn-success"
+                                        type="button"
+                                        onclick="addRow('tableBahan')"
+                                    >
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-sm btn-danger"
+                                        type="button"
+                                        onclick="removeRow('tableBahan')"
+                                    >
+                                        <i class="mdi mdi-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-footer-->
+                    </div>
+                    <!-- Bahan JMF -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-secondary">
+                            <h3 class="card-title">Bahan Campuran ( JMF )</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <table
+                                        class="table table-bordered table-striped"
+                                        id="tableJMF"
+                                    >
+                                        <thead>
+                                            <th>Bahan Digunakan</th>
+                                            <th>Volume</th>
+                                            <th>Satuan</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td
+                                                    style="
+                                                        width: 40%;
+                                                        padding: 10px;
+                                                    "
+                                                >
+                                                    <div class="col">
+                                                        <input
+                                                            class="form-control"
+                                                            type="text"
+                                                            name="bahan_jmf[]"
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td
+                                                    style="
+                                                        width: 20%;
+                                                        padding: 10px;
+                                                    "
+                                                >
+                                                    <div class="col">
+                                                        <input
+                                                            class="form-control"
+                                                            type="number"
+                                                            step="0.001"
+                                                            name="volume_jmf[]"
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td
+                                                    style="
+                                                        width: 20%;
+                                                        padding: 10px;
+                                                    "
+                                                >
+                                                    <div class="col">
+                                                        <input
+                                                            class="form-control"
+                                                            type="text"
+                                                            name="satuan_jmf[]"
+                                                        />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-secondary">
+                            <div class="row">
+                                <div class="col">
+                                    <button
+                                        class="btn btn-sm btn-success"
+                                        type="button"
+                                        onclick="addRow('tableJMF')"
+                                    >
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-sm btn-danger"
+                                        type="button"
+                                        onclick="removeRow('tableJMF')"
+                                    >
+                                        <i class="mdi mdi-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <!-- /.card-footer-->
                     </div>
                     <!-- Peralatan -->
@@ -224,11 +441,11 @@
                                 <div class="col">
                                     <table
                                         class="table table-bordered table-striped"
-                                        id="invoiceItem1"
+                                        id="tablePeralatan"
                                     >
                                         <thead>
-                                            <th>Bahan Digunakan</th>
-                                            <th>Volume</th>
+                                            <th>Jenis Peralatan</th>
+                                            <th>Jumlah</th>
                                             <th>Satuan</th>
                                         </thead>
                                         <tbody>
@@ -243,8 +460,22 @@
                                                         <input
                                                             class="form-control"
                                                             type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
+                                                            name="jenis_peralatan[]"
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td
+                                                    style="
+                                                        width: 20%;
+                                                        padding: 10px;
+                                                    "
+                                                >
+                                                    <div class="col">
+                                                        <input
+                                                            class="form-control"
+                                                            type="number"
+                                                            name="jumlah_peralatan[]"
+                                                            step="1"
                                                         />
                                                     </div>
                                                 </td>
@@ -258,23 +489,7 @@
                                                         <input
                                                             class="form-control"
                                                             type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td
-                                                    style="
-                                                        width: 20%;
-                                                        padding: 10px;
-                                                    "
-                                                >
-                                                    <div class="col">
-                                                        <input
-                                                            class="form-control"
-                                                            type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
+                                                            name="satuan_peralatan[]"
                                                         />
                                                     </div>
                                                 </td>
@@ -285,25 +500,43 @@
                             </div>
                         </div>
 
-                        <div class="card-footer bg-secondary"></div>
+                        <div class="card-footer bg-secondary">
+                            <div class="row">
+                                <div class="col">
+                                    <button
+                                        class="btn btn-sm btn-success"
+                                        type="button"
+                                        onclick="addRow('tablePeralatan')"
+                                    >
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-sm btn-danger"
+                                        type="button"
+                                        onclick="removeRow('tablePeralatan')"
+                                    >
+                                        <i class="mdi mdi-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <!-- /.card-footer-->
                     </div>
                     <!-- Tenga Kerja -->
                     <div class="card mb-3">
                         <div class="card-header bg-secondary">
-                            <h3 class="card-title">Bahan / Material</h3>
+                            <h3 class="card-title">Tenaga Kerja</h3>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
                                     <table
                                         class="table table-bordered table-striped"
-                                        id="invoiceItem1"
+                                        id="tableTenagaKerja"
                                     >
                                         <thead>
-                                            <th>Bahan Digunakan</th>
-                                            <th>Volume</th>
-                                            <th>Satuan</th>
+                                            <th>Tenaga Kerja</th>
+                                            <th>Jumlah</th>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -317,11 +550,11 @@
                                                         <input
                                                             class="form-control"
                                                             type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
+                                                            name="tenaga_kerja[]"
                                                         />
                                                     </div>
                                                 </td>
+
                                                 <td
                                                     style="
                                                         width: 20%;
@@ -331,24 +564,9 @@
                                                     <div class="col">
                                                         <input
                                                             class="form-control"
-                                                            type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td
-                                                    style="
-                                                        width: 20%;
-                                                        padding: 10px;
-                                                    "
-                                                >
-                                                    <div class="col">
-                                                        <input
-                                                            class="form-control"
-                                                            type="text"
-                                                            placeholder="Default input"
-                                                            aria-label="default input example"
+                                                            type="number"
+                                                            name="jumlah_tenaga_kerja[]"
+                                                            step="1"
                                                         />
                                                     </div>
                                                 </td>
@@ -359,31 +577,214 @@
                             </div>
                         </div>
 
-                        <div class="card-footer bg-secondary"></div>
-                        <!-- /.card-footer-->
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label"
-                            >Shop Drawing Penyedia Jasa</label
-                        >
-                        <div class="col-sm-10">
-                            <div class="container mt-5">
-                                <img
-                                    src="https://tk.temanjabar.net/storage/app/public/lampiran/file_req/1623065080_jbt sementara.jpg"
-                                    style="border: 1px solid black"
-                                    width="80%"
-                                />
+                        <div class="card-footer bg-secondary">
+                            <div class="row">
+                                <div class="col">
+                                    <button
+                                        class="btn btn-sm btn-success"
+                                        type="button"
+                                        onclick="addRow('tableTenagaKerja')"
+                                    >
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-sm btn-danger"
+                                        type="button"
+                                        onclick="removeRow('tableTenagaKerja')"
+                                    >
+                                        <i class="mdi mdi-minus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <!-- /.card-footer-->
                     </div>
                 </div>
 
-                <div class="card-footer" style="display: block"></div>
+                <div class="card-footer" style="display: block">
+                    <button class="btn btn-sm btn-primary" type="submit">
+                        <i class="mdi mdi-content-save"></i>
+                        Simpan
+                    </button>
+                </div>
                 <!-- /.card-footer-->
             </div>
         </form>
     </div>
 </div>
 
+@endsection @section('script')
+
+<script>
+    $(document).ready(function () {
+        $(".fs-6").hide();
+    });
+    function addRow(idTable) {
+        var table;
+        switch (idTable) {
+            case "tableBahan":
+                table = document.getElementById("tableBahan");
+                var row = table.insertRow(table.rows.length);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                cell1.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="jenis_bahan[]" /></div>';
+                cell2.innerHTML =
+                    '<div class="col"><input class="form-control" type="number" name="jumlah_bahan[]" step="0.001" /></div>';
+                cell3.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="satuan_bahan[]" /></div>';
+
+                break;
+            case 'tableJMF':
+                table = document.getElementById("tableJMF");
+                var row = table.insertRow(table.rows.length);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                cell1.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="bahan_jmf[]" /></div>';
+                cell2.innerHTML =
+                    '<div class="col"><input class="form-control" type="number" name="volume_jmf[]" step="0.001" /></div>';
+                cell3.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="satuan_jmf[]" /></div>';
+                break;
+
+            case 'tablePeralatan':
+                table = document.getElementById("tablePeralatan");
+                var row = table.insertRow(table.rows.length);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                cell1.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="jenis_peralatan[]" /></div>';
+                cell2.innerHTML = '<div class="col"><input class="form-control" type="number" name="jumlah_peralatan[]" step="0.001" /></div>';
+                cell3.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="satuan_peralatan[]" /></div>';
+                break;
+            case 'tableTenagaKerja':
+                table = document.getElementById("tableTenagaKerja");
+                var row = table.insertRow(table.rows.length);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                cell1.innerHTML =
+                    '<div class="col"><input class="form-control" type="text" name="tenaga_kerja[]" /></div>';
+                cell2.innerHTML =
+                    '<div class="col"><input class="form-control" type="number" name="jumlah_tenaga_kerja[]" step="0.001" /></div>';
+                break;
+        }
+    }
+    function removeRow(idTable) {
+        var table;
+        var rowDelete;
+        switch (idTable) {
+            case "tableBahan":
+                table = $("#tableBahan tr");
+                rowDelete = $("#tableBahan tr:last");
+                break;
+
+            case "tablePeralatan":
+                table = $("#tablePeralatan tr");
+                rowDelete = $("#tablePeralatan tr:last");
+                break;
+            case "tableTenagaKerja":
+                table = $("#tableTenagaKerja tr");
+                rowDelete = $("#tableTenagaKerja tr:last");
+                break;
+            case "tableJMF":
+                table = $("#tableJMF tr");
+                rowDelete = $("#tableJMF tr:last");
+                break;
+        }
+
+        if (table.length > 2) {
+            rowDelete.remove();
+        }
+    }
+    function getVolumeJadual(id) {
+        const jadual = {!! json_encode($data->jadual->jadualItems) !!};
+        jadual.forEach((item) => {
+            console.log(item);
+            if (item.id == id) {
+                $("#volume").attr({
+                    max: item.volume_terrequest
+                        ? item.volume_terrequest
+                        : item.total_volume,
+                });
+                $(".fs-6").text(
+                    `Volume Tersedia ${
+                        item.volume_terrequest
+                            ? item.volume_terrequest
+                            : item.total_volume
+                    } `
+                );
+            }
+        });
+    }
+    function replace(val) {
+        var val = parseFloat(val);
+        var max = parseFloat($("#volume").attr("max"));
+        if (val > max) {
+            $("#volume").val(max);
+        }
+    }
+    function readFile(input) {
+        if (input.files) {
+            for (let i = 0; i < input.files.length; i++) {
+                var reader = new FileReader();
+                if (input.files[i].type.match("image")) {
+                    reader.onload = function (e) {
+                        var htmlPreview =
+                            '<img width="200" src="' +
+                            e.target.result +
+                            '" />' +
+                            "<p>" +
+                            input.files[i].name +
+                            "</p>";
+                        var wrapperZone = $(input).parent();
+                        var previewZone = $(input)
+                            .parent()
+                            .parent()
+                            .find(".preview-zone");
+                        var boxZone = $(input)
+                            .parent()
+                            .parent()
+                            .find(".preview-zone")
+                            .find(".box")
+                            .find(".box-body");
+                        wrapperZone.removeClass("dragover");
+                        previewZone.removeClass("hidden");
+                        boxZone.append(htmlPreview);
+                    };
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+    }
+    function reset(e) {
+        e.wrap("<form>").closest("form").get(0).reset();
+        e.unwrap();
+    }
+    $(".dropzone").change(function () {
+        readFile(this);
+    });
+    $(".dropzone-wrapper").on("dragover", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass("dragover");
+    });
+    $(".dropzone-wrapper").on("dragleave", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).removeClass("dragover");
+    });
+    $(".remove-preview").on("click", function () {
+        var boxZone = $(this).parents(".preview-zone").find(".box-body");
+        var previewZone = $(this).parents(".preview-zone");
+        var dropzone = $(this).parents(".form-group").find(".dropzone");
+        boxZone.empty();
+        previewZone.addClass("hidden");
+        reset(dropzone);
+    });
+</script>
 @endsection
