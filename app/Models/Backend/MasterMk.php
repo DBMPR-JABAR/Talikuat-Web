@@ -21,6 +21,6 @@ class MasterMk extends Model
     // }
     public function user_lists()
     {
-        return $this->hasMany('App\Models\Backend\UserDetail', 'mk_id');
+        return $this->hasMany('App\Models\Backend\UserDetail', 'mk_id')->where('is_delete',null);
     }
 }

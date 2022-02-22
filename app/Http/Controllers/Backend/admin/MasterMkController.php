@@ -79,10 +79,10 @@ class MasterMkController extends Controller
             return redirect()->route('mastermk.index')->with(['danger' => 'Data Gagal Disimpan!']);
         }
     }
-    public function store_user(Request $request, $id)
+    public function store_user(Request $request, $id=null)
     {
         //
-        // dd($request->unit);
+        // dd($request->rule);
         $user = User::select('name', 'email', 'password', 'id')->where('email', $request->email)->first();
         if ($user) {
             if (!$user->user_detail) {
@@ -107,15 +107,18 @@ class MasterMkController extends Controller
                 'rule'=> ''
             ]);
         }
-        if ($request->rule == 13)
+        if ($request->rule == 12)
             $validator = Validator::make($request->all(), ['unit' => 'required']);
 
         if ($validator->fails()) {
             storeLogActivity(declarLog(1, 'Users MK', $request->email . ' ' . $validator->getMessageBag()->first()));
             return back()->with(['error' => $validator->getMessageBag()->first()]);
         }
-        $mk_id = $id ? : $request->mk_id;
-        dd($mk_id);
+        // $mk_id = $id=="null" ?$request->company : $id;
+        if($id==null){
+            $request->rule = 12;
+            $mk_id = $request->company;
+        }else $mk_id = $id;
         $create_user = User::firstOrNew(['email'=> $request->email]);
         $create_user->name = $request->input('name');
         $create_user->password = Hash::make($request->input('password'));
@@ -130,19 +133,11 @@ class MasterMkController extends Controller
 
         $create_detail = UserDetail::firstOrNew(['user_id' => $create_user->id]);
         $create_detail->rule_user_id = $request->rule;
-        $create_detail->mk_id = $id;
+        $create_detail->mk_id = $mk_id;
         $create_detail->created_by = Auth::user()->id;
         $create_detail->save();
-        if ($request->rule == 13) {
-            for ($x = 0; $x < count($request->unit); $x++) {
-                $temp_unit = ['uptd_id' => $request->unit[$x]];
-                $create_detail->lists_uptd()->updateOrCreate($temp_unit);
-            }
-            $create_detail->lists_uptd()->whereNotIn('uptd_id', $request->unit)->delete();
-            $create_master_admin = MasterAdmin::firstOrNew(['user_detail_id' => $create_detail->id]);
-            $create_master_admin->nama = $request->input('name');
-            $create_master_admin->created_by = Auth::user()->id;
-            $create_master_admin->save();
+        if ($request->rule == 12) {
+            $create_detail->list_uptd()->sync($request->unit);
         }
         storeLogActivity(declarLog(1, 'Users MK', $request->email, 1));
         return back()->with(['success' => 'Berhasil Menambahkan User!!']);

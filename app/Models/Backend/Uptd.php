@@ -19,4 +19,9 @@ class Uptd extends Model
     {
         return $this->HasMany('App\Models\Backend\DataUmum', 'id_uptd');
     }
+    public function list_user()
+    {
+        // return $this->belongsToMany('App\Models\Backend\UserDetail', 'user_detail_has_uptd','uptd_id','user_detail_id');
+        return $this->belongsToMany('App\Models\Backend\UserDetail', env('db_tali_kuat').'user_detail_has_uptd', 'uptd_id', 'user_detail_id');
+    }
 }
