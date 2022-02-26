@@ -172,6 +172,7 @@
                                     required
                                     id="volume"
                                     oninput="replace(this.value)"
+                                    disabled
                                 />
                             </div>
                             <p class="fs-6 text-danger"></p>
@@ -702,6 +703,7 @@
         }
     }
     function getVolumeJadual(id) {
+        $('#volume').attr('disabled', false);
         const jadual = {!! json_encode($data->jadual->jadualItems) !!};
         jadual.forEach((item) => {
             console.log(item);

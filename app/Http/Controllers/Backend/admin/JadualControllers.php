@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\JadualImport;
 use App\Models\Backend\JadualDetail;
 use App\Models\Backend\DataUmum;
+use App\Models\Backend\DataUmumDetail;
 use App\Models\Backend\Jadual;
 use App\Models\TempFileJadual;
 use Carbon\Carbon;
@@ -15,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Illuminate\Support\Facades\Validator;
 
 use Maatwebsite\Excel\Facades\Excel;
-
+use stdClass;
 
 class JadualControllers extends Controller
 {
@@ -129,10 +130,19 @@ class JadualControllers extends Controller
      */
     public function show($id)
     {
-        $data = Jadual::where([
-            ['id', $id]
-        ])->delete();
-        return view('admin.input_data.jadual.show', compact('data'));
+        $data = DataUmum::where(
+            'id',
+            $id
+        )->with('kategori_paket')->with('uptd')->with('ruas')->with('detail')->first();
+
+        $jadualDB = Jadual::where('data_umum_detail_id', $data->detail->id)->with('detail')->get();
+        $jadualDetail = new stdClass();
+        $jadualDetail->data_umum = $data;
+        $jadualDetail->curva = [];
+        foreach ($jadualDB as $val) {
+            array_push($jadualDetail->curva, $val->detail);
+        }
+        return view('admin.input_data.jadual.show', compact('data', 'jadualDetail'));
     }
 
     /**

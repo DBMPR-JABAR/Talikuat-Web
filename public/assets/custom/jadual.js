@@ -7,6 +7,7 @@ async function nonAdendum(res) {
     render(jadualAwal, [], "", weeks);
     jadualAwal = [];
 }
+var dataJadualGlobal = [];
 
 function render(sumJadual, laporan, jadualAdendum, jmlMinggu) {
     $("body").removeClass("loading");
@@ -35,12 +36,21 @@ function render(sumJadual, laporan, jadualAdendum, jmlMinggu) {
     });
     $(jmlMinggu).each((i, v) => {
         $("#dataJadual").append(`
-        <div class="col-sm-1">
-        <div class="border">
-        <ins> Minggu ${i + 1}</ins> <br />
+        <div class="col-sm-2" data-toggle="tooltip" data-placement="top" title="Klik Untuk Melihat Detail Jadual">
+        <a href="#" style="color:black;" data-toggle="modal" data-target="#jadualDetail" onclick="renderDetailJadual(${i})">
+        <div class="border p-2 m-1">
+        <p>
+        ${convertDate(jmlMinggu[i]).toISOString().slice(0, 10)} / ${convertDate(
+            jmlMinggu[i]
+        )
+            .addDays(6)
+            .toISOString()
+            .slice(0, 10)} </p> 
            ${sumJadual[i]}
         </div>
-    </div>`);
+        </a>
+    </div>
+    `);
     });
 }
 
@@ -65,6 +75,8 @@ const sortJadual = async (jadual, weeks) => {
         });
         sortedJadual.push(tesData);
     }
+
+    dataJadualGlobal.push(sortedJadual);
     $(sortedJadual).each((i, v) => {
         sumJadual.push(v.sum("nilai"));
     });
@@ -147,3 +159,53 @@ function getRandomColor() {
     ];
     return color;
 }
+
+function renderDetailJadual(index) {
+    const data = dataJadualGlobal[0][index];
+    $("table.display").DataTable().destroy();
+    data.forEach((v, i) => {
+        console.log(data[i].nilai);
+        if (v == undefined) {
+            $("#jadualDetail").find("tbody").append(`
+            <tr>
+           <td>
+            Tidak Ada Jadual
+            </td>
+            </tr>
+            `);
+        } else {
+            $("#jadualDetail").find("tbody").append(`
+        <tr>
+        <td>${v.tanggal}</td>
+        <td>${v.nmp + " - " + v.uraian}</td>
+        <td>${formatRupiah(v.harga_satuan, "Rp. ")}</td>
+        <td>${v.volume}</td>
+        <td>${v.satuan}</td>
+        <td>${v.bobot}</td>
+        <td>${v.koefisien}</td>
+        </tr>
+        `);
+        }
+    });
+    $("table.display").DataTable().draw();
+}
+
+function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, "").toString(),
+        split = number_string.split(","),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+        separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
+    }
+
+    rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+    return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+}
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});

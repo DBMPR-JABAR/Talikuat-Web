@@ -328,66 +328,62 @@
                     <div class="contianer text-center">
                         <div class="row" id="dataJadual"></div>
                     </div>
-                    <form action="{{ route('jadual.create') }}" method="post">
-                        @csrf
-                        <div class="row" id="upload">
-                            <div class="col-md-6 p-2">
-                                <div class="form-group">
-                                    <label>File jadual</label>
-                                    <div class="input-group">
-                                        <input
-                                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                            type="file"
-                                            class="form-control"
-                                            id="fileJadual"
-                                            aria-describedby="inputGroupFileAddon04"
-                                            aria-label="Upload"
-                                        />
-                                        <input
-                                            type="hidden"
-                                            name="id_data_umum"
-                                            value="{{$data->id}}"
-                                        />
-                                        <button
-                                            class="btn btn-success"
-                                            type="button"
-                                        >
-                                            Upload
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="progress">
-                                    <div
-                                        class="progress-bar"
-                                        role="progressbar"
-                                        style="width: 5%"
-                                        aria-valuenow="0"
-                                        aria-valuemin="0"
-                                        aria-valuemax="100"
-                                        id="progressUpload"
-                                    >
-                                        5%
-                                    </div>
-                                </div>
-
-                                <div id="status"></div>
-                                <span
-                                    class="text-danger"
-                                    style="font-size: small"
-                                    >Format File Salah</span
-                                >
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-primary btn-icon-text">
-                    <i class="mdi mdi-file-check btn-icon-prepend"></i> Simpan
-                </button>
-                <button type="button" class="btn btn-warning btn-icon-text">
-                    <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
-                </button>
+                <a href="{{ route('jadual.index') }}">
+                    <button type="button" class="btn btn-dark">
+                        Kembali
+                    </button></a
+                >
+            </div>
+        </div>
+    </div>
+    <div
+        class="modal fade"
+        id="jadualDetail"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div
+            class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered"
+        >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="labelJadual"></h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered display">
+                        <thead>
+                            <th>Tanggal</th>
+                            <th>No Mata Pembayaran</th>
+                            <th>Harga Satuan</th>
+                            <th>Volume</th>
+                            <th>Satuan</th>
+                            <th>Bobot</th>
+                            <th>Koefisien</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-dark"
+                        data-dismiss="modal"
+                    >
+                        Kembali
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -399,91 +395,8 @@
     ></script>
     <script src="{{ asset('assets/custom/jadual.js') }}"></script>
     <script>
-        $(document).ready(() => {
-            $(".card-footer").hide();
-            $(".progress").hide();
-            $("#fileJadual").change((e) => {
-                e.preventDefault();
-                $(".col-md-6").removeClass("border border-danger");
-                $(".text-danger").hide();
-            });
-
-            $(".text-danger").hide();
-            $(".btn-success").click((e) => {
-                e.preventDefault();
-                const file = $("#fileJadual").val();
-                if (file == "") {
-                    $(".col-md-6").addClass("border border-danger");
-                    $(".text-danger").text("Format File Salah");
-                    $(".text-danger").show();
-                    return false;
-                }
-                if (file.replace(/^.*\./, "") != "xlsx") {
-                    $(".col-md-6").addClass("border border-danger");
-                    $(".text-danger").text("Format File Salah");
-                    $(".text-danger").show();
-                    return false;
-                }
-
-                const formData = new FormData();
-                formData.append(
-                    "jadual_excel_file",
-                    $("#fileJadual")[0].files[0]
-                );
-                formData.append("id", "{{$data->id}}");
-                formData.append("_token", "{{ csrf_token() }}");
-                $.ajax({
-                    url: "{{ route('jadual.exceltodata') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    xhr: () => {
-                        const xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener(
-                            "progress",
-                            function (e) {
-                                $(".progress").show();
-                                const file1Size =
-                                    $("#fileJadual")[0].files[0].size;
-                                let percent = Math.round(
-                                    (e.loaded / file1Size) * 100
-                                );
-                                if (e.loaded <= file1Size) {
-                                    $("#progressUpload")
-                                        .width(percent + "%")
-                                        .html(percent + "%");
-                                }
-                                $("#progressUpload")
-                                    .width(percent + "%")
-                                    .html(percent + "%");
-                            },
-                            false
-                        );
-                        return xhr;
-                    },
-                    success: (res) => {
-                        $(".progress").hide();
-                        nonAdendum(res);
-                        $("#upload").hide();
-                        $(".card-footer").show();
-                    },
-                    error: (error) => {
-                        $(".progress").hide();
-                        console.log(
-                            $(".text-danger").text(error.responseJSON.message)
-                        );
-                        $(".col-md-6").addClass("border border-danger");
-                        $(".text-danger").text(error.responseJSON.message);
-                        $(".text-danger").show();
-                    },
-                });
-            });
-        });
-        $(".btn-warning").click(() => {
-            location.reload();
-        });
+        const data = {!! json_encode($jadualDetail) !!};
+        nonAdendum(data);
     </script>
-
     @endsection
 </div>

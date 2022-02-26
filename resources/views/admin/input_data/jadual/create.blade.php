@@ -383,11 +383,6 @@
                     <i class="mdi mdi-file-check btn-icon-prepend"></i> Simpan
                 </button>
             </form>
-                <a href="{{route('jadual.delete.file',$data->detail->id)}}">
-                    <button type="button" class="btn btn-warning btn-icon-text">
-                        <i class="mdi mdi-reload btn-icon-prepend"></i> Reset
-                    </button></a
-                >
             </div>
             
         </div>
