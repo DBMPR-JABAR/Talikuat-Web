@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\admin;
 
+use App\Http\Controllers\backend\admin\LaporanMingguanControllers;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -187,6 +188,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/delete/file/{id}', [JadualControllers::class, 'deleteFile'])->name('jadual.delete.file');
             Route::resource('request', RequestControllers::class);
             Route::get('/request/create/{id}', [RequestControllers::class, 'create'])->name('request.create');
+            Route::resource('laporan-mingguan', LaporanMingguanControllers::class);
         });
     });
 });
