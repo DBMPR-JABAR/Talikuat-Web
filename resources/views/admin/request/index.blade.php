@@ -115,7 +115,7 @@
     aria-labelledby="myLargeModalLabel"
     aria-hidden="true"
 >
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">

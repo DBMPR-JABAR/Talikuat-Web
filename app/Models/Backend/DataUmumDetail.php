@@ -12,6 +12,11 @@ class DataUmumDetail extends Model
     protected $table = 'data_umum_detail';
     protected $guarded = [];
 
+    public function dataUmum()
+    {
+        return  $this->belongsTo(DataUmum::class, 'data_umum_id');
+    }
+
     public function konsultan()
     {
         return $this->belongsTo('App\Models\Backend\MasterKonsultan', 'konsultan_id');

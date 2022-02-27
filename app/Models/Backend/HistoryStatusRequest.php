@@ -5,11 +5,12 @@ namespace App\Models\Backend;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HistoryRequest extends Model
+class HistoryStatusRequest extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $table = 'history_request';
+    protected $table = 'history_status_request';
+
     protected $guarded = [];
 
     public function request()
