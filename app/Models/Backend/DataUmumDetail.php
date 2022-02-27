@@ -14,7 +14,7 @@ class DataUmumDetail extends Model
 
     public function dataUmum()
     {
-        return  $this->belongsTo(DataUmum::class, 'data_umum_id');
+        return  $this->belongsTo(DataUmum::class, 'data_umum_id')->with('uptd');
     }
 
     public function konsultan()

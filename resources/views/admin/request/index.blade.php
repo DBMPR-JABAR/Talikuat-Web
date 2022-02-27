@@ -29,43 +29,48 @@
     </nav>
 </div>
 @endsection @section('content')
+<input
+    type="hidden"
+    name="{{Auth::user()->user_detail->rule_user_id}}"
+    id="roleUser"
+/>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <table class="display responsive">
                     <thead>
-                        <tr>
-                            <th>No. Dokumen Diajukan Tanggal</th>
-                            <th>Unor</th>
-                            <th>Nomor Kontrak</th>
-                            <th>Nama Kegiatan</th>
-                            <th>Lokasi/Sta Jenis Pekerjaan Perkiraan Volume</th>
-                            <th>Foto dan Catatan</th>
-                            <th>Status Dokumen</th>
-                            <th style="width: 5%">Aksi</th>
-                        </tr>
+                        <th>No. Dokumen Diajukan Tanggal</th>
+                        <th>Unor</th>
+                        <th>Nomor Kontrak</th>
+                        <th>Nama Kegiatan</th>
+                        <th>Lokasi/Sta Jenis Pekerjaan Perkiraan Volume</th>
+                        <th>Foto dan Catatan</th>
+                        <th>Status Dokumen</th>
+                        <th style="width: 5%">Aksi</th>
                     </thead>
                     <tbody>
+                        @foreach($requests as $request)
                         <tr>
                             <td>
-                                FRM-01/SOP/DBMPR-1<br />
-                                2021-05-31
+                                FRM-01/SOP/DBMPR-{{$loop->index}}<br />
+                                {{$request->tgl_request}}
                             </td>
                             <td>
-                                UPTD Pengelolaan Jalan dan Jembatan Wilayah
-                                Pelayanan - V
-                            </td>
-                            <td>602.1/375/KTR/PPK.PPJ/PJ2WP.V</td>
-                            <td>
-                                1 M Pekerjaan Penggantian Jembatan Ciroke Ruas
-                                Jalan Ciawigebang - Bts.Cirebon/Kuningan (Waled)
-                                Km.Cn. 58+420
+                                {{$request->dataUmumDetail->dataUmum->uptd->nama}}
                             </td>
                             <td>
-                                Km.Cn.58+420<br />
-                                1.8.(2) - Jembatan Sementara<br />
-                                1.00 (LS)
+                                {{$request->dataUmumDetail->dataUmum->no_kontrak}}
+                            </td>
+                            <td>
+                                {{$request->dataUmumDetail->dataUmum->ppk_kegiatan}}
+                            </td>
+                            <td>
+                                {{$request->lokasi_sta}}<br />
+                                {{$request->jadual->nmp}} -
+                                {{$request->jadual->uraian}}<br />
+                                {{$request->volume}}
+                                {{$request->jadual->satuan}}
                             </td>
                             <td>
                                 <button
@@ -77,12 +82,31 @@
                                     "
                                     data-toggle="modal"
                                     data-target="#exampleModalDetail"
-                                    data-whatever="Detail :"
+                                    data-img-ppk="{{route('request.file',$request->file_ppk ?? '')}}"
+                                    data-ppk="{{$request->respon_ppk}}"
+                                    data-img-dirlap="{{route('request.file',$request->file_dirlap ?? '')}}"
+                                    data-dirlap="{{$request->respon_dirlap}}"
+                                    onclick="rederModalCatatan(this)"
                                 >
                                     Lihat
                                 </button>
                             </td>
-                            <td>Dokumen Berada di PPK</td>
+                            <td>
+                                @if($request->status == '0')
+                                <span class="badge badge-warning">
+                                    Menunggu
+                                </span>
+                                @elseif($request->status == '1')
+                                <span class="badge badge-success">
+                                    Disetujui
+                                </span>
+                                @elseif($request->status == '2')
+                                <span class="badge badge-danger">
+                                    Ditolak
+                                </span>
+                                @endif
+                            </td>
+
                             <td>
                                 <button
                                     type="button"
@@ -93,12 +117,15 @@
                                     "
                                     data-toggle="modal"
                                     data-target="#exampleModalApproval"
-                                    data-whatever="Approval :"
+                                    data-id="{{$request->id}}"
+                                    data-paket="{{$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
+                                    onclick="rederModalDetail(this)"
                                 >
                                     Respon
                                 </button>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -131,451 +158,307 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="card card-danger">
-                        <div class="card-header bg-secondary">
-                            <h3 class="card-title">Data</h3>
-                        </div>
-                        <div class="card-body" style="display: block">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Kegiatan / Paket</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="kegiatan"
-                                        name="kegiatan"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                    <input
-                                        id="unor"
-                                        type="hidden"
-                                        value=""
-                                        class="form-control"
-                                        name="unor"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Diajukan Tgl</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="diajukan_tgl"
-                                        name="diajukan_tgl"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Lokasi/Sta</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="lokasi_sta"
-                                        name="lokasi_sta"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Jenis Pekerjaan</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="jenis_pekerjaan"
-                                        name="jenis_pekerjaan"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Perkiraan Volume</label
-                                >
-                                <div class="col-sm-10">
-                                    <div class="input-group mb-3">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="perkiraan_volume"
-                                            name="perkiraan_volume"
-                                            value=""
-                                            required="required"
-                                            readonly=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Untuk Pelaksanaan Tgl</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="pelaksanaan_tgl"
-                                        name="pelaksanaan_tgl"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <!-- Bahan Material -->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Bahan / Material</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>Volume</th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 40%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- Peralatan -->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Peralatan</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>Volume</th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 40%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- Tenaga Kerja -->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Bahan / Material</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>Volume</th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 40%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Shop Drawing Penyedia Jasa</label
-                                >
-                                <div class="col-sm-10">
-                                    <div class="container mt-5">
-                                        <img
-                                            src=""
-                                            style="border: 1px solid black"
-                                            width="80%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label
-                                    for="inputExperience"
-                                    class="col-sm-2 col-form-label"
-                                    >Catatan Direksi Lapangan</label
-                                >
-                                <div class="col-sm-10">
-                                    <textarea
-                                        class="form-control"
-                                        id="catatan"
-                                        name="catatan"
-                                        placeholder=""
-                                        readonly=""
-                                    ></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label
-                                    for="inputExperience"
-                                    class="col-sm-2 col-form-label"
-                                    >Catatan Pejabat Pembuat Komitmen
-                                    (PPK)</label
-                                >
-                                <div class="col-sm-10">
-                                    <textarea
-                                        class="form-control"
-                                        id="catatan"
-                                        name="catatan"
-                                        placeholder=""
-                                        readonly=""
-                                    ></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer" style="display: block"></div>
-                        <!-- /.card-footer-->
+                <div class="card mb-3">
+                    <div class="card-header bg-secondary">
+                        <h3 class="card-title">Data</h3>
                     </div>
-
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label"
-                            >Direksi Lapangan :</label
-                        >
-                        <div class="input-group mb-3">
-                            <div class="custom-file">
+                    <div class="card-body" style="display: block">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Kegiatan / Paket</label
+                            >
+                            <div class="col-sm-10">
                                 <input
-                                    type="file"
-                                    class="custom-file-input"
-                                    id="inputGroupFile01"
-                                    aria-describedby="inputGroupFileAddon01"
-                                    accept="image/x-png,image/gif,image/jpeg,application/pdf"
+                                    type="text"
+                                    class="form-control"
+                                    id="kegiatan"
+                                    name="kegiatan"
+                                    readonly
                                 />
-                                <label
-                                    class="custom-file-label"
-                                    for="inputGroupFile01"
-                                    >Choose file</label
-                                >
                             </div>
                         </div>
-                        <textarea
-                            class="form-control"
-                            id="message-text"
-                            placeholder="Catatan Direksi Lapangan"
-                        ></textarea
-                        ><br />
 
-                        <div class="custom-control custom-radio">
-                            <input
-                                type="radio"
-                                id="customRadio1"
-                                name="customRadio"
-                                class="custom-control-input"
-                            />
-                            <label
-                                class="custom-control-label"
-                                for="customRadio1"
-                                >Disetujui</label
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Diajukan Tgl</label
                             >
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input
-                                type="radio"
-                                id="customRadio2"
-                                name="customRadio"
-                                class="custom-control-input"
-                            />
-                            <label
-                                class="custom-control-label"
-                                for="customRadio2"
-                                >Ditolak</label
-                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="diajukan_tgl"
+                                    name="diajukan_tgl"
+                                    readonly
+                                />
+                            </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Lokasi/Sta</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="lokasi_sta"
+                                    name="lokasi_sta"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Jenis Pekerjaan</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="jenis_pekerjaan"
+                                    name="jenis_pekerjaan"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Perkiraan Volume</label
+                            >
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="perkiraan_volume"
+                                        name="perkiraan_volume"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Untuk Pelaksanaan Tgl</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="pelaksanaan_tgl"
+                                    name="pelaksanaan_tgl"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Bahan Material -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Bahan / Material</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="tableBahan"
+                                        >
+                                            <thead>
+                                                <th>Bahan Digunakan</th>
+                                                <th>Volume</th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bahan Material JMF -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">
+                                    Bahan Campuran ( JMF )
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="tableJmf"
+                                        >
+                                            <thead>
+                                                <th>Bahan Digunakan</th>
+                                                <th>Volume</th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Peralatan -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Peralatan</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="tablePeralatan"
+                                        >
+                                            <thead>
+                                                <th>Jenis Peralatan</th>
+                                                <th>Jumlah</th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                        <!-- Tenaga Kerja -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Tenaga Kerja</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="tableTenagaKerja"
+                                        >
+                                            <thead>
+                                                <th>Tenaga Kerja</th>
+                                                <th>Jumlah</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Shop Drawing Penyedia Jasa</label
+                            >
+                            <div class="col-sm-10">
+                                <div class="container mt-5">
+                                    <img
+                                        src=""
+                                        class="w-100"
+                                        id="shopDrawing"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label
+                                for="inputExperience"
+                                class="col-sm-2 col-form-label"
+                                >Catatan Direksi Lapangan</label
+                            >
+                            <div class="col-sm-10">
+                                <textarea
+                                    class="form-control"
+                                    disabled
+                                    rows="5"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label
+                                for="inputExperience"
+                                class="col-sm-2 col-form-label"
+                                >Catatan Pejabat Pembuat Komitmen (PPK)</label
+                            >
+                            <div class="col-sm-10">
+                                <textarea
+                                    class="form-control"
+                                    disabled
+                                    rows="5"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-secondary">
+                        <h3 class="card-title">Approval</h3>
+                    </div>
+                    <form action="" method="post">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"
+                                    >Approval</label
+                                >
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input
+                                                type="radio"
+                                                class="form-check-input"
+                                                name="approval"
+                                                value="1"
+                                                checked />
+                                            Disetujui
+                                            <i class="input-helper"></i
+                                        ></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input
+                                                type="radio"
+                                                class="form-check-input"
+                                                name="approval"
+                                                value="0" />
+                                            Ditolak
+                                            <i class="input-helper"></i
+                                        ></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"
+                                    >Catatan</label
+                                >
+                                <div class="col-sm-10">
+                                    <textarea
+                                        id="catatan"
+                                        name="catatan"
+                                        class="form-control"
+                                        placeholder="Catatan "
+                                        rows="5"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-success"
+                                data-dismiss="modal"
+                            >
+                                Sumbit
+                            </button>
                             <button
                                 type="button"
                                 class="btn btn-dark"
@@ -583,80 +466,9 @@
                             >
                                 Kembali
                             </button>
-                            <button type="button" class="btn btn-success">
-                                Kirim Respon
-                            </button>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label"
-                            >Pejabat Pembuat Komitmen (PPK) :</label
-                        >
-                        <div class="input-group mb-3">
-                            <div class="custom-file">
-                                <input
-                                    type="file"
-                                    class="custom-file-input"
-                                    id="inputGroupFile01"
-                                    aria-describedby="inputGroupFileAddon01"
-                                    accept="image/x-png,image/gif,image/jpeg,application/pdf"
-                                />
-                                <label
-                                    class="custom-file-label"
-                                    for="inputGroupFile01"
-                                    >Choose file</label
-                                >
-                            </div>
-                        </div>
-                        <textarea
-                            class="form-control"
-                            id="message-text"
-                            placeholder="Catatan Pejabat Pembuata Komitmen (PPK)"
-                        ></textarea
-                        ><br />
-
-                        <div class="custom-control custom-radio">
-                            <input
-                                type="radio"
-                                id="customRadio1"
-                                name="customRadio"
-                                class="custom-control-input"
-                            />
-                            <label
-                                class="custom-control-label"
-                                for="customRadio1"
-                                >Disetujui</label
-                            >
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input
-                                type="radio"
-                                id="customRadio2"
-                                name="customRadio"
-                                class="custom-control-input"
-                            />
-                            <label
-                                class="custom-control-label"
-                                for="customRadio2"
-                                >Ditolak</label
-                            >
-                        </div>
-
-                        <div class="modal-footer">
-                            <button
-                                type="button"
-                                class="btn btn-dark"
-                                data-dismiss="modal"
-                            >
-                                Kembali
-                            </button>
-                            <button type="button" class="btn btn-success">
-                                Kirim Respon
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -692,14 +504,15 @@
                             >Direksi Lapangan :</label
                         >
                         <img
-                            src="..."
+                            src=""
                             class="rounded mx-auto d-block"
-                            alt="..."
+                            alt=""
+                            id="filePPK"
                         />
                         <textarea
                             class="form-control"
-                            id="message-text"
-                            placeholder="Catatan Direksi Lapangan"
+                            id="catatanDirlap"
+                            disabled
                         ></textarea>
                     </div>
                     <div class="form-group">
@@ -707,14 +520,15 @@
                             >Pejabat Pembuat Komitmen (PPK) :</label
                         >
                         <img
-                            src="..."
+                            src=""
                             class="rounded mx-auto d-block"
-                            alt="..."
+                            alt=""
+                            id="fileDirlap"
                         />
                         <textarea
                             class="form-control"
-                            id="message-text"
-                            placeholder="Catatan Pejabat Pembuata Komitmen (PPK)"
+                            id="catatanPPK"
+                            disabled
                         ></textarea>
                     </div>
                 </form>
@@ -732,29 +546,6 @@
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('assets/custom/request.js') }}"></script>
 
-<script>
-    $(document).ready(() => {
-        $("#request").DataTable({
-            responsive: true,
-            columns: [
-                { responsivePriority: 4 },
-                { responsivePriority: 3 },
-                { responsivePriority: 2 },
-                { responsivePriority: 1 },
-                { responsivePriority: 5 },
-                { responsivePriority: 6 },
-                { responsivePriority: 7 },
-                { responsivePriority: 8 },
-            ],
-        });
-    });
-    $("#exampleModal").on("show.bs.modal", function (event) {
-        var button = $(event.relatedTarget);
-        var recipient = button.data("whatever");
-        var modal = $(this);
-        modal.find(".modal-title").text("New message to " + recipient);
-        modal.find(".modal-body input").val(recipient);
-    });
-</script>
 @endsection

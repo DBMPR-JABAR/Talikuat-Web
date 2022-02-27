@@ -66,22 +66,17 @@ Route::prefix('admin')->group(function () {
                 Route::post('store', [UserController::class, 'store'])->name('store.user');
                 Route::post('store/kons/{id}', [UserController::class, 'store_konsultan'])->name('store.user.kons');
                 Route::post('store/kont/{id}', [UserController::class, 'store_kontraktor'])->name('store.user.kont');
-
                 Route::get('/trash', [UserController::class, 'trash'])->name('user.trash');
                 Route::get('/trash/{desc}/{id}', [UserController::class, 'move_to_trash']);
-
                 Route::get('/{id}', [UserController::class, 'show'])->name('show.user');
                 Route::get('verified/{id}', [UserController::class, 'show'])->name('verified.user');
                 Route::post('verified/{id}', [UserController::class, 'verified_account'])->name('verified.user');
-
                 Route::get('edit/{desc}/{id}', [UserController::class, 'edit'])->name('edit.user');
                 Route::post('edit/{desc}/{id}', [UserController::class, 'update'])->name('update.user');
                 Route::prefix('field_team')->group(function () {
                     Route::get('/index', [UserController::class, 'index_ft'])->name('user.ft.index');
                     Route::get('/trash', [MasterKonsultanController::class, 'trash_ft'])->name('user.ft.trash');
                     Route::get('/{id}', [UserController::class, 'show_ft'])->name('show.user.ft');
-
-
                     Route::get('verified/{id}', [UserController::class, 'show_ft'])->name('verified.user.ft');
                     Route::post('verified/{id}', [VerifiedController::class, 'verified_ft'])->name('verified.user.ft.store');
                 });
@@ -89,7 +84,6 @@ Route::prefix('admin')->group(function () {
                     Route::get('/index', [UserController::class, 'index_gs'])->name('user.gs.index');
                     Route::get('/trash', [MasterKontraktorController::class, 'trash_gs'])->name('user.gs.trash');
                     Route::get('/{id}', [UserController::class, 'show_gs'])->name('show.user.gs');
-
                     Route::get('verified/{id}', [UserController::class, 'show_gs'])->name('verified.user.gs');
                     Route::post('verified/{id}', [VerifiedController::class, 'verified_gs'])->name('verified.user.gs.store');
                 });
@@ -112,7 +106,6 @@ Route::prefix('admin')->group(function () {
                 Route::post('/update_gs/{id}', [MasterKontraktorController::class, 'update_gs'])->name('update.masterkontraktorgs');
                 Route::post('/store_gs', [MasterKontraktorController::class, 'store_gs'])->name('store.masterkontraktorgs');
                 Route::get('/trash_gs/{desc}/{id}', [MasterKontraktorController::class, 'move_to_trash_gs']);
-
                 Route::get('/trash', [MasterKontraktorController::class, 'trash'])->name('trash.masterkontraktor');
                 Route::get('/trash/{desc}/{id}', [MasterKontraktorController::class, 'move_to_trash']);
             });
@@ -126,9 +119,7 @@ Route::prefix('admin')->group(function () {
                 Route::post('/update_ft/{id}', [MasterKonsultanController::class, 'update_ft'])->name('update.masterkonsultanft');
                 Route::post('/store_ft/{id}', [MasterKonsultanController::class, 'store_ft'])->name('store.masterkonsultanft');
                 Route::post('/store_ft_second', [MasterKonsultanController::class, 'store_ft_second'])->name('store.masterkonsultanft.second');
-
                 Route::get('/trash_ft/{desc}/{id}', [MasterKonsultanController::class, 'move_to_trash_ft']);
-
                 Route::get('/trash', [MasterKonsultanController::class, 'trash'])->name('trash.masterkonsultan');
                 Route::get('/trash/{desc}/{id}', [MasterKonsultanController::class, 'move_to_trash']);
             });
@@ -139,11 +130,8 @@ Route::prefix('admin')->group(function () {
                 Route::post('/store', [MasterMkController::class, 'store'])->name('store.mastermk');
                 Route::get('/edit/{id}', [MasterMkController::class, 'edit'])->name('edit.mastermk');
                 Route::put('/update/{id}', [MasterMkController::class, 'update'])->name('update.mastermk');
-
                 Route::post('/user/store/{id}', [MasterMkController::class, 'store_user'])->name('store.user.mk');
-
                 Route::get('/trash_ft/{desc}/{id}', [MasterMkController::class, 'move_to_trash_ft']);
-
                 Route::get('/trash', [MasterMkController::class, 'trash'])->name('trash.mastermk');
                 Route::get('/trash/{desc}/{id}', [MasterMkController::class, 'move_to_trash']);
             });
@@ -187,6 +175,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/delete/file/{id}', [JadualControllers::class, 'deleteFile'])->name('jadual.delete.file');
             Route::resource('request', RequestControllers::class);
             Route::get('/request/create/{id}', [RequestControllers::class, 'create'])->name('request.create');
+            Route::get('/file-request/{file_name}', [RequestControllers::class, 'file'])->name('request.file');
+            Route::get('/request-api/{id}', [RequestControllers::class, 'showApi'])->name('request.show.api');
         });
     });
 });
