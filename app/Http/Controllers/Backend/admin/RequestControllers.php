@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Backend\BahanJMF;
 use App\Models\Backend\BahanMaterial;
 use App\Models\Backend\DataUmum;
+use App\Models\Backend\HistoryRequest;
 use App\Models\Backend\Jadual;
 use App\Models\Backend\Peralatan;
 use App\Models\Backend\Request as BackendRequest;
@@ -27,9 +28,8 @@ class RequestControllers extends Controller
      */
     public function index()
     {
-        $data = BackendRequest::with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmum')->get();
-        dd($data);
-        return view('admin.request.index', compact('data'));
+        $requests = BackendRequest::with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        return view('admin.request.index', compact('requests'));
     }
 
     /**
@@ -107,7 +107,7 @@ class RequestControllers extends Controller
                 'lokasi_sta' => $request->lokasi_sta,
                 'tgl_request' => $request->tgl_diajukan,
                 'tgl_dikerjakan' => $request->tgl_dikerjakan,
-                'status' => 0,
+                'status' => 1,
                 'volume' => $request->volume,
                 'keterangan' => $request->keterangan,
                 'file_shopdrawing' => $fileName,
@@ -158,7 +158,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            $this->createHistoryStatus($dataRequest->id, 0);
+            $this->createHistoryStatus($dataRequest->id, 1);
             DB::commit();
             return redirect()->route('request.index')->with('success', 'Data berhasil ditambahkan');
         } catch (\Throwable $e) {
@@ -177,6 +177,12 @@ class RequestControllers extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function showApi($id)
+    {
+        $data = BackendRequest::where('id', $id)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('jadual')->first();
+        return response()->json($data);
     }
 
     /**
@@ -198,7 +204,6 @@ class RequestControllers extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     /**
@@ -209,26 +214,115 @@ class RequestControllers extends Controller
      */
     public function destroy($id)
     {
-        //
+    }
+
+    public function approvalDirlap(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'status' => 'required',
+                'keterangan' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                dd($validator->errors());
+                return back()->withErrors($validator)->withInput();
+            }
+            $data = BackendRequest::find($id);
+            if ($request->approval == 1) {
+                $data->status = 2;
+                $data->respon_dirlap = $request->catatan ? $request->catatan : '-';
+                $data->save();
+                $this->createHistoryStatus($id, 2);
+            } else {
+                $data->status = 0;
+                $data->respon_dirlap = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($id, 3);
+            }
+            return back()->with('success', 'Data berhasil diubah');
+        } catch (\Throwable $e) {
+            dd($e);
+            return back()->with('error', 'Gagal menyimpan data')->withInput();
+        }
+    }
+
+    public function approvalPPK(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'status' => 'required',
+                'keterangan' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                dd($validator->errors());
+                return back()->withErrors($validator)->withInput();
+            }
+            $data = BackendRequest::find($request->id);
+            if ($request->approval == 1) {
+                $data->status = 4;
+                $data->respon_ppk = $request->catatan ? $request->catatan : '-';
+                $data->save();
+                $this->createHistoryStatus($request->id, 5);
+            } else {
+                $data->status = 2;
+                $data->respon_ppk = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($request->id, 3);
+            }
+            return back()->with('success', 'Data berhasil diubah');
+        } catch (\Throwable $e) {
+            dd($e);
+            return back()->with('error', 'Gagal menyimpan data');
+        }
+    }
+
+    public function file($file_name)
+    {
+        $path = 'app/' . $this->PATH_FILE_DB . $file_name;
+        $file = storage_path($path);
+        if (!file_exists($file)) {
+            abort(404);
+        }
+        return response()->file($file);
     }
 
     private function createHistoryStatus($id, $status,)
     {
 
-        if ($status == 0) {
-            $keterangan = 'Request sudah dibuat oleh';
-        }
         if ($status == 1) {
-            $keterangan = 'Request sudah dikirim kepada';
+            $keterangan = 'Request sudah dibuat dan dikirim oleh';
         }
+        if ($status == 2) {
+            $keterangan = 'Request sudah disetujui dan dilanjutkan ke PPK oleh';
+        }
+
         if ($status == 3) {
-            $keterangan = 'Request sudah dikirim kepada PPK';
+            $keterangan = 'Request ditolak oleh';
+        }
+        if ($status == 4) {
+            $keterangan = 'Request sudah direvisi dan dikirim oleh';
+        }
+
+        if ($status == 5) {
+            $keterangan = 'Request sudah disetujui oleh PPK';
         }
         HistoryStatusRequest::create([
             'user_id' => Auth::user()->id,
             'request_id' => $id,
             'status' => $status,
             'keterangan' => $keterangan,
+        ]);
+    }
+
+    private  function createHistoryRequest($id, $input)
+    {
+        HistoryRequest::create([
+            'user_id' => Auth::user()->id,
+            'request_id' => $id,
+            'keterangan' => $input['keterangan'],
+            'status' => $input['status'],
         ]);
     }
 }

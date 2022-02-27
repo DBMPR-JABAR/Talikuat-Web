@@ -13,10 +13,15 @@ class Request extends Model
     protected $guarded = [];
 
 
-    public function dataUmum()
+    public function dataUmumDetail()
     {
         $detail = $this->belongsTo(DataUmumDetail::class, 'data_umum_detail_id');
         return $detail->with('dataUmum');
+    }
+
+    public function jadual()
+    {
+        return $this->belongsTo(Jadual::class, 'jadual_id');
     }
 
     public function historyStatus()
