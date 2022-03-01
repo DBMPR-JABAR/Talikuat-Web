@@ -56,17 +56,18 @@
                     </thead>
                     <tbody>
                         @foreach ($data as $no => $item)
+                        
 
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>
-                                {!! $item->user->name !!}
+                                {!! @$item->user->name !!}
                             </td>
                             <td>
-                                {!! $item->uptd->nama !!}
+                                {!! @$item->uptd->nama !!}
                             </td>
                             <td>
-                                {!! $item->user->email !!}
+                                {!! @$item->user->email !!}
                             </td>
                             <td>
 
