@@ -278,6 +278,37 @@ class RequestControllers extends Controller
         }
     }
 
+    public function revisi(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'status' => 'required',
+                'keterangan' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                dd($validator->errors());
+                return back()->withErrors($validator)->withInput();
+            }
+            $data = BackendRequest::find($request->id);
+            if ($request->revisi == 1) {
+                $data->status = 1;
+                $data->respon_ppk = $request->catatan ? $request->catatan : '-';
+                $data->save();
+                $this->createHistoryStatus($request->id, 1);
+            } else {
+                $data->status = 0;
+                $data->respon_ppk = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($request->id, 3);
+            }
+            return back()->with('success', 'Data berhasil diubah');
+        } catch (\Throwable $e) {
+            dd($e);
+            return back()->with('error', 'Gagal menyimpan data');
+        }
+    }
+
     public function file($file_name)
     {
         $path = 'app/' . $this->PATH_FILE_DB . $file_name;
@@ -288,7 +319,7 @@ class RequestControllers extends Controller
         return response()->file($file);
     }
 
-    private function createHistoryStatus($id, $status,)
+    private function createHistoryStatus($id, $status)
     {
 
         if ($status == 1) {
