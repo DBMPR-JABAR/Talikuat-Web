@@ -178,7 +178,16 @@
                                         >MK</a
                                     >
                                 </li>
-                                @endcan 
+                                @endcan
+                                @can('viewUserDirlap',Auth::user())
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('user_dirlap.index') }}"
+                                        >DIRLAP</a
+                                    >
+                                </li>
+                                @endcan  
                                 @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a

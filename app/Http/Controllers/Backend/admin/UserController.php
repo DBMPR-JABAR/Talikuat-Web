@@ -43,6 +43,15 @@ class UserController extends Controller
 
         return view('admin.user.index',compact('data'));
     }
+    public function index_dirlap()
+    {
+        //
+        $this->authorize('viewUserDirlap', User::class);
+        $data = UserDetail::where('is_delete',null)->where('rule_user_id',14)->get();
+        // dd($data);
+
+        return view('admin.user.dirlap.index',compact('data'));
+    }
     public function index_ft()
     {
         //
@@ -92,6 +101,7 @@ class UserController extends Controller
                     'password' => 'confirmed',
                     'name'=> 'required',
                     'no_tlp'=> '',
+                    'unit'=> '',
                     'rule' => 'required',
         
                 ]);
@@ -106,6 +116,7 @@ class UserController extends Controller
                 'password' => 'confirmed',
                 'name'=> 'required',
                 'no_tlp'=> '',
+                'unit'=> '',
                 'rule'=>'required'
             ]);
         }
@@ -113,6 +124,7 @@ class UserController extends Controller
             storeLogActivity(declarLog(1, 'Users', $request->email.' '.$validator->messages()->first()));
             return back()->with(['error'=>$validator->messages()->first()]);
         }
+        // dd($request->unit);
         $create_user = User::firstOrNew(['email'=> $request->email]);
         $create_user->name = $request->input('name');
         $create_user->password = Hash::make($request->input('password'));
@@ -126,10 +138,13 @@ class UserController extends Controller
 
         $create_profile->save();
 
-        $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id])->save();
+        $create_detail = UserDetail::firstOrNew(['user_id'=> $create_user->id]);
+        $create_detail->rule_user_id = $request->rule;
+        $create_detail->uptd_id = $request->unit;
+        $create_detail->save();
         storeLogActivity(declarLog(1, 'Users', $request->email,1 ));
 
-        return redirect(route('user.index'))->with(['success'=>'Berhasil Menambahkan User!!']);
+        return back()->with(['success'=>'Berhasil Menambahkan User!!']);
 
     }
     public function store_konsultan(Request $request, $id)

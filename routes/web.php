@@ -43,6 +43,9 @@ Route::prefix('admin')->group(function () {
 
             Route::get('/user_mk', [MasterMkController::class, 'index_user'])->name('user_mk.index');
             Route::post('/user_mk/store', [MasterMkController::class, 'store_user'])->name('store.user_mk');
+            Route::get('/user_dirlap', [UserController::class, 'index_dirlap'])->name('user_dirlap.index');
+            Route::post('/user_dirlap/store', [UserController::class, 'store'])->name('store.user_dirlap');
+            
             Route::get('/role&permission', [RoleController::class, 'index'])->name('role.index');
 
             Route::prefix('role')->group(function () {

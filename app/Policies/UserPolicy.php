@@ -174,6 +174,28 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.restore');
     }
 
+    //feature user mk
+    public function viewUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.index');
+    }
+    public function createUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.create');
+    }
+    public function editUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.edit');
+    }
+    public function deleteUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.delete');
+    }
+    public function restoreUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.restore');
+    }
+
     //feature role
     public function viewRole()
     {
