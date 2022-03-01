@@ -9,7 +9,11 @@ class TenagaKerja extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $table = 'reuest_tenaga_kerja';
-
+    protected $table = 'request_tenaga_kerja';
     protected $guarded = [];
+
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'request_id');
+    }
 }

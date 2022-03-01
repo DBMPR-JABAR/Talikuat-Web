@@ -84,7 +84,11 @@
 @endsection @section('content')
 <div class="row">
     <div class="col">
-        <form action="{{ route('request.store') }}">
+        <form
+            action="{{ route('request.store') }}"
+            method="post"
+            enctype="multipart/form-data"
+        >
             @csrf
             <div class="card">
                 <div class="card-body" style="display: block">
@@ -115,8 +119,9 @@
                             <input
                                 type="date"
                                 class="form-control"
-                                name="diajukan_tgl"
+                                name="tgl_diajukan"
                                 required
+                                value="{{ old('tgl_diajukan') }}"
                             />
                         </div>
                     </div>
@@ -131,6 +136,7 @@
                                 class="form-control"
                                 name="lokasi_sta"
                                 required
+                                value="{{ old('lokasi_sta') }}"
                             />
                         </div>
                     </div>
@@ -172,6 +178,7 @@
                                     required
                                     id="volume"
                                     oninput="replace(this.value)"
+                                    disabled
                                 />
                             </div>
                             <p class="fs-6 text-danger"></p>
@@ -186,8 +193,8 @@
                             <input
                                 type="date"
                                 class="form-control"
-                                name="pelaksanaan_tgl"
-                                required
+                                name="tgl_dikerjakan"
+                                value="{{ old('tgl_dikerjakan') }}"
                             />
                         </div>
                     </div>
@@ -236,8 +243,7 @@
                                                 type="file"
                                                 name="file_shop_drawing"
                                                 class="dropzone"
-                                                multiple
-                                                accept="image/*,video/*"
+                                                accept="image/*"
                                             />
                                         </div>
                                     </div>
@@ -702,22 +708,28 @@
         }
     }
     function getVolumeJadual(id) {
+        $('#volume').attr('disabled', false);
         const jadual = {!! json_encode($data->jadual->jadualItems) !!};
         jadual.forEach((item) => {
-            console.log(item);
             if (item.id == id) {
-                $("#volume").attr({
-                    max: item.volume_terrequest
-                        ? item.volume_terrequest
-                        : item.total_volume,
+                let volume = parseFloat(item.total_volume) - parseFloat(item.volume_terrequest ?? 0);
+                if (volume == 0) {
+                    $("#volume").attr('disabled', true);
+                    $(".fs-6").text('Volume Nomor Mata Pembayaran Sudah habis !');
+                    $(".fs-6").show();
+                }
+                else{
+                    $("#volume").attr({
+                    max: volume,
                 });
                 $(".fs-6").text(
                     `Volume Tersedia ${
-                        item.volume_terrequest
-                            ? item.volume_terrequest
-                            : item.total_volume
+                        volume
                     } `
                 );
+
+                }
+
             }
         });
     }
@@ -727,6 +739,8 @@
         if (val > max) {
             $("#volume").val(max);
         }
+        $('.fs-6').text(`Volume Tersedia ${max} `);
+        $('.fs-6').show();
     }
     function readFile(input) {
         if (input.files) {
@@ -757,6 +771,7 @@
                         boxZone.append(htmlPreview);
                     };
                     reader.readAsDataURL(input.files[i]);
+                    $('.dropzone-wrapper').hide();
                 }
             }
         }
@@ -785,6 +800,7 @@
         boxZone.empty();
         previewZone.addClass("hidden");
         reset(dropzone);
+        $('.dropzone-wrapper').show();
     });
 </script>
 @endsection

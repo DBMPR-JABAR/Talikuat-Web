@@ -320,8 +320,8 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="pages/ui-features/typography.html"
-                                        >Laporan Harian</a
+                                        href="{{ route('laporan-mingguan.index') }}"
+                                        >Laporan Mingguan</a
                                     >
                                 </li>
                             </ul>
