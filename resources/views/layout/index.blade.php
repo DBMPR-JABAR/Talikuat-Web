@@ -178,7 +178,16 @@
                                         >MK</a
                                     >
                                 </li>
-                                @endcan 
+                                @endcan
+                                @can('viewUserDirlap',Auth::user())
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('user_dirlap.index') }}"
+                                        >DIRLAP</a
+                                    >
+                                </li>
+                                @endcan  
                                 @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a
@@ -209,8 +218,7 @@
                         </div>
                     </li>
                     @endcanany
-                    
-                    
+                    @canany(['viewKontraktor','viewKonsultan','viewMk','viewJenisPekerjaan'], Auth::user())
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -225,6 +233,7 @@
                         </a>
                         <div class="collapse" id="ui-basic">
                             <ul class="nav flex-column sub-menu">
+                                @can('viewKontraktor',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -234,6 +243,8 @@
                                         >Kontraktor</a
                                     >
                                 </li>
+                                @endcan
+                                @can('viewKonsultan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -243,6 +254,8 @@
                                         >Konsultan</a
                                     >
                                 </li>
+                                @endcan
+                                @can('viewMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -250,6 +263,8 @@
                                         >Manajemen Konstruksi</a
                                     >
                                 </li>
+                                @endcan
+                                @can('viewJenisPekerjaan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -259,6 +274,7 @@
                                         >Jenis Pekerjaan</a
                                     >
                                 </li>
+                                @endcan
                                 {{--
                                 <li class="nav-item">
                                     <a
@@ -271,6 +287,8 @@
                             </ul>
                         </div>
                     </li>
+                    @endcanany
+                    @canany(['viewDataUmum','viewJadwal','viewPermintaan','viewLaporanMingguan'], Auth::user())
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -287,6 +305,7 @@
                         </a>
                         <div class="collapse" id="inputData">
                             <ul class="nav flex-column sub-menu">
+                                @can('viewDataUmum',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -294,6 +313,8 @@
                                         >Data Umum</a
                                     >
                                 </li>
+                                @endcan
+                                @can('viewJadwal',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -301,6 +322,8 @@
                                         >Jadwal Pekerjaan</a
                                     >
                                 </li>
+                                @endcan
+                                @can('viewPermintaan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -308,6 +331,8 @@
                                         >Permintaan</a
                                     >
                                 </li>
+                                @endcan
+                                @can('viewLaporanMingguan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -315,9 +340,13 @@
                                         >Laporan Mingguan</a
                                     >
                                 </li>
+                                @endcan
                             </ul>
                         </div>
                     </li>
+                    @endcanany
+                    @can('viewPusatUnduhan',Auth::user())
+                    @endcan
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -327,12 +356,15 @@
                             <span class="menu-title">Pusat Unduhan</span>
                         </a>
                     </li>
+                    @can('viewLog',Auth::user())]
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('log.index') }}">
                             <i class="mdi mdi-alert-octagon menu-icon"></i>
                             <span class="menu-title">LOG</span>
                         </a>
                     </li>
+                    @endcan
+                    
                     <li class="nav-item sidebar-actions">
                         <a
                             class="nav-link mt-4"

@@ -174,6 +174,28 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.restore');
     }
 
+    //feature user mk
+    public function viewUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.index');
+    }
+    public function createUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.create');
+    }
+    public function editUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.edit');
+    }
+    public function deleteUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.delete');
+    }
+    public function restoreUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.restore');
+    }
+
     //feature role
     public function viewRole()
     {
@@ -394,7 +416,29 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-harian.restore');
     }
 
-    //feature laporan harian
+    //feature laporan mingguan
+    public function viewLaporanMingguan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.index');
+    }
+    public function createLaporanMingguan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.create');
+    }
+    public function editLaporanMingguan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.edit');
+    }
+    public function deleteLaporanMingguan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.delete');
+    }
+    public function restoreLaporanMingguan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.restore');
+    }
+
+    //feature Pusat Unduhan
     public function viewPusatUnduhan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('pusat-unduhan.index');
