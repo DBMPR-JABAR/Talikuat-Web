@@ -398,6 +398,8 @@ class UserController extends Controller
             $failed = "Akun Gagal Diupdate!";
             $update_user = User::find($id)->update($data);
         }else if($desc == 'profiles'){
+            dd($request->rule_user);
+            
             $this->validate($request,[
                 'nama'=> 'required',
                 'tgl_lahir'=> 'required',
@@ -420,7 +422,6 @@ class UserController extends Controller
             ]);
             // dd($request->all());
             // dd($request->uptd_mk);
-
             $update_user = UserProfiles::firstOrNew(['user_id'=> $id]);
             $email = $update_user->user->email;
 

@@ -263,16 +263,21 @@
 
                         <div class="form-group">
                             <label>Jabatan</label>
-                            <select class="form-control" name="rule_user" @if ( Auth::user()->id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
+    
+                            <select class="form-control" name="rule_user" @if ( Auth::user()->user_detail->rule_user_id != 1) readonly="readonly" tabindex="-1" aria-disabled="true" @endif>
                                 <option value="">Select</option>
                                 @foreach ($rule_user as $no =>$rule)
                                 <option value="{{ $rule->id }}" @if (@$data->user_detail->rule_user_id != null && $rule->id == @$data->user_detail->rule_user_id) selected @endif>{{ $rule->rule }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        
+                        @error('rule_user')
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         @if(@$data->user_detail->rule_user_id == 12)
-                        
+                            
                             @foreach (@$uptd_list as $no => $item)
                             <input type="checkbox" id="uptd{{ $item->id }}" name="uptd_mk[]" value="{{ $item->id }}" @if(in_array($item->id, @$data->user_detail->mk()->pluck('uptd_id')->toArray(), true)) checked @endif>
                             <label for="uptd{{ $item->id }}">UPTD {{ $item->id }}</label>
@@ -294,7 +299,7 @@
                                         @endforeach
                                     @else
                                         @foreach ($uptd as $no =>$uptd)
-                                        <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                        <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @elseif(@$data->user_detail->uptd_id ==$uptd->id) selected @endif>{{ $uptd->nama }}</option>
                                         @endforeach  
                                     @endif
                                 </select>
