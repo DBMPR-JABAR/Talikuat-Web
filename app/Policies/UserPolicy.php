@@ -24,6 +24,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.index');
     }
+    public function showVerificationUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.show');
+    }
     public function createVerificationUser()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-verification.create');
@@ -45,6 +49,10 @@ class UserPolicy
     public function viewAllUser()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.index');
+    }
+    public function showAllUser()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.show');
     }
     public function createAllUser()
     {
@@ -69,6 +77,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-admin.index');
     }
+    public function showUserAdmin()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-admin.show');
+    }
     public function createUserAdmin()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-admin.create');
@@ -90,6 +102,10 @@ class UserPolicy
     public function viewUserPpk()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ppk.index');
+    }
+    public function showUserPpk()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ppk.show');
     }
     public function createUserPpk()
     {
@@ -113,6 +129,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ft.index');
     }
+    public function showUserFt()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ft.show');
+    }
     public function createUserFt()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-ft.create');
@@ -134,6 +154,10 @@ class UserPolicy
     public function viewUserGs()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-gs.index');
+    }
+    public function showUserGs()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-gs.show');
     }
     public function createUserGs()
     {
@@ -157,6 +181,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.index');
     }
+    public function showUserMk()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.show');
+    }
     public function createUserMk()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.create');
@@ -178,6 +206,10 @@ class UserPolicy
     public function viewUserDirlap()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.index');
+    }
+    public function showUserDirlap()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.show');
     }
     public function createUserDirlap()
     {
@@ -201,6 +233,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('role.index');
     }
+    public function showRole()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('role.show');
+    }
     public function createRole()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('role.create');
@@ -222,6 +258,10 @@ class UserPolicy
     public function viewPermission()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permission.index');
+    }
+    public function showPermission()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permission.show');
     }
     public function createPermission()
     {
@@ -245,6 +285,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('kontraktor.index');
     }
+    public function showKontraktor()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('kontraktor.show');
+    }
     public function createKontraktor()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('kontraktor.create');
@@ -266,6 +310,10 @@ class UserPolicy
     public function viewKonsultan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('konsultan.index');
+    }
+    public function showKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('konsultan.show');
     }
     public function createKonsultan()
     {
@@ -289,6 +337,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('mk.index');
     }
+    public function showMk()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('mk.show');
+    }
     public function createMk()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('mk.create');
@@ -310,6 +362,10 @@ class UserPolicy
     public function viewJenisPekerjaan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jenis-pekerjaan.index');
+    }
+    public function showJenisPekerjaan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jenis-pekerjaan.show');
     }
     public function createJenisPekerjaan()
     {
@@ -333,6 +389,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('data-umum.index');
     }
+    public function showDataUmum()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('data-umum.show');
+    }
     public function createDataUmum()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('data-umum.create');
@@ -354,6 +414,10 @@ class UserPolicy
     public function viewJadwal()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jadwal.index');
+    }
+    public function showJadwal()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jadwal.show');
     }
     public function createJadwal()
     {
@@ -377,6 +441,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permintaan.index');
     }
+    public function showPermintaan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permintaan.show');
+    }
     public function createPermintaan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permintaan.create');
@@ -398,6 +466,10 @@ class UserPolicy
     public function viewLaporanHarian()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-harian.index');
+    }
+    public function showLaporanHarian()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-harian.show');
     }
     public function createLaporanHarian()
     {
@@ -421,6 +493,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.index');
     }
+    public function showLaporanMingguan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.show');
+    }
     public function createLaporanMingguan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.create');
@@ -443,6 +519,10 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('pusat-unduhan.index');
     }
+    public function showPusatUnduhan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('pusat-unduhan.show');
+    }
     public function createPusatUnduhan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('pusat-unduhan.create');
@@ -464,6 +544,10 @@ class UserPolicy
     public function viewLog()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('log.index');
+    }
+    public function showLog()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('log.show');
     }
     public function createLog()
     {

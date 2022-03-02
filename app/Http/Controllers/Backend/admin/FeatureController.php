@@ -61,6 +61,7 @@ class FeatureController extends Controller
         $feature = Feature::create($temp);
         $feature->permission()->createMany([
             ['name' => $temp['slug'].'.index','guard_name'=>'web'],
+            ['name' => $temp['slug'].'.show','guard_name'=>'web'],
             ['name' => $temp['slug'].'.create','guard_name'=>'web'],
             ['name' => $temp['slug'].'.edit','guard_name'=>'web'],
             ['name' => $temp['slug'].'.delete','guard_name'=>'web'],

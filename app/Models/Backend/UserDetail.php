@@ -16,10 +16,6 @@ class UserDetail extends Model
     {
         return $this->belongsTo('App\Models\Backend\User', 'user_id');
     }
-    public function user_name()
-    {
-        return $this->belongsTo('App\Models\Backend\User', 'user_id')->pluck('name');
-    }
     public function role()
     {
         return $this->belongsTo('App\Models\Backend\UserRule', 'rule_user_id');

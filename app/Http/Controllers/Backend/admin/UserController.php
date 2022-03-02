@@ -48,8 +48,7 @@ class UserController extends Controller
         //
         $this->authorize('viewUserDirlap', User::class);
         $data = UserDetail::where('is_delete',null)->where('rule_user_id',14)->get();
-        // dd($data);
-
+    
         return view('admin.user.dirlap.index',compact('data'));
     }
     public function index_ft()

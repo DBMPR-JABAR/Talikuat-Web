@@ -28,7 +28,18 @@ class RoleController extends Controller
         $features = Feature::get();
         $permissions = Permission::get();
         $feature_categories = FeatureCategory::get();
-        
+        // foreach($features as $feature){
+        //     $feature->permission()->createMany([
+        //         ['name' => $feature->slug.'.index','guard_name'=>'web'],
+        //         ['name' => $feature->slug.'.show','guard_name'=>'web'],
+        //         ['name' => $feature->slug.'.create','guard_name'=>'web'],
+        //         ['name' => $feature->slug.'.edit','guard_name'=>'web'],
+        //         ['name' => $feature->slug.'.delete','guard_name'=>'web'],
+        //         ['name' => $feature->slug.'.restore','guard_name'=>'web']
+        //     ]);
+
+        // }
+        // dd($feature);
         // print_r(Auth::user()->user_detail->role->permissions()->pluck('name'));
         // dd(Auth::user()->user_detail->role->permissions()->pluck('name')->contains('all-user.index'));
         return view('admin.role.index', compact('roles','features','feature_categories','permissions'));
