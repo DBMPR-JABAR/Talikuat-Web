@@ -56,8 +56,8 @@ class RoleController extends Controller
         //
         $this->authorize('createRole', Auth::user());
 
-        $feature_category = FeatureCategory::get();
-        return view('admin.role.form',compact('feature_category'));
+        $feature = Feature::get();
+        return view('admin.role.form',compact('feature'));
 
     }
 
@@ -112,10 +112,10 @@ class RoleController extends Controller
         //
         $this->authorize('editRole', Auth::user());
 
-        $feature_category = FeatureCategory::get();
+        $feature = Feature::get();
         $data = Role::find($id);
         // dd($data);
-        return view('admin.role.form',compact('data','feature_category'));
+        return view('admin.role.form',compact('data','feature'));
     }
 
     /**

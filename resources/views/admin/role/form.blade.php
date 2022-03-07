@@ -65,21 +65,14 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <h4>Permissions</h4>
-                                @foreach ($feature_category as $category)
-                                    <br>
-                                    <h5>{{ $category->name }}</h5>
-                                    @foreach ($category->features as $feature)
-                                        @foreach ($feature->permission as $permission)
-                                        <div class="container">
-                                            <div class="row">
+                                @foreach ($feature as $category)
+                                    <br>                                   
+                                    <h5>{{ $category->name }}</h5>   
+                                        @foreach ($category->permission as $permission)                             
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="permission[]" value="{{ $permission->id }}" @if(@$data->description && @$data->permissions->contains(@$permission))  checked @endif>&nbsp;{{ $permission->name }} &nbsp;
-                                                </label>
-                                            </div>
-                                          </div>
-                                        @endforeach
-                                    @endforeach
-                                    
+                                                </label>           
+                                        @endforeach   
                                 @endforeach
                                 
                                 @error('telp')
