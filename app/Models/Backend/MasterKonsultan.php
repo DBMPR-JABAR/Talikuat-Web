@@ -26,5 +26,14 @@ class MasterKonsultan extends Model
         return $this->hasManyThrough('App\Models\Backend\UserDetail','App\Models\Backend\UserRule', 'id','konsultan_id')->where('is_delete',  null);
         // return $this->hasManyThrough('App\Models\Backend\UserRule','App\Models\Backend\UserDetail', 'konsultan_id','id','id','rule_user_id')->where('is_delete',  null);        
     }
+    public function direktur()
+    {
+        return $this->hasOne('App\Models\Backend\UserDetail', 'konsultan_id')->where('is_delete',  null)->where('rule_user_id',4)->with('user');
+        
+    }
+    public function uptd()
+    {
+        return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
+    }
 
 }

@@ -54,6 +54,7 @@ class MasterKonsultanController extends Controller
             'alamat'=> 'required',
             'nama_direktur'=> '',
             'npwp' => 'unique:master_konsultan',
+            'uptd_id'=> '',
 
            
         ]);
@@ -67,6 +68,7 @@ class MasterKonsultanController extends Controller
             'alamat'=>$request->alamat,
             'nama_direktur'=>$request->nama_direktur,
             'npwp'=>$request->npwp,
+            'uptd_id'=>$request->uptd_id,
             'created_by'=>Auth::user()->id,
         ]);
         $konsultan = MasterKonsultan::create($temp);
@@ -131,6 +133,8 @@ class MasterKonsultanController extends Controller
             'alamat'=> 'required',
             'nama_direktur'=> '',
             'npwp' => Rule::unique('master_konsultan', 'npwp')->ignore($id),
+            'uptd_id'=> '',
+
 
         ]);
         if ($validator->fails()) {
@@ -145,6 +149,7 @@ class MasterKonsultanController extends Controller
         $update_konsultan->alamat= $request->alamat;
         $update_konsultan->nama_direktur= $request->nama_direktur;
         $update_konsultan->npwp= $request->npwp;
+        $update_konsultan->uptd_id= $request->uptd_id;
 
         $update_konsultan->updated_by= Auth::user()->id;
         $update_konsultan->save();

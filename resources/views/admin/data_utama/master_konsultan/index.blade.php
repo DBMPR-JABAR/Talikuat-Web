@@ -49,7 +49,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Name Perusahaan</th>
-                                    <th>Nama Direktur</th>
+                                    {{-- <th>Nama Direktur</th> --}}
                                     <th>FT</th>
                                     <th style="width: 22%">Aksi</th>
                                 </tr>
@@ -62,8 +62,13 @@
                                         <td>
                                             {!! $item->nama !!}
                                         </td>
-                                    
-                                        <td>{!! $item->nama_direktur !!}</td>
+{{--                                         
+                                        <td>
+                                            {!! $item->nama_direktur !!}
+                                            @if($item->user_detail_sec->count() >=1 )
+                                            {{ $item->direktur->user->name }}
+                                            @endif
+                                        </td> --}}
                                         <td></td>
                                         <td>
                                             @if (Request::segment(3) != 'trash')
@@ -94,7 +99,7 @@
 
                     @csrf
                     <div class="modal-header">
-                        <h4 class="modal-title">Tambah User</h4>
+                        <h4 class="modal-title">Tambah Konsultan</h4>
                         <button
                             type="button"
                             class="close"
@@ -192,6 +197,16 @@
                                 class="form-control"
                                 
                             />
+                        </div>
+                        <div class="form-group">
+                            <label>Unit</label>
+
+                            <select class="form-control" name="uptd_id" style="width: 100%">
+                                <option value="">Select</option>
+                                @foreach ($uptd_list as $no =>$uptd)
+                                <option value="{{ $uptd->id }}" >{{ $uptd->nama }}</option>
+                                @endforeach   
+                            </select>
                         </div>
                         {{-- <div class="form-group">
                             <label>Nama Site Engineering</label>
