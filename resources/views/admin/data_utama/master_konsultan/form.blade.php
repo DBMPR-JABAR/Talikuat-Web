@@ -97,6 +97,27 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label>UNIT</label>
+                                @if( Auth::user()->user_detail->role->id == 1)
+                                <select class="form-control" name="uptd_id" >
+                                    <option value="">Select</option>
+                                    @foreach ($uptd_list as $no =>$uptd)
+                                    <option value="{{ $uptd->id }}" @if (@$data->uptd_id != null && $uptd->id == @$data->uptd_id) selected @elseif(@$data->uptd_id ==$uptd->id) selected @endif>{{ $uptd->nama }}</option>
+                                    @endforeach   
+                                </select>
+                                @else
+                                <input type="text" name="uptd" value="{{ @$data->uptd->nama }}" readonly class="form-control">
+                                @endif
+                                
+                                @error('uptd_id')
+                                    <div class="invalid-feedback" style="display: block; color:red">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
                         {{-- <div class="col-md-12">
 
                             <div class="row">
