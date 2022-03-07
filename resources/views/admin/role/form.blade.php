@@ -72,7 +72,8 @@
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="permission[]" value="{{ $permission->id }}" @if(@$data->description && @$data->permissions->contains(@$permission))  checked @endif>&nbsp;{{ $permission->name }} &nbsp;
                                                 </label>           
-                                        @endforeach   
+                                        @endforeach
+                                        <br>   
                                 @endforeach
                                 
                                 @error('telp')
