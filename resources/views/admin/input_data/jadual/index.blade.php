@@ -62,16 +62,16 @@
             <tbody>
                 @foreach ($data as $item)
                 <tr>
-                    <td>{!! $item->no_kontrak !!}</td>
-                    <td>{!! $item->nm_paket !!}</td>
-                    <td>{!! $item->uptd->nama !!}</td>
+                    <td>{!! @$item->no_kontrak !!}</td>
+                    <td>{!! @$item->nm_paket !!}</td>
+                    <td>{!! @$item->uptd->nama !!}</td>
                     <td>
                         {!! @$item->kategori_paket->nama_kategori ? :
                         $item->kategori !!}
                     </td>
 
-                    <td>{!! $item->ruas[0]->id_ruas_jalan !!}</td>
-                    <td>{!! $item->detail->kontraktor->nama !!}</td>
+                    <td>{!! @$item->detail->ruas[0]->id_ruas_jalan !!}</td>
+                    <td>{!! @$item->detail->kontraktor->nama !!}</td>
                     <td>{!! @$item->detail->ppk->nama !!}</td>
                     <td>
                         @if($item->detail->jadual != null)

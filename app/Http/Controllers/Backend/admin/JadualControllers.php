@@ -29,7 +29,7 @@ class JadualControllers extends Controller
     public function index()
     {
 
-        $data = DataUmum::latest()->with('detail')->with('uptd')->with('ruas')->get();
+        $data = DataUmum::latest()->with('detail')->with('uptd')->get();
         return view('admin.input_data.jadual.index', compact('data'));
     }
 
@@ -43,7 +43,7 @@ class JadualControllers extends Controller
 
         $data = DataUmum::where([[
             'id', $id
-        ]])->with('kategori_paket')->with('uptd')->with('ruas')->with('detail')->first();
+        ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
 
         $file = TempFileJadual::where([[
             'data_umum_detail_id', $data->detail->$id

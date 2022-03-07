@@ -264,7 +264,7 @@
                             </div>
                         </div>
                     </div>
-
+{{--
                     <div class="row justify-content-center">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -278,7 +278,7 @@
                                     readonly
                                 />
                             </div>
-                        </div>
+                        </div> 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>General Superintendent</label>
@@ -292,7 +292,7 @@
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>
