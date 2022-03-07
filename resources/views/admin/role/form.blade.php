@@ -50,7 +50,7 @@
                     <div class="card-block">
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <label>Nama Role</label>
+                                <h4>Nama Role</h4>
                                 <input type="text" name="description" value="{{ @$data->description }}" class="form-control" style="text-transform:uppercase" required>
                                 
                                 @error('description')
@@ -64,16 +64,19 @@
                       
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <label>Permissions</label>
+                                <h4>Permissions</h4>
                                 @foreach ($feature_category as $category)
                                     <br>
-                                    {{ $category->name }}
-                                    <br>
+                                    <h5>{{ $category->name }}</h5>
                                     @foreach ($category->features as $feature)
                                         @foreach ($feature->permission as $permission)
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" name="permission[]" value="{{ $permission->id }}" @if(@$data->description && @$data->permissions->contains(@$permission))  checked @endif>&nbsp;{{ $permission->name }} &nbsp;
-                                        </label>
+                                        <div class="container">
+                                            <div class="row">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" name="permission[]" value="{{ $permission->id }}" @if(@$data->description && @$data->permissions->contains(@$permission))  checked @endif>&nbsp;{{ $permission->name }} &nbsp;
+                                                </label>
+                                            </div>
+                                          </div>
                                         @endforeach
                                     @endforeach
                                     
