@@ -1,4 +1,4 @@
-@extends('layout.index') @section('title','Kontraktor') @section('header')
+@extends('layout.index') @section('title','Data Umum') @section('header')
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">
@@ -43,6 +43,12 @@
             </div>
             <div class="card-body">
                 <div class="card-block">
+                    <form
+                        action="{{route('update.dataumum',$data->id)}}"
+                        method="post"
+                    >
+                    @csrf
+                    @method('PUT')
                     <div class="form-group">
                         <label>Pemda</label>
                         <input
@@ -52,7 +58,6 @@
                             value="{{ @$data->pemda ? : 'PEMERINTAH PROVINSI JAWA BARAT' }}"
                             class="form-control"
                             required
-                            readonly
                         />
                         @error('pemda')
                         <div
@@ -91,9 +96,9 @@
                             required
                             disabled
                         >
-                            <option selected disabled>
-                                {{$data->kategori_paket->nama_kategori}}
-                            </option>
+                    
+                        <option value="" selected disabled>{{$data->kategori_paket->nama_kategori}}</option>
+          
                         </select>
                         @error('unit')
                         <div
@@ -136,9 +141,16 @@
                             onchange="ubahOption()"
                             disabled
                         >
-                            <option selected disabled>
-                                {{$data->uptd->nama}}
+                            @foreach (@$uptd_list as $item) @if ($item->id ==
+                            $data->uptd_id)
+                            <option value="{{ $item->id }}" selected disabled>
+                                {{ $item->nama }}
                             </option>
+                            @else
+                            <option value="{{ $item->id }}">
+                                {{ $item->nama }}
+                            </option>
+                            @endif @endforeach
                         </select>
                         @error('unit')
                         <div
@@ -153,6 +165,49 @@
                     <div class="card mb-3">
                         <div class="card-header">Ruas</div>
                         <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-9 col-sm-9">
+                                    <select
+                                        name="ruas"
+                                        id="ruas"
+                                        class="form-control"
+                                        required
+                                        value="{{ old('ruas') }}"
+                                    >
+                                        <option selected disabled>
+                                            Pilih Ruas
+                                        </option>
+                                    </select>
+                                    @error('ruas')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-3 col-sm-3">
+                                    <p>
+                                        <input
+                                            type="button"
+                                            class="btn btn-primary btn-mini waves-effect waves-light"
+                                            data-toggle="tooltip"
+                                            title="Tambah Ruas"
+                                            value="Tambah Ruas"
+                                            disabled
+                                        />
+                                        {{--
+                                        <input
+                                            type="button"
+                                            value="Insert row"
+                                        />
+                                        --}}
+                                    </p>
+                                </div>
+                            </div>
+
                             <table class="table-bordered" id="myTable">
                                 <!--<table class="table table-bordered table-hover " id="invoiceItem7">-->
                                 <thead>
@@ -164,25 +219,98 @@
                                         <th>Koordinat Akhir Lat</th>
                                         <th>Koordinat Akhir Long</th>
                                         <th>Cek Lokasi</th>
+                                        <th>Hapus</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($data->ruas as $ruas)
-                                    <td>{{$ruas->id_ruas_jalan}}</td>
-                                    <td>{{$ruas->segment_jalan}}</td>
-                                    <td>{{$ruas->lat_awal}}</td>
-                                    <td>{{$ruas->long_awal}}</td>
-                                    <td>{{$ruas->lat_akhir}}</td>
-                                    <td>{{$ruas->long_akhir}}</td>
-                                    <td>
-                                        <button
-                                            type="button"
-                                            onclick="checkLok(this)"
-                                            class="badge badge-sm badge-primary"
-                                        >
-                                            Cek Lokasi
-                                        </button>
-                                    </td>
+                                    @foreach($data->detail->ruas as $ruas)
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="id_ruas_jalan[]"
+                                                value="{{$ruas->id_ruas_jalan}}"
+                                                autocomplete="off"
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="segmen_jalan[]"
+                                                value="{{$ruas->segment_jalan}}"
+                                                autocomplete="off"
+                                                placeholder="Km Bdg... s/d Km...Bdg"
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="lat_awal[]"
+                                                value="{{$ruas->lat_awal}}"
+                                                autocomplete="off"
+                                                placeholder="-7.123456"
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="long_awal[]"
+                                                value="{{$ruas->long_awal}}"
+                                                autocomplete="off"
+                                                placeholder="107.12345"
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="lat_akhir[]"
+                                                value="{{$ruas->lat_akhir}}"
+                                                autocomplete="off"
+                                                placeholder="-7.12345"
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="long_akhir[]"
+                                                value="{{$ruas->long_akhir}}"
+                                                autocomplete="off"
+                                                placeholder="107.12345"
+                                                required
+                                            />
+                                        </td>
+
+                                        <td>
+                                            <button
+                                                type="button"
+                                                onclick="checkLok(this)"
+                                                class="badge badge-sm badge-primary"
+                                            >
+                                                Cek Lokasi
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                onclick="deleteEl(this)"
+                                                class="badge badge-sm badge-danger"
+                                                style="background-color: red"
+                                            >
+                                                Hapus
+                                            </button>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -198,7 +326,6 @@
                             class="form-control"
                             required
                             autocomplete="off"
-                            readonly
                         />
                         @error('no_kontrak')
                         <div
@@ -218,7 +345,6 @@
                             value="{{ @$data->tgl_kontrak }}"
                             class="form-control"
                             required
-                            readonly
                         />
                         @error('tgl_kontrak')
                         <div
@@ -239,7 +365,6 @@
                             value="{{ @$data->detail->nilai_kontrak }}"
                             class="form-control"
                             required
-                            readonly
                             autocomplete="off"
                         />
                         @error('nilai_kontrak')
@@ -261,7 +386,6 @@
                             class="form-control"
                             required
                             autocomplete="off"
-                            readonly
                         />
                         @error('no_spmk')
                         <div
@@ -298,12 +422,11 @@
                             step="00.01"
                             name="panjang_km"
                             id="panjang_km"
-                            value="{{ @$data->detail->nilai_kontrak }}"
+                            value="{{ @$data->detail->lama_waktu }}"
                             placeholder="....Km"
                             class="form-control"
                             required
                             autocomplete="off"
-                            readonly
                         />
                         @error('panjang_km')
                         <div
@@ -315,17 +438,16 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label>Waktu Pelaksanaan</label>
+                        <label>Waktu Pelaksanaan ( Hari )</label>
                         <input
                             type="number"
                             step="1"
                             name="lama_waktu"
                             id="lama_waktu"
-                            value="{{ @$data->detail->lama_waktu }} Hari"
+                            value="{{ @$data->detail->lama_waktu }}"
                             class="form-control"
                             required
                             autocomplete="off"
-                            readonly
                         />
                         @error('lama_waktu')
                         <div
@@ -346,7 +468,6 @@
                             class="form-control"
                             required
                             autocomplete="off"
-                            readonly
                         />
                         @error('ppk_kegiatan')
                         <div
@@ -358,6 +479,29 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label>Direksi Lapangan</label>
+                        <select
+                            name="dirlap_id"
+                            id="dirlap"
+                            class="form-control"
+                            required
+                            value="{{ old('dirlap_id') }}"
+                            disabled
+                        >
+                            <option selected disabled>Pilih Dirlap</option>
+                        </select>
+                        @error('dirlap_id')
+                        <div
+                            class="invalid-feedback"
+                            style="display: block; color: red"
+                        >
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <input type="hidden" id="idDirlapSelected" value="" />
+                    <input type="hidden" id="namaDirlapSelected" value="" />
+                    <div class="form-group">
                         <label>PPK</label>
                         <select
                             name="ppk_user_id"
@@ -365,6 +509,7 @@
                             class="form-control"
                             required
                             value="{{ old('ppk') }}"
+                            disabled
                         >
                             <option
                                 selected
@@ -383,6 +528,16 @@
                         </div>
                         @enderror
                     </div>
+                    <input
+                        type="hidden"
+                        id="idPpkSelected"
+                        value="{{$data->detail->ppk->id}}"
+                    />
+                    <input
+                        type="hidden"
+                        id="namaPpkSelected"
+                        value="{{$data->detail->ppk->nama}}"
+                    />
                     <div class="form-group">
                         <label>Konsultan Supervisi</label>
                         <select
@@ -390,16 +545,10 @@
                             id="konsultan_id"
                             class="form-control"
                             required
-                            onchange="ubahOption2()"
-                            value="{{ old('konsultan_id') }}"
+                            disabled
                         >
-                            <option
-                                selected
-                                disabled
-                                value="{{$data->detail->konsultan_id}}"
-                            >
-                                {{$data->detail->konsultan->nama}}
-                            </option>
+                            <option selected disabled>{{$data->detail->konsultan->nama}}</option>
+      
                         </select>
                         @error('konsultan_id')
                         <div
@@ -410,20 +559,26 @@
                         </div>
                         @enderror
                     </div>
-                    <div class="form-group">
+                    <input
+                        type="hidden"
+                        id="idKonsultanSelected"
+                        value="{{$data->detail->konsultan->id}}"
+                    />
+                    <input
+                        type="hidden"
+                        id="namaKonsultanSelected"
+                        value="{{$data->detail->konsultan->nama}}"
+                    />
+                    {{--
+                    <!-- <div class="form-group">
                         <label>Field Team</label>
                         <select
                             name="ft_id"
                             id="ft"
                             class="form-control"
                             required
-                            value="{{ old('ft') }}"
                         >
-                            <option
-                                selected
-                                disabled
-                                value="{{$data->detail->ft_id}}"
-                            >
+                            <option selected value="{{$data->detail->ft_id}}">
                                 {{$data->detail->ft->se}}
                             </option>
                         </select>
@@ -435,7 +590,8 @@
                             {{ $message }}
                         </div>
                         @enderror
-                    </div>
+                    </div> -->
+                    --}}
                     <div class="form-group">
                         <label>Penyedia Jasa</label>
                         <select
@@ -443,16 +599,10 @@
                             id="kontraktor_id"
                             class="form-control"
                             required
-                            onchange="ubahOption1()"
-                            value="{{ old('kontraktor_id') }}"
+                            disabled
                         >
-                            <option
-                                selected
-                                disabled
-                                value="{{$data->detail->kontraktor_id}}"
-                            >
-                                {{$data->detail->kontraktor->nama}}
-                            </option>
+                            <option selected disabled>{{$data->detail->kontraktor->nama}}</option>
+            
                         </select>
                         @error('kontraktor_id')
                         <div
@@ -463,7 +613,8 @@
                         </div>
                         @enderror
                     </div>
-                    <div class="form-group">
+                    {{--
+                    <!-- <div class="form-group">
                         <label>General Superintendent</label>
                         <select
                             name="gs_user_detail_id"
@@ -472,11 +623,7 @@
                             required
                             value="{{ old('gs_user_detail_id') }}"
                         >
-                            <option
-                                selected
-                                disabled
-                                value="{{$data->detail->gs_id}}"
-                            >
+                            <option selected value="{{$data->detail->gs_id}}">
                                 {{$data->detail->gs->nama}}
                             </option>
                         </select>
@@ -488,34 +635,42 @@
                             {{ $message }}
                         </div>
                         @enderror
-                    </div>
-                    @if(Request::segment(3) == 'edit')
+                    </div> -->
+                    --}} @if(Request::segment(3) == 'edit')
                     <i style="color: red; font-size: 10px"
                         >Biarkan jika tidak ada perubahan</i
                     >
                     @endif
                 </div>
+            </form>
                 <a href="{{route('create.addendum',$data->id)}}">
                     <button
-                        type="submit"
+                        type="button"
                         class="btn btn-responsive btn-primary"
                     >
                         Tambah Addendum
                     </button>
                 </a>
+
             </div>
         </div>
     </div>
 </div>
-
 @endsection @section('script')
 <script src="{{
         asset('vendor/jquery-validation-1.19.3/dist/jquery.validate.js')
     }}"></script>
 <script>
-    function ubahOption() {
+    $(document).ready(function () {
+        ubahOption("edit");
+    });
+
+    function ubahOption(params) {
         $('input[title="Tambah Ruas"]').prop("disabled", false);
-        $("#myTable tbody tr").remove();
+
+        if (params == null) {
+            $("#myTable tbody tr").remove();
+        }
 
         //untuk select Ruas
         id = document.getElementById("unit").value;
@@ -533,6 +688,24 @@
         text1 = "-- Pilih PPK --";
         option1 = "nama";
         value1 = "user_detail_id";
+        setDataSelect(
+            id1,
+            url1,
+            id_select1,
+            text1,
+            value1,
+            option1,
+            $("#idPpkSelected").val(),
+            $("#namaPpkSelected").val()
+        );
+
+        //Dirlap
+        id1 = document.getElementById("unit").value;
+        url1 = "{{ url('getDirlapByUptd') }}";
+        id_select1 = "#dirlap";
+        text1 = "-- Pilih DRILAP --";
+        option1 = "nama";
+        value1 = "id";
         setDataSelect(id1, url1, id_select1, text1, value1, option1);
     }
     function ubahOption1() {
@@ -555,8 +728,6 @@
         value = "id";
         setDataSelect(id, url, id_select, text, value, option);
     }
-</script>
-<script>
     $("#myTable").on("click", ".badge-danger", function () {
         $(this).closest("tr").remove();
     });
@@ -566,16 +737,16 @@
             return alert("Ruas Belum Dipilih");
 
         $("#myTable tbody").append(`
-        <tr>
-        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required></td>
-        <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required></td>
-        <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required></td>
-        <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" required></td>
-        <td><input type="text" class="form-control" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" required></td>
-        <td><input type="text" class="form-control" name="long_akhir[]" autocomplete="off" placeholder="107.12345" required></td>
-        <td><button type="button" onclick="checkLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button></td>
-        <td><button type="button" class="badge badge-sm badge-danger" style="background-color:red;">Delete</button></td>
-        </tr>`);
+            <tr>
+            <td><input type="text" class="form-control" id="id_ruas_jalan[]" value="${text}" autocomplete="off" required></td>
+            <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required></td>
+            <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required></td>
+            <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" required></td>
+            <td><input type="text" class="form-control" name="lat_akhir[]" autocomplete="off" placeholder="-7.12345" required></td>
+            <td><input type="text" class="form-control" name="long_akhir[]" autocomplete="off" placeholder="107.12345" required></td>
+            <td><button type="button" onclick="checkLok(this)" class="badge badge-sm badge-primary">Cek Lokasi</button></td>
+            <td><button type="button" class="badge badge-sm badge-danger" style="background-color:red;">Delete</button></td>
+            </tr>`);
     });
     function formatRupiah(angka, prefix) {
         var number_string = angka.replace(/[^,\d]/g, "").toString(),
@@ -595,13 +766,7 @@
     }
 
     $(document).ready(function () {
-        $("select").select2({
-            theme: "classic",
-            width: "resolve",
-        });
-
         var maxGroupRuas = 8;
-
         $(".addMoreRuas").click(function () {
             if ($("body").find(".fieldGroupRuas").length < maxGroupRuas) {
                 var fieldHTML =
@@ -618,13 +783,6 @@
             nilaiKontrak.val(formatRupiah(nilaiKontrak.val(), "Rp"));
         });
 
-        //remove fields group
-        $("body").on("click", ".removeRuas", function () {
-            $(this).parents(".fieldGroupRuas").remove();
-        });
-
-        console.log($(".error"));
-
         $("#createData").validate({
             errorClass: "text-danger error mt-2",
             rules: {
@@ -632,18 +790,18 @@
                     required: true,
                     digits: true,
                 },
-                ft_id: {
-                    required: true,
-                    digits: true,
-                },
+                // ft_id: {
+                //     required: true,
+                //     digits: true
+                // },
                 konsultan_id: {
                     required: true,
                     digits: true,
                 },
-                gs_user_detail_id: {
-                    required: true,
-                    digits: true,
-                },
+                // gs_user_detail_id: {
+                //     required: true,
+                //     digits: true
+                // },
                 kontraktor_id: {
                     required: true,
                     digits: true,
@@ -657,18 +815,18 @@
                     required: "PPK Belum dipilih",
                     digits: "PPK Belum dipilih",
                 },
-                ft_id: {
-                    required: "Field Team Belum dipilih",
-                    digits: "Field Team Belum dipilih",
-                },
+                // ft_id: {
+                //     required: 'Field Team Belum dipilih',
+                //     digits: 'Field Team Belum dipilih'
+                // },
                 konsultan_id: {
                     required: "Konsultan Belum dipilih",
                     digits: "Konsultan Belum dipilih",
                 },
-                gs_user_detail_id: {
-                    required: "General Superintendent Belum dipilih",
-                    digits: "General Superintendent Belum dipilih",
-                },
+                // gs_user_detail_id: {
+                //     required: 'General Superintendent Belum dipilih',
+                //     digits: 'General Superintendent Belum dipilih'
+                // },
                 kontraktor_id: {
                     required: "Kontraktor Belum dipilih",
                     digits: "Kontraktor Belum dipilih",
@@ -701,13 +859,6 @@
                 $(element).removeClass(errorClass);
             },
         });
-    });
-
-    $(document).keypress(function (e) {
-        $(".error").hide();
-    });
-    $(document).change(function (e) {
-        $(".error").hide();
     });
     function PopupCenter(url, title, w, h) {
         var dualScreenLeft =
@@ -748,12 +899,11 @@
     }
     function checkLok(e) {
         var parents = $(e).closest("tr");
-        var row = parents.find("td");
-        console.log(row);
-        var latawal = row[2].innerText;
-        var longawal = row[3].innerText;
-        var latakhir = row[4].innerText;
-        var longakhir = row[5].innerText;
+        var row = parents.find("input");
+        var latawal = row[2].value;
+        var longawal = row[3].value;
+        var latakhir = row[4].value;
+        var longakhir = row[5].value;
         var url = "https://www.google.com/maps/dir/?api=1";
         var origin = "&origin=" + latawal + "," + longawal;
         var destination = "&destination=" + latakhir + "," + longakhir;

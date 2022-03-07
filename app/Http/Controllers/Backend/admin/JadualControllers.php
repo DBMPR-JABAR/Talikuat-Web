@@ -133,7 +133,7 @@ class JadualControllers extends Controller
         $data = DataUmum::where(
             'id',
             $id
-        )->with('kategori_paket')->with('uptd')->with('ruas')->with('detail')->first();
+        )->with('kategori_paket')->with('uptd')->with('detail')->first();
 
         $jadualDB = Jadual::where('data_umum_detail_id', $data->detail->id)->with('detail')->get();
         $jadualDetail = new stdClass();

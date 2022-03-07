@@ -697,9 +697,10 @@
                         id: id,
                     },
                     complete: function (result) {
-                        $(id_select).empty(); // remove old options
-                        result.responseJSON.forEach(function (item) {
+                        $(id_select).empty();
+                        result.responseJSON.forEach((item) => {
                             if (selectedId == item[valueOption]) {
+                                console.log(selectedId, item[valueOption]);
                                 $(id_select).append(
                                     $("<option></option>")
                                         .attr("value", item[valueOption])

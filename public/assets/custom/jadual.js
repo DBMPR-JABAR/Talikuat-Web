@@ -1,5 +1,6 @@
 let massPopChart;
 async function nonAdendum(res) {
+    console.log(res);
     let dataUmum = res.data_umum;
     let spmk = new Date(dataUmum.tgl_spmk);
     let weeks = sortDateAsWeek(getTermin(dataUmum.detail.lama_waktu), spmk);
@@ -75,12 +76,10 @@ const sortJadual = async (jadual, weeks) => {
         });
         sortedJadual.push(tesData);
     }
-
     dataJadualGlobal.push(sortedJadual);
     $(sortedJadual).each((i, v) => {
         sumJadual.push(v.sum("nilai"));
     });
-
     const sumCumulative = sumJadual.map(cumulativeSum);
     for (let i = 0; i < sumCumulative.length; i++) {
         sumCumulative[i] = parseFloat(sumCumulative[i]).toFixed(3);

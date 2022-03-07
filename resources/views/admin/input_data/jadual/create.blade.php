@@ -385,6 +385,7 @@
             </form>
             </div>
             
+            
         </div>
     </div>
      </form>
@@ -427,7 +428,7 @@
                     "jadual_excel_file",
                     $("#fileJadual")[0].files[0]
                 );
-                formData.append("id", "{{$data->detail->id}}");
+                formData.append("id", "{{$data->id}}");
                 formData.append("_token", "{{ csrf_token() }}");
                 $.ajax({
                     url: "{{ route('jadual.exceltodata') }}",

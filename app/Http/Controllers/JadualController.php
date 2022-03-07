@@ -547,6 +547,7 @@ class JadualController extends Controller
     public function excelToData(Request $request)
     {
         try {
+
             $file = $request->file('jadual_excel_file');
             $list_jadual = Excel::toCollection(new JadualImport, $file);
             $data_umum = DataUmum::where('id', $request->id)->with('detail')->first();
