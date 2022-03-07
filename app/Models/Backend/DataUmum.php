@@ -15,7 +15,7 @@ class DataUmum extends Model
     public function detail()
     {
         $detail = $this->hasOne('App\Models\Backend\DataUmumDetail', 'data_umum_id')->where('is_active', 1);
-        return $detail->with('konsultan')->with('ft')->with('kontraktor')->with('gs')->with('ppk');
+        return $detail->with('konsultan')->with('kontraktor')->with('ppk')->with('ruas');
     }
     public function jadual()
     {
@@ -26,10 +26,6 @@ class DataUmum extends Model
     public function list_details()
     {
         return $this->hasMany('App\Models\Backend\DataUmumDetail', 'data_umum_id');
-    }
-    public function ruas()
-    {
-        return $this->hasMany('App\Models\Backend\DataUmumRuas', 'data_umum_detail_id');
     }
     public function uptd()
     {

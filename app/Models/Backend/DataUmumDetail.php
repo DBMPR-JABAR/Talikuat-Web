@@ -35,11 +35,16 @@ class DataUmumDetail extends Model
     }
     public function ppk()
     {
-        return $this->belongsTo('App\Models\Backend\MasterPpk', 'ppk_id');
+        return $this->belongsTo('App\Models\Backend\MasterPpk', 'ppk_id', 'user_detail_id');
     }
 
     public function jadualItems()
     {
         return $this->hasMany('App\Models\Backend\Jadual', 'data_umum_detail_id');
+    }
+
+    public function ruas()
+    {
+        return $this->hasMany(DataUmumRuas::class, 'data_umum_detail_id');
     }
 }

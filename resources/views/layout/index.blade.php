@@ -130,7 +130,8 @@
                         </a>
                     </li>
                     --}}
-                    @canany(['viewAllUser','viewUserAdmin','viewUserPpk','viewUserMk','viewUserFt','viewUserGs','viewRole', 'viewPermission'], Auth::user())
+                    @canany(['viewAllUser','viewUserAdmin','viewUserPpk','viewUserMk','viewUserFt','viewUserGs','viewRole',
+                    'viewPermission'], Auth::user())
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -169,8 +170,7 @@
                                         >PPK</a
                                     >
                                 </li>
-                                @endcan 
-                                @can('viewUserMk',Auth::user())
+                                @endcan @can('viewUserMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -178,8 +178,7 @@
                                         >MK</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewUserDirlap',Auth::user())
+                                @endcan @can('viewUserDirlap',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -187,8 +186,7 @@
                                         >DIRLAP</a
                                     >
                                 </li>
-                                @endcan  
-                                @can('viewUserFt',Auth::user())
+                                @endcan @can('viewUserFt',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -204,8 +202,8 @@
                                         >General Superintendent</a
                                     >
                                 </li>
-                                @endcan 
-                                @canany(['viewRole', 'viewPermission'], Auth::user())
+                                @endcan @canany(['viewRole', 'viewPermission'],
+                                Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -218,7 +216,8 @@
                         </div>
                     </li>
                     @endcanany
-                    @canany(['viewKontraktor','viewKonsultan','viewMk','viewJenisPekerjaan'], Auth::user())
+                    @canany(['viewKontraktor','viewKonsultan','viewMk','viewJenisPekerjaan'],
+                    Auth::user())
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -243,8 +242,7 @@
                                         >Kontraktor</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewKonsultan',Auth::user())
+                                @endcan @can('viewKonsultan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -254,8 +252,7 @@
                                         >Konsultan</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewMk',Auth::user())
+                                @endcan @can('viewMk',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -263,8 +260,7 @@
                                         >Manajemen Konstruksi</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewJenisPekerjaan',Auth::user())
+                                @endcan @can('viewJenisPekerjaan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -274,8 +270,7 @@
                                         >Jenis Pekerjaan</a
                                     >
                                 </li>
-                                @endcan
-                                {{--
+                                @endcan {{--
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -288,7 +283,8 @@
                         </div>
                     </li>
                     @endcanany
-                    @canany(['viewDataUmum','viewJadwal','viewPermintaan','viewLaporanMingguan'], Auth::user())
+                    @canany(['viewDataUmum','viewJadwal','viewPermintaan','viewLaporanMingguan'],
+                    Auth::user())
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -313,8 +309,7 @@
                                         >Data Umum</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewJadwal',Auth::user())
+                                @endcan @can('viewJadwal',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -322,8 +317,7 @@
                                         >Jadwal Pekerjaan</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewPermintaan',Auth::user())
+                                @endcan @can('viewPermintaan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
@@ -331,12 +325,13 @@
                                         >Permintaan</a
                                     >
                                 </li>
-                                @endcan
-                                @can('viewLaporanMingguan',Auth::user())
+                                @endcan @can('viewLaporanMingguan',Auth::user())
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{ route('laporan-mingguan.index') }}"
+                                        href="{{
+                                            route('laporan-mingguan.index')
+                                        }}"
                                         >Laporan Mingguan</a
                                     >
                                 </li>
@@ -344,9 +339,7 @@
                             </ul>
                         </div>
                     </li>
-                    @endcanany
-                    @can('viewPusatUnduhan',Auth::user())
-                    @endcan
+                    @endcanany @can('viewPusatUnduhan',Auth::user()) @endcan
                     <li class="nav-item">
                         <a
                             class="nav-link"
@@ -364,7 +357,7 @@
                         </a>
                     </li>
                     @endcan
-                    
+
                     <li class="nav-item sidebar-actions">
                         <a
                             class="nav-link mt-4"
@@ -692,7 +685,9 @@
                 id_select,
                 text,
                 valueOption,
-                textOption
+                textOption,
+                selectedId,
+                selectedText
             ) {
                 $.ajax({
                     url: url,
@@ -702,18 +697,22 @@
                         id: id,
                     },
                     complete: function (result) {
-                        console.log(result.responseJSON);
                         $(id_select).empty(); // remove old options
-                        $(id_select).append(
-                            $("<option disable></option>").text(text)
-                        );
-
                         result.responseJSON.forEach(function (item) {
-                            $(id_select).append(
-                                $("<option></option>")
-                                    .attr("value", item[valueOption])
-                                    .text(item[textOption])
-                            );
+                            if (selectedId == item[valueOption]) {
+                                $(id_select).append(
+                                    $("<option></option>")
+                                        .attr("value", item[valueOption])
+                                        .attr("selected")
+                                        .text(item[textOption])
+                                );
+                            } else {
+                                $(id_select).append(
+                                    $("<option></option>")
+                                        .attr("value", item[valueOption])
+                                        .text(item[textOption])
+                                );
+                            }
                         });
                     },
                 });

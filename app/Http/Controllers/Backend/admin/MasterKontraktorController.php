@@ -49,7 +49,7 @@ class MasterKontraktorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
         $validator = Validator::make($request->all(), [
             'npwp' => 'unique:master_kontraktor',
             'nama' => 'required',
@@ -77,17 +77,17 @@ class MasterKontraktorController extends Controller
         $kontraktor = MasterKontraktor::create($temp);
 
         if ($kontraktor) {
-            if (count($request->nm_gs) >= 1) {
-                for ($x = 0; $x < count($request->nm_gs); $x++) {
-                    if ($request->nm_gs[$x] != null) {
-                        $save_gs = KontraktorGs::create([
-                            'kontraktor_id' => $kontraktor->id,
-                            'gs' => $request->nm_gs[$x],
-                            'created_by' => Auth::user()->id,
-                        ]);
-                    }
-                }
-            }
+            // if (count($request->nm_gs) >= 1) {
+            //     for ($x = 0; $x < count($request->nm_gs); $x++) {
+            //         if ($request->nm_gs[$x] != null) {
+            //             $save_gs = KontraktorGs::create([
+            //                 'kontraktor_id' => $kontraktor->id,
+            //                 'gs' => $request->nm_gs[$x],
+            //                 'created_by' => Auth::user()->id,
+            //             ]);
+            //         }
+            //     }
+            // }
             storeLogActivity(declarLog(1, 'Kontraktor', $kontraktor->nama, 1));
             return redirect()->route('masterkontraktor.index')->with(['success' => 'Data Berhasil Disimpan!']);
         } else {

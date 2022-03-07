@@ -28,6 +28,7 @@ Route::get('getRuasByUptd', [DropdownDataController::class, 'getRuasByUptd']);
 Route::get('getPpkByUptd', [DropdownDataController::class, 'getPpkByUptd']);
 Route::get('getGsByKontraktor', [DropdownDataController::class, 'getGsByKontraktor']);
 Route::get('getFtByKonsultan', [DropdownDataController::class, 'getFtByKonsultan']);
+Route::get('getDirlapByUptd', [DropdownDataController::class, 'getDirlapByUptd']);
 
 
 Route::prefix('admin')->group(function () {
@@ -46,7 +47,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/user_mk/store', [MasterMkController::class, 'store_user'])->name('store.user_mk');
             Route::get('/user_dirlap', [UserController::class, 'index_dirlap'])->name('user_dirlap.index');
             Route::post('/user_dirlap/store', [UserController::class, 'store'])->name('store.user_dirlap');
-            
+
             Route::get('/role&permission', [RoleController::class, 'index'])->name('role.index');
 
             Route::prefix('role')->group(function () {

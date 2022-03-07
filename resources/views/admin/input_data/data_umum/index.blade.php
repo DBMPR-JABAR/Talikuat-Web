@@ -87,9 +87,9 @@
                         $item->kategori !!}
                     </td>
 
-                    <td>{!! $item->ruas[0]->id_ruas_jalan !!}</td>
-                    <td>{!! $item->detail->kontraktor->nama !!}</td>
-                    <td>{!! $item->detail->ppk !!}</td>
+                    <td>{!! @$item->detail->ruas[0]->id_ruas_jalan !!}</td>
+                    <td>{!! @$item->detail->kontraktor->nama !!}</td>
+                    <td>{!! @$item->detail->ppk->nama !!}</td>
                     <td>
                         @if (Request::segment(3) != 'trash')
                         <a
