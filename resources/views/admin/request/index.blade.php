@@ -54,23 +54,23 @@
                         <tr>
                             <td>
                                 FRM-01/SOP/DBMPR-{{$loop->index}}<br />
-                                {{$request->tgl_request}}
+                                {{@$request->tgl_request}}
                             </td>
                             <td>
-                                {{$request->dataUmumDetail->dataUmum->uptd->nama}}
+                                {{@$request->dataUmumDetail->dataUmum->uptd->nama}}
                             </td>
                             <td>
-                                {{$request->dataUmumDetail->dataUmum->no_kontrak}}
+                                {{@$request->dataUmumDetail->dataUmum->no_kontrak}}
                             </td>
                             <td>
-                                {{$request->dataUmumDetail->dataUmum->ppk_kegiatan}}
+                                {{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}
                             </td>
                             <td>
-                                {{$request->lokasi_sta}}<br />
-                                {{$request->jadual->nmp}} -
-                                {{$request->jadual->uraian}}<br />
-                                {{$request->volume}}
-                                {{$request->jadual->satuan}}
+                                {{@$request->lokasi_sta}}<br />
+                                {{@$request->jadual->nmp}} -
+                                {{@$request->jadual->uraian}}<br />
+                                {{@$request->volume}}
+                                {{@$request->jadual->satuan}}
                             </td>
                             <td>
                                 <button
@@ -82,10 +82,10 @@
                                     "
                                     data-toggle="modal"
                                     data-target="#exampleModalDetail"
-                                    data-img-ppk="{{route('request.file',$request->file_ppk ?? '')}}"
-                                    data-ppk="{{$request->respon_ppk}}"
-                                    data-img-dirlap="{{route('request.file',$request->file_dirlap ?? '')}}"
-                                    data-dirlap="{{$request->respon_dirlap}}"
+                                    data-img-ppk="{{route('request.file',@$request->file_ppk ?? '')}}"
+                                    data-ppk="{{@$request->respon_ppk}}"
+                                    data-img-dirlap="{{route('request.file',@$request->file_dirlap ?? '')}}"
+                                    data-dirlap="{{@$request->respon_dirlap}}"
                                     onclick="rederModalCatatan(this)"
                                 >
                                     Lihat
@@ -117,8 +117,8 @@
                                     "
                                     data-toggle="modal"
                                     data-target="#exampleModalApproval"
-                                    data-id="{{$request->id}}"
-                                    data-paket="{{$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
+                                    data-id="{{@$request->id}}"
+                                    data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
                                     onclick="rederModalDetail(this)"
                                 >
                                     Respon
