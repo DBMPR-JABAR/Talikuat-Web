@@ -39,495 +39,467 @@
                 </div>
             </div>
             <div class="card-body">
-                <form
-                    action="{{ route('store.dataumum') }}"
-                    method="post"
-                    enctype="multipart/form-data"
-                    id="createData"
-                >
-                    @csrf
-                    <div class="card-block">
-                        <div class="form-group">
-                            <label>Pemda</label>
-                            <input
-                                type="text"
-                                name="pemda"
-                                id="pemda"
-                                value="{{ @$data->pemda ? : 'PEMERINTAH PROVINSI JAWA BARAT' }}"
-                                class="form-control"
-                                required
-                            />
-                            @error('pemda')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>OPD</label>
-                            <input
-                                type="text"
-                                name="opd"
-                                id="opd"
-                                value="{{ @$data->opd ? : 'DINAS BINA MARGA DAN PENATAAN RUANG' }}"
-                                class="form-control"
-                                required
-                            />
-                            @error('opd')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Kategori Paket Kegiatan</label>
-                            <select
-                                name="kategori_paket_id"
-                                class="form-control"
-                                required
-                            >
-                                <option selected disabled>
-                                    Pilih Kategori
-                                </option>
-                                @foreach (@$temp_kategori as $item)
-                                @if(old('kategori_paket_id') == $item->id)
-                                <option
-                                    value="{{ old('kategori_paket_id') }}"
-                                    selected
-                                >
-                                    {{ $item->nama_kategori }}
-                                </option>
-                                @else
-                                <option value="{{ $item->id }}">
-                                    {{ $item->nama_kategori }}
-                                </option>
-                                @endif @endforeach
-                            </select>
-                            @error('unit')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Kegiatan / Paket</label>
-                            <input
-                                type="text"
-                                name="nm_paket"
-                                id="nm_paket"
-                                value="{{ old('nm_paket') }}"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('nm_paket')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Unor</label>
-                            <select
-                                name="uptd_id"
-                                id="unit"
-                                class="form-control"
-                                required
-                                onchange="ubahOption()"
-                            >
-                                <option selected disabled>Pilih Unit</option>
-                                @foreach (@$uptd_list as $item)
-                                @if(old('uptd_id') == $item->id)
-                                <option value="{{ old('uptd_id') }}" selected>
-                                    {{ $item->nama }}
-                                </option>
-                                @else
-                                <option value="{{ $item->id }}">
-                                    {{ $item->nama }}
-                                </option>
-                                @endif @endforeach
-                            </select>
-                            @error('unit')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="card-header">Ruas</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <div class="col-md-9 col-sm-9">
-                                        <select
-                                            name="ruas"
-                                            id="ruas"
-                                            class="form-control"
-                                            required
-                                            value="{{ old('ruas') }}"
-                                        >
-                                            <option selected disabled>
-                                                Pilih Ruas
-                                            </option>
-                                        </select>
-                                        @error('ruas')
-                                        <div
-                                            class="invalid-feedback"
-                                            style="display: block; color: red"
-                                        >
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3 col-sm-3">
-                                        <p>
-                                            <input
-                                                type="button"
-                                                class="btn btn-primary btn-mini waves-effect waves-light"
-                                                data-toggle="tooltip"
-                                                title="Tambah Ruas"
-                                                value="Tambah Ruas"
-                                                disabled
-                                            />
-                                            {{--
-                                            <input
-                                                type="button"
-                                                value="Insert row"
-                                            />
-                                            --}}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <table class="table-bordered" id="myTable">
-                                    <!--<table class="table table-bordered table-hover " id="invoiceItem7">-->
-                                    <thead>
-                                        <tr class="well">
-                                            <th>Ruas Jalan</th>
-                                            <th>Segmen Jalan</th>
-                                            <th>Koordinat Awal Lat</th>
-                                            <th>Koordinat Awal Long</th>
-                                            <th>Koordinat Akhir Lat</th>
-                                            <th>Koordinat Akhir Long</th>
-                                            <th>Cek Lokasi</th>
-                                            <th>Hapus</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>No.Kontrak</label>
-                            <input
-                                type="text"
-                                name="no_kontrak"
-                                id="no_kontrak"
-                                value="{{ old('no_kontrak') }}"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('no_kontrak')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal Kontrak</label>
-                            <input
-                                type="date"
-                                name="tgl_kontrak"
-                                id="tgl_kontrak"
-                                value="{{ old('tgl_kontrak') }}"
-                                class="form-control"
-                                required
-                            />
-                            @error('tgl_kontrak')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Nilai Kontrak</label>
-                            <input
-                                type="text"
-                                name="nilai_kontrak"
-                                id="nilai_kontrak"
-                                value="{{ old('nilai_kontrak') }}"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('nilai_kontrak')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>No. SPMK</label>
-                            <input
-                                type="text"
-                                name="no_spmk"
-                                id="no_spmk"
-                                value="{{ old('no_spmk') }}"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('no_spmk')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal SPMK</label>
-                            <input
-                                type="date"
-                                name="tgl_spmk"
-                                id="tgl_spmk"
-                                value="{{ old('tgl_spmk') }}"
-                                class="form-control"
-                                required
-                            />
-                            @error('tgl_spmk')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Panjang KM</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                name="panjang_km"
-                                id="panjang_km"
-                                value="{{ old('panjang_km') }}"
-                                placeholder="....Km"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('panjang_km')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Waktu Pelaksanaan</label>
-                            <input
-                                type="number"
-                                step="1"
-                                name="lama_waktu"
-                                id="lama_waktu"
-                                value="{{ old('lama_waktu') }}"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('lama_waktu')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>PPK Kegiatan</label>
-                            <input
-                                type="text"
-                                name="ppk_kegiatan"
-                                id="ppk_kegiatan"
-                                value="{{ old('ppk_kegiatan') }}"
-                                class="form-control"
-                                required
-                                autocomplete="off"
-                            />
-                            @error('ppk_kegiatan')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Direksi Lapangan</label>
-                            <select
-                                name="dirlap_id"
-                                id="dirlap"
-                                class="form-control"
-                                required
-                                value="{{ old('dirlap_id') }}"
-                            >
-                                <option selected disabled>Pilih Dirlap</option>
-                            </select>
-                            @error('dirlap_id')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>PPK</label>
-                            <select
-                                name="ppk_user_id"
-                                id="ppk"
-                                class="form-control"
-                                required
-                                value="{{ old('ppk') }}"
-                            >
-                                <option selected disabled>Pilih PPK</option>
-                            </select>
-                            @error('ppk')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Konsultan Supervisi</label>
-                            <select
-                                name="konsultan_id"
-                                id="konsultan_id"
-                                class="form-control"
-                                required
-                            >
-                                <option selected disabled>
-                                    Pilih Konsultan
-                                </option>
-                                @foreach($konsultans as $item)
-
-                                <option value="{{ $item->id }}">
-                                    {{ $item->nama }}
-                                </option>
-
-                                @endforeach
-                            </select>
-                            @error('konsultan_id')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <!-- <div class="form-group">
-                                <label>Field Team</label>
-                                <select name="ft_id" id="ft" class="form-control" required value="{{ old('ft') }}">
-                                    <option selected disabled>Pilih ft</option>
-                                </select>
-                                @error('ft')
-                                <div class="invalid-feedback" style="display: block; color:red">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div> -->
-                        <div class="form-group">
-                            <label>Penyedia Jasa</label>
-                            <select
-                                name="kontraktor_id"
-                                id="kontraktor_id"
-                                class="form-control"
-                                required
-                                onchange="ubahOption1()"
-                                value="{{ old('kontraktor_id') }}"
-                            >
-                                <option selected disabled>
-                                    Pilih Penyedia Jasa
-                                </option>
-                                @foreach (@$kontraktors as $item)
-                                <option value="{{ $item->id }}">
-                                    {{ $item->nama }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('kontraktor_id')
-                            <div
-                                class="invalid-feedback"
-                                style="display: block; color: red"
-                            >
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <!-- <div class="form-group">
-                                <label>General Superintendent</label>
-                                <select name="gs_user_detail_id" id="gs" class="form-control" required
-                                    value="{{ old('gs_user_detail_id') }}">
-                                    <option selected disabled>Pilih gs</option>
-                                </select>
-                                @error('gs_user_detail_id')
-                                <div class="invalid-feedback" style="display: block; color:red">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div> -->
-                        @if(Request::segment(3) == 'edit')
-                        <i style="color: red; font-size: 10px"
-                            >Biarkan jika tidak ada perubahan</i
-                        >
-                        @endif
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="btn btn-responsive btn-primary"
+                <div class="card-block">
+                    <form
+                        action="{{ route('store.dataumum') }}"
+                        method="post"
+                        enctype="multipart/form-data"
+                        id="createData"
                     >
-                        <i class="fa fa-paper-plane"></i> Save
-                    </button>
-                </form>
+                        @csrf
+                        <div class="row align-items-start">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Pemda</label>
+                                    <input
+                                        type="text"
+                                        name="pemda"
+                                        id="pemda"
+                                        value="{{ @$data->pemda ? : 'PEMERINTAH PROVINSI JAWA BARAT' }}"
+                                        class="form-control"
+                                        required
+                                        readonly
+                                    />
+                                    @error('pemda')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>OPD</label>
+                                    <input
+                                        type="text"
+                                        name="opd"
+                                        id="opd"
+                                        value="{{ @$data->opd ? : 'DINAS BINA MARGA DAN PENATAAN RUANG' }}"
+                                        class="form-control"
+                                        required
+                                        readonly
+                                    />
+                                    @error('opd')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Unor</label>
+                                    <input
+                                        type="text"
+                                        id="uptd_id"
+                                        value="{{ $uptd->nama }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                        readonly
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="upd_id"
+                                        value="{{$uptd->id}}"
+                                    />
+                                    @error('unit')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-start">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Kategori Paket Kegiatan</label>
+                                    <select
+                                        name="kategori_paket_id"
+                                        class="form-control"
+                                        required
+                                    >
+                                        <option selected disabled>
+                                            Pilih Kategori
+                                        </option>
+                                        @foreach (@$temp_kategori as $item)
+                                        @if(old('kategori_paket_id') ==
+                                        $item->id)
+                                        <option
+                                            value="{{
+                                                old('kategori_paket_id')
+                                            }}"
+                                            selected
+                                        >
+                                            {{ $item->nama_kategori }}
+                                        </option>
+                                        @else
+                                        <option value="{{ $item->id }}">
+                                            {{ $item->nama_kategori }}
+                                        </option>
+                                        @endif @endforeach
+                                    </select>
+                                    @error('unit')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Nama Kegiatan / Paket</label>
+                                    <input
+                                        type="text"
+                                        name="nm_paket"
+                                        id="nm_paket"
+                                        value="{{ old('nm_paket') }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                        style="text-transform: uppercase"
+                                    />
+                                    @error('nm_paket')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Nilai Kontrak</label>
+                                    <input
+                                        type="text"
+                                        name="nilai_kontrak"
+                                        id="nilai_kontrak"
+                                        value="{{ old('nilai_kontrak') }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                    />
+                                    @error('nilai_kontrak')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-start">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Tanggal Kontrak</label>
+                                    <input
+                                        type="date"
+                                        name="tgl_kontrak"
+                                        id="tgl_kontrak"
+                                        value="{{ old('tgl_kontrak') }}"
+                                        class="form-control"
+                                        required
+                                    />
+                                    @error('tgl_kontrak')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>No. Kontrak</label>
+                                    <input
+                                        type="text"
+                                        name="pemda"
+                                        id="pemda"
+                                        value=""
+                                        class="form-control"
+                                        style="text-transform: uppercase"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>No. SPMK</label>
+                                    <input
+                                        type="text"
+                                        name="no_spmk"
+                                        id="no_spmk"
+                                        value="{{ old('no_spmk') }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                    />
+                                    @error('no_spmk')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-start">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Tanggal SPMK</label>
+                                    <input
+                                        type="date"
+                                        name="tgl_spmk"
+                                        id="tgl_spmk"
+                                        value="{{ old('tgl_spmk') }}"
+                                        class="form-control"
+                                        required
+                                    />
+                                    @error('tgl_spmk')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Panjang KM</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        name="panjang_km"
+                                        id="panjang_km"
+                                        value="{{ old('panjang_km') }}"
+                                        placeholder="....Km"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                    />
+                                    @error('panjang_km')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Waktu Pelaksanaan</label>
+                                    <input
+                                        type="number"
+                                        step="1"
+                                        name="lama_waktu"
+                                        id="lama_waktu"
+                                        value="{{ old('lama_waktu') }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                    />
+                                    @error('lama_waktu')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-start">
+                            <div class="col">
+                                <div class="card mb-3">
+                                    <div class="card-header">Ruas</div>
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <div class="col-md-9 col-sm-9">
+                                                <select
+                                                    name="ruas"
+                                                    id="ruas"
+                                                    class="form-control"
+                                                    required
+                                                >
+                                                    @foreach (@$ruas as $item)
+                                                    <option
+                                                        value="{{$item->id_ruas_jalan}}"
+                                                    >
+                                                        {{$item->nama_ruas_jalan}}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('ruas')
+                                                <div
+                                                    class="invalid-feedback"
+                                                    style="
+                                                        display: block;
+                                                        color: red;
+                                                    "
+                                                >
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
+                                            </div>
+
+                                            <div class="col-md-3 col-sm-3">
+                                                <p>
+                                                    <input
+                                                        type="button"
+                                                        class="btn btn-primary btn-mini waves-effect waves-light"
+                                                        data-toggle="tooltip"
+                                                        title="Tambah Ruas"
+                                                        value="Tambah Ruas"
+                                                    />
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <table
+                                            class="table-bordered"
+                                            id="myTable"
+                                        >
+                                            <!--<table class="table table-bordered table-hover " id="invoiceItem7">-->
+                                            <thead>
+                                                <tr class="well">
+                                                    <th>Ruas Jalan</th>
+                                                    <th>Segmen Jalan</th>
+                                                    <th>Koordinat Awal Lat</th>
+                                                    <th>Koordinat Awal Long</th>
+                                                    <th>Koordinat Akhir Lat</th>
+                                                    <th>
+                                                        Koordinat Akhir Long
+                                                    </th>
+                                                    <th>Cek Lokasi</th>
+                                                    <th>Hapus</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-start">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Konsultan Supervisi</label>
+                                    <select
+                                        name="konsultan_id"
+                                        id="konsultan_id"
+                                        class="form-control"
+                                        required
+                                    >
+                                        <option selected disabled>
+                                            Pilih Konsultan
+                                        </option>
+                                        @foreach($konsultans as $item)
+
+                                        <option value="{{ $item->id }}">
+                                            {{ $item->nama }}
+                                        </option>
+
+                                        @endforeach
+                                    </select>
+                                    @error('konsultan_id')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Direksi Lapangan</label>
+                                    <select
+                                        name="dirlap_id"
+                                        id="dirlap"
+                                        class="form-control"
+                                        required
+                                        value="{{ old('dirlap_id') }}"
+                                    >
+                                        @foreach($dirlaps as $dirlap)
+                                        <option value="{{ $dirlap->id }}">
+                                            {{ $dirlap->nama }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('dirlap_id')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>PPK</label>
+                                    <select
+                                        name="ppk_user_id"
+                                        id="ppk"
+                                        class="form-control"
+                                        required
+                                        value="{{ old('ppk') }}"
+                                    >
+                                        @foreach($ppks as $ppk)
+                                        <option value="{{ $ppk->id }}">
+                                            {{ $ppk->nama }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('ppk')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            class="btn btn-responsive btn-primary"
+                        >
+                            <i class="fa fa-paper-plane"></i> Save
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -538,9 +510,6 @@
     }}"></script>
 <script>
     function ubahOption() {
-        $('input[title="Tambah Ruas"]').prop("disabled", false);
-        $("#myTable tbody tr").remove();
-
         //untuk select Ruas
         id = document.getElementById("unit").value;
         url = "{{ url('getRuasByUptd') }}";
@@ -588,6 +557,10 @@
         value = "id";
         setDataSelect(id, url, id_select, text, value, option);
     }
+    $("#ruas").change(function (e) {
+        e.preventDefault();
+        $("#myTable tbody tr").remove();
+    });
     $("#myTable").on("click", ".badge-danger", function () {
         $(this).closest("tr").remove();
     });

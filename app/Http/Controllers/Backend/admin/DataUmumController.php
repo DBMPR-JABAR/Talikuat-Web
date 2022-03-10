@@ -12,7 +12,10 @@ use App\Models\Backend\DataUmumRuas;
 use App\Models\Backend\KategoriPaket;
 use App\Models\Backend\MasterKonsultan;
 use App\Models\Backend\MasterKontraktor;
+use App\Models\Backend\MasterPpk;
+use App\Models\Backend\RuasJalan;
 use App\Models\Backend\Uptd;
+use App\Models\Backend\UserDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -28,10 +31,16 @@ class DataUmumController extends Controller
     }
     public function create()
     {
-        //
+        $uptd_id = Auth::user()->user_detail->uptd_id;
+        $uptd = Uptd::where('id', $uptd_id)->first();
+        $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
+        $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
+        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
+        foreach ($dirlaps as $item) {
+            $item->nama = $item->user->name;
+        }
         $temp_kategori = KategoriPaket::all();
-        $data = [];
-        return view('admin.input_data.data_umum.create', compact('data', 'temp_kategori'));
+        return view('admin.input_data.data_umum.create', compact('uptd', 'temp_kategori', 'ruas', 'ppks', 'dirlaps'));
     }
     public function store(Request $request)
     {
