@@ -216,7 +216,6 @@
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
             const id = link.data("id");
-            console.log(id);
             const url =
                 `{{ url('admin/master_kontraktor/trash/move_to_trash') }}/` +
                 id;

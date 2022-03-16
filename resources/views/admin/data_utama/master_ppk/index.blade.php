@@ -40,7 +40,7 @@
                 @endif
 
                 <table
-                    class="table-striped"
+                    class="table table-striped"
                     style="width: 100%"
                     id="dataPpk"
                 >

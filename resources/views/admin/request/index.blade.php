@@ -121,7 +121,7 @@
                                     data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
                                     onclick="rederModalDetail(this)"
                                 >
-                                    Respon
+                                    Detail
                                 </button>
                             </td>
                         </tr>
@@ -547,5 +547,11 @@
 <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('assets/custom/request.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        $("table").DataTable().destroy();
+        $("table.display").DataTable();
+    });
+</script>
 
 @endsection

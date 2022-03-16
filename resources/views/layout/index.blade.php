@@ -45,7 +45,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
         <link
             rel="shortcut icon"
-            href="{{ asset('assets/images/favicon.png') }}"
+            href="{{ asset('assets/images/favicon.ico') }}"
         />
         <link
             rel="stylesheet"
@@ -665,6 +665,9 @@
         <script>
             $(document).ready(function () {
                 $("table.display").DataTable({
+                    responsive: true,
+                });
+                $("table.table").DataTable({
                     responsive: true,
                 });
                 $("select").select2({
