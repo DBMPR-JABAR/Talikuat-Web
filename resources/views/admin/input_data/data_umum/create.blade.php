@@ -1,4 +1,4 @@
-@extends('layout.index') @section('title','Kontraktor') @section('header')
+@extends('layout.index') @section('title','Data Umum') @section('header')
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">

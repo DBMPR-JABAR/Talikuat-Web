@@ -414,7 +414,7 @@
                         >
                             <i class="mdi mdi-menu"></i>
                         </button>
-                        <ul class="navbar-nav">
+                        <!-- <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a
                                     class="nav-link count-indicator dropdown-toggle"
@@ -503,7 +503,7 @@
                                     <p class="p-3 mb-0">View all activities</p>
                                 </div>
                             </li>
-                        </ul>
+                        </ul> -->
                         <ul class="navbar-nav navbar-nav-right ml-lg-auto">
                             <li class="nav-item nav-profile dropdown border-0">
                                 <a
@@ -512,7 +512,7 @@
                                     href="#"
                                     data-toggle="dropdown"
                                 >
-                                    <img
+                                    <!-- <img
                                         class="nav-profile-img mr-2"
                                         alt=""
                                         src="{{
@@ -520,9 +520,9 @@
                                                 'assets/images/faces/face1.jpg'
                                             )
                                         }}"
-                                    />
+                                    /> -->
                                     <span
-                                        class="profile-name"
+                                        class="profile-name p-3"
                                         >{{ auth()->user()->name }}</span
                                     >
                                 </a>

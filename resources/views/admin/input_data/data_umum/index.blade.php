@@ -213,9 +213,6 @@
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#dataKontraktor").DataTable({
-            responsive: true,
-        });
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
             const id = link.data("id");

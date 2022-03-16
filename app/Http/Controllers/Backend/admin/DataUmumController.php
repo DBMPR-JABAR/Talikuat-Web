@@ -245,18 +245,24 @@ class DataUmumController extends Controller
         $data = DataUmum::where([[
             'id', $id
         ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
-        $kontraktor = MasterKontraktor::all();
-        $kategori_paket = KategoriPaket::all();
-        $konsultan = MasterKonsultan::all();
-        $unit = Uptd::all();
+        $uptd_id = Auth::user()->user_detail->uptd_id;
+        $uptd = Uptd::where('id', $uptd_id)->first();
+        $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
+        $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
+        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
+        foreach ($dirlaps as $item) {
+            $item->nama = $item->user->name;
+        }
+        $temp_kategori = KategoriPaket::all();
 
         return view('admin.input_data.data_umum.edit')->with(
             [
                 'data' => $data,
-                'kategori_paket' => $kategori_paket,
-                'unit' => $unit,
-                'kontraktor' => $kontraktor,
-                'konsultan' => $konsultan,
+                'uptd' => $uptd,
+                'ruas' => $ruas,
+                'ppks' => $ppks,
+                'dirlaps' => $dirlaps,
+                'temp_kategori' => $temp_kategori,
 
             ]
         );

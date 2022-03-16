@@ -22,6 +22,7 @@ class DashboardControllers extends Controller
             return redirect(url('admin/profile/edit', Auth::user()->id))->with(['warning' => 'Lengkapi Data Terlebih Dahulu']);
         }
 
+
         $peyedia = DB::table('master_kontraktor')->count();
         $konsultan = DB::table('master_konsultan')->count();
         $dataUmum = DB::table('data_umum')->count();
