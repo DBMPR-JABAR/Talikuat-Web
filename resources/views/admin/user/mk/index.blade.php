@@ -52,7 +52,7 @@
                             <td> {{ @$item->user->email}} </td>
                             <td>
                                 @if (isset($item->list_uptd))
-                                    @foreach ($item->list_uptd as $list_uptd)
+                                    @foreach (@$item->list_uptd as $list_uptd)
                                     {{ $list_uptd->nama }}<br>
                                     @endforeach    
                                 @endif
