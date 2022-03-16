@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\backend\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Backend\DataUmum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanMingguanControllers extends Controller
 {
@@ -14,6 +16,9 @@ class LaporanMingguanControllers extends Controller
      */
     public function index()
     {
+
+        $uptd = Auth::user()->user_detail->uptd_id;
+        $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
         return view("admin.laporan_mingguan.index");
     }
 

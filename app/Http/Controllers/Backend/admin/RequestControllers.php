@@ -28,7 +28,18 @@ class RequestControllers extends Controller
      */
     public function index()
     {
-        $requests = BackendRequest::with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        if (Auth::user()->internal_role_id != 1) {
+            $uptd = Auth::user()->user_detail->uptd_id;
+            $dataUmum = DataUmum::where('id_uptd', $uptd)->with('detail')->with('uptd')->get();
+            $list = [];
+            foreach ($dataUmum as $item) {
+                array_push($list, $item->detail->id);
+            }
+            $requests = BackendRequest::whereIn('data_umum_detail_id', $list)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        } else {
+            $requests = BackendRequest::latest()->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        }
+
         return view('admin.request.index', compact('requests'));
     }
 
@@ -63,7 +74,6 @@ class RequestControllers extends Controller
             ]);
 
             if ($validator->fails()) {
-                dd($validator->errors());
                 return back()->withErrors($validator)->withInput();
             }
 

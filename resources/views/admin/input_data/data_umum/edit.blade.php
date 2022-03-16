@@ -46,7 +46,7 @@
                         enctype="multipart/form-data"
                         id="createData"
                     >
-                        @csrf
+                        @csrf @method('PUT')
                         <div class="row align-items-start">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -102,6 +102,7 @@
                                         value="{{ $data->uptd->nama }}"
                                         class="form-control"
                                         required
+                                        name="uptd_id"
                                         autocomplete="off"
                                         readonly
                                     />
@@ -233,7 +234,7 @@
                                     <label>No. Kontrak</label>
                                     <input
                                         type="text"
-                                        name="pemda"
+                                        name="no_kontrak"
                                         id="pemda"
                                         value="{{ $data->no_kontrak }}"
                                         class="form-control"

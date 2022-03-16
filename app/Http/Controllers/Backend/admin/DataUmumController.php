@@ -25,8 +25,15 @@ class DataUmumController extends Controller
     //
     public function index()
     {
-        // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
-        $data = DataUmum::latest()->with('detail')->with('uptd')->get();
+        if (Auth::user()->internal_role_id != 1) {
+            $uptd = Auth::user()->user_detail->uptd_id;
+            // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
+        } else {
+            $data = DataUmum::latest()->with('detail')->with('uptd')->get();
+        }
+
+
         return view('admin.input_data.data_umum.index', compact('data'));
     }
     public function create()

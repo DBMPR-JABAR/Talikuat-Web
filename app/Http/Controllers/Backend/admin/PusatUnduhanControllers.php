@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\DataUmum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PusatUnduhanControllers extends Controller
 {
@@ -15,7 +16,13 @@ class PusatUnduhanControllers extends Controller
      */
     public function index()
     {
-        $data = DataUmum::latest()->get();
+        if (Auth::user()->internal_role_id != 1) {
+            $uptd = Auth::user()->user_detail->uptd_id;
+            // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
+        } else {
+            $data = DataUmum::latest()->with('detail')->with('uptd')->get();
+        }
 
         return view('unduhan.index', ['data' => $data]);
     }
