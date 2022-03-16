@@ -66,7 +66,7 @@ class UserDetail extends Model
     public function list_uptd()
     {
         // return $this->belongsToMany('App\Models\Backend\Uptd', 'user_detail_has_uptd','user_detail_id','uptd_id');
-        return $this->belongsToMany('App\Models\Backend\Uptd', 'db_tali_kuat.user_detail_has_uptd', 'user_detail_id', 'uptd_id');
+        return $this->belongsToMany('App\Models\Backend\Uptd', 'talikuat_fix.user_detail_has_uptd', 'user_detail_id', 'uptd_id');
 
     }
 }
