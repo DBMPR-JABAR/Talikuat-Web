@@ -156,6 +156,7 @@
 
 <script>
     $(document).ready(()=>{
+        $('#dataunduhan').DataTable().destroy();
         $('#dataunduhan').DataTable({
             responsive : true,
             columns: [
