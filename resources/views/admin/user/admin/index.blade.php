@@ -123,7 +123,7 @@
                         <div class="form-group">
                             
                             <label>Role</label>
-                            <select
+                            <select style="width: 100%"
                                 name="rule"
                                 class="form-control"
                                 required
@@ -131,6 +131,7 @@
                                 value="{{ old('unit') }}">
                             <option value="" selected>Pilih Role</option>
                             <option value="ADMIN" >ADMINISTRATOR</option>
+                            <option value="ADMIN-PPK" >ADMINISTRATOR PPK</option>
                             <option value="ADMIN-KONSULTAN" >ADMINISTRATOR KONSULTAN</option>
                             <option value="ADMIN-KONTRAKTOR" >ADMINISTRATOR KONTRAKTOR</option>
                             </select>
@@ -138,7 +139,7 @@
                         <div id="ADMIN" class="drop-down-show-hide">
                             <div class="form-group ">
                                 <label>Unit</label>
-                                <select
+                                <select style="width: 100%"
                                     name="unit"
                                     class="form-control"
                                     value="{{ old('unit') }}">
@@ -152,7 +153,7 @@
                         <div id="ADMIN-KONTRAKTOR" class="drop-down-show-hide">
                             <div class="form-group">
                                 <label>Perusahaan</label>
-                                <select class="form-control" name="kontraktor" >
+                                <select style="width: 100%" class="form-control" name="kontraktor" >
                                     <option value="">Select</option>
                                     @foreach ($kontraktors as $no =>$kontraktor)
                                         <option value="{{ $kontraktor->id }}" >{{ $kontraktor->nama }}</option> 
@@ -173,10 +174,24 @@
                             </div>
                             
                         </div>
+                        <div id="ADMIN-PPK" class="drop-down-show-hide">
+                            <div class="form-group ">
+                                <label>Unit</label>
+                                <select style="width: 100%"
+                                    name="unit_ppk"
+                                    class="form-control"
+                                    value="{{ old('unit') }}">
+                                <option value="" selected>Pilih</option>
+                                @foreach (@$uptd_list as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->nama }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div id="ADMIN-KONSULTAN" class="drop-down-show-hide">
                             <div class="form-group">
                                 <label>Perusahaan</label>
-                                <select class="form-control" name="konsultan" >
+                                <select style="width: 100%" class="form-control" name="konsultan" >
                                     <option value="">Select</option> 
                                     @foreach ($konsultans as $no =>$konsultan)
                                         <option value="{{ $konsultan->id }}" >{{ $konsultan->nama }}</option> 
