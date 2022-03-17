@@ -161,6 +161,10 @@
                             <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
                         </div>
                         <div class="form-group ">
+                            <label>PPK Kegiatan</label>
+                            <input type="text" name="ppk_kegiatan" class="form-control">  
+                        </div>
+                        <div class="form-group ">
                             <label>Unit</label>
                             <select
                                 name="unit"

@@ -33,8 +33,8 @@ class MasterPpkController extends Controller
     public function index()
     {
         $this->authorize('viewUserPpk', Auth::user());
-        $data = MasterPpk::all()->where('is_delete','!=',1);
-        return view('admin.data_utama.master_ppk.index',compact('data'));
+        $data = MasterPpk::all()->where('is_delete', '!=', 1);
+        return view('admin.data_utama.master_ppk.index', compact('data'));
     }
 
     /**
@@ -46,7 +46,6 @@ class MasterPpkController extends Controller
     {
         //
         return view('admin.data_utama.master_ppk.form');
-
     }
 
     /**
@@ -75,62 +74,63 @@ class MasterPpkController extends Controller
         // ]);
         // $ppk = MasterPpk::create($temp);
 
-        $user = User::select('name','email','password','id')->where('email', $request->email)->first();
+        $user = User::select('name', 'email', 'password', 'id')->where('email', $request->email)->first();
         // dd($user);
-        if($user){
-            if(!$user->user_detail){
+        if ($user) {
+            if (!$user->user_detail) {
                 $validator = Validator::make($request->all(), [
                     'email' => 'email|required|string',
                     'password' => 'confirmed',
-                    'name'=> 'required',
-                    'no_tlp'=> '',
-                    'unit'=> 'required',
-                    
-                ]);
+                    'name' => 'required',
+                    'ppk_kegiatan' => 'required',
+                    'no_tlp' => '',
+                    'unit' => 'required',
 
-            }else{
+                ]);
+            } else {
                 storeLogActivity(declarLog(1, 'PPK', $request->email));
                 return back()->with(['error' => 'The email has already been taken.']);
             }
-        }else{
+        } else {
             $validator = Validator::make($request->all(), [
                 'email' => 'email|required|string|unique:db_users_dbmpr.users',
                 'password' => 'confirmed',
-                'name'=> 'required',
-                'no_tlp'=> '',
-                'unit'=> 'required',
+                'ppk_kegiatan' => 'required',
+                'name' => 'required',
+                'no_tlp' => '',
+                'unit' => 'required',
 
             ]);
         }
         if ($validator->fails()) {
-            storeLogActivity(declarLog(1, 'PPK', $request->email.' '.$validator->messages()->first()));
-            return back()->with(['error'=>$validator->messages()->first()]);
+            storeLogActivity(declarLog(1, 'PPK', $request->email . ' ' . $validator->messages()->first()));
+            return back()->with(['error' => $validator->messages()->first()]);
         }
-        $create_ppk = User::firstOrNew(['email'=> $request->email]);
+        $create_ppk = User::firstOrNew(['email' => $request->email]);
         $create_ppk->name = $request->input('name');
         $create_ppk->password = Hash::make($request->input('password'));
         $create_ppk->role = 'internal';
         $create_ppk->save();
 
-        $create_profile = UserProfiles::firstOrNew(['user_id'=> $create_ppk->id]);
+        $create_profile = UserProfiles::firstOrNew(['user_id' => $create_ppk->id]);
         $create_profile->nama = $request->input('name');
         $create_profile->no_tlp = $request->input('no_tlp');
         $create_profile->created_by = Auth::user()->id;
         $create_profile->save();
 
-        $create_detail = UserDetail::firstOrNew(['user_id'=> $create_ppk->id]);
+        $create_detail = UserDetail::firstOrNew(['user_id' => $create_ppk->id]);
         $create_detail->rule_user_id = 2;
         $create_detail->save();
         $create_detail->ppk()->create([
             'uptd_id' => $request->input('unit'),
-            'nama' => $request->input('name'),    
-            
-            'created_by' => Auth::user()->id    
+            'nama' => $request->input('name'),
+            'ppk_kegiatan' => $request->input('ppk_kegiatan'),
+            'created_by' => Auth::user()->id
         ]);
-        if($create_ppk){
-            storeLogActivity(declarLog(1, 'PPK', $request->email,1 ));
+        if ($create_ppk) {
+            storeLogActivity(declarLog(1, 'PPK', $request->email, 1));
             return redirect()->route('masterppk.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else
+        } else
             return redirect()->route('masterppk.index')->with(['danger' => 'Data Gagal Disimpan!']);
     }
 
@@ -149,7 +149,7 @@ class MasterPpkController extends Controller
         $data_ppk = MasterPpk::find($id);
         $data = $data_ppk->user_detail->user;
         // dd($data->user_detail->kontraktor);
-        return view('admin.user.show',compact('data','rule_user','uptd'));
+        return view('admin.user.show', compact('data', 'rule_user', 'uptd'));
     }
 
     /**
@@ -171,7 +171,7 @@ class MasterPpkController extends Controller
 
         // dd($data->user_detail->kontraktor);
         // dd($data);
-        return view('admin.data_utama.master_ppk.form',compact('data','kontraktors','konsultans','rule_user','uptd'));
+        return view('admin.data_utama.master_ppk.form', compact('data', 'kontraktors', 'konsultans', 'rule_user', 'uptd'));
     }
 
     /**
@@ -185,26 +185,25 @@ class MasterPpkController extends Controller
     {
         //
         //
-     
+
         $validator = Validator::make($request->all(), [
-            'nama'=> 'required',
-            'alamat'=> 'required',
+            'nama' => 'required',
+            'alamat' => 'required',
         ]);
         if ($validator->fails()) {
-            return back()->with(['error'=>$validator->messages()->first()]);
+            return back()->with(['error' => $validator->messages()->first()]);
         }
-        $update_ppk = MasterPpk::firstOrNew(['id'=> $id]);
-        $update_ppk->nama= $request->nama;
-        $update_ppk->alamat= $request->alamat;
-        $update_ppk->updated_by= Auth::user()->id;
+        $update_ppk = MasterPpk::firstOrNew(['id' => $id]);
+        $update_ppk->nama = $request->nama;
+        $update_ppk->alamat = $request->alamat;
+        $update_ppk->updated_by = Auth::user()->id;
         $update_ppk->save();
-       
-        if($update_ppk){
+
+        if ($update_ppk) {
             // dd($update_ppk);
             return redirect()->route('masterppk.index')->with(['success' => 'Data Berhasil Di Perbaharui!']);
-        }else
+        } else
             return redirect()->route('masterppk.index')->with(['danger' => 'Data Gagal Di Perbaharui!']);
-
     }
 
     /**
@@ -222,32 +221,31 @@ class MasterPpkController extends Controller
         //
         $this->authorize('restoreUserPpk', Auth::user());
 
-        $data = MasterPpk::where('is_delete',1)->get();
+        $data = MasterPpk::where('is_delete', 1)->get();
         // dd($data);
         return view('admin.data_utama.master_ppk.index', compact('data'));
-
     }
     public function move_to_trash($desc, $id)
     {
         //
 
         $user = MasterPpk::find($id);
-        if($desc == 'restore'){
+        if ($desc == 'restore') {
             $this->authorize('restoreUserPpk', Auth::user());
             $user->user_detail()->update(['is_delete' => null]);
             $user->is_delete = null;
             $message = 'Data Berhasil Dikembalikan! ';
-        }elseif($desc == 'move_to_trash'){
+        } elseif ($desc == 'move_to_trash') {
             $this->authorize('deleteUserPpk', Auth::user());
             $user->user_detail->update(['is_delete' => 1]);
             $user->is_delete = 1;
             $message = 'Data Berhasil di Pindahkan! ';
         }
         $user->save();
-        if($user){
-            return back()->with(['success'=>$message]);
+        if ($user) {
+            return back()->with(['success' => $message]);
         }
         // dd($data);
-       
+
     }
 }
