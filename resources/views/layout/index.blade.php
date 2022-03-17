@@ -103,12 +103,12 @@
                 >
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="{{ asset('assets/images/talikuat.png') }}"
+                            src="{{ asset('assets/images/logo_tali_strong.png') }}" style="width: 50px;"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="{{ asset('assets/images/talikuat.png') }}"
+                            src="{{ asset('assets/images/logo_tali_strong.png') }}" style="object-fit: cover;"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
@@ -404,7 +404,7 @@
                             class="navbar-brand brand-logo-mini align-self-center d-lg-none"
                             href="index.html"
                             ><img
-                                src="{{ asset('assets/images/talikuat.png') }}"
+                                src="{{ asset('assets/images/logo_tali_strong.png') }}" style="object-fit: cover;"
                                 alt="logo"
                         /></a>
                         <button

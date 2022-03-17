@@ -181,7 +181,8 @@
                                                 <td>
                                                     {{-- {{ Str::upper(@$data->uptd->nama) }} --}}
                                                     @if (@$data->user_detail->rule_user_id == 2)
-                                                        {{ Str::upper(@$data->user_detail->ppk->uptd->nama) }} 
+                                                    {{ Str::upper(@$data->user_detail->uptd->nama) }} 
+
                                                     @elseif (@$data->user_detail->rule_user_id == 3)
                                                         {{ Str::upper(@$data->user_detail->master_admin->uptd->nama) }} 
                                                     @elseif (@$data->user_detail->rule_user_id == 12)

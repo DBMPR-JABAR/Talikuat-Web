@@ -473,12 +473,7 @@ class UserController extends Controller
             $update_deet->rule_user_id = $request->input('rule_user');
             $update_deet->save();
             // dd($id);
-            if ($request->input('rule_user') == 2) {
-                $update_ppk = MasterPpk::firstOrNew(['user_detail_id' => $update_deet->id]);
-                $update_ppk->uptd_id = $request->input('uptd');
-                $update_ppk->nama = $request->input('nama');
-                $update_ppk->save();
-            } else if ($request->input('rule_user') == 3) {
+            if ($request->input('rule_user') == 3) {
                 $update_master_admin = MasterAdmin::firstOrNew(['user_detail_id' => $update_deet->id]);
                 $update_master_admin->uptd_id = $request->input('uptd');
                 $update_master_admin->nama = $request->input('nama');
