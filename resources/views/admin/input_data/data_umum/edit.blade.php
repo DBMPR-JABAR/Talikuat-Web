@@ -617,6 +617,13 @@
                         >
                             <i class="fa fa-paper-plane"></i> Save
                         </button>
+                        <button
+                            type="submit"
+                            class="btn btn-responsive btn-warning"
+                        >
+                            <i class="fa-solid fa-file-arrow-up"></i> File
+                            Upload
+                        </button>
                     </form>
                 </div>
             </div>
