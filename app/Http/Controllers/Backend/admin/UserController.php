@@ -39,6 +39,10 @@ class UserController extends Controller
         //
         $this->authorize('viewAllUser', User::class);
         $data = UserDetail::where('is_delete', null)->get();
+        // foreach($data as $no){
+        //     print_r($no->user->name);
+        //     echo "<br>";
+        // }
         // dd($data);
 
         return view('admin.user.index', compact('data'));
