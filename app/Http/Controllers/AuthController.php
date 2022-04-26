@@ -51,9 +51,7 @@ class AuthController extends Controller
         ];
 
         $token = $user->createToken($user_detail->nama_lengkap);
-
         Auth::login($user);
-
         return response()->json([
             'status' => 'success',
             'code' => 200,
