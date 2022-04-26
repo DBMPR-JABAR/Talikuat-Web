@@ -42,12 +42,13 @@ class DataUmumController extends Controller
         $uptd = Uptd::where('id', $uptd_id)->first();
         $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
         $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
+        $kontraktors = MasterKontraktor::get();
         $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
         foreach ($dirlaps as $item) {
             $item->nama = $item->user->name;
         }
         $temp_kategori = KategoriPaket::all();
-        return view('admin.input_data.data_umum.create', compact('uptd', 'temp_kategori', 'ruas', 'ppks', 'dirlaps'));
+        return view('admin.input_data.data_umum.create', compact('uptd', 'temp_kategori', 'ruas', 'ppks', 'dirlaps', 'kontraktors'));
     }
     public function store(Request $request)
     {
