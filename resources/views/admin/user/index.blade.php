@@ -73,7 +73,7 @@
                                 @if($item->account_verified_at)
                                 <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
                                 @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
+                                <button class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hubungi admin pusat untuk verifikasi"><i class="mdi mdi-close menu-icon"></i></button>
                                 @endif
                             </td>
 
@@ -246,5 +246,6 @@
         });
 
     });
+    
 </script>
 @endsection

@@ -692,6 +692,9 @@
                     $("#" + this.value).show();
                 });
             });
+            $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            })
         </script>
         <script>
             function setDataSelect(
@@ -734,6 +737,7 @@
                 });
             }
         </script>
+        
         @yield('script')
     </body>
 </html>

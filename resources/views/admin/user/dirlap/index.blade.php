@@ -50,6 +50,8 @@
                             <th>Name</th>
                             <th>UPTD</th>
                             <th>E-mail</th>
+                            <th class="text-center">Account Verified</th>
+
                             <th style="width: 25%">Aksi</th>
 
                         </tr>
@@ -68,6 +70,13 @@
                             </td>
                             <td>
                                 {!! @$item->user->email !!}
+                            </td>
+                            <td class="text-center">
+                                @if($item->account_verified_at)
+                                <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
+                                @else
+                                <button class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hubungi admin pusat untuk verifikasi"><i class="mdi mdi-close menu-icon"></i></button>
+                                @endif
                             </td>
                             <td>
 
@@ -270,6 +279,7 @@
 </div>
 @endsection @section('script')
 <script>
+   
     $(document).ready(function () {
         $("#dataPpk").DataTable();
         $("#delModal").on("show.bs.modal", function (event) {
@@ -291,5 +301,8 @@
             modal.find(".modal-footer #resHref").attr("href", url);
         });
     });
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 </script>
 @endsection
