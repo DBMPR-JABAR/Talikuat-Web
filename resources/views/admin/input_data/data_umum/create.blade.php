@@ -408,7 +408,37 @@
                             </div>
                         </div>
                         <div class="row align-items-start">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Kontraktor</label>
+                                    <select
+                                        name="kontraktor_id"
+                                        id="kontraktor_id"
+                                        class="form-control"
+                                        required
+                                    >
+                                        <option selected disabled>
+                                            Pilih kontraktor
+                                        </option>
+                                        @foreach($kontraktors as $item)
+
+                                        <option value="{{ $item->id }}">
+                                            {{ $item->nama }}
+                                        </option>
+
+                                        @endforeach
+                                    </select>
+                                    @error('konsultan_id')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Konsultan Supervisi</label>
                                     <select
@@ -438,7 +468,8 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Direksi Lapangan</label>
                                     <select
@@ -464,7 +495,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>PPK</label>
                                     <select
