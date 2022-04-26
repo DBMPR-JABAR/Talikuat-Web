@@ -202,7 +202,7 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-mk.restore');
     }
 
-    //feature user mk
+    //feature user Dirlap
     public function viewUserDirlap()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('user-dirlap.index');
@@ -254,7 +254,7 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('role.restore');
     }
 
-    //feature role
+    //feature Permission
     public function viewPermission()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('permission.index');
@@ -358,7 +358,7 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('mk.restore');
     }
 
-    //feature mk
+    //feature Jenis Pekerjaan
     public function viewJenisPekerjaan()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jenis-pekerjaan.index');
@@ -384,7 +384,7 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('jenis-pekerjaan.restore');
     }
 
-    //feature jenis-pekerjaan
+    //feature Data Umum
     public function viewDataUmum()
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('data-umum.index');

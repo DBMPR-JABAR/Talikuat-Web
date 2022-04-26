@@ -33,8 +33,9 @@ class MasterPpkController extends Controller
     public function index()
     {
         $this->authorize('viewUserPpk', Auth::user());
-        $data = MasterPpk::all()->where('is_delete', '!=', 1);
-        return view('admin.data_utama.master_ppk.index', compact('data'));
+        $data = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->get();
+        // dd($data);
+        return view('admin.data_utama.master_ppk.index',compact('data'));
     }
 
     /**
@@ -58,23 +59,7 @@ class MasterPpkController extends Controller
     {
         $this->authorize('createUserPpk', Auth::user());
 
-        //
-        // $validator = Validator::make($request->all(), [
-        //     'nama'=> 'required',
-        //     'alamat'=> 'required',
-        // ]);
-        // if ($validator->fails()) {
-        //     return back()->with(['error'=>$validator->messages()->first()]);
-        // }
-        // $temp =([
-        //     'nama'=>$request->nama,
-        //     'alamat'=>$request->alamat,
-        //     'created_by'=>Auth::user()->id,
-
-        // ]);
-        // $ppk = MasterPpk::create($temp);
-
-        $user = User::select('name', 'email', 'password', 'id')->where('email', $request->email)->first();
+        $user = User::select('name','email','password','id')->where('email', $request->email)->first();
         // dd($user);
         if ($user) {
             if (!$user->user_detail) {
@@ -120,15 +105,16 @@ class MasterPpkController extends Controller
 
         $create_detail = UserDetail::firstOrNew(['user_id' => $create_ppk->id]);
         $create_detail->rule_user_id = 2;
+        $create_detail->uptd_id = $request->input('unit');
+        $create_detail->created_by = Auth::user()->id;
         $create_detail->save();
-        $create_detail->ppk()->create([
-            'uptd_id' => $request->input('unit'),
-            'nama' => $request->input('name'),
-            'ppk_kegiatan' => $request->input('ppk_kegiatan'),
-            'created_by' => Auth::user()->id
-        ]);
-        if ($create_ppk) {
-            storeLogActivity(declarLog(1, 'PPK', $request->email, 1));
+        // $create_detail->ppk()->create([
+        //     'uptd_id' => $request->input('unit'),
+        //     'nama' => $request->input('name'),    
+        //     'created_by' => Auth::user()->id    
+        // ]);
+        if($create_ppk){
+            storeLogActivity(declarLog(1, 'PPK', $request->email,1 ));
             return redirect()->route('masterppk.index')->with(['success' => 'Data Berhasil Disimpan!']);
         } else
             return redirect()->route('masterppk.index')->with(['danger' => 'Data Gagal Disimpan!']);
@@ -146,8 +132,8 @@ class MasterPpkController extends Controller
         // return view('admin.data_utama.master_ppk.show', compact('data'));
         $rule_user = UserRule::all();
         $uptd = Uptd::all();
-        $data_ppk = MasterPpk::find($id);
-        $data = $data_ppk->user_detail->user;
+        $data_ppk = UserDetail::find($id);
+        $data = $data_ppk->user;
         // dd($data->user_detail->kontraktor);
         return view('admin.user.show', compact('data', 'rule_user', 'uptd'));
     }
@@ -161,9 +147,8 @@ class MasterPpkController extends Controller
     public function edit($id)
     {
         //
-        $data_ppk = MasterPpk::find($id);
-        // return view('admin.data_utama.master_ppk.form',compact('data'));
-        $data = $data_ppk->user_detail->user;
+        $data_ppk = UserDetail::find($id);
+        $data = $data_ppk->user;
         $kontraktors = MasterKontraktor::all();
         $konsultans = MasterKonsultan::all();
         $rule_user = UserRule::all();
@@ -171,7 +156,7 @@ class MasterPpkController extends Controller
 
         // dd($data->user_detail->kontraktor);
         // dd($data);
-        return view('admin.data_utama.master_ppk.form', compact('data', 'kontraktors', 'konsultans', 'rule_user', 'uptd'));
+        return view('admin.data_utama.master_ppk.form',compact('data','data_ppk','kontraktors','konsultans','rule_user','uptd'));
     }
 
     /**
@@ -221,7 +206,8 @@ class MasterPpkController extends Controller
         //
         $this->authorize('restoreUserPpk', Auth::user());
 
-        $data = MasterPpk::where('is_delete', 1)->get();
+        $data = UserDetail::where('is_delete',1)->where('rule_user_id',2)->get();
+
         // dd($data);
         return view('admin.data_utama.master_ppk.index', compact('data'));
     }
@@ -229,21 +215,21 @@ class MasterPpkController extends Controller
     {
         //
 
-        $user = MasterPpk::find($id);
-        if ($desc == 'restore') {
+        $user = UserDetail::find($id);
+        if($desc == 'restore'){
             $this->authorize('restoreUserPpk', Auth::user());
-            $user->user_detail()->update(['is_delete' => null]);
-            $user->is_delete = null;
+            $user->update(['is_delete' => null]);
+            // $user->is_delete = null;
             $message = 'Data Berhasil Dikembalikan! ';
         } elseif ($desc == 'move_to_trash') {
             $this->authorize('deleteUserPpk', Auth::user());
-            $user->user_detail->update(['is_delete' => 1]);
-            $user->is_delete = 1;
+            $user->update(['is_delete' => 1]);
+            // $user->is_delete = 1;
             $message = 'Data Berhasil di Pindahkan! ';
         }
-        $user->save();
-        if ($user) {
-            return back()->with(['success' => $message]);
+        // $user->save();
+        if($user){
+            return back()->with(['success'=>$message]);
         }
         // dd($data);
 

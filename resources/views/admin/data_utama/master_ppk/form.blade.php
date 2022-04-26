@@ -6,7 +6,7 @@
 @section('page-header')
 <div class="page-header">
     
-    <h3 class="page-title"> Edit @if(Request::segment(2) == 'user') User @else Profile @endif {!! $data->name !!} </h3>
+    <h3 class="page-title"> Edit @if(Request::segment(2) == 'user') User @else Profile @endif {!! @$data->profile->nama !!} </h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboar</a></li>
@@ -271,7 +271,7 @@
                                 <option value="">Select</option>
                                 @if (@$data->user_detail->rule_user_id == 2)
                                     @foreach ($uptd as $no =>$uptd)
-                                    <option value="{{ $uptd->id }}" @if (@$data->user_detail->ppk->uptd_id != null && $uptd->id == @$data->user_detail->ppk->uptd_id) selected @endif>{{ $uptd->nama }}</option>
+                                    <option value="{{ $uptd->id }}" @if (@$data->user_detail->uptd_id != null && $uptd->id == @$data->user_detail->uptd_id) selected @endif>{{ $uptd->nama }}</option>
                                     @endforeach
                                 @elseif (@$data->user_detail->rule_user_id == 3)
                                     @foreach ($uptd as $no =>$uptd)

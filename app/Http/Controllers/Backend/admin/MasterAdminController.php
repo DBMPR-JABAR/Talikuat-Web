@@ -22,7 +22,7 @@ class MasterAdminController extends Controller
     {
         //
         $this->authorize('viewUserAdmin', Auth::user());
-        $data = UserDetail::where('is_delete', null)->whereIn('rule_user_id', [1, 3, 9, 10, 13])->get();
+        $data = UserDetail::where('is_delete', null)->whereIn('rule_user_id', [1, 3, 9, 10, 13, 15])->get();
         // dd($data);
         return view('admin.user.admin.index', compact('data'));
     }
@@ -111,6 +111,9 @@ class MasterAdminController extends Controller
             $temp_detail['rule_user_id'] = 10;
             $create_detail->kontraktor_id = $request->kontraktor;
             $temp_detail['uptd_id'] = $request->unit_kontraktor;
+        } else if ($request->rule == 'ADMIN-PPK') {
+            $temp_detail['rule_user_id'] = 15;
+            $temp_detail['uptd_id'] = $request->unit_ppk;
         }
 
         $create_detail->rule_user_id = $temp_detail['rule_user_id'];
