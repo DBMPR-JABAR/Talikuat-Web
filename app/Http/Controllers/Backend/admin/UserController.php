@@ -40,7 +40,7 @@ class UserController extends Controller
         $this->authorize('viewAllUser', User::class);
         $data = UserDetail::where('is_delete', null)->get();
         // foreach($data as $no){
-        //     print_r($no->user->name);
+        //     print_r($no->user->name.', '.$no->user->id);
         //     echo "<br>";
         // }
         // dd($data);

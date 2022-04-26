@@ -35,6 +35,11 @@ class MasterPpkController extends Controller
         $this->authorize('viewUserPpk', Auth::user());
         $data = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->get();
         // dd($data);
+        // foreach($data as $no){
+        //     print_r($no->uptd->nama.', '.$no->user->id);
+        //     echo "<br>";
+        // }
+        // dd($data);
         return view('admin.data_utama.master_ppk.index',compact('data'));
     }
 
