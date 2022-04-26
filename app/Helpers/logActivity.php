@@ -42,7 +42,7 @@ if (! function_exists('declarLog')) {
             $desc2 = ' Print Data '.$target.' ' ;
         }else if($cek == 7){
             $activity = 'Verified Item';
-            $desc2 = ' Verifikasi Data '.$target.' ' ;
+            $desc2 = ' Verifikdasi Data '.$target.' ' ;
         }
         if($status == 0){
             $stat = 'error';
