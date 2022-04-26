@@ -103,12 +103,18 @@
                 >
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="{{ asset('assets/images/logo_tali_strong.png') }}" style="width: 50px;"
+                            src="{{
+                                asset('assets/images/logo_tali_strong.png')
+                            }}"
+                            style="width: 50px"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="{{ asset('assets/images/logo_tali_strong.png') }}" style="object-fit: cover;"
+                            src="{{
+                                asset('assets/images/logo_tali_strong.png')
+                            }}"
+                            style="object-fit: cover"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
@@ -404,7 +410,10 @@
                             class="navbar-brand brand-logo-mini align-self-center d-lg-none"
                             href="index.html"
                             ><img
-                                src="{{ asset('assets/images/logo_tali_strong.png') }}" style="object-fit: cover;"
+                                src="{{
+                                    asset('assets/images/logo_tali_strong.png')
+                                }}"
+                                style="object-fit: cover"
                                 alt="logo"
                         /></a>
                         <button
@@ -589,7 +598,7 @@
                     <div class="content-wrapper pb-0">
                         @yield('page-header') @yield('content')
                     </div>
-                    <footer class="footer">
+                    <!-- <footer class="footer">
                         <div
                             class="d-sm-flex justify-content-center justify-content-sm-between"
                         >
@@ -609,7 +618,7 @@
                                 from Bootstrapdash.com</span
                             >
                         </div>
-                    </footer>
+                    </footer> -->
                 </div>
                 <!-- main-panel ends -->
             </div>
