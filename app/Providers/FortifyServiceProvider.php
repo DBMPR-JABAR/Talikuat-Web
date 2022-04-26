@@ -68,7 +68,9 @@ class FortifyServiceProvider extends ServiceProvider
                
                 if($detail){
                     if ($user && Hash::check($request->password, $user->password)) {  
-                        Log::create(['activity' => 'Login','user_detail_id' => $detail->id, 'description' => 'User ' . $user->name . ' Logged In To Web Teman-Jabar', 'ip_address' => request()->ip()]);
+                        $log = Log::firstOrNew(['activity' => 'Login','user_detail_id' => $detail->id, 'description' => 'User ' . $user->name . ' Logged In To Web Teman-Jabar', 'ip_address' => request()->ip(),'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i')]);
+                        $log->save();
+                        
                         return $user;
                     }
                 }
