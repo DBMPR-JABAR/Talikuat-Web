@@ -89,7 +89,7 @@
                                     @else
                                         
                                         @can('viewVerificationUser',Auth::user())
-                                        <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        <a type='button' href='{{ route('verified.user',@$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
                                         @endcan
                                        
                                     @endif
