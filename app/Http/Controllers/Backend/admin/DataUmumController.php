@@ -38,15 +38,25 @@ class DataUmumController extends Controller
     }
     public function create()
     {
-        $uptd_id = Auth::user()->user_detail->uptd_id;
-        $uptd = Uptd::where('id', $uptd_id)->first();
-        $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
-        $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
-        $kontraktors = MasterKontraktor::get();
-        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
-        foreach ($dirlaps as $item) {
-            $item->nama = $item->user->name;
+        if (Auth::user()->internal_role_id != 1) {
+            $uptd_id = Auth::user()->user_detail->uptd_id;
+            $uptd = Uptd::where('id', $uptd_id)->first();
+            $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
+            $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
+        } else {
+            $ruas = RuasJalan::all();
+            $ppks = MasterPpk::all();
+
+            $uptd = Uptd::all();
         }
+
+
+        $kontraktors = MasterKontraktor::get();
+        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->with('user')->get();
+        dd($dirlaps);
+
+
+
         $temp_kategori = KategoriPaket::all();
         return view('admin.input_data.data_umum.create', compact('uptd', 'temp_kategori', 'ruas', 'ppks', 'dirlaps', 'kontraktors'));
     }

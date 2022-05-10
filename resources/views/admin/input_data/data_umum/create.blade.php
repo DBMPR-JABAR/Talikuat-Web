@@ -92,6 +92,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            @if(Auth::user()->internal_role_id !=1)
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Unor</label>
@@ -119,6 +120,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <div class="row align-items-start">
                             <div class="col-md-4">
@@ -481,7 +483,7 @@
                                     >
                                         @foreach($dirlaps as $dirlap)
                                         <option value="{{ $dirlap->id }}">
-                                            {{ $dirlap->nama }}
+                                            {{ $dirlap->user}}
                                         </option>
                                         @endforeach
                                     </select>
@@ -560,13 +562,13 @@
         setDataSelect(id1, url1, id_select1, text1, value1, option1);
 
         //Dirlap
-        id1 = document.getElementById("unit").value;
-        url1 = "{{ url('getDirlapByUptd') }}";
-        id_select1 = "#dirlap";
-        text1 = "-- Pilih DRILAP --";
-        option1 = "nama";
-        value1 = "id";
-        setDataSelect(id1, url1, id_select1, text1, value1, option1);
+        // id1 = document.getElementById("unit").value;
+        // url1 = "{{ url('getDirlapByUptd') }}";
+        // id_select1 = "#dirlap";
+        // text1 = "-- Pilih DRILAP --";
+        // option1 = "nama";
+        // value1 = "id";
+        // setDataSelect(id1, url1, id_select1, text1, value1, option1);
     }
     function ubahOption1() {
         //untuk select Ruas
