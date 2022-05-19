@@ -70,7 +70,7 @@
                     <th>Nama Kegiatan</th>
                     <th>Unor</th>
                     <th>Kategori</th>
-                    <th>Ruas</th>
+                    <th>Kode / Nama Ruas</th>
                     <th>kontraktor</th>
                     <th>PPK</th>
                     <th style="width: 22%">Aksi</th>
@@ -87,9 +87,9 @@
                         $item->kategori !!}
                     </td>
 
-                    <td>{!! @$item->detail->ruas[0]->id_ruas_jalan !!}</td>
+                    <td>{!! @$item->detail->ruas[0]->id_ruas_jalan !!} / {!! @$item->detail->ruas[0]->detail_ruas->nama_ruas_jalan !!}</td>
                     <td>{!! @$item->detail->kontraktor->nama !!}</td>
-                    <td>{!! @$item->detail->ppk->nama !!}</td>
+                    <td>{!! @$item->detail->ppk->user->name !!}</td>
                     <td>
                         @if (Request::segment(3) != 'trash')
                         <a

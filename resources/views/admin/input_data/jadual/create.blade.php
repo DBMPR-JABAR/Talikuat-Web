@@ -211,7 +211,7 @@
                     </div>
 
                     <div class="row align-items-start">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>PPK Kegiatan</label>
                                 <input
@@ -224,20 +224,33 @@
                                 />
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>PPK</label>
                                 <input
                                     type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{@$data->detail->ppk->nama}}"
+                                    name="ppk_user_id"
+                                    id="ppk_user_id"
+                                    value="{{@$data->detail->ppk->user->name}}"
                                     class="form-control"
                                     readonly
                                 />
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Direksi Lapangan</label>
+                                <input
+                                    type="text"
+                                    name="dirlap_id"
+                                    id="dirlap_id"
+                                    value="{{@$data->detail->dirlap->user->name}}"
+                                    class="form-control"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Konsultan Supervisi</label>
                                 <input
@@ -250,7 +263,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Penyedia Jasa</label>
                                 <input
