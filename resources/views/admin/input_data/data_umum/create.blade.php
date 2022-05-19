@@ -92,11 +92,10 @@
                                     @enderror
                                 </div>
                             </div>
-                            @if(Auth::user()->internal_role_id !=1)
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Unor</label>
-                                    <input
+                                    {{-- <input
                                         type="text"
                                         id="uptd_id"
                                         value="{{ $uptd->nama }}"
@@ -104,13 +103,25 @@
                                         required
                                         autocomplete="off"
                                         readonly
-                                    />
-                                    <input
+                                    /> --}}
+                                    {{-- <input
                                         type="hidden"
                                         name="upd_id"
                                         value="{{$uptd->id}}"
-                                    />
-                                    @error('unit')
+                                    /> --}}
+                                    <select
+                                        name="uptd_id" class="form-control" required
+                                    >
+                                    <option value="">
+                                        Pilih Unor
+                                    </option>
+                                    @foreach ($uptd as $uptd)
+                                    <option value="{{ $uptd->id }}">
+                                        {{ $uptd->nama }}
+                                    </option>
+                                    @endforeach
+                                    </select>
+                                    @error('uptd_id')
                                     <div
                                         class="invalid-feedback"
                                         style="display: block; color: red"
@@ -120,6 +131,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            @if(Auth::user()->internal_role_id !=1)
                             @endif
                         </div>
                         <div class="row align-items-start">
@@ -483,7 +495,7 @@
                                     >
                                         @foreach($dirlaps as $dirlap)
                                         <option value="{{ $dirlap->id }}">
-                                            {{ $dirlap->user}}
+                                            {{ $dirlap->user->name}}
                                         </option>
                                         @endforeach
                                     </select>
@@ -509,7 +521,7 @@
                                     >
                                         @foreach($ppks as $ppk)
                                         <option value="{{ $ppk->id }}">
-                                            {{ $ppk->nama }}
+                                            {{ $ppk->user->name }}
                                         </option>
                                         @endforeach
                                     </select>
