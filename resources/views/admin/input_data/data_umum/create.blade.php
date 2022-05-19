@@ -246,8 +246,8 @@
                                     <label>No. Kontrak</label>
                                     <input
                                         type="text"
-                                        name="pemda"
-                                        id="pemda"
+                                        name="no_kontrak"
+                                        id="no_kontrak"
                                         value=""
                                         class="form-control"
                                         style="text-transform: uppercase"
@@ -402,7 +402,7 @@
                                             <!--<table class="table table-bordered table-hover " id="invoiceItem7">-->
                                             <thead>
                                                 <tr class="well">
-                                                    <th>Ruas Jalan</th>
+                                                    <th>Kode Ruas Jalan</th>
                                                     <th>Segmen Jalan</th>
                                                     <th>Koordinat Awal Lat</th>
                                                     <th>Koordinat Awal Long</th>
@@ -422,7 +422,7 @@
                             </div>
                         </div>
                         <div class="row align-items-start">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Kontraktor</label>
                                     <select
@@ -452,7 +452,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Konsultan Supervisi</label>
                                     <select
@@ -483,7 +483,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Direksi Lapangan</label>
                                     <select
@@ -493,6 +493,9 @@
                                         required
                                         value="{{ old('dirlap_id') }}"
                                     >
+                                        <option value="">
+                                            Pilih Dirlap
+                                        </option>
                                         @foreach($dirlaps as $dirlap)
                                         <option value="{{ $dirlap->id }}">
                                             {{ $dirlap->user->name}}
@@ -509,7 +512,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>PPK</label>
                                     <select
@@ -531,6 +534,25 @@
                                         class="invalid-feedback"
                                         style="display: block; color: red"
                                     >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>PPK Kegiatan</label>
+                                    <input
+                                        type="text"
+                                        name="ppk_kegiatan"
+                                        id="ppk_kegiatan"
+                                        value="{{ old('ppk_kegiatan') }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                    />
+                                    @error('ppk_kegiatan')
+                                    <div class="invalid-feedback" style="display: block; color: red" >
                                         {{ $message }}
                                     </div>
                                     @enderror
@@ -616,7 +638,7 @@
 
         $("#myTable tbody").append(`
         <tr>
-        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required></td>
+        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required readonly></td>
         <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required></td>
         <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required></td>
         <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" required></td>
