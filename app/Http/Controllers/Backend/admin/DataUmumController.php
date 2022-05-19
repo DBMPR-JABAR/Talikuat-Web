@@ -42,8 +42,8 @@ class DataUmumController extends Controller
         $ruas = RuasJalan::latest();
         $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');
         $uptd = Uptd::whereBetween('id', [1, 6]);
-
-        if (Auth::user()->user_detail->uptd_id) {
+        
+        if (Auth::user()->internal_role_id != 1) {
             $uptd_id = Auth::user()->user_detail->uptd_id;
             $ruas = $ruas->where('uptd_id', $uptd_id);
             $uptd = $uptd->where('id', $uptd_id);
@@ -56,8 +56,6 @@ class DataUmumController extends Controller
         $uptd = $uptd->get();
 
         $kontraktors = MasterKontraktor::get();
-        // dd($ppks);
-
         $temp_kategori = KategoriPaket::all();
         return view('admin.input_data.data_umum.create', compact('uptd', 'temp_kategori', 'ruas', 'ppks', 'dirlaps', 'kontraktors'));
     }

@@ -95,33 +95,37 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Unor</label>
-                                    {{-- <input
-                                        type="text"
-                                        id="uptd_id"
-                                        value="{{ $uptd->nama }}"
+                                    @if(Auth::user()->internal_role_id != 1)
+                                    <select
+                                        name="uptd_id"
                                         class="form-control"
                                         required
-                                        autocomplete="off"
-                                        readonly
-                                    /> --}}
-                                    {{-- <input
-                                        type="hidden"
-                                        name="upd_id"
-                                        value="{{$uptd->id}}"
-                                    /> --}}
-                                    <select
-                                        name="uptd_id" class="form-control" required
+                                        disabled
                                     >
-                                    <option value="">
-                                        Pilih Unor
-                                    </option>
-                                    @foreach ($uptd as $uptd)
-                                    <option value="{{ $uptd->id }}">
-                                        {{ $uptd->nama }}
-                                    </option>
-                                    @endforeach
+                                        <option value="">Pilih Unor</option>
+                                        @foreach ($uptd as $uptd)
+                                        <option
+                                            value="{{ $uptd->id }}"
+                                            selected
+                                        >
+                                            {{ $uptd->nama }}
+                                        </option>
+                                        @endforeach
                                     </select>
-                                    @error('uptd_id')
+                                    @else
+                                    <select
+                                        name="uptd_id"
+                                        class="form-control"
+                                        required
+                                    >
+                                        <option value="">Pilih Unor</option>
+                                        @foreach ($uptd as $uptd)
+                                        <option value="{{ $uptd->id }}">
+                                            {{ $uptd->nama }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @endif @error('uptd_id')
                                     <div
                                         class="invalid-feedback"
                                         style="display: block; color: red"
@@ -131,8 +135,6 @@
                                     @enderror
                                 </div>
                             </div>
-                            @if(Auth::user()->internal_role_id !=1)
-                            @endif
                         </div>
                         <div class="row align-items-start">
                             <div class="col-md-4">
@@ -346,6 +348,117 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                        <div class="mb-3 border p-5 w-100">
+                            <h4 class="card-title text-center">
+                                Data Tenaga Ahli
+                            </h4>
+                            <table
+                                class="table table-bordered table-striped"
+                                id="tenagaAhli"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Jabatan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="nama_tenaga_ahli[]"
+                                                id="nama_tenaga_ahli"
+                                                value="{{
+                                                    old('nama_tenaga_ahli')
+                                                }}"
+                                                class="form-control"
+                                                required
+                                                autocomplete="off"
+                                            />
+                                            @error('nama_tenaga_ahli')
+                                            <div
+                                                class="invalid-feedback"
+                                                style="
+                                                    display: block;
+                                                    color: red;
+                                                "
+                                            >
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <select
+                                                name="jabatan_tenaga_ahli[]"
+                                                class="form-control"
+                                                required
+                                            >
+                                                <option value="">
+                                                    Jabatan
+                                                </option>
+                                                <option
+                                                    value="Supervision Enginer"
+                                                >
+                                                    Supervision Enginer
+                                                </option>
+                                                <option
+                                                    value="Inspector Enginer"
+                                                >
+                                                    Inspector Enginer
+                                                </option>
+                                                <option value="Bridge Engineer">
+                                                    Bridge Engineer
+                                                </option>
+                                                <option
+                                                    value="Quality Enggineer"
+                                                >
+                                                    Quality Enggineer
+                                                </option>
+                                                <option value="Lab. Tek ">
+                                                    Lab. Tek
+                                                </option>
+                                                <option value="K3">K3</option>
+                                            </select>
+                                            @error('jabatan_tenaga_ahli')
+                                            <div
+                                                class="invalid-feedback"
+                                                style="
+                                                    display: block;
+                                                    color: red;
+                                                "
+                                            >
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="removeRow(this)"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="7">
+                                            <button
+                                                type="button"
+                                                class="btn btn-primary btn-sm"
+                                                id="btn-add"
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="row align-items-start">
                             <div class="col">
@@ -644,8 +757,14 @@
     }
 
     $(document).ready(function () {
+        $(".table").DataTable().destroy();
+        $("#tenagaAhli").dataTable({
+            ordering: false,
+            paging: false,
+            info: false,
+            searching: false,
+        });
         var maxGroupRuas = 8;
-
         $(".addMoreRuas").click(function () {
             if ($("body").find(".fieldGroupRuas").length < maxGroupRuas) {
                 var fieldHTML =
@@ -793,6 +912,26 @@
         var destination = "&destination=" + latakhir + "," + longakhir;
         var newUrl = new URL(url + origin + destination);
         PopupCenter(newUrl, "Google Maps", 1200, 650);
+    }
+
+    $("#btn-add").click(function () {
+        $("#tbody")
+            .find("tr")
+            .first()
+            .clone()
+            .find("input")
+            .val("")
+            .end()
+            .appendTo("#tbody");
+    });
+
+    function removeRow(e) {
+        var parents = $(e).closest("tr");
+        if (parents.siblings().length > 0) {
+            parents.remove();
+        } else {
+            parents.find("input").val("");
+        }
     }
 </script>
 @endsection
