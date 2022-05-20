@@ -16,6 +16,7 @@ use App\Models\Backend\MasterPpk;
 use App\Models\Backend\RuasJalan;
 use App\Models\Backend\Uptd;
 use App\Models\Backend\UserDetail;
+use App\Models\Backend\TenagaAhli;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -61,8 +62,10 @@ class DataUmumController extends Controller
     }
     public function store(Request $request)
     {
+        $ppk = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->where('id',$request->input('ppk_user_id'))->first();
+
+        dd($ppk);
         try {
-            dd($request->all());
             $validator = Validator::make($request->all(), [
                 'pemda' => 'required',
                 'opd' => 'required',
@@ -98,6 +101,8 @@ class DataUmumController extends Controller
                 storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak') . ' ' . $validator->getMessageBag()->first()));
                 return back()->withInput()->with(['error' => $validator->getMessageBag()->first()]);
             }
+          
+
             $temp = ([
                 'pemda' => $request->input('pemda'),
                 'opd' => $request->input('opd'),
@@ -127,6 +132,15 @@ class DataUmumController extends Controller
                 'keterangan' => 'Kontrak Awal',
                 'created_by' => Auth::user()->id,
             ]);
+
+           foreach ($request->nama_tenaga_ahli as $key => $value) {
+              TenagaAhli::create([
+                'data_umum_id' => $data_umum_detail->id,
+                'nama_tenaga_ahli' => $value,
+                'jabatan' => $request->jumlah_tenaga_ahli[$key],
+            ]);
+           }
+
             for ($i = 0; $i < count($request->id_ruas_jalan); $i++) {
                 if ($request->segmen_jalan[$i] && $request->lat_awal[$i] && $request->long_awal[$i] && $request->lat_akhir[$i] && $request->long_akhir[$i]) {
                     DataUmumRuas::create([
@@ -146,6 +160,7 @@ class DataUmumController extends Controller
             return redirect()->route('dataumum.index')->with(['success' => 'Data Berhasil Disimpan!']);
         } catch (\Throwable $e) {
             DB::rollBack();
+            dd($e);
             storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak') . " | " . $e->getMessage()));
             return redirect()->route('dataumum.index')->with(['danger' => 'Data Gagal Disimpan!']);
         }

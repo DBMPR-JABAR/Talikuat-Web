@@ -10,6 +10,12 @@
         <title>@yield('title') | Tali Kuat Bina Marga</title>
         <link
             rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+            integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
             href=" {{
                 asset('assets/vendors/mdi/css/materialdesignicons.min.css')
             }}"
@@ -38,10 +44,6 @@
                 )
             }}"
         />
-        <link
-            rel="stylesheet"
-            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
-        />
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
         <link
             rel="shortcut icon"
@@ -53,17 +55,8 @@
             href="{{ asset('assets/css/custom.css') }}"
         />
         <link
-            rel="stylesheet"
-            type="text/css"
-            href="{{ asset('vendor/datatables.min.css') }}"
-        />
-        <link
             href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
             rel="stylesheet"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
         />
         <style>
             @media only screen and (max-width: 646px) {
@@ -629,6 +622,16 @@
         </div>
         <!-- container-scroller -->
         <!-- plugins:js -->
+        <!-- <script
+            src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"
+        ></script> -->
         <script src="{{
                 asset('assets/vendors/js/vendor.bundle.base.js')
             }}"></script>
@@ -667,21 +670,11 @@
         <script src="{{ asset('assets/js/misc.js') }}"></script>
         <!-- endinject -->
         <!-- Custom js for this page -->
-        <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+
         <!-- End custom js for this page -->
-        <script src="{{ asset('vendor/datatables.min.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-        <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
-        <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
         <script>
             $(document).ready(function () {
-                // $("table .display").DataTable({
-                //     responsive: true,
-                // });
-                // $("table .table").DataTable({
-                //     responsive: true,
-                // });
                 $("select").select2({
                     theme: "classic",
                     width: "resolve",
