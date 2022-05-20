@@ -22,7 +22,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">
-                <a href="/Talikuat-Backend/public/admin/dashboard">Dashboard</a>
+                <a href="{{ route('admin.dashboard.index') }}">Dashboard</a>
                 / Request
             </li>
         </ol>
@@ -550,7 +550,7 @@
 <script>
     $(document).ready(function () {
         $("table").DataTable().destroy();
-        $("table.display").DataTable();
+        $("table .display").DataTable();
     });
 </script>
 

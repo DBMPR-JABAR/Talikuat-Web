@@ -42,7 +42,7 @@ class DataUmumController extends Controller
         $ruas = RuasJalan::latest();
         $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');
         $uptd = Uptd::whereBetween('id', [1, 6]);
-        
+
         if (Auth::user()->internal_role_id != 1) {
             $uptd_id = Auth::user()->user_detail->uptd_id;
             $ruas = $ruas->where('uptd_id', $uptd_id);
@@ -62,7 +62,7 @@ class DataUmumController extends Controller
     public function store(Request $request)
     {
         try {
-
+            dd($request->all());
             $validator = Validator::make($request->all(), [
                 'pemda' => 'required',
                 'opd' => 'required',
@@ -117,8 +117,6 @@ class DataUmumController extends Controller
                 'data_umum_id' => $data_umum->id,
                 'kontraktor_id' => $request->input('kontraktor_id'),
                 'konsultan_id' => $request->input('konsultan_id'),
-                // 'ft_id' => $request->input('ft_id'),
-                // 'gs_user_detail_id' => $request->input('gs_user_detail_id'),
                 'ppk_id' => $request->input('ppk_user_id'),
                 'panjang_km' => $request->input('panjang_km'),
                 'lama_waktu' => $request->input('lama_waktu'),
@@ -131,8 +129,6 @@ class DataUmumController extends Controller
             ]);
             for ($i = 0; $i < count($request->id_ruas_jalan); $i++) {
                 if ($request->segmen_jalan[$i] && $request->lat_awal[$i] && $request->long_awal[$i] && $request->lat_akhir[$i] && $request->long_akhir[$i]) {
-
-                    // if($request->id_ruas_jalan[$i] && $request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
                     DataUmumRuas::create([
                         'data_umum_detail_id' => $data_umum_detail->id,
                         'id_ruas_jalan' => $request->id_ruas_jalan[$i],
@@ -150,7 +146,6 @@ class DataUmumController extends Controller
             return redirect()->route('dataumum.index')->with(['success' => 'Data Berhasil Disimpan!']);
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
             storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak') . " | " . $e->getMessage()));
             return redirect()->route('dataumum.index')->with(['danger' => 'Data Gagal Disimpan!']);
         }
@@ -160,14 +155,24 @@ class DataUmumController extends Controller
         $data = DataUmum::where([[
             'id', $id
         ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
-        $uptd_id = Auth::user()->user_detail->uptd_id;
-        $uptd = Uptd::where('id', $uptd_id)->first();
-        $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
-        $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
-        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
-        foreach ($dirlaps as $item) {
-            $item->nama = $item->user->name;
+        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->with('user');
+        $ruas = RuasJalan::latest();
+        $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');
+        $uptd = Uptd::whereBetween('id', [1, 6]);
+
+        if (Auth::user()->user_detail->uptd_id) {
+            $uptd_id = Auth::user()->user_detail->uptd_id;
+            $ruas = $ruas->where('uptd_id', $uptd_id);
+            $uptd = $uptd->where('id', $uptd_id);
+            $ppks = $ppks->where('uptd_id', $uptd_id);
+            $dirlaps = $dirlaps->where('uptd_id',$uptd_id);
         }
+        $dirlaps = $dirlaps->get();
+        $ruas = $ruas->get();
+        $ppks = $ppks->get();
+        $uptd = $uptd->get();
+
+        $kontraktors = MasterKontraktor::get();
         $temp_kategori = KategoriPaket::all();
 
         return view('admin.input_data.data_umum.show')->with(
@@ -178,6 +183,7 @@ class DataUmumController extends Controller
                 'ppks' => $ppks,
                 'dirlaps' => $dirlaps,
                 'temp_kategori' => $temp_kategori,
+                'kontraktors' => $kontraktors
 
             ]
         );
@@ -277,17 +283,38 @@ class DataUmumController extends Controller
 
     public function edit($id)
     {
-        $data = DataUmum::where([[
-            'id', $id
-        ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
-        $uptd_id = Auth::user()->user_detail->uptd_id;
-        $uptd = Uptd::where('id', $uptd_id)->first();
-        $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
-        $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
-        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
-        foreach ($dirlaps as $item) {
-            $item->nama = $item->user->name;
+        $data = DataUmum::find($id)->with('kategori_paket')->with('uptd')->with('detail')->first();
+        // $uptd_id = Auth::user()->user_detail->uptd_id;
+        // $uptd = Uptd::where('id', $uptd_id)->first();
+        // $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
+        // $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
+        // $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
+        // foreach ($dirlaps as $item) {
+        //     $item->nama = $item->user->name;
+        // }
+        // $kontraktors = MasterKontraktor::get();
+        // $temp_kategori = KategoriPaket::all();
+
+        // dd($data->detail->ppk->id);
+        $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->with('user');
+        $ruas = RuasJalan::latest();
+        $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');
+        $uptd = Uptd::whereBetween('id', [1, 6]);
+
+        if (Auth::user()->user_detail->uptd_id) {
+            $uptd_id = Auth::user()->user_detail->uptd_id;
+            $ruas = $ruas->where('uptd_id', $uptd_id);
+            $uptd = $uptd->where('id', $uptd_id);
+            $ppks = $ppks->where('uptd_id', $uptd_id);
+            $dirlaps = $dirlaps->where('uptd_id',$uptd_id);
         }
+        $dirlaps = $dirlaps->get();
+        $ruas = $ruas->get();
+        $ppks = $ppks->get();
+        $uptd = $uptd->get();
+
+        $kontraktors = MasterKontraktor::get();
+        // dd($ppks);
         $temp_kategori = KategoriPaket::all();
 
         return view('admin.input_data.data_umum.edit')->with(
@@ -298,8 +325,19 @@ class DataUmumController extends Controller
                 'ppks' => $ppks,
                 'dirlaps' => $dirlaps,
                 'temp_kategori' => $temp_kategori,
+                'kontraktors' => $kontraktors
 
             ]
         );
+    }
+
+    public function uploadFile(Request $request)
+    {
+       try {
+           
+           
+       } catch (\Throwable $e) {
+           
+       }
     }
 }

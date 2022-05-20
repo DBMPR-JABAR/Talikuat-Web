@@ -598,7 +598,7 @@
                     <div style="background: #f2f2f2">
                         @include('flashalert.index')
                     </div>
-                    <div class="content-wrapper pb-0">
+                    <div class="content-wrapper mt-4">
                         @yield('page-header') @yield('content')
                     </div>
                     <!-- <footer class="footer">
@@ -676,16 +676,17 @@
         <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
         <script>
             $(document).ready(function () {
-                $("table.display").DataTable({
-                    responsive: true,
-                });
-                $("table.table").DataTable({
-                    responsive: true,
-                });
+                // $("table .display").DataTable({
+                //     responsive: true,
+                // });
+                // $("table .table").DataTable({
+                //     responsive: true,
+                // });
                 $("select").select2({
                     theme: "classic",
                     width: "resolve",
                 });
+                $("#jabatanTenagaAhli").select2("destroy");
                 $(".drop-down-show-hide").hide();
                 $("#dropDown").change(function () {
                     $(".drop-down-show-hide").hide();
@@ -693,8 +694,8 @@
                 });
             });
             $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-            })
+                $('[data-toggle="tooltip"]').tooltip();
+            });
         </script>
         <script>
             function setDataSelect(
@@ -737,7 +738,7 @@
                 });
             }
         </script>
-        
+
         @yield('script')
     </body>
 </html>

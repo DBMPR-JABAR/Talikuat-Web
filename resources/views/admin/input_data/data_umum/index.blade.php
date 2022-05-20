@@ -33,102 +33,137 @@
 </div>
 @endsection @section('content')
 <div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
-        <div class="container">
-            <h4 class="card-title">Data Umum</h4>
-            @if (Request::segment(3) != 'trash')
-            <a
-                href="{{ route('create.dataumum') }}"
-                class="btn btn-mat btn-primary mb-3"
-            >
-                <i class="mdi mdi-account-plus menu-icon"></i> Tambah</a
-            >
-            <a
-                href="{{ route('trash.dataumum') }}"
-                class="btn btn-mat btn-danger mb-3"
-            >
-                <i class="mdi mdi-delete menu-icon"></i> Trash
-            </a>
-            @else
-            <a
-                href="{{ route('dataumum.index') }}"
-                class="btn btn-mat btn-danger mb-3"
-                ><i class="mdi mdi-undo menu-icon"></i> Kembali</a
-            >
-            @endif
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="container">
+                                @if (Request::segment(3) != 'trash')
+                                <a
+                                    href="{{ route('create.dataumum') }}"
+                                    class="btn btn-mat btn-primary mb-3"
+                                >
+                                    <i
+                                        class="mdi mdi-account-plus menu-icon"
+                                    ></i>
+                                    Tambah</a
+                                >
+                                <a
+                                    href="{{ route('trash.dataumum') }}"
+                                    class="btn btn-mat btn-danger mb-3"
+                                >
+                                    <i class="mdi mdi-delete menu-icon"></i>
+                                    Trash
+                                </a>
+                                @else
+                                <a
+                                    href="{{ route('dataumum.index') }}"
+                                    class="btn btn-mat btn-danger mb-3"
+                                    ><i class="mdi mdi-undo menu-icon"></i>
+                                    Kembali</a
+                                >
+                                @endif
+                            </div>
+                        </div>
+                        <div class="w-100">
+                            <table
+                                class="display responsive"
+                                style="width: 100%"
+                                id="dataUmum"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th>No Kontrak</th>
+                                        <th>Nama Kegiatan</th>
+                                        <th>Unor</th>
+                                        <th>Kategori</th>
+                                        <th>Kode / Nama Ruas</th>
+                                        <th>kontraktor</th>
+                                        <th>PPK</th>
+                                        <th style="width: 22%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data as $no => $item)
+                                    <tr>
+                                        <td>{!! $item->no_kontrak !!}</td>
+                                        <td>{!! $item->nm_paket !!}</td>
+                                        <td>{!! $item->uptd->nama !!}</td>
+                                        <td>
+                                            {!!
+                                            @$item->kategori_paket->nama_kategori
+                                            ? : $item->kategori !!}
+                                        </td>
+
+                                        <td>
+                                            {!!
+                                            @$item->detail->ruas[0]->id_ruas_jalan
+                                            !!} / {!!
+                                            @$item->detail->ruas[0]->detail_ruas->nama_ruas_jalan
+                                            !!}
+                                        </td>
+                                        <td>
+                                            {!! @$item->detail->kontraktor->nama
+                                            !!}
+                                        </td>
+                                        <td>
+                                            {!! @$item->detail->ppk->user->name
+                                            !!}
+                                        </td>
+                                        <td>
+                                            @if (Request::segment(3) != 'trash')
+                                            <a
+                                                type="button"
+                                                href="{{route('show.dataumum',$item->id) }}"
+                                                class="btn btn-sm btn-success waves-effect waves-light"
+                                                ><i
+                                                    class="mdi mdi-search-web menu-icon"
+                                                ></i
+                                            ></a>
+                                            <a
+                                                type="button"
+                                                href="{{route('edit.dataumum',$item->id) }}"
+                                                class="btn btn-sm btn-warning waves-effect waves-light"
+                                                ><i
+                                                    class="mdi mdi-grease-pencil"
+                                                ></i
+                                            ></a>
+
+                                            @else
+                                            <a
+                                                type="button"
+                                                href="#Restore"
+                                                data-toggle="modal"
+                                                data-id="{{$item->id}}"
+                                                class="btn btn-sm btn-success waves-effect waves-light"
+                                                ><i
+                                                    class="mdi mdi-backup-restore menu-icon"
+                                                ></i
+                                                >Restore</a
+                                            >
+                                            @endif
+                                            <a
+                                                type="button"
+                                                href="#delModal"
+                                                data-toggle="modal"
+                                                data-id="{{$item->id}}"
+                                                class="btn btn-sm btn-danger waves-effect waves-light"
+                                                ><i
+                                                    class="mdi mdi-delete menu-icon"
+                                                ></i></a
+                                            ><br />
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="w-100">
-        <table
-            class="display responsive"
-            id="dataKontraktor"
-            style="width: 100%"
-        >
-            <thead>
-                <tr>
-                    <th>No Kontrak</th>
-                    <th>Nama Kegiatan</th>
-                    <th>Unor</th>
-                    <th>Kategori</th>
-                    <th>Ruas</th>
-                    <th>kontraktor</th>
-                    <th>PPK</th>
-                    <th style="width: 22%">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $no => $item)
-                <tr>
-                    <td>{!! $item->no_kontrak !!}</td>
-                    <td>{!! $item->nm_paket !!}</td>
-                    <td>{!! $item->uptd->nama !!}</td>
-                    <td>
-                        {!! @$item->kategori_paket->nama_kategori ? :
-                        $item->kategori !!}
-                    </td>
-
-                    <td>{!! @$item->detail->ruas[0]->id_ruas_jalan !!}</td>
-                    <td>{!! @$item->detail->kontraktor->nama !!}</td>
-                    <td>{!! @$item->detail->ppk->nama !!}</td>
-                    <td>
-                        @if (Request::segment(3) != 'trash')
-                        <a
-                            type="button"
-                            href="{{route('show.dataumum',$item->id) }}"
-                            class="btn btn-sm btn-success waves-effect waves-light"
-                            ><i class="mdi mdi-search-web menu-icon"></i
-                        ></a>
-                        <a
-                            type="button"
-                            href="{{route('edit.dataumum',$item->id) }}"
-                            class="btn btn-sm btn-warning waves-effect waves-light"
-                            ><i class="mdi mdi-grease-pencil"></i
-                        ></a>
-
-                        @else
-                        <a
-                            type="button"
-                            href="#Restore"
-                            data-toggle="modal"
-                            data-id="{{$item->id}}"
-                            class="btn btn-sm btn-success waves-effect waves-light"
-                            ><i class="mdi mdi-backup-restore menu-icon"></i
-                            >Restore</a
-                        >
-                        @endif
-                        <a
-                            type="button"
-                            href="#delModal"
-                            data-toggle="modal"
-                            data-id="{{$item->id}}"
-                            class="btn btn-sm btn-danger waves-effect waves-light"
-                            ><i class="mdi mdi-delete menu-icon"></i></a
-                        ><br />
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
     </div>
 </div>
 <div class="modal-only">
@@ -213,6 +248,23 @@
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
+        $("#dataUmum").dataTable({
+            columnDefs: [
+                {
+                    targets: [0, 1, 2, 3, 4, 5, 6, 7],
+                    orderable: false,
+                },
+            ],
+            rowReorder: {
+                selector: "td:nth-child(2)",
+            },
+            responsive: true,
+            autoWidth: false,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Indonesian.json",
+            },
+        });
+
         $("#delModal").on("show.bs.modal", function (event) {
             const link = $(event.relatedTarget);
             const id = link.data("id");

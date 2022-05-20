@@ -248,8 +248,8 @@
                                     <label>No. Kontrak</label>
                                     <input
                                         type="text"
-                                        name="pemda"
-                                        id="pemda"
+                                        name="no_kontrak"
+                                        id="no_kontrak"
                                         value=""
                                         class="form-control"
                                         style="text-transform: uppercase"
@@ -395,6 +395,7 @@
                                                 name="jabatan_tenaga_ahli[]"
                                                 class="form-control"
                                                 required
+                                                id="jabatanTenagaAhli"
                                             >
                                                 <option value="">
                                                     Jabatan
@@ -515,7 +516,7 @@
                                             <!--<table class="table table-bordered table-hover " id="invoiceItem7">-->
                                             <thead>
                                                 <tr class="well">
-                                                    <th>Ruas Jalan</th>
+                                                    <th>Kode Ruas Jalan</th>
                                                     <th>Segmen Jalan</th>
                                                     <th>Koordinat Awal Lat</th>
                                                     <th>Koordinat Awal Long</th>
@@ -606,6 +607,7 @@
                                         required
                                         value="{{ old('dirlap_id') }}"
                                     >
+                                        <option value="">Pilih Dirlap</option>
                                         @foreach($dirlaps as $dirlap)
                                         <option value="{{ $dirlap->id }}">
                                             {{ $dirlap->user->name}}
@@ -729,7 +731,7 @@
 
         $("#myTable tbody").append(`
         <tr>
-        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required></td>
+        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required readonly></td>
         <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required></td>
         <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required></td>
         <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" required></td>
@@ -757,13 +759,13 @@
     }
 
     $(document).ready(function () {
-        $(".table").DataTable().destroy();
         $("#tenagaAhli").dataTable({
             ordering: false,
             paging: false,
             info: false,
             searching: false,
         });
+
         var maxGroupRuas = 8;
         $(".addMoreRuas").click(function () {
             if ($("body").find(".fieldGroupRuas").length < maxGroupRuas) {

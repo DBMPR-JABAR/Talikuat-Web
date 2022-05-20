@@ -390,13 +390,13 @@
 
                                             <div class="col-md-3 col-sm-3">
                                                 <p>
-                                                    <input
+                                                    {{-- <input
                                                         type="button"
                                                         class="btn btn-primary btn-mini waves-effect waves-light"
                                                         data-toggle="tooltip"
                                                         title="Tambah Ruas"
                                                         value="Tambah Ruas"
-                                                    />
+                                                    /> --}}
                                                 </p>
                                             </div>
                                         </div>
@@ -416,8 +416,7 @@
                                                     <th>
                                                         Koordinat Akhir Long
                                                     </th>
-                                                    <th>Cek Lokasi</th>
-                                                    <th>Hapus</th>
+                                                 
                                                 </tr>
                                             </thead>
 
@@ -498,27 +497,7 @@
                                                         />
                                                     </td>
 
-                                                    <td>
-                                                        <button
-                                                            type="button"
-                                                            onclick="checkLok(this)"
-                                                            class="badge badge-sm badge-primary"
-                                                        >
-                                                            Cek Lokasi
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <button
-                                                            type="button"
-                                                            onclick="deleteEl(this)"
-                                                            class="badge badge-sm badge-danger"
-                                                            style="
-                                                                background-color: red;
-                                                            "
-                                                        >
-                                                            Hapus
-                                                        </button>
-                                                    </td>
+                                                    
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -529,6 +508,38 @@
                         </div>
 
                         <div class="row align-items-start">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Kontraktor</label>
+                                    <select
+                                        name="kontraktor_id"
+                                        id="kontraktor_id"
+                                        class="form-control"
+                                        required
+                                        disabled
+
+                                    >
+                                        <option selected disabled>
+                                            Pilih kontraktor
+                                        </option>
+                                        @foreach($kontraktors as $item)
+
+                                        <option value="{{ $item->id }}" @if(@$data->detail->kontraktor->id == $item->id) selected @endif>
+                                            {{ $item->nama }}
+                                        </option>
+
+                                        @endforeach
+                                    </select>
+                                    @error('konsultan_id')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Konsultan Supervisi</label>
@@ -573,15 +584,17 @@
                                         id="dirlap"
                                         class="form-control"
                                         required
-                                        value="{{ old('dirlap_id') }}"
                                         disabled
                                     >
+                                        {{-- <option value="">
+                                            Pilih Dirlap
+                                        </option> --}}
                                         @foreach($dirlaps as $dirlap)
                                         <option
                                             value="{{ $dirlap->id }}"
-                                            selected
+                                            @if(@$data->detail->dirlap->id == $dirlap->id) selected @endif
                                         >
-                                            {{ $dirlap->nama }}
+                                            {{ $dirlap->user->name }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -595,7 +608,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>PPK</label>
                                     <select
@@ -603,19 +616,15 @@
                                         id="ppk"
                                         class="form-control"
                                         required
-                                        value="{{ old('ppk') }}"
                                         disabled
+                                        
                                     >
-                                        @foreach($ppks as $ppk) @if($ppk->id ==
-                                        $data->detail->ppk->id)
-                                        <option value="{{ $ppk->id }}" selected>
-                                            {{ $ppk->nama }}
-                                        </option>
-                                        @else
-                                        <option value="{{ $ppk->id }}">
-                                            {{ $ppk->nama }}
-                                        </option>
-                                        @endif @endforeach
+                                    @foreach($ppks as $ppk)
+                                    <option value="{{ $ppk->id }}" @if(@$data->detail->ppk->id == $ppk->id) selected @endif>
+                                        {{ $ppk->user->name }}
+                                    </option>
+                                    @endforeach
+
                                     </select>
 
                                     @error('ppk')
@@ -628,13 +637,36 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>PPK Kegiatan</label>
+                                    <input
+                                        type="text"
+                                        name="ppk_kegiatan"
+                                        id="ppk_kegiatan"
+                                        value="{{ old('ppk_kegiatan',@$data->ppk_kegiatan) }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off" readonly
+                                    />
+                                    @error('ppk_kegiatan')
+                                    <div class="invalid-feedback" style="display: block; color: red" >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                        <button
+                        <a href="{{ route('dataumum.index') }}" class="btn btn-responsive btn-primary">
+                            <i class="mdi mdi-reload"></i> Kembali
+                        
+                        </a>
+                        {{-- <button
                             type="button"
                             class="btn btn-responsive btn-primary"
                         >
                             <i class="mdi mdi-reload"></i> Kembali
-                        </button>
+                        </button> --}}
                     </form>
                 </div>
             </div>

@@ -96,22 +96,19 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Unor</label>
-                                    <input
-                                        type="text"
-                                        id="uptd_id"
-                                        value="{{ $data->uptd->nama }}"
-                                        class="form-control"
-                                        required
-                                        name="uptd_id"
-                                        autocomplete="off"
-                                        readonly
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="upd_id"
-                                        value="{{$data->uptd->id}}"
-                                    />
-                                    @error('unit')
+                                    <select
+                                        name="uptd_id" class="form-control" required
+                                    >
+                                    <option value="">
+                                        Pilih Unor
+                                    </option>
+                                    @foreach ($uptd as $uptd)
+                                    <option value="{{ $uptd->id }}" @if($data->id_uptd == $uptd->id) selected @endif>
+                                        {{ $uptd->nama }}
+                                    </option>
+                                    @endforeach
+                                    </select>
+                                    @error('uptd_id')
                                     <div
                                         class="invalid-feedback"
                                         style="display: block; color: red"
@@ -135,21 +132,10 @@
                                             Pilih Kategori
                                         </option>
                                         @foreach (@$temp_kategori as $item)
-                                        @if($data->kategori_paket_id ==
-                                        $item->id)
-                                        <option
-                                            value="{{
-                                                $data->kategori_paket_id
-                                            }}"
-                                            selected
-                                        >
+                                        <option value="{{ $item->id }}" @if(@$data->kategori_paket_id == $item->id) selected @endif>
                                             {{ $item->nama_kategori }}
                                         </option>
-                                        @else
-                                        <option value="{{ $item->id }}">
-                                            {{ $item->nama_kategori }}
-                                        </option>
-                                        @endif @endforeach
+                                        @endforeach
                                     </select>
                                     @error('unit')
                                     <div
@@ -424,7 +410,7 @@
                                                             id="id_ruas_jalan[]"
                                                             value="{{$ruas->id_ruas_jalan}}"
                                                             autocomplete="off"
-                                                            required
+                                                            required readonly
                                                         />
                                                     </td>
                                                     <td>
@@ -516,6 +502,36 @@
                         <div class="row align-items-start">
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label>Kontraktor</label>
+                                    <select
+                                        name="kontraktor_id"
+                                        id="kontraktor_id"
+                                        class="form-control"
+                                        required
+                                    >
+                                        <option selected disabled>
+                                            Pilih kontraktor
+                                        </option>
+                                        @foreach($kontraktors as $item)
+
+                                        <option value="{{ $item->id }}" @if(@$data->detail->kontraktor->id == $item->id) selected @endif>
+                                            {{ $item->nama }}
+                                        </option>
+
+                                        @endforeach
+                                    </select>
+                                    @error('konsultan_id')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label>Konsultan Supervisi</label>
                                     <select
                                         name="konsultan_id"
@@ -557,14 +573,16 @@
                                         id="dirlap"
                                         class="form-control"
                                         required
-                                        value="{{ old('dirlap_id') }}"
                                     >
+                                        {{-- <option value="">
+                                            Pilih Dirlap
+                                        </option> --}}
                                         @foreach($dirlaps as $dirlap)
                                         <option
                                             value="{{ $dirlap->id }}"
-                                            selected
+                                            @if(@$data->detail->dirlap->id == $dirlap->id) selected @endif
                                         >
-                                            {{ $dirlap->nama }}
+                                            {{ $dirlap->user->name }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -578,7 +596,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>PPK</label>
                                     <select
@@ -586,18 +604,14 @@
                                         id="ppk"
                                         class="form-control"
                                         required
-                                        value="{{ old('ppk') }}"
+                                        
                                     >
-                                        @foreach($ppks as $ppk) @if($ppk->id ==
-                                        $data->detail->ppk->id)
-                                        <option value="{{ $ppk->id }}" selected>
-                                            {{ $ppk->nama }}
-                                        </option>
-                                        @else
-                                        <option value="{{ $ppk->id }}">
-                                            {{ $ppk->nama }}
-                                        </option>
-                                        @endif @endforeach
+                                    @foreach($ppks as $ppk)
+                                    <option value="{{ $ppk->id }}" @if(@$data->detail->ppk->id == $ppk->id) selected @endif>
+                                        {{ $ppk->user->name }}
+                                    </option>
+                                    @endforeach
+
                                     </select>
 
                                     @error('ppk')
@@ -605,6 +619,25 @@
                                         class="invalid-feedback"
                                         style="display: block; color: red"
                                     >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>PPK Kegiatan</label>
+                                    <input
+                                        type="text"
+                                        name="ppk_kegiatan"
+                                        id="ppk_kegiatan"
+                                        value="{{ old('ppk_kegiatan',@$data->ppk_kegiatan) }}"
+                                        class="form-control"
+                                        required
+                                        autocomplete="off"
+                                    />
+                                    @error('ppk_kegiatan')
+                                    <div class="invalid-feedback" style="display: block; color: red" >
                                         {{ $message }}
                                     </div>
                                     @enderror
@@ -697,7 +730,7 @@
 
         $("#myTable tbody").append(`
         <tr>
-        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required></td>
+        <td><input type="text" class="form-control" name="id_ruas_jalan[]" value="${text}" autocomplete="off" required readonly></td>
         <td><input type="text" class="form-control" name="segmen_jalan[]" autocomplete="off" placeholder="Km Bdg... s/d Km...Bdg" required></td>
         <td><input type="text" class="form-control"  name="lat_awal[]" autocomplete="off" placeholder="-7.123456" required></td>
         <td><input type="text" class="form-control"  name="long_awal[]" autocomplete="off" placeholder="107.12345" required></td>
