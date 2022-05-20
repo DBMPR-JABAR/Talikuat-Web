@@ -221,6 +221,7 @@ class MasterPpkController extends Controller
     {
         //
 
+      
         $user = UserDetail::find($id);
         if($desc == 'restore'){
             $this->authorize('restoreUserPpk', Auth::user());
