@@ -322,6 +322,12 @@
             modal.find('.modal-footer #resHref').attr('href', url);
         });
 
+        $('.table').DataTable({
+            "language": {
+                "emptyTable": "Tidak Ada Data"
+            }
+        });
+
     });
 </script>
 @endsection

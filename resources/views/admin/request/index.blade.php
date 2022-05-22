@@ -22,7 +22,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">
-                <a href="/Talikuat-Backend/public/admin/dashboard">Dashboard</a>
+                <a href="{{ route('admin.dashboard.index') }}">Dashboard</a>
                 / Request
             </li>
         </ol>
@@ -38,7 +38,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <table class="display responsive">
+                <table class="display nowrap" style="width: 100%">
                     <thead>
                         <th>No. Dokumen Diajukan Tanggal</th>
                         <th>Unor</th>
@@ -549,8 +549,13 @@
 <script src="{{ asset('assets/custom/request.js') }}"></script>
 <script>
     $(document).ready(function () {
-        $("table").DataTable().destroy();
-        $("table.display").DataTable();
+        $("table").DataTable({
+            responsive: true,
+            autoWidth: false,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Indonesian.json",
+            },
+        });
     });
 </script>
 

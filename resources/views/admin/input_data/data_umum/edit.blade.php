@@ -97,7 +97,7 @@
                                 <div class="form-group">
                                     <label>Unor</label>
                                     <select
-                                        name="uptd_id" class="form-control" required
+                                        name="uptd_id" class="form-control select2" required
                                     >
                                     <option value="">
                                         Pilih Unor
@@ -125,7 +125,7 @@
                                     <label>Kategori Paket Kegiatan</label>
                                     <select
                                         name="kategori_paket_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option selected disabled>
@@ -331,7 +331,7 @@
                                                 <select
                                                     name="ruas"
                                                     id="ruas"
-                                                    class="form-control"
+                                                    class="form-control select2"
                                                     required
                                                 >
                                                     @foreach (@$ruas as $item)
@@ -506,7 +506,7 @@
                                     <select
                                         name="kontraktor_id"
                                         id="kontraktor_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option selected disabled>
@@ -536,7 +536,7 @@
                                     <select
                                         name="konsultan_id"
                                         id="konsultan_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         @foreach($konsultans as $item)
@@ -571,7 +571,7 @@
                                     <select
                                         name="dirlap_id"
                                         id="dirlap"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         {{-- <option value="">
@@ -602,7 +602,7 @@
                                     <select
                                         name="ppk_user_id"
                                         id="ppk"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                         
                                     >
@@ -624,6 +624,7 @@
                                     @enderror
                                 </div>
                             </div>
+                           
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>PPK Kegiatan</label>
@@ -631,7 +632,7 @@
                                         type="text"
                                         name="ppk_kegiatan"
                                         id="ppk_kegiatan"
-                                        value="{{ old('ppk_kegiatan',@$data->ppk_kegiatan) }}"
+                                        value="{{ old('ppk_kegiatan') ?? $data->ppk_kegiatan }}"
                                         class="form-control"
                                         required
                                         autocomplete="off"
@@ -650,13 +651,14 @@
                         >
                             <i class="fa fa-paper-plane"></i> Save
                         </button>
-                        <button
-                            type="submit"
+                        <a
+                            type="button"
                             class="btn btn-responsive btn-warning"
+                            href="{{ route('upload.dataumum', $data->id) }}"
                         >
                             <i class="fa-solid fa-file-arrow-up"></i> File
                             Upload
-                        </button>
+                        </a>
                     </form>
                 </div>
             </div>

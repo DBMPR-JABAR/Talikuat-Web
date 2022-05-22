@@ -161,8 +161,8 @@ function getRandomColor() {
 
 function renderDetailJadual(index) {
     const data = dataJadualGlobal[0][index];
-    $("table.display").DataTable().destroy();
     $("table tbody").empty();
+    $("table .display").DataTable().destroy();
 
     data.forEach((v, i) => {
         console.log(data[i].nilai);

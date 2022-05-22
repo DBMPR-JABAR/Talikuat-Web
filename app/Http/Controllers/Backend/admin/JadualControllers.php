@@ -46,11 +46,12 @@ class JadualControllers extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create($id)
-    {
+    {   
 
         $data = DataUmum::where([[
             'id', $id
         ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
+
 
         $file = TempFileJadual::where([[
             'data_umum_detail_id', $data->detail->$id
@@ -60,7 +61,11 @@ class JadualControllers extends Controller
             $file->delete();
         }
 
-        return view('admin.input_data.jadual.create', compact('data'));
+        if($data->fileJadual->first() != null){
+            return view('admin.input_data.jadual.create', compact('data'));
+        }else{
+            return redirect()->route('upload.dataumum', $id)->with(['error' => 'File Jadual Belum Diupload']);
+        }
     }
 
     /**
@@ -82,7 +87,7 @@ class JadualControllers extends Controller
             $getFile = TempFileJadual::where('data_umum_detail_id', $request->data_umum_detail_id)->first();
             $file = storage_path('app/' . $this->PATH_FILE_DB . $getFile->file_name);
             $list_jadual = Excel::toCollection(new JadualImport, $file);
-            $data_umum = DataUmum::where('id', $request->id_data_umum)->with('detail')->first();
+            $data_umum = DataUmumDetail::where('id', $request->data_umum_detail_id)->where('is_active', 1)->first();
             foreach ($list_jadual as $val) {
 
                 $val[0]['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($val[0]['tanggal']));
@@ -117,9 +122,10 @@ class JadualControllers extends Controller
                     ]);
                 }
             }
-            $data_umum->detail->update([
-                'jadual' => 'Jadual Sudah Diinput'
-            ]);
+             $data_umum->update([
+                 'jadual' => 'Jadual Sudah Diinput'
+             ]);
+            
             Storage::delete($this->PATH_FILE_DB . $getFile->file_name);
             $getFile->delete();
             return redirect()->route('jadual.index')->with('success', 'Data berhasil diinput');

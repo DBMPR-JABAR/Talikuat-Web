@@ -148,7 +148,7 @@
                         <div class="col-sm-10">
                             <select
                                 name="jadual_id"
-                                class="form-control"
+                                class="form-control select2"
                                 required
                                 onchange="getVolumeJadual(this.value)"
                             >

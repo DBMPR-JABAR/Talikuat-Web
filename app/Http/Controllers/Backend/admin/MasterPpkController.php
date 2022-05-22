@@ -113,6 +113,10 @@ class MasterPpkController extends Controller
         $create_detail->uptd_id = $request->input('unit');
         $create_detail->created_by = Auth::user()->id;
         $create_detail->save();
+        MasterPpk::create([
+            'user_detail_id' => $create_detail->id,
+            'ppk_kegiatan' => $request->input('ppk_kegiatan'),
+        ]);
         // $create_detail->ppk()->create([
         //     'uptd_id' => $request->input('unit'),
         //     'nama' => $request->input('name'),    
@@ -173,9 +177,6 @@ class MasterPpkController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        //
-
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
             'alamat' => 'required',
@@ -220,6 +221,7 @@ class MasterPpkController extends Controller
     {
         //
 
+      
         $user = UserDetail::find($id);
         if($desc == 'restore'){
             $this->authorize('restoreUserPpk', Auth::user());

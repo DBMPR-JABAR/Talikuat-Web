@@ -284,7 +284,19 @@
                                 @endif
                             </select>
                         </div>
-                            
+                        @if(@$data->user_detail->rule_user_id == 2)
+                        <div class="form-group">
+                            <label>PPK Kegiatan </label>
+                            <input name="ppk_kegiatan" placeholder="PPK Kegiatan" type="text"
+                                value="{{ old('ppk_kegiatan', @$data->user_detail->ppkKegiatan->ppk_kegiatan) }}"
+                                class="form-control  @error('ppk_kegiatan') is-invalid @enderror">
+                            @error('ppk_kegiatan')
+                                <div class="invalid-feedback" style="display: block; color:red">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        @endif
                         {{-- @if (@$data->user_detail->rule_user_id == 2 || @$data->user_detail->rule_user_id == 3)
                         @endif --}}
                         <div class="form-group">

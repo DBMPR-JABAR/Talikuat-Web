@@ -69,4 +69,10 @@ class UserDetail extends Model
         return $this->belongsToMany('App\Models\Backend\Uptd', 'talikuat.user_detail_has_uptd', 'user_detail_id', 'uptd_id');
 
     }
+    
+   
+    public function ppkKegiatan()
+    {
+        return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');
+    }
 }

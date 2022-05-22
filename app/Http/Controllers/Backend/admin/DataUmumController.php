@@ -16,13 +16,19 @@ use App\Models\Backend\MasterPpk;
 use App\Models\Backend\RuasJalan;
 use App\Models\Backend\Uptd;
 use App\Models\Backend\UserDetail;
+use App\Models\Backend\TenagaAhli;
+use App\Models\Backend\FileDataUmum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class DataUmumController extends Controller
 {
-    //
+    private $PATH_FILE_DB = "public/file/data_umum/";
     public function index()
     {
         if (Auth::user()->internal_role_id != 1) {
@@ -43,7 +49,7 @@ class DataUmumController extends Controller
         $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');
         $uptd = Uptd::whereBetween('id', [1, 6]);
 
-        if (Auth::user()->user_detail->uptd_id) {
+        if (Auth::user()->internal_role_id != 1) {
             $uptd_id = Auth::user()->user_detail->uptd_id;
             $ruas = $ruas->where('uptd_id', $uptd_id);
             $uptd = $uptd->where('id', $uptd_id);
@@ -56,14 +62,16 @@ class DataUmumController extends Controller
         $uptd = $uptd->get();
 
         $kontraktors = MasterKontraktor::get();
-        // dd($ppks);
         $temp_kategori = KategoriPaket::all();
         return view('admin.input_data.data_umum.create', compact('uptd', 'temp_kategori', 'ruas', 'ppks', 'dirlaps', 'kontraktors'));
     }
     public function store(Request $request)
     {
+        $ppk = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->where('id',$request->input('ppk_user_id'))->first();
+        $ppk_kegiatan = $ppk->ppkKegiatan->ppk_kegiatan;
+        
+        
         try {
-
             $validator = Validator::make($request->all(), [
                 'pemda' => 'required',
                 'opd' => 'required',
@@ -79,8 +87,6 @@ class DataUmumController extends Controller
                     Rule::unique(DataUmum::class, 'no_spmk'),
                 ],
                 'tgl_spmk' => 'required',
-                'ppk_kegiatan' => 'required',
-
                 'nilai_kontrak' => 'required',
                 'kontraktor_id' => 'required',
                 'konsultan_id' => 'required',
@@ -99,6 +105,8 @@ class DataUmumController extends Controller
                 storeLogActivity(declarLog(1, 'Data Umum', $request->input('no_kontrak') . ' ' . $validator->getMessageBag()->first()));
                 return back()->withInput()->with(['error' => $validator->getMessageBag()->first()]);
             }
+          
+
             $temp = ([
                 'pemda' => $request->input('pemda'),
                 'opd' => $request->input('opd'),
@@ -109,18 +117,15 @@ class DataUmumController extends Controller
                 'tgl_kontrak' => $request->input('tgl_kontrak'),
                 'no_spmk' => $request->input('no_spmk'),
                 'tgl_spmk' => $request->input('tgl_spmk'),
-                'ppk_kegiatan' => $request->input('ppk_kegiatan'),
+                'ppk_kegiatan' => $ppk_kegiatan,
                 'created_by' => Auth::user()->id,
             ]);
-            // dd($temp);
             DB::beginTransaction();
             $data_umum = DataUmum::create($temp);
             $data_umum_detail =  DataUmumDetail::create([
                 'data_umum_id' => $data_umum->id,
                 'kontraktor_id' => $request->input('kontraktor_id'),
                 'konsultan_id' => $request->input('konsultan_id'),
-                // 'ft_id' => $request->input('ft_id'),
-                // 'gs_user_detail_id' => $request->input('gs_user_detail_id'),
                 'ppk_id' => $request->input('ppk_user_id'),
                 'panjang_km' => $request->input('panjang_km'),
                 'lama_waktu' => $request->input('lama_waktu'),
@@ -131,10 +136,17 @@ class DataUmumController extends Controller
                 'keterangan' => 'Kontrak Awal',
                 'created_by' => Auth::user()->id,
             ]);
+
+           foreach ($request->nama_tenaga_ahli as $key => $value) {
+              TenagaAhli::create([
+                'data_umum_id' => $data_umum_detail->id,
+                'nama_tenaga_ahli' => $value,
+                'jabatan' => $request->jabatan_tenaga_ahli[$key],
+            ]);
+           }
+
             for ($i = 0; $i < count($request->id_ruas_jalan); $i++) {
                 if ($request->segmen_jalan[$i] && $request->lat_awal[$i] && $request->long_awal[$i] && $request->lat_akhir[$i] && $request->long_akhir[$i]) {
-
-                    // if($request->id_ruas_jalan[$i] && $request->segmen_jalan[$i] && $request->lat_awal[$i]&& $request->long_awal[$i]&& $request->lat_akhir[$i]&& $request->long_akhir[$i]){
                     DataUmumRuas::create([
                         'data_umum_detail_id' => $data_umum_detail->id,
                         'id_ruas_jalan' => $request->id_ruas_jalan[$i],
@@ -337,4 +349,108 @@ class DataUmumController extends Controller
             ]
         );
     }
+
+    public function fileUpload($id)
+    {
+        $data = DataUmum::find($id);
+        
+
+        $fileDkh =new \stdClass;
+        $fileDkh->label ='Daftar Kuantitas dan Harga (DKH)';
+        $fileDkh->name = 'file_dkh';
+        $fileDkh->file = $data->fileDkh->first()? $data->fileDkh->first()->file_name : null;
+        
+        
+        $fileKontrak =new \stdClass;
+        $fileKontrak->label ='Perjanjian Kontrak';
+        $fileKontrak->name = 'file_kontrak';
+        $fileKontrak->file = $data->fileKontrak->first()? $data->fileKontrak->first()->file_name : null;
+
+        $fileSPMK =new \stdClass;
+        $fileSPMK->label ='SPMK';
+        $fileSPMK->name = 'file_spmk';
+        $fileSPMK->file = $data->fileSPMK->first()? $data->fileSPMK->first()->file_name : null;
+
+        $fileUmum =new \stdClass;
+        $fileUmum->label ='Syarat Umum';
+        $fileUmum->name = 'file_umum';
+        $fileUmum->file = $data->fileUmum->first()? $data->fileUmum->first()->file_name : null;
+
+        $fileSyaratKhusus =new \stdClass;
+        $fileSyaratKhusus->label ='Syarat Khusus';
+        $fileSyaratKhusus->name = 'file_syarat_khusus';
+        $fileSyaratKhusus->file = $data->fileSyaratKhusus->first()? $data->fileSyaratKhusus->first()->file_name : null;
+
+        $fileJadual =new \stdClass;
+        $fileJadual->label ='Jadual Pelaksanaan Pekerjaan';
+        $fileJadual->name = 'file_jadual';
+        $fileJadual->file = $data->fileJadual->first()? $data->fileJadual->first()->file_name : null;
+
+        $fileGambarRencana =new \stdClass;
+        $fileGambarRencana->label ='Gambar Rencana';
+        $fileGambarRencana->name = 'file_gambar_rencana';
+        $fileGambarRencana->file = $data->fileGambarRencana->first()? $data->fileGambarRencana->first()->file_name : null;
+
+        $fileSPPBJ =new \stdClass;
+        $fileSPPBJ->label ='SPPBJ';
+        $fileSPPBJ->name = 'file_sppbj';
+        $fileSPPBJ->file = $data->fileSPPBJ->first()? $data->fileSPPBJ->first()->file_name : null;
+
+        $fileSPL =new \stdClass;
+        $fileSPL->label ='SPL';
+        $fileSPL->name = 'file_spl';
+        $fileSPL->file = $data->fileSPL->first()? $data->fileSPL->first()->file_name : null;
+
+        $fileSpeckUmum =new \stdClass;
+        $fileSpeckUmum->label ='Spesifikasi Umum';
+        $fileSpeckUmum->name = 'file_speck_umum';
+        $fileSpeckUmum->file = $data->fileSpeckUmum->first()? $data->fileSpeckUmum->first()->file_name : null;
+
+        $fileJaminan =new \stdClass;
+        $fileJaminan->label ='Jaminan - Jaminan';
+        $fileJaminan->name = 'file_jaminan';
+        $fileJaminan->file = $data->fileJaminan->first()? $data->fileJaminan->first()->file_name : null;
+
+        $fileBAPL =new \stdClass;
+        $fileBAPL->label ='BAPL';
+        $fileBAPL->name = 'file_bapl';
+        $fileBAPL->file = $data->fileBAPL->first()? $data->fileBAPL->first()->file_name : null;
+
+        $fileInit = [$fileDkh, $fileKontrak, $fileSPMK, $fileUmum, $fileSyaratKhusus, $fileJadual, $fileGambarRencana, $fileSPPBJ, $fileSPL, $fileSpeckUmum, $fileJaminan, $fileBAPL];
+       
+        return view('admin.input_data.data_umum.file_upload')->with(
+            [
+                'data' => $data,
+                'file_init' => $fileInit
+            ]
+        );
+       
+    }
+
+    public function store_file(Request $request, $id)
+    {
+      try {
+        $file = $request->file('file');
+        $file_name = time() . "_" . $file->getClientOriginalName();
+        
+        Storage::disk('public')->putFileAs('data_umum/'.$id, $file, $file_name);
+        FileDataUmum::create([
+            'data_umum_id' => $id,
+            'file_label' => $request->file_name,
+            'file_name' => $file_name
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'File Berhasil di Upload']);
+         
+      } catch (\Exception $e) {
+          return response()->json(['success' => false, 'message' => $e->getMessage()]);
+      }
+    }
+
+    public function show_file($id,$file_name)
+    {   
+        $file = storage_path('app/public/data_umum/'.$id.'/'.$file_name);
+        return response()->file($file);
+    }
+    
 }
