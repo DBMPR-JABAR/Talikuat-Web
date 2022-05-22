@@ -17,13 +17,18 @@ use App\Models\Backend\RuasJalan;
 use App\Models\Backend\Uptd;
 use App\Models\Backend\UserDetail;
 use App\Models\Backend\TenagaAhli;
+use App\Models\Backend\FileDataUmum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class DataUmumController extends Controller
 {
-    //
+    private $PATH_FILE_DB = "public/file/data_umum/";
     public function index()
     {
         if (Auth::user()->internal_role_id != 1) {
@@ -345,13 +350,107 @@ class DataUmumController extends Controller
         );
     }
 
-    public function uploadFile(Request $request)
+    public function fileUpload($id)
     {
-       try {
-           
-           
-       } catch (\Throwable $e) {
-           
-       }
+        $data = DataUmum::find($id);
+        
+
+        $fileDkh =new \stdClass;
+        $fileDkh->label ='Daftar Kuantitas dan Harga (DKH)';
+        $fileDkh->name = 'file_dkh';
+        $fileDkh->file = $data->fileDkh->first()? $data->fileDkh->first()->file_name : null;
+        
+        
+        $fileKontrak =new \stdClass;
+        $fileKontrak->label ='Perjanjian Kontrak';
+        $fileKontrak->name = 'file_kontrak';
+        $fileKontrak->file = $data->fileKontrak->first()? $data->fileKontrak->first()->file_name : null;
+
+        $fileSPMK =new \stdClass;
+        $fileSPMK->label ='SPMK';
+        $fileSPMK->name = 'file_spmk';
+        $fileSPMK->file = $data->fileSPMK->first()? $data->fileSPMK->first()->file_name : null;
+
+        $fileUmum =new \stdClass;
+        $fileUmum->label ='Syarat Umum';
+        $fileUmum->name = 'file_umum';
+        $fileUmum->file = $data->fileUmum->first()? $data->fileUmum->first()->file_name : null;
+
+        $fileSyaratKhusus =new \stdClass;
+        $fileSyaratKhusus->label ='Syarat Khusus';
+        $fileSyaratKhusus->name = 'file_syarat_khusus';
+        $fileSyaratKhusus->file = $data->fileSyaratKhusus->first()? $data->fileSyaratKhusus->first()->file_name : null;
+
+        $fileJadual =new \stdClass;
+        $fileJadual->label ='Jadual Pelaksanaan Pekerjaan';
+        $fileJadual->name = 'file_jadual';
+        $fileJadual->file = $data->fileJadual->first()? $data->fileJadual->first()->file_name : null;
+
+        $fileGambarRencana =new \stdClass;
+        $fileGambarRencana->label ='Gambar Rencana';
+        $fileGambarRencana->name = 'file_gambar_rencana';
+        $fileGambarRencana->file = $data->fileGambarRencana->first()? $data->fileGambarRencana->first()->file_name : null;
+
+        $fileSPPBJ =new \stdClass;
+        $fileSPPBJ->label ='SPPBJ';
+        $fileSPPBJ->name = 'file_sppbj';
+        $fileSPPBJ->file = $data->fileSPPBJ->first()? $data->fileSPPBJ->first()->file_name : null;
+
+        $fileSPL =new \stdClass;
+        $fileSPL->label ='SPL';
+        $fileSPL->name = 'file_spl';
+        $fileSPL->file = $data->fileSPL->first()? $data->fileSPL->first()->file_name : null;
+
+        $fileSpeckUmum =new \stdClass;
+        $fileSpeckUmum->label ='Spesifikasi Umum';
+        $fileSpeckUmum->name = 'file_speck_umum';
+        $fileSpeckUmum->file = $data->fileSpeckUmum->first()? $data->fileSpeckUmum->first()->file_name : null;
+
+        $fileJaminan =new \stdClass;
+        $fileJaminan->label ='Jaminan - Jaminan';
+        $fileJaminan->name = 'file_jaminan';
+        $fileJaminan->file = $data->fileJaminan->first()? $data->fileJaminan->first()->file_name : null;
+
+        $fileBAPL =new \stdClass;
+        $fileBAPL->label ='BAPL';
+        $fileBAPL->name = 'file_bapl';
+        $fileBAPL->file = $data->fileBAPL->first()? $data->fileBAPL->first()->file_name : null;
+
+        $fileInit = [$fileDkh, $fileKontrak, $fileSPMK, $fileUmum, $fileSyaratKhusus, $fileJadual, $fileGambarRencana, $fileSPPBJ, $fileSPL, $fileSpeckUmum, $fileJaminan, $fileBAPL];
+       
+        return view('admin.input_data.data_umum.file_upload')->with(
+            [
+                'data' => $data,
+                'file_init' => $fileInit
+            ]
+        );
+       
     }
+
+    public function store_file(Request $request, $id)
+    {
+      try {
+        $file = $request->file('file');
+        $file_name = time() . "_" . $file->getClientOriginalName();
+        
+        Storage::disk('public')->putFileAs('data_umum/'.$id, $file, $file_name);
+        FileDataUmum::create([
+            'data_umum_id' => $id,
+            'file_label' => $request->file_name,
+            'file_name' => $file_name
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'File Berhasil di Upload']);
+         
+      } catch (\Exception $e) {
+          return response()->json(['success' => false, 'message' => $e->getMessage()]);
+      }
+    }
+
+    public function show_file($id,$file_name)
+    {   
+        $file = storage_path('app/public/data_umum/'.$id.'/'.$file_name);
+        return response()->file($file);
+    }
+    
 }

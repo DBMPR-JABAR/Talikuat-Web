@@ -168,6 +168,9 @@ Route::prefix('admin')->group(function () {
                 Route::put('/update/{id}', [DataUmumController::class, 'update'])->name('update.dataumum');
                 Route::get('/trash', [DataUmumController::class, 'trash'])->name('trash.dataumum');
                 Route::get('/trash/{desc}/{id}', [DataUmumController::class, 'move_to_trash']);
+                Route::get('/upload/{id}', [DataUmumController::class, 'fileUpload'])->name('upload.dataumum');
+                Route::post('/store_file/{id}', [DataUmumController::class, 'store_file'])->name('store.file.dataumum');
+                Route::get('/file/{id}/{file}', [DataUmumController::class, 'show_file'])->name('show.file.dataumum');
                 Route::get('/addendum/{id}', [DataUmumAddendumControllers::class, 'create'])->name('create.addendum');
             });
             Route::get('activity/{id}', [LogControllers::class, 'getLogUser'])->name('log.user.index');

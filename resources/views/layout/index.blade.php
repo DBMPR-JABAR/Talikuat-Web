@@ -58,6 +58,22 @@
             href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
             rel="stylesheet"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css"
+        />
         <style>
             @media only screen and (max-width: 646px) {
                 .table-striped {
@@ -668,6 +684,10 @@
         <script src="{{ asset('assets/js/off-canvas.js') }}"></script>
         <script src="{{ asset('assets/js/hoverable-collapse.js') }}"></script>
         <script src="{{ asset('assets/js/misc.js') }}"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
         <!-- endinject -->
         <!-- Custom js for this page -->
 
@@ -675,7 +695,7 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
             $(document).ready(function () {
-                $("select").select2({
+                $(".select2").select2({
                     theme: "classic",
                     width: "resolve",
                 });

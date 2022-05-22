@@ -98,7 +98,7 @@
                                     @if(Auth::user()->internal_role_id != 1)
                                     <select
                                         name="uptd_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                         disabled
                                     >
@@ -119,7 +119,7 @@
                                     @else
                                     <select
                                         name="uptd_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option value="">Pilih Unor</option>
@@ -146,7 +146,7 @@
                                     <label>Kategori Paket Kegiatan</label>
                                     <select
                                         name="kategori_paket_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option selected disabled>
@@ -396,7 +396,7 @@
                                         <td>
                                             <select
                                                 name="jabatan_tenaga_ahli[]"
-                                                class="form-control"
+                                                class="form-control select2"
                                                 required
                                                 id="jabatanTenagaAhli"
                                             >
@@ -474,7 +474,7 @@
                                                 <select
                                                     name="ruas"
                                                     id="ruas"
-                                                    class="form-control"
+                                                    class="form-control select2"
                                                     required
                                                 >
                                                     @foreach (@$ruas as $item)
@@ -545,7 +545,7 @@
                                     <select
                                         name="kontraktor_id"
                                         id="kontraktor_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option selected disabled>
@@ -575,7 +575,7 @@
                                     <select
                                         name="konsultan_id"
                                         id="konsultan_id"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option selected disabled>
@@ -606,7 +606,7 @@
                                     <select
                                         name="dirlap_id"
                                         id="dirlap"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                         value="{{ old('dirlap_id') }}"
                                     >
@@ -633,7 +633,7 @@
                                     <select
                                         name="ppk_user_id"
                                         id="ppk"
-                                        class="form-control"
+                                        class="form-control select2"
                                         required
                                     >
                                         <option value="">Pilih PPK</option>
