@@ -63,8 +63,9 @@ class DataUmumController extends Controller
     public function store(Request $request)
     {
         $ppk = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->where('id',$request->input('ppk_user_id'))->first();
-
-        dd($ppk);
+        $ppk_kegiatan = $ppk->ppkKegiatan->ppk_kegiatan;
+        
+        
         try {
             $validator = Validator::make($request->all(), [
                 'pemda' => 'required',
@@ -81,8 +82,6 @@ class DataUmumController extends Controller
                     Rule::unique(DataUmum::class, 'no_spmk'),
                 ],
                 'tgl_spmk' => 'required',
-                'ppk_kegiatan' => 'required',
-
                 'nilai_kontrak' => 'required',
                 'kontraktor_id' => 'required',
                 'konsultan_id' => 'required',
@@ -113,7 +112,7 @@ class DataUmumController extends Controller
                 'tgl_kontrak' => $request->input('tgl_kontrak'),
                 'no_spmk' => $request->input('no_spmk'),
                 'tgl_spmk' => $request->input('tgl_spmk'),
-                'ppk_kegiatan' => $request->input('ppk_kegiatan'),
+                'ppk_kegiatan' => $ppk_kegiatan,
                 'created_by' => Auth::user()->id,
             ]);
             DB::beginTransaction();
@@ -137,7 +136,7 @@ class DataUmumController extends Controller
               TenagaAhli::create([
                 'data_umum_id' => $data_umum_detail->id,
                 'nama_tenaga_ahli' => $value,
-                'jabatan' => $request->jumlah_tenaga_ahli[$key],
+                'jabatan' => $request->jabatan_tenaga_ahli[$key],
             ]);
            }
 

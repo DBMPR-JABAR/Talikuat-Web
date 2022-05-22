@@ -4,7 +4,18 @@
     rel="stylesheet"
     href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css"
 />
-
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css"
+/>
 <style>
     th {
         width: fit-content !important;
@@ -63,7 +74,7 @@
                         </div>
                         <div class="w-100">
                             <table
-                                class="display responsive table table-striped"
+                                class="display nowrap"
                                 style="width: 100%"
                                 id="dataUmum"
                             >
@@ -238,19 +249,12 @@
 </div>
 @endsection @section('script')
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#dataUmum").dataTable({
-            columnDefs: [
-                {
-                    targets: [0, 1, 2, 3, 4, 5, 6, 7],
-                    orderable: false,
-                },
-            ],
-            rowReorder: {
-                selector: "td:nth-child(2)",
-            },
             responsive: true,
             autoWidth: false,
             language: {

@@ -72,6 +72,6 @@ class UserDetail extends Model
     
     public function ppkKegiatan()
     {
-        return $this->hashOne('App\Models\Backend\MasterPpk', 'user_detail_id');
+        return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');
     }
 }
