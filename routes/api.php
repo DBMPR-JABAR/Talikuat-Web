@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurvaControllers;
 use App\Http\Controllers\DataUmumAdendum;
 use App\Http\Controllers\DataUmumController;
-use App\Http\Controllers\GetFile;
 use App\Http\Controllers\JadualAdendumControllers;
 use App\Http\Controllers\JadualController;
 use App\Http\Controllers\JenisPekerjaanController;

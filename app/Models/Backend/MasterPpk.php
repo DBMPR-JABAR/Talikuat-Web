@@ -12,14 +12,6 @@ class MasterPpk extends Model
     protected $table = 'master_ppk';
     protected $guarded = [];
 
-    public function uptd()
-    {
-        return $this->belongsTo('App\Models\Backend\Uptd', 'uptd_id');
-    }
-    public function user_ppk_detail()
-    {
-        return $this->belongsTo('App\Models\Backend\UserDetail', 'user_detail_id','id');
-    }
     public function user_detail()
     {
         return $this->belongsTo('App\Models\Backend\UserDetail', 'user_detail_id','id');

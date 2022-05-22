@@ -40,7 +40,7 @@
                             {{-- <th class="text-center"> Progress </th> --}}
                             <th class="text-center"> NIK </th>
                             <th class="text-center"> NIP </th>
-                            <th class="text-center"> Email Verified </th>
+                            <th class="text-center"> Email </th>
                             <th class="text-center"> Account Verified </th>
                             <th class="text-center"> Action </th>
 
@@ -62,17 +62,18 @@
                             <td> {{ @$item->user->profile->nik }} </td>
                             <td> {{ @$item->user->profile->nip }} </td>
                             <td class="text-center"> 
-                                @if($item->email_verified_at)
+                                {{ @$item->user->email }}
+                                {{-- @if($item->email_verified_at)
                                 <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
                                 @else
                                 <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
-                                @endif
+                                @endif --}}
                             </td>
                             <td class="text-center">
                                 @if($item->account_verified_at)
                                 <button class="btn btn-sm btn-success"><i class="mdi mdi-check-all menu-icon"></i></button>
                                 @else
-                                <button class="btn btn-sm btn-danger"><i class="mdi mdi-close menu-icon"></i></button>
+                                <button class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hubungi admin pusat untuk verifikasi"><i class="mdi mdi-close menu-icon"></i></button>
                                 @endif
                             </td>
 
@@ -245,5 +246,8 @@
         });
 
     });
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 @endsection

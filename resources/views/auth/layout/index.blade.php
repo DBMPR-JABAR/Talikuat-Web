@@ -55,7 +55,7 @@
         <div class="limiter">
             <div class="container-login100">
                 <div class="wrap-login100">
-                    <div class="login100-pic js-tilt" data-tilt>
+                    <div class="login100-pic js-tilt" data-tilte>
                         <img
                             src="{{
                                 asset('assets/images/logo-jawa_barat.png')
@@ -63,8 +63,7 @@
                             alt="IMG"
                         />
                     </div>
-                            
-               
+
                     @yield('content')
                 </div>
             </div>

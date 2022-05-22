@@ -27,8 +27,7 @@
                     <a
                         href="{{ route('trash.masterppk') }}"
                         class="btn btn-mat btn-danger mb-3"
-                        ><i class="mdi mdi-delete menu-icon"></i> Trash</a
-                    >
+                        ><i class="mdi mdi-delete menu-icon"></i> Trash</a>
                     @endcan
                 @else
                 <a
@@ -40,7 +39,7 @@
                 @endif
 
                 <table
-                    class="table-striped"
+                    class="table table-striped"
                     style="width: 100%"
                     id="dataPpk"
                 >
@@ -60,13 +59,13 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>
-                                {!! $item->user_ppk_detail->user->name !!}
+                                {!! $item->user->name !!}
                             </td>
                             <td>
                                 {!! $item->uptd->nama !!}
                             </td>
                             <td>
-                                {!! $item->user_ppk_detail->user->email !!}
+                                {!! $item->user->email !!}
                             </td>
                             <td>
 
@@ -75,14 +74,14 @@
                                     <a type='button' href='#Restore' data-toggle='modal' data-id='{{$item->id}}' class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-backup-restore menu-icon"></i>Restore</a>
                                     @endcan
                                 @else
-                                    @if($item->user_ppk_detail->account_verified_at)
+                                    @if($item->account_verified_at)
                                         <a type='button' href='{{ route('show.masterppk',$item->id) }}'  class='btn btn-sm btn-success waves-effect waves-light'><i class="mdi mdi-search-web menu-icon"></i></a>
                                         @can('restoreUserPpk',Auth::user())
                                         <a type='button' href='{{ route('edit.masterppk',$item->id) }}'  class='btn btn-sm btn-warning waves-effect waves-light'><i class="mdi mdi-table-edit menu-icon"></i></a>
                                         @endcan
                                     @else
                                         @can('viewVerificationUser',Auth::user())
-                                        <a type='button' href='{{ route('verified.user',$item->user_ppk_detail->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
+                                        <a type='button' href='{{ route('verified.user',$item->user->id) }}'  class='btn btn-sm btn-dark waves-effect waves-light'><i class="mdi mdi-content-paste menu-icon"></i> Verified</a>
                                         @endcan
                                     @endif
                                     @can('deleteUserPpk',Auth::user())
@@ -159,6 +158,10 @@
                         <div class="form-group ">
                             <label>No Telp</label>
                             <input type="text" name="no_tlp" oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="082218XXXXXX" class="form-control">  
+                        </div>
+                        <div class="form-group ">
+                            <label>PPK Kegiatan</label>
+                            <input type="text" name="ppk_kegiatan" class="form-control">  
                         </div>
                         <div class="form-group ">
                             <label>Unit</label>

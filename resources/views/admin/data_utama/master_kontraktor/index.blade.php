@@ -38,7 +38,7 @@
                 <div id="table-wrapper">
                     <div id="table-scroll">
                         <table
-                            class="table-striped"
+                            class="table table-striped"
                             style="width: 100%"
                             id="dataKontraktor">
                             <thead>

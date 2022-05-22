@@ -237,7 +237,7 @@
                                                 <i
                                                     class="glyphicon glyphicon-download-alt"
                                                 ></i>
-                                                <p>Pilih Image Atau Video</p>
+                                                <p>Pilih Image</p>
                                             </div>
                                             <input
                                                 type="file"

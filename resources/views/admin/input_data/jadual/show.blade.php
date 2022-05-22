@@ -362,7 +362,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-bordered display">
+                    <table class="table-bordered display">
                         <thead>
                             <th>Tanggal</th>
                             <th>No Mata Pembayaran</th>

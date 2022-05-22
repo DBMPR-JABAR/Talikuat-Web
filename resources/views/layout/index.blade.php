@@ -10,6 +10,12 @@
         <title>@yield('title') | Tali Kuat Bina Marga</title>
         <link
             rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+            integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
             href=" {{
                 asset('assets/vendors/mdi/css/materialdesignicons.min.css')
             }}"
@@ -38,14 +44,10 @@
                 )
             }}"
         />
-        <link
-            rel="stylesheet"
-            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
-        />
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
         <link
             rel="shortcut icon"
-            href="{{ asset('assets/images/favicon.png') }}"
+            href="{{ asset('assets/images/favicon.ico') }}"
         />
         <link
             rel="stylesheet"
@@ -53,17 +55,8 @@
             href="{{ asset('assets/css/custom.css') }}"
         />
         <link
-            rel="stylesheet"
-            type="text/css"
-            href="{{ asset('vendor/datatables.min.css') }}"
-        />
-        <link
             href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
             rel="stylesheet"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"
         />
         <style>
             @media only screen and (max-width: 646px) {
@@ -103,12 +96,20 @@
                 >
                     <a class="sidebar-brand brand-logo" href="/"
                         ><img
-                            src="{{ asset('assets/images/talikuat.png') }}"
+                            src="{{
+                                asset('assets/images/logo_tali_strong.png')
+                            }}"
+                            style="width: 120px"
+                            class="img-fluid"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
-                            src="{{ asset('assets/images/talikuat.png') }}"
+                            src="{{
+                                asset('assets/images/logo_tali_strong.png')
+                            }}"
+                            style="object-fit: cover"
+                            class="img-fluid"
                             alt="Dinas Bina Marga Provinsi Jawa Barat"
                     /></a>
                 </div>
@@ -400,13 +401,17 @@
                     <div
                         class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between"
                     >
-                        <a
+                        <!-- <a
                             class="navbar-brand brand-logo-mini align-self-center d-lg-none"
                             href="index.html"
                             ><img
-                                src="{{ asset('assets/images/talikuat.png') }}"
+                                src="{{
+                                    asset('assets/images/logo_tali_strong.png')
+                                }}"
+                                width="100"
+                                class="img-fluid"
                                 alt="logo"
-                        /></a>
+                        /></a> -->
                         <button
                             class="navbar-toggler navbar-toggler align-self-center mr-2"
                             type="button"
@@ -414,7 +419,7 @@
                         >
                             <i class="mdi mdi-menu"></i>
                         </button>
-                        <ul class="navbar-nav">
+                        <!-- <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a
                                     class="nav-link count-indicator dropdown-toggle"
@@ -503,7 +508,7 @@
                                     <p class="p-3 mb-0">View all activities</p>
                                 </div>
                             </li>
-                        </ul>
+                        </ul> -->
                         <ul class="navbar-nav navbar-nav-right ml-lg-auto">
                             <li class="nav-item nav-profile dropdown border-0">
                                 <a
@@ -512,7 +517,7 @@
                                     href="#"
                                     data-toggle="dropdown"
                                 >
-                                    <img
+                                    <!-- <img
                                         class="nav-profile-img mr-2"
                                         alt=""
                                         src="{{
@@ -520,9 +525,9 @@
                                                 'assets/images/faces/face1.jpg'
                                             )
                                         }}"
-                                    />
+                                    /> -->
                                     <span
-                                        class="profile-name"
+                                        class="profile-name p-3"
                                         >{{ auth()->user()->name }}</span
                                     >
                                 </a>
@@ -586,10 +591,10 @@
                     <div style="background: #f2f2f2">
                         @include('flashalert.index')
                     </div>
-                    <div class="content-wrapper pb-0">
+                    <div class="content-wrapper mt-4">
                         @yield('page-header') @yield('content')
                     </div>
-                    <footer class="footer">
+                    <!-- <footer class="footer">
                         <div
                             class="d-sm-flex justify-content-center justify-content-sm-between"
                         >
@@ -609,7 +614,7 @@
                                 from Bootstrapdash.com</span
                             >
                         </div>
-                    </footer>
+                    </footer> -->
                 </div>
                 <!-- main-panel ends -->
             </div>
@@ -617,6 +622,16 @@
         </div>
         <!-- container-scroller -->
         <!-- plugins:js -->
+        <!-- <script
+            src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"
+        ></script> -->
         <script src="{{
                 asset('assets/vendors/js/vendor.bundle.base.js')
             }}"></script>
@@ -655,27 +670,24 @@
         <script src="{{ asset('assets/js/misc.js') }}"></script>
         <!-- endinject -->
         <!-- Custom js for this page -->
-        <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+
         <!-- End custom js for this page -->
-        <script src="{{ asset('vendor/datatables.min.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-        <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
-        <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
         <script>
             $(document).ready(function () {
-                $("table.display").DataTable({
-                    responsive: true,
-                });
                 $("select").select2({
                     theme: "classic",
                     width: "resolve",
                 });
+                $("#jabatanTenagaAhli").select2("destroy");
                 $(".drop-down-show-hide").hide();
                 $("#dropDown").change(function () {
                     $(".drop-down-show-hide").hide();
                     $("#" + this.value).show();
                 });
+            });
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip();
             });
         </script>
         <script>
@@ -719,6 +731,7 @@
                 });
             }
         </script>
+
         @yield('script')
     </body>
 </html>

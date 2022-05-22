@@ -48,11 +48,13 @@
     </form>
 
     <div class="container-login100-form-btn">
+        {{--
         <a href="{{ url('/register') }}" class="w-100">
             <button class="login100-form-btn bg-warning" type="button">
                 Daftar
             </button></a
         >
+        --}}
     </div>
 
     @error('email')

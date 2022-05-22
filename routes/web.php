@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend\admin;
 
-use App\Http\Controllers\backend\admin\LaporanMingguanControllers;
 use Illuminate\Support\Facades\Route;
 
 /*
