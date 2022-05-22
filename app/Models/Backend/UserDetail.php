@@ -70,6 +70,7 @@ class UserDetail extends Model
 
     }
     
+   
     public function ppkKegiatan()
     {
         return $this->hasOne('App\Models\Backend\MasterPpk', 'user_detail_id');

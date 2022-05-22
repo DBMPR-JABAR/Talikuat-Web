@@ -199,6 +199,14 @@
                                                     @endif
                                                 </td>
                                             </tr>
+                                            @if (@$data->user_detail->rule_user_id == 2)
+                                            <tr>
+                                                <td width="20%">PPK Kegiatan</td>
+                                                <td>
+                                                    {{ @$data->user_detail->ppkKegiatan->ppk_kegiatan }}
+                                                </td>
+                                            </tr>
+                                            @endif
                                             {{-- <tr>
                                                 <td>SUP</td>
                                                 <td>{{ @$profile->sup }}</td>

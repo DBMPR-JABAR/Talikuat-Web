@@ -411,6 +411,7 @@ class UserController extends Controller
                 'alamat' => '',
                 'agama' => '',
                 'uptd' => '',
+                'ppk_kegiatan' => '',
                 'rule_user' => 'required',
             ]);
             // dd($request->all());
@@ -434,6 +435,10 @@ class UserController extends Controller
             }
             if ($request->input('rule_user') == 2 || $request->input('rule_user') == 3) {
                 $validator = Validator::make($request->all(), ['uptd' => 'required']);
+                if($request->input('rule_user') == 2){
+                    $validator = Validator::make($request->all(), ['ppk_kegiatan' => 'required']);
+
+                }
             } else if ($request->input('rule_user') == 12) {
                 $validator = Validator::make($request->all(), ['uptd_mk' => 'required']);
             }
@@ -489,6 +494,10 @@ class UserController extends Controller
                     $update_deet->mk()->updateOrCreate($temp_unit);
                 }
                 $update_deet->mk()->whereNotIn('uptd_id', $request->uptd_mk)->delete();
+            }else if ($request->input('rule_user') == 2) {
+                $update_deet->ppkKegiatan->ppk_kegiatan = $request->input('ppk_kegiatan');
+                $update_deet->ppkKegiatan->save();
+
             }
         }
         if ($update_user) {

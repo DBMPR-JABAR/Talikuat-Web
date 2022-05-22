@@ -168,7 +168,7 @@
                             <select
                                 name="unit"
                                 class="form-control"
-                                required
+                                required style="width: 100%"
                                 value="{{ old('unit') }}"
                             >
                             <option value="" selected>Pilih Unit</option>
