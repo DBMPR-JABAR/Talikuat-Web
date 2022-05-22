@@ -624,6 +624,7 @@
                                     @enderror
                                 </div>
                             </div>
+                           
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>PPK Kegiatan</label>
@@ -631,7 +632,7 @@
                                         type="text"
                                         name="ppk_kegiatan"
                                         id="ppk_kegiatan"
-                                        value="{{ old('ppk_kegiatan',@$data->ppk_kegiatan) }}"
+                                        value="{{ old('ppk_kegiatan') ?? $data->ppk_kegiatan }}"
                                         class="form-control"
                                         required
                                         autocomplete="off"
