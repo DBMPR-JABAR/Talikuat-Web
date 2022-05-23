@@ -176,7 +176,7 @@ class MasterKontraktorController extends Controller
     public function show($id)
     {
         $data = MasterKontraktor::find($id);
-        dd($data);
+        // dd($data);
         $data_pengguna = $data->user_detail_gsc->where('rule_user_id', '!=', 11);
 
         return view('admin.data_utama.master_kontraktor.show', compact('data', 'data_pengguna'));
