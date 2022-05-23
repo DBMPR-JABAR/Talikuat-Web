@@ -497,7 +497,6 @@ class UserController extends Controller
             }else if ($request->input('rule_user') == 2) {
                 $update_deet->ppkKegiatan->ppk_kegiatan = $request->input('ppk_kegiatan');
                 $update_deet->ppkKegiatan->save();
-
             }
         }
         if ($update_user) {

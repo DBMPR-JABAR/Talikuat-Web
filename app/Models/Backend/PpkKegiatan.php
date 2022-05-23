@@ -10,4 +10,6 @@ class PpkKegiatan extends Model
     use HasFactory;
     protected $connection= 'mysql';
     protected $table = 'ppk_kegiatan';
+    protected $guarded = [];
+
 }
