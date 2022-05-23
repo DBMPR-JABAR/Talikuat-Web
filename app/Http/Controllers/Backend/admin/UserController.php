@@ -495,13 +495,12 @@ class UserController extends Controller
                 }
                 $update_deet->mk()->whereNotIn('uptd_id', $request->uptd_mk)->delete();
             }else if ($request->input('rule_user') == 2) {
-                $update_deet->ppkKegiatan->ppk_kegiatan = $request->input('ppk_kegiatan');
-                $update_deet->ppkKegiatan->save();
-                // $update_master_admin = MasterPpk::firstOrNew([
-                //     'user_detail_id' => $update_deet->id
-                // ]);
-                // $update_master_admin->ppk_kegiatan = $request->input('ppk_kegiatan');
-                // $update_master_admin->save();
+                
+                $update_master_admin = MasterPpk::firstOrNew([
+                    'user_detail_id' => $update_deet->id
+                ]);
+                $update_master_admin->ppk_kegiatan = $request->input('ppk_kegiatan');
+                $update_master_admin->save();
             }
         }
         if ($update_user) {
