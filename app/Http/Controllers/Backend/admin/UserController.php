@@ -198,7 +198,7 @@ class UserController extends Controller
         $create_detail->rule_user_id = $request->rule;
         $create_detail->konsultan_id = $id;
         $create_detail->save();
-        storeLogActivity(declarLog(1, 'User Konsultan', $create_detail->konsultan->nama . ': ' . $request->email . ' as ' . $create_detail->rule->rule, 1));
+        storeLogActivity(declarLog(1, 'User Konsultan', $create_detail->konsultan->nama . ': ' . $request->email . ' as ' . $create_detail->role->rule, 1));
 
         return back()->with(['success' => 'Berhasil Menambahkan User!!']);
     }
