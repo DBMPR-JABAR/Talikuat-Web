@@ -495,8 +495,8 @@ class UserController extends Controller
                 }
                 $update_deet->mk()->whereNotIn('uptd_id', $request->uptd_mk)->delete();
             }else if ($request->input('rule_user') == 2) {
-                $update_deet->ppkKegiatan->ppk_kegiatan = $request->input('ppk_kegiatan');
                 dd($update_deet->ppkKegiatan->ppk_kegiatan);
+                $update_deet->ppkKegiatan->ppk_kegiatan = $request->input('ppk_kegiatan');
                 $update_deet->ppkKegiatan->save();
             }
         }
