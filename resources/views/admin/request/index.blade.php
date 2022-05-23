@@ -108,21 +108,54 @@
                             </td>
 
                             <td>
-                                <button
+                                @if(Auth::user()->user_detail->rule_user_id ==
+                                '1')
+                                <a
                                     type="button"
-                                    class="btn btn-success"
-                                    style="
-                                        width: 100px !important;
-                                        font-size: 13px !important;
-                                    "
+                                    data-toggle="modal"
+                                    data-target="#exampleModalApproval"
+                                    data-id="{{@$request->id}}"
+                                    data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
+                                    onclick="rederModalDetail(this)"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-search-web menu-icon"></i
+                                ></a>
+
+                                <a
+                                    type="button"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
                                     data-toggle="modal"
                                     data-target="#exampleModalApproval"
                                     data-id="{{@$request->id}}"
                                     data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
                                     onclick="rederModalDetail(this)"
                                 >
-                                    Detail
-                                </button>
+                                    <i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    class="btn btn-sm btn-danger waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalApproval"
+                                    data-id="{{@$request->id}}"
+                                    data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
+                                    onclick="rederModalDetail(this)"
+                                >
+                                    <i class="mdi mdi-delete"></i>
+                                </a>
+                                @endif
+                                @if(Auth::user()->user_detail->rule_user_id ==2)
+                                <a
+                                    type="button"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalApproval"
+                                    data-id="{{@$request->id}}"
+                                    data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
+                                    onclick="rederModalDetail(this)"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi mdi-reply menu-icon"></i>
+                                </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

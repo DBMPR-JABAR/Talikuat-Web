@@ -302,19 +302,7 @@ class DataUmumController extends Controller
 
     public function edit($id)
     {
-        $data = DataUmum::find($id)->with('kategori_paket')->with('uptd')->with('detail')->first();
-        // $uptd_id = Auth::user()->user_detail->uptd_id;
-        // $uptd = Uptd::where('id', $uptd_id)->first();
-        // $ruas = RuasJalan::where('uptd_id', $uptd_id)->get();
-        // $ppks = MasterPpk::where('uptd_id', $uptd_id)->get();
-        // $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->where('uptd_id', $uptd_id)->get();
-        // foreach ($dirlaps as $item) {
-        //     $item->nama = $item->user->name;
-        // }
-        // $kontraktors = MasterKontraktor::get();
-        // $temp_kategori = KategoriPaket::all();
-
-        // dd($data->detail->ppk->id);
+        $data = DataUmum::where('id',$id)->with('kategori_paket')->with('uptd')->with('detail')->first();
         $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->with('user');
         $ruas = RuasJalan::latest();
         $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');

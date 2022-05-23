@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Backend\UserDetail;
 
 
 class DashboardControllers extends Controller
@@ -26,7 +27,7 @@ class DashboardControllers extends Controller
         $peyedia = DB::table('master_kontraktor')->count();
         $konsultan = DB::table('master_konsultan')->count();
         $dataUmum = DB::table('data_umum')->count();
-        $ppk = DB::table('master_ppk')->count();
+        $ppk = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user')->count();
 
         return view('admin.dashboard.index', [
             'penyedia' => $peyedia,

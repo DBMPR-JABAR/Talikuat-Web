@@ -74,7 +74,7 @@
                                             <a
                                                 type="button"
                                                 href="{{route('jadual.edit',$item->id) }}"
-                                                class="btn btn-sm btn-primary waves-effect waves-light"
+                                                class="btn btn-sm btn-warning waves-effect waves-light"
                                                 ><i
                                                     class="mdi mdi-pencil menu-icon"
                                                 ></i
