@@ -58,7 +58,7 @@
                                 @foreach ($data as $no => $item)
                                     
                                     <tr>
-                                        <td>{{ ++$no }}</td>
+                                        <td>{{ $loop->index +1 }}</td>
                                         <td>
                                             {!! $item->nama !!}
                                         </td>

@@ -93,21 +93,26 @@
                             </td>
                             <td>
                                 @if($request->status == '0')
+                                <span class="badge badge-dark">
+                                    Belum Dikirim
+                                </span>
+                                @endif @if($request->status == '1')
                                 <span class="badge badge-warning">
                                     Menunggu
                                 </span>
-                                @elseif($request->status == '1')
-                                <span class="badge badge-success">
-                                    Disetujui
-                                </span>
-                                @elseif($request->status == '2')
+                                @endif @if($request->status == '2')
                                 <span class="badge badge-danger">
                                     Ditolak
+                                </span>
+                                @endif @if($request->status == '3')
+                                <span class="badge badge-success">
+                                    Disetujui
                                 </span>
                                 @endif
                             </td>
 
                             <td>
+                                <!-- Super Admin -->
                                 @if(Auth::user()->user_detail->rule_user_id ==
                                 '1')
                                 <a
@@ -144,17 +149,38 @@
                                     <i class="mdi mdi-delete"></i>
                                 </a>
                                 @endif
-                                @if(Auth::user()->user_detail->rule_user_id ==2)
+                                <!-- Admin Uptd -->
+                                @if(Auth::user()->user_detail->rule_user_id ==3)
+                                @if($request->status == '0')
                                 <a
                                     type="button"
-                                    data-toggle="modal"
-                                    data-target="#exampleModalApproval"
-                                    data-id="{{@$request->id}}"
-                                    data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
-                                    onclick="rederModalDetail(this)"
+                                    data-toggle="tooltip"
+                                    title="Kirim Request"
                                     class="btn btn-sm btn-success waves-effect waves-light"
-                                    ><i class="mdi mdi mdi-reply menu-icon"></i>
+                                    ><i class="mdi mdi-file-send"></i>
                                 </a>
+                                <a
+                                    type="button"
+                                    data-toggle="tooltip"
+                                    href="{{route('request.edit',@$request->id)}}"
+                                    title="Edit Request"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    ><i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    href="{{route('request.destroy',@$request->id)}}"
+                                    data-toggle="tooltip"
+                                    title="Delete Request"
+                                    class="btn btn-sm btn-danger waves-effect waves-light"
+                                    ><i class="mdi mdi-delete menu-icon"></i>
+                                </a>
+                                @endif @endif
+                                <!-- DIRLAP -->
+                                @if(Auth::user()->user_detail->rule_user_id
+                                ==14) @endif
+                                <!-- PPK -->
+                                @if(Auth::user()->user_detail->rule_user_id ==2)
                                 @endif
                             </td>
                         </tr>
@@ -582,6 +608,7 @@
 <script src="{{ asset('assets/custom/request.js') }}"></script>
 <script>
     $(document).ready(function () {
+        $("body").tooltip({ selector: "[data-toggle=tooltip]" });
         $("table").DataTable({
             responsive: true,
             autoWidth: false,

@@ -22,6 +22,7 @@ use App\Http\Controllers\UnorController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UtilsControllers;
+use App\Http\Controllers\PembangunanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -464,6 +465,8 @@ Route::prefix('memo')->group(function () {
     Route::post('/cek-konsultan', [MemoControllers::class, 'cekMemoKonsultan']);
     Route::post('/read-konsultan', [MemoControllers::class, 'readKonsultan']);
 });
+
+Route::get('get-data-pembangunan',[PembangunanController::class, 'getDataPembangunan']);
 
 Route::prefix('notif')->group(function () {
     Route::post('post-notification', function (Request $req) {

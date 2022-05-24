@@ -24,8 +24,8 @@ class DashboardControllers extends Controller
         }
 
 
-        $peyedia = DB::table('master_kontraktor')->count();
-        $konsultan = DB::table('master_konsultan')->count();
+        $peyedia = DB::table('master_kontraktor')->whereNull('is_delete')->count();
+        $konsultan = DB::table('master_konsultan')->whereNull('is_delete')->count();
         $dataUmum = DB::table('data_umum')->count();
         $ppk = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user')->count();
 

@@ -100,13 +100,8 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                value="{{$data->nm_paket}}"
+                                value="{{$data->dataUmumDetail->dataUmum->nm_paket}}"
                                 readonly
-                            />
-                            <input
-                                type="hidden"
-                                value="{{$data->detail->id}}"
-                                name="data_umum_detail_id"
                             />
                         </div>
                     </div>
@@ -121,7 +116,7 @@
                                 class="form-control"
                                 name="tgl_diajukan"
                                 required
-                                value="{{ old('tgl_diajukan') }}"
+                                value="{{$data->tgl_request}}"
                             />
                         </div>
                     </div>
@@ -136,7 +131,7 @@
                                 class="form-control"
                                 name="lokasi_sta"
                                 required
-                                value="{{ old('lokasi_sta') }}"
+                                value="{{$data->lokasi_sta}}"
                             />
                         </div>
                     </div>
@@ -150,21 +145,17 @@
                                 name="jadual_id"
                                 class="form-control select2"
                                 required
+                                id="nmp"
                                 onchange="getVolumeJadual(this.value)"
                             >
-                                <option selected disabled>
-                                    Jenis Pekerjaan
-                                </option>
-                                @foreach ($data->jadual->jadualItems as $item)
-                                @if($item->total_volume ==
-                                $item->volume_terrequest)
-                                <option value="{{ $item->id }}" disabled>
-                                    {{ $item->nmp .' - '. $item->uraian }} (
-                                    Volume Sudah Habis )
+                                @foreach($jadual as $j) @if($j->id ==
+                                $data->jadual->id)
+                                <option value="{{$j->id}}" selected>
+                                    {{$data->jadual->nmp . ' - ' . $data->jadual->uraian}}
                                 </option>
                                 @else
-                                <option value="{{ $item->id }}">
-                                    {{ $item->nmp .' - '. $item->uraian }}
+                                <option value="{{$j->id}}">
+                                    {{ $j->nmp .' - '. $j->uraian }}
                                 </option>
                                 @endif @endforeach
                             </select>
@@ -185,7 +176,7 @@
                                     required
                                     id="volume"
                                     oninput="replace(this.value)"
-                                    disabled
+                                    value="{{$data->volume}}"
                                 />
                             </div>
                             <p class="fs-6 text-danger"></p>
@@ -201,7 +192,20 @@
                                 type="date"
                                 class="form-control"
                                 name="tgl_dikerjakan"
-                                value="{{ old('tgl_dikerjakan') }}"
+                                value="{{ $data->tgl_dikerjakan }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"
+                            >File Shop Drawing</label
+                        >
+                        <div class="col-sm-10">
+                            <img
+                                src="{{route('request.file',$data->file_shopdrawing)}}"
+                                alt="{{$data->file_shopdrawing}}"
+                                class="img-thumbnail"
                             />
                         </div>
                     </div>
@@ -212,7 +216,7 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label class="control-label"
-                                            >Upload File Shop Drawing</label
+                                            >Ubah File Shop Drawing</label
                                         >
                                         <div class="preview-zone hidden">
                                             <div class="box box-solid">
@@ -251,7 +255,6 @@
                                                 name="file_shop_drawing"
                                                 class="dropzone"
                                                 accept="image/*"
-                                                required
                                             />
                                         </div>
                                     </div>
@@ -278,6 +281,7 @@
                                             <th>Satuan</th>
                                         </thead>
                                         <tbody>
+                                            @foreach($data->detailBahan as $b)
                                             <tr>
                                                 <td
                                                     style="
@@ -291,6 +295,7 @@
                                                             type="text"
                                                             placeholder="Sement"
                                                             name="bahan_material[]"
+                                                            value="{{$b->bahan_material}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -307,6 +312,7 @@
                                                             placeholder="2.00"
                                                             step="0.001"
                                                             name="volume_material[]"
+                                                            value="{{$b->volume}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -322,10 +328,12 @@
                                                             type="text"
                                                             placeholder="Sack"
                                                             name="satuan_material[]"
+                                                            value="{{$b->satuan}}"
                                                         />
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -372,6 +380,8 @@
                                             <th>Satuan</th>
                                         </thead>
                                         <tbody>
+                                            @foreach($data->detailBahanJMF as
+                                            $j)
                                             <tr>
                                                 <td
                                                     style="
@@ -384,6 +394,7 @@
                                                             class="form-control"
                                                             type="text"
                                                             name="bahan_jmf[]"
+                                                            value="{{$j->bahan_jmf}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -399,6 +410,7 @@
                                                             type="number"
                                                             step="0.001"
                                                             name="volume_jmf[]"
+                                                            value="{{$j->volume}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -413,10 +425,12 @@
                                                             class="form-control"
                                                             type="text"
                                                             name="satuan_jmf[]"
+                                                            value="{{$j->satuan}}"
                                                         />
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -463,6 +477,8 @@
                                             <th>Satuan</th>
                                         </thead>
                                         <tbody>
+                                            @foreach($data->detailPeralatan as
+                                            $p)
                                             <tr>
                                                 <td
                                                     style="
@@ -475,6 +491,7 @@
                                                             class="form-control"
                                                             type="text"
                                                             name="jenis_peralatan[]"
+                                                            value="{{$p->jenis_peralatan}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -490,6 +507,7 @@
                                                             type="number"
                                                             name="jumlah_peralatan[]"
                                                             step="1"
+                                                            value="{{$p->jumlah}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -504,10 +522,12 @@
                                                             class="form-control"
                                                             type="text"
                                                             name="satuan_peralatan[]"
+                                                            value="{{$p->satuan}}"
                                                         />
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -553,6 +573,8 @@
                                             <th>Jumlah</th>
                                         </thead>
                                         <tbody>
+                                            @foreach($data->detailTenagaKerja as
+                                            $t)
                                             <tr>
                                                 <td
                                                     style="
@@ -565,6 +587,7 @@
                                                             class="form-control"
                                                             type="text"
                                                             name="tenaga_kerja[]"
+                                                            value="{{$t->tenaga_kerja}}"
                                                         />
                                                     </div>
                                                 </td>
@@ -581,10 +604,12 @@
                                                             type="number"
                                                             name="jumlah_tenaga_kerja[]"
                                                             step="1"
+                                                            value="{{$t->jumlah}}"
                                                         />
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -632,6 +657,7 @@
 <script>
     $(document).ready(function () {
         $(".fs-6").hide();
+        getVolumeJadual($('#nmp').val());
     });
     function addRow(idTable) {
         var table;
@@ -650,7 +676,7 @@
                     '<div class="col"><input class="form-control" type="text" name="satuan_bahan[]" /></div>';
 
                 break;
-            case 'tableJMF':
+            case "tableJMF":
                 table = document.getElementById("tableJMF");
                 var row = table.insertRow(table.rows.length);
                 var cell1 = row.insertCell(0);
@@ -664,7 +690,7 @@
                     '<div class="col"><input class="form-control" type="text" name="satuan_jmf[]" /></div>';
                 break;
 
-            case 'tablePeralatan':
+            case "tablePeralatan":
                 table = document.getElementById("tablePeralatan");
                 var row = table.insertRow(table.rows.length);
                 var cell1 = row.insertCell(0);
@@ -672,11 +698,12 @@
                 var cell3 = row.insertCell(2);
                 cell1.innerHTML =
                     '<div class="col"><input class="form-control" type="text" name="jenis_peralatan[]" /></div>';
-                cell2.innerHTML = '<div class="col"><input class="form-control" type="number" name="jumlah_peralatan[]" step="0.001" /></div>';
+                cell2.innerHTML =
+                    '<div class="col"><input class="form-control" type="number" name="jumlah_peralatan[]" step="0.001" /></div>';
                 cell3.innerHTML =
                     '<div class="col"><input class="form-control" type="text" name="satuan_peralatan[]" /></div>';
                 break;
-            case 'tableTenagaKerja':
+            case "tableTenagaKerja":
                 table = document.getElementById("tableTenagaKerja");
                 var row = table.insertRow(table.rows.length);
                 var cell1 = row.insertCell(0);
@@ -716,11 +743,21 @@
         }
     }
     function getVolumeJadual(id) {
-        $('#volume').attr('disabled', false);
-        const jadual = {!! json_encode($data->jadual->jadualItems) !!};
-        jadual.forEach((item) => {
+         $('#volume').attr('disabled', false);
+         $(".fs-6").hide();
+         const jadual = {!! json_encode($jadual) !!};
+         const count = {!! json_encode($countRequest) !!};
+         const jadualId = {!! json_encode($data->jadual_id) !!};
+         jadual.forEach((item) => {
             if (item.id == id) {
-                let volume = parseFloat(item.total_volume) - parseFloat(item.volume_terrequest ?? 0);
+                if (count == 1 && item.id == jadualId) {
+                    console.log(item);
+                    $("#volume").attr({
+                    max: parseFloat(item.total_volume),
+                });
+                }
+                else{
+                    let volume = parseFloat(item.total_volume) - parseFloat(item.volume_terrequest ?? 0);
                 if (volume == 0) {
                     $("#volume").attr('disabled', true);
                     $(".fs-6").text('Volume Nomor Mata Pembayaran Sudah habis !');
@@ -737,18 +774,20 @@
                 );
 
                 }
+                }
+
 
             }
         });
-    }
+     }
     function replace(val) {
         var val = parseFloat(val);
         var max = parseFloat($("#volume").attr("max"));
         if (val > max) {
             $("#volume").val(max);
         }
-        $('.fs-6').text(`Volume Tersedia ${max} `);
-        $('.fs-6').show();
+        $(".fs-6").text(`Volume Tersedia ${max} `);
+        $(".fs-6").show();
     }
     function readFile(input) {
         if (input.files) {
@@ -779,7 +818,7 @@
                         boxZone.append(htmlPreview);
                     };
                     reader.readAsDataURL(input.files[i]);
-                    $('.dropzone-wrapper').hide();
+                    $(".dropzone-wrapper").hide();
                 }
             }
         }
@@ -808,7 +847,7 @@
         boxZone.empty();
         previewZone.addClass("hidden");
         reset(dropzone);
-        $('.dropzone-wrapper').show();
+        $(".dropzone-wrapper").show();
     });
 </script>
 @endsection

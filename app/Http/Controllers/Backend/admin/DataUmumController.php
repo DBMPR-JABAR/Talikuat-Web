@@ -171,9 +171,7 @@ class DataUmumController extends Controller
     }
     public function show($id)
     {
-        $data = DataUmum::where([[
-            'id', $id
-        ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
+        $data = DataUmum::where('id', $id)->with('kategori_paket')->with('uptd')->with('detail')->first();
         $dirlaps = UserDetail::where('rule_user_id', 14)->where('is_delete', null)->with('user');
         $ruas = RuasJalan::latest();
         $ppks = UserDetail::where('rule_user_id', 2)->where('is_delete', null)->with('user');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Backend\BahanJMF;
 use App\Models\Backend\BahanMaterial;
 use App\Models\Backend\DataUmum;
+use App\Models\Backend\DataUmumDetail;
 use App\Models\Backend\HistoryRequest;
 use App\Models\Backend\Jadual;
 use App\Models\Backend\Peralatan;
@@ -117,7 +118,7 @@ class RequestControllers extends Controller
                 'lokasi_sta' => $request->lokasi_sta,
                 'tgl_request' => $request->tgl_diajukan,
                 'tgl_dikerjakan' => $request->tgl_dikerjakan,
-                'status' => 1,
+                'status' => 0,
                 'volume' => $request->volume,
                 'keterangan' => $request->keterangan,
                 'file_shopdrawing' => $fileName,
@@ -203,6 +204,11 @@ class RequestControllers extends Controller
      */
     public function edit($id)
     {
+        $data = BackendRequest::where('id', $id)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('jadual')->with('dataUmumDetail')->first();
+        $jadual = Jadual::where('data_umum_detail_id', $data->dataUmumDetail->id)->get(); 
+        $countRequest = BackendRequest::where('jadual_id', $data->jadual_id)->count();
+       
+        return view('admin.request.edit', compact('data', 'jadual', 'countRequest'));
     }
 
     /**
@@ -214,6 +220,38 @@ class RequestControllers extends Controller
      */
     public function update(Request $request, $id)
     {
+        try {
+            $validator = Validator::make($request->all(), [
+                'tgl_diajukan' => 'required',
+                'tgl_dikerjakan' => 'required',
+                'volume' => 'required',
+                'lokasi_sta' => 'required',
+                'keterangan' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
+            $dataRequest = BackendRequest::find($id);
+            $dataRequest->tgl_diajukan = $request->tgl_diajukan;
+            $dataRequest->tgl_dikerjakan = $request->tgl_dikerjakan;
+            $dataRequest->volume = $request->volume;
+            $dataRequest->lokasi_sta = $request->lokasi_sta;
+            $dataRequest->keterangan = $request->keterangan;
+            $dataRequest->save();
+
+            $jadual = Jadual::find($dataRequest->jadual_id);
+            $jadual->volume_terrequest = (float) $jadual->volume_terrequest - (float) $dataRequest->volume;
+            $jadual->volume_terrequest = (float) $jadual->volume_terrequest + (float) $request->volume;
+            $jadual->save();
+
+            $this->createHistoryStatus($id, 2);
+
+            return redirect()->route('request.index')->with('success', 'Data berhasil diubah');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal menyimpan data')->withInput();
+        }
     }
 
     /**
@@ -333,7 +371,7 @@ class RequestControllers extends Controller
     {
 
         if ($status == 1) {
-            $keterangan = 'Request sudah dibuat dan dikirim oleh';
+            $keterangan = 'Request sudah dibuat dan Belum dikirim ke DIRLAP';
         }
         if ($status == 2) {
             $keterangan = 'Request sudah disetujui dan dilanjutkan ke PPK oleh';

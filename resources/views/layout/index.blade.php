@@ -366,7 +366,7 @@
                             <span class="menu-title">Pusat Unduhan</span>
                         </a>
                     </li>
-                    @can('viewLog',Auth::user())]
+                    @can('viewLog',Auth::user())
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('log.index') }}">
                             <i class="mdi mdi-alert-octagon menu-icon"></i>

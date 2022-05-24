@@ -182,9 +182,10 @@ Route::prefix('admin')->group(function () {
             Route::get('/delete/file/{id}', [JadualControllers::class, 'deleteFile'])->name('jadual.delete.file');
             Route::resource('request', RequestControllers::class);
             Route::get('/request/create/{id}', [RequestControllers::class, 'create'])->name('request.create');
+            Route::get('/request-api/{id}', [RequestControllers::class, 'showApi'])->name('request.show.api');
             Route::resource('laporan-mingguan', LaporanMingguanControllers::class);
             Route::get('/file-request/{file_name}', [RequestControllers::class, 'file'])->name('request.file');
-            Route::get('/request-api/{id}', [RequestControllers::class, 'showApi'])->name('request.show.api');
+            
         });
     });
 });
