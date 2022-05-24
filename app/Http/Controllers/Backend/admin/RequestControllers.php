@@ -105,10 +105,9 @@ class RequestControllers extends Controller
             }
 
             if ($validator->fails()) {
-                dd($validator->errors());
                 return back()->withErrors($validator)->withInput();
             }
-
+            
             $file = $request->file('file_shop_drawing');
             $fileName =  time() . "_" . $file->getClientOriginalName();
             DB::beginTransaction();
@@ -232,21 +231,76 @@ class RequestControllers extends Controller
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             }
+            if (!$request->file('file_shop_drawing')) {
+                $file = $request->file('file_shop_drawing');
+                $fileName =  time() . "_" . $file->getClientOriginalName();
+                Storage::putFileAs($this->PATH_FILE_DB, $file, $fileName);
+            }
 
             $dataRequest = BackendRequest::find($id);
-            $dataRequest->tgl_diajukan = $request->tgl_diajukan;
-            $dataRequest->tgl_dikerjakan = $request->tgl_dikerjakan;
-            $dataRequest->volume = $request->volume;
+            $dataRequest->jadual_id = $request->jadual_id;
             $dataRequest->lokasi_sta = $request->lokasi_sta;
+            $dataRequest->tgl_request = $request->tgl_diajukan;
+            $dataRequest->tgl_dikerjakan = $request->tgl_dikerjakan;
+            $dataRequest->status = 0;
+            $dataRequest->volume = $request->volume;
             $dataRequest->keterangan = $request->keterangan;
+            $dataRequest->file_shopdrawing = $fileName;
             $dataRequest->save();
 
-            $jadual = Jadual::find($dataRequest->jadual_id);
-            $jadual->volume_terrequest = (float) $jadual->volume_terrequest - (float) $dataRequest->volume;
-            $jadual->volume_terrequest = (float) $jadual->volume_terrequest + (float) $request->volume;
-            $jadual->save();
+            
 
-            $this->createHistoryStatus($id, 2);
+
+
+
+            
+
+            if (!$request->bahan_material) {
+                $dataBahanMaterial = BahanMaterial::where('request_id', $id)->delete();
+                for ($i = 0; $i < count($request->bahan_material); $i++) {
+                    BahanMaterial::create([
+                        'request_id' => $dataRequest->id,
+                        'bahan_material' => $request->bahan_material[$i],
+                        'volume' => $request->volume_material[$i],
+                        'satuan' => $request->satuan_material[$i],
+                    ]);
+                }
+            }
+            if (!$request->bahan_jmf) {
+                $dataBahanJMF = BahanJMF::where('request_id', $id)->delete();
+                for ($i = 0; $i < count($request->bahan_jmf); $i++) {
+                    BahanJMF::create([
+                        'request_id' => $dataRequest->id,
+                        'bahan_jmf' => $request->bahan_jmf[$i],
+                        'volume' => $request->volume_jmf[$i],
+                        'satuan' => $request->satuan_jmf[$i],
+                    ]);
+                }
+            }
+            if (!$request->jenis_peralatan) {
+                $dataPeralatan = Peralatan::where('request_id', $id)->delete();
+                for ($i = 0; $i < count($request->jenis_peralatan); $i++) {
+                    Peralatan::create([
+                        'request_id' => $dataRequest->id,
+                        'jenis_peralatan' => $request->jenis_peralatan[$i],
+                        'jumlah' => $request->jumlah_peralatan[$i],
+                        'satuan' => $request->satuan_peralatan[$i],
+                    ]);
+                }
+            }
+            if (!$request->tenaga_kerja) {
+                $dataTenagaKerja = TenagaKerja::where('request_id', $id)->delete();
+                for ($i = 0; $i < count($request->tenaga_kerja); $i++) {
+                    TenagaKerja::create([
+                        'request_id' => $dataRequest->id,
+                        'tenaga_kerja' => $request->tenaga_kerja[$i],
+                        'jumlah' => $request->jumlah_tenaga_kerja[$i],
+                    ]);
+                }
+            }
+            $this->createHistoryStatus($dataRequest->id, 1);
+            DB::commit();
+            return redirect()->route('request.index')->with('success', 'Data berhasil ditambahkan');
 
             return redirect()->route('request.index')->with('success', 'Data berhasil diubah');
         } catch (\Throwable $e) {
