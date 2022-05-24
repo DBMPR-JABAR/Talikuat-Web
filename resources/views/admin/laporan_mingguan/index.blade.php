@@ -34,36 +34,78 @@
         <div class="card">
             <div class="card-body">
                 <table
-                    class="display responsive"
+                    class="display nowrap"
                     id="laporanmingguan"
                     style="width: 100%"
                 >
                     <thead>
-                        <th>
-                            Tanggal<br />
-                            Nama Kegiatan<br />
-                            Ruas Jalan
-                        </th>
-                        <th>
-                            Kode dan Nama Jenis Pekerjaan<br />
-                            Volume
-                        </th>
-                        <th>
-                            Penyedia Jasa<br />
-                            Foto
-                        </th>
-                        <th>
-                            Direksi Lapangan<br />
-                            Foto dan Catatan
-                        </th>
-                        <th>
-                            Pejabat Pembuat Komitmen (PPK)<br />
-                            Foto dan Catatan
-                        </th>
+                        <th>Tanggal</th>
+                        <th>Nama Kegiatan / Paket</th>
+                        <th>Kode dan Nama Jenis Pekerjaan</th>
+                        <th>Volume</th>
                         <th>Status Dokumen</th>
                         <th style="width: 5%">Aksi</th>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        @foreach($data as $d) @foreach($d->laporan as $l)
+                        <tr>
+                            <td>
+                                {{$l->tgl_mulai}} -
+                                {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}
+                            </td>
+                            <td>
+                                {{$d->nm_paket}}
+                            </td>
+                            <td>
+                                {{$l->jenis_pekerjaan}}
+                            </td>
+                            <td>
+                                {{$l->volume.' '.$l->satuan    }}
+                            </td>
+                            <td>
+                                @if($l->status == '0')
+                                <span class="badge badge-dark">
+                                    Belum Dikirim
+                                </span>
+                                @endif @if($l->status == '1')
+                                <span class="badge badge-warning">
+                                    Menunggu Approval DIRLAP
+                                </span>
+                                @endif @if($l->status == '2')
+                                <span class="badge badge-danger">
+                                    Ditolak Oleh DIRLAP
+                                </span>
+                                @endif @if($l->status == '3')
+                                <span class="badge badge-warning">
+                                    Menunggu Approval PPK
+                                </span>
+                                @endif @if($l->status == '4')
+                                <span class="badge badge-danger">
+                                    Ditolak Oleh PPK
+                                </span>
+                                @endif @if($l->status == '5')
+                                <span class="badge badge-success">
+                                    Disetujui Oleh PPK
+                                </span>
+                                @endif
+                            </td>
+                            <td>
+                                <a
+                                    href="/Talikuat-Backend/public/admin/laporan_mingguan/{{$l->id}}/edit"
+                                    class="btn btn-sm btn-primary"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a
+                                    href="/Talikuat-Backend/public/admin/laporan_mingguan/{{$l->id}}/delete"
+                                    class="btn btn-sm btn-danger"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach @endforeach
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -1291,17 +1333,8 @@
 
 <script>
     $(document).ready(() => {
-        $("#request").DataTable({
+        $("table").DataTable({
             responsive: true,
-            columns: [
-                { responsivePriority: 4 },
-                { responsivePriority: 3 },
-                { responsivePriority: 2 },
-                { responsivePriority: 1 },
-                { responsivePriority: 5 },
-                { responsivePriority: 6 },
-                { responsivePriority: 7 },
-            ],
         });
     });
     $("#exampleModal").on("show.bs.modal", function (event) {

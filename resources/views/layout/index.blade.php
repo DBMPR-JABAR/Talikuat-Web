@@ -346,9 +346,7 @@
                                 <li class="nav-item">
                                     <a
                                         class="nav-link"
-                                        href="{{
-                                            route('laporan-mingguan.index')
-                                        }}"
+                                        href="{{ route('laporan.index') }}"
                                         >Laporan Mingguan</a
                                     >
                                 </li>

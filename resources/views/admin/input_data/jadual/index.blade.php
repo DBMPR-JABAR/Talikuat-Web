@@ -71,6 +71,10 @@
                                                     class="mdi mdi-search-web menu-icon"
                                                 ></i
                                             ></a>
+                                            @if(Auth::user()->user_detail->rule_user_id
+                                            == 1
+                                            ||Auth::user()->user_detail->rule_user_id
+                                            == 3)
                                             <a
                                                 type="button"
                                                 href="{{route('jadual.edit',$item->id) }}"
@@ -87,8 +91,7 @@
                                                     class="mdi mdi-file-document"
                                                 ></i
                                             ></a>
-
-                                            @else
+                                            @endif @else
                                             <a
                                                 type="button"
                                                 href="{{ route('jadual.create',$item->id) }}"

@@ -85,11 +85,11 @@
 <div class="row">
     <div class="col">
         <form
-            action="{{ route('request.store') }}"
+            action="{{ route('request.update',$data->id) }}"
             method="post"
             enctype="multipart/form-data"
         >
-            @csrf
+            @csrf @method('PUT')
             <div class="card">
                 <div class="card-body" style="display: block">
                     <div class="form-group row">
@@ -205,6 +205,7 @@
                             <img
                                 src="{{route('request.file',$data->file_shopdrawing)}}"
                                 alt="{{$data->file_shopdrawing}}"
+                                width="100%"
                                 class="img-thumbnail"
                             />
                         </div>
@@ -669,11 +670,11 @@
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
                 cell1.innerHTML =
-                    '<div class="col"><input class="form-control" type="text" name="jenis_bahan[]" /></div>';
+                    '<div class="col"><input class="form-control" type="text" name="bahan_material[]" /></div>';
                 cell2.innerHTML =
-                    '<div class="col"><input class="form-control" type="number" name="jumlah_bahan[]" step="0.001" /></div>';
+                    '<div class="col"><input class="form-control" type="number" name="volume_material[]" step="0.001" /></div>';
                 cell3.innerHTML =
-                    '<div class="col"><input class="form-control" type="text" name="satuan_bahan[]" /></div>';
+                    '<div class="col"><input class="form-control" type="text" name="satuan_material[]" /></div>';
 
                 break;
             case "tableJMF":
@@ -743,7 +744,7 @@
         }
     }
     function getVolumeJadual(id) {
-         $('#volume').attr('disabled', false);
+         $('#volume').attr('readonly', false);
          $(".fs-6").hide();
          const jadual = {!! json_encode($jadual) !!};
          const count = {!! json_encode($countRequest) !!};
@@ -759,7 +760,7 @@
                 else{
                     let volume = parseFloat(item.total_volume) - parseFloat(item.volume_terrequest ?? 0);
                 if (volume == 0) {
-                    $("#volume").attr('disabled', true);
+                    $('#volume').attr('readonly', true);
                     $(".fs-6").text('Volume Nomor Mata Pembayaran Sudah habis !');
                     $(".fs-6").show();
                 }

@@ -500,7 +500,7 @@
                         </div>
 
                         <div class="row align-items-start">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Kontraktor</label>
                                     <select
@@ -530,7 +530,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Konsultan Supervisi</label>
                                     <select
@@ -565,7 +565,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Direksi Lapangan</label>
                                     <select
@@ -596,7 +596,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>PPK</label>
                                     <select
@@ -619,26 +619,6 @@
                                         class="invalid-feedback"
                                         style="display: block; color: red"
                                     >
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                           
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>PPK Kegiatan</label>
-                                    <input
-                                        type="text"
-                                        name="ppk_kegiatan"
-                                        id="ppk_kegiatan"
-                                        value="{{ old('ppk_kegiatan') ?? $data->ppk_kegiatan }}"
-                                        class="form-control"
-                                        required
-                                        autocomplete="off"
-                                    />
-                                    @error('ppk_kegiatan')
-                                    <div class="invalid-feedback" style="display: block; color: red" >
                                         {{ $message }}
                                     </div>
                                     @enderror

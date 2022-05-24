@@ -95,7 +95,6 @@
                                             !!}
                                         </td>
                                         <td>
-                                            @if (Request::segment(3) != 'trash')
                                             <a
                                                 type="button"
                                                 href="{{route('show.dataumum',$item->id) }}"
@@ -104,6 +103,11 @@
                                                     class="mdi mdi-search-web menu-icon"
                                                 ></i
                                             ></a>
+                                            @if (Request::segment(3) != 'trash')
+                                            @if(Auth::user()->user_detail->rule_user_id
+                                            == 1
+                                            ||Auth::user()->user_detail->rule_user_id
+                                            == 3)
                                             <a
                                                 type="button"
                                                 href="{{route('edit.dataumum',$item->id) }}"
@@ -112,8 +116,17 @@
                                                     class="mdi mdi-grease-pencil"
                                                 ></i
                                             ></a>
-
-                                            @else
+                                            <a
+                                                type="button"
+                                                href="#delModal"
+                                                data-toggle="modal"
+                                                data-id="{{$item->id}}"
+                                                class="btn btn-sm btn-danger waves-effect waves-light"
+                                                ><i
+                                                    class="mdi mdi-delete menu-icon"
+                                                ></i
+                                            ></a>
+                                            @endif @else
                                             <a
                                                 type="button"
                                                 href="#Restore"
@@ -126,16 +139,6 @@
                                                 >Restore</a
                                             >
                                             @endif
-                                            <a
-                                                type="button"
-                                                href="#delModal"
-                                                data-toggle="modal"
-                                                data-id="{{$item->id}}"
-                                                class="btn btn-sm btn-danger waves-effect waves-light"
-                                                ><i
-                                                    class="mdi mdi-delete menu-icon"
-                                                ></i></a
-                                            ><br />
                                         </td>
                                     </tr>
                                     @endforeach

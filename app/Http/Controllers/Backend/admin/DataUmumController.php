@@ -30,11 +30,23 @@ class DataUmumController extends Controller
 {
     private $PATH_FILE_DB = "public/file/data_umum/";
     public function index()
-    {
-        if (Auth::user()->internal_role_id != 1) {
-            $uptd = Auth::user()->user_detail->uptd_id;
+    {   // 3 admin uptd
+        // 2 ppk
+        // 15 admin ppk
+        //14 dirlap
+        $role = Auth::user()->user_detail->rule_user_id;
+        $uptd = Auth::user()->user_detail->uptd_id;
+        if ($role == 3) {
             // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
             $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
+        }elseif($role == 2 || $role == 15){
+            $data = DataUmum::latest()->whereHas('detail', function($query){
+                $query->where('ppk_id', Auth::user()->user_detail->id);
+            })->with('detail')->with('uptd')->get();
+        }elseif($role == 14){
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+                $query->where('dirlap_id', Auth::user()->user_detail->id);
+            })->with('uptd')->get();   
         } else {
             $data = DataUmum::latest()->with('detail')->with('uptd')->get();
         }

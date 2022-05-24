@@ -45,7 +45,7 @@
                         <th>Nomor Kontrak</th>
                         <th>Nama Kegiatan</th>
                         <th>Lokasi/Sta Jenis Pekerjaan Perkiraan Volume</th>
-                        <th>Foto dan Catatan</th>
+                        <th>Catatan</th>
                         <th>Status Dokumen</th>
                         <th style="width: 5%">Aksi</th>
                     </thead>
@@ -98,15 +98,23 @@
                                 </span>
                                 @endif @if($request->status == '1')
                                 <span class="badge badge-warning">
-                                    Menunggu
+                                    Menunggu Approval DIRLAP
                                 </span>
                                 @endif @if($request->status == '2')
                                 <span class="badge badge-danger">
-                                    Ditolak
+                                    Ditolak Oleh DIRLAP
                                 </span>
                                 @endif @if($request->status == '3')
+                                <span class="badge badge-warning">
+                                    Menunggu Approval PPK
+                                </span>
+                                @endif @if($request->status == '4')
+                                <span class="badge badge-danger">
+                                    Ditolak Oleh PPK
+                                </span>
+                                @endif @if($request->status == '5')
                                 <span class="badge badge-success">
-                                    Disetujui
+                                    Disetujui Oleh PPK
                                 </span>
                                 @endif
                             </td>
@@ -114,7 +122,7 @@
                             <td>
                                 <!-- Super Admin -->
                                 @if(Auth::user()->user_detail->rule_user_id ==
-                                '1')
+                                1)
                                 <a
                                     type="button"
                                     data-toggle="modal"
@@ -151,17 +159,19 @@
                                 @endif
                                 <!-- Admin Uptd -->
                                 @if(Auth::user()->user_detail->rule_user_id ==3)
-                                @if($request->status == '0')
+                                <!-- Create -->
+                                @if($request->status == 0)
                                 <a
                                     type="button"
-                                    data-toggle="tooltip"
+                                    href="{{route('request.send',@$request->id)}}"
+                                    data-tooltip="tooltip"
                                     title="Kirim Request"
                                     class="btn btn-sm btn-success waves-effect waves-light"
                                     ><i class="mdi mdi-file-send"></i>
                                 </a>
                                 <a
                                     type="button"
-                                    data-toggle="tooltip"
+                                    data-tooltip="tooltip"
                                     href="{{route('request.edit',@$request->id)}}"
                                     title="Edit Request"
                                     class="btn btn-sm btn-warning waves-effect waves-light"
@@ -170,18 +180,97 @@
                                 <a
                                     type="button"
                                     href="{{route('request.destroy',@$request->id)}}"
-                                    data-toggle="tooltip"
+                                    data-tooltip="tooltip"
                                     title="Delete Request"
                                     class="btn btn-sm btn-danger waves-effect waves-light"
                                     ><i class="mdi mdi-delete menu-icon"></i>
                                 </a>
+                                @endif @if($request->status == 1) @endif
+                                <!-- DItolak Dirlap -->
+                                @if($request->status == 2)
+                                <a
+                                    type="button"
+                                    href="{{route('request.send',@$request->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Kirim Request"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    data-tooltip="tooltip"
+                                    href="{{route('request.edit',@$request->id)}}"
+                                    title="Revisi Request"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    ><i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+
+                                @endif @if($request->status == 4)
+                                <a
+                                    type="button"
+                                    href="{{route('request.send',@$request->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Kirim Request"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    data-tooltip="tooltip"
+                                    href="{{route('request.edit',@$request->id)}}"
+                                    title="Revisi Request"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    ><i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+
+                                @endif @if($request->status == 5)
+                                <a
+                                    type="button"
+                                    data-tooltip="tooltip"
+                                    title="Buat Laporan"
+                                    href="{{route('laporan.create',@$request->id) }}"
+                                    class="btn btn-sm btn-dark waves-effect waves-light"
+                                    ><i class="mdi mdi-file-document"></i
+                                ></a>
+
                                 @endif @endif
                                 <!-- DIRLAP -->
-                                @if(Auth::user()->user_detail->rule_user_id
-                                ==14) @endif
+                                @if(Auth::user()->user_detail->rule_user_id ==
+                                14) @if($request->status == 1)
+                                <a
+                                    type="button"
+                                    href="{{route('request.send',@$request->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Respon Request"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalApproval"
+                                    data-data="{{@$request}}"
+                                    data-role="dirlap"
+                                    data-url="{{ route('request.approval',$request->id) }}"
+                                    onclick="rederModalDetail(this)"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                @endif @endif
                                 <!-- PPK -->
-                                @if(Auth::user()->user_detail->rule_user_id ==2)
-                                @endif
+                                @if(Auth::user()->user_detail->rule_user_id ==2
+                                || Auth::user()->user_detail->rule_user_id ==15)
+                                @if($request->status == 3)
+                                <a
+                                    type="button"
+                                    href="{{route('request.send',@$request->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Respon Request"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalApproval"
+                                    data-data="{{@$request}}"
+                                    data-role="ppk"
+                                    data-url="{{ route('request.approval',$request->id) }}"
+                                    onclick="rederModalDetail(this)"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                @endif @endif
                             </td>
                         </tr>
                         @endforeach
@@ -435,6 +524,7 @@
                             >
                             <div class="col-sm-10">
                                 <textarea
+                                    id="catatan_dirlap"
                                     class="form-control"
                                     disabled
                                     rows="5"
@@ -450,6 +540,7 @@
                             >
                             <div class="col-sm-10">
                                 <textarea
+                                    id="catatan_ppk"
                                     class="form-control"
                                     disabled
                                     rows="5"
@@ -463,7 +554,9 @@
                     <div class="card-header bg-secondary">
                         <h3 class="card-title">Approval</h3>
                     </div>
-                    <form action="" method="post">
+                    <form action="" method="post" id="formApproval">
+                        @csrf
+                        <input type="hidden" name="role" id="role" />
                         <div class="card-body">
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label"
@@ -477,7 +570,8 @@
                                                 class="form-check-input"
                                                 name="approval"
                                                 value="1"
-                                                checked />
+                                                required
+                                                onclick="checkCatatan()" />
                                             Disetujui
                                             <i class="input-helper"></i
                                         ></label>
@@ -488,7 +582,8 @@
                                                 type="radio"
                                                 class="form-check-input"
                                                 name="approval"
-                                                value="0" />
+                                                value="0"
+                                                onclick="checkCatatan()" />
                                             Ditolak
                                             <i class="input-helper"></i
                                         ></label>
@@ -505,17 +600,14 @@
                                         name="catatan"
                                         class="form-control"
                                         placeholder="Catatan "
+                                        required
                                         rows="5"
                                     ></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button
-                                type="button"
-                                class="btn btn-success"
-                                data-dismiss="modal"
-                            >
+                            <button type="submit" class="btn btn-success">
                                 Sumbit
                             </button>
                             <button
@@ -544,9 +636,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                    Foto dan Catatan
-                </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Catatan</h5>
                 <button
                     type="button"
                     class="close"
@@ -608,7 +698,7 @@
 <script src="{{ asset('assets/custom/request.js') }}"></script>
 <script>
     $(document).ready(function () {
-        $("body").tooltip({ selector: "[data-toggle=tooltip]" });
+        $("body").tooltip({ selector: "[data-tooltip=tooltip]" });
         $("table").DataTable({
             responsive: true,
             autoWidth: false,

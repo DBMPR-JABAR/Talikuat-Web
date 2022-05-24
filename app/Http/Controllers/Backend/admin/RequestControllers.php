@@ -29,17 +29,37 @@ class RequestControllers extends Controller
      */
     public function index()
     {
-        if (Auth::user()->internal_role_id != 1) {
-            $uptd = Auth::user()->user_detail->uptd_id;
-            $dataUmum = DataUmum::where('id_uptd', $uptd)->with('detail')->with('uptd')->get();
-            $list = [];
-            foreach ($dataUmum as $item) {
+        $role = Auth::user()->user_detail->rule_user_id;
+        $uptd = Auth::user()->user_detail->uptd_id;
+        $list = [];
+        if ($role == 3) {
+            // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
+            foreach ($data as $item) {
+                array_push($list, $item->detail->id);
+            }
+           $requests = BackendRequest::whereIn('data_umum_detail_id', $list)->latest()->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        }elseif($role == 2 || $role == 15){
+            $data = DataUmum::latest()->whereHas('detail', function($query){
+                $query->where('ppk_id', Auth::user()->user_detail->id);
+            })->with('detail')->with('uptd')->get();
+            foreach ($data as $item) {
+                array_push($list, $item->detail->id);
+            }
+            $requests = BackendRequest::whereIn('data_umum_detail_id', $list)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        }elseif($role == 14){
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+                $query->where('dirlap_id', Auth::user()->user_detail->id);
+            })->with('uptd')->get();   
+            foreach ($data as $item) {
                 array_push($list, $item->detail->id);
             }
             $requests = BackendRequest::whereIn('data_umum_detail_id', $list)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
         } else {
+            $data = DataUmum::latest()->with('detail')->with('uptd')->get();
             $requests = BackendRequest::latest()->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
         }
+   
 
         return view('admin.request.index', compact('requests'));
     }
@@ -78,33 +98,34 @@ class RequestControllers extends Controller
                 return back()->withErrors($validator)->withInput();
             }
 
-            if (!$request->bahan_material) {
+            if ($request->bahan_material) {
                 $validator = Validator::make($request->all(), [
                     'volume_material' => 'required',
                     'satuan_material' => 'required',
                 ]);
             }
 
-            if (!$request->bahan_jmf) {
+            if ($request->bahan_jmf) {
                 $validator = Validator::make($request->all(), [
                     'volume_jmf' => 'required',
                     'satuan_jmf' => 'required',
                 ]);
             }
-            if (!$request->jenis_peralatan) {
+            if ($request->jenis_peralatan) {
                 $validator = Validator::make($request->all(), [
                     'jumlah_peralatan' => 'required',
                     'satuan_peralatan' => 'required',
                 ]);
             }
 
-            if (!$request->tenaga_kerja) {
+            if ($request->tenaga_kerja) {
                 $validator = Validator::make($request->all(), [
                     'jumlah_tenaga_kerja' => 'required',
                 ]);
             }
 
             if ($validator->fails()) {
+                dd($validator->errors());
                 return back()->withErrors($validator)->withInput();
             }
             
@@ -119,7 +140,6 @@ class RequestControllers extends Controller
                 'tgl_dikerjakan' => $request->tgl_dikerjakan,
                 'status' => 0,
                 'volume' => $request->volume,
-                'keterangan' => $request->keterangan,
                 'file_shopdrawing' => $fileName,
             ]);
 
@@ -129,7 +149,7 @@ class RequestControllers extends Controller
             Storage::putFileAs($this->PATH_FILE_DB, $file, $fileName);
 
 
-            if (!$request->bahan_material) {
+            if ($request->bahan_material) {
                 for ($i = 0; $i < count($request->bahan_material); $i++) {
                     BahanMaterial::create([
                         'request_id' => $dataRequest->id,
@@ -139,7 +159,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if (!$request->bahan_jmf) {
+            if ($request->bahan_jmf) {
                 for ($i = 0; $i < count($request->bahan_jmf); $i++) {
                     BahanJMF::create([
                         'request_id' => $dataRequest->id,
@@ -149,7 +169,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if (!$request->jenis_peralatan) {
+            if ($request->jenis_peralatan) {
                 for ($i = 0; $i < count($request->jenis_peralatan); $i++) {
                     Peralatan::create([
                         'request_id' => $dataRequest->id,
@@ -159,7 +179,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if (!$request->tenaga_kerja) {
+            if ($request->tenaga_kerja) {
                 for ($i = 0; $i < count($request->tenaga_kerja); $i++) {
                     TenagaKerja::create([
                         'request_id' => $dataRequest->id,
@@ -168,7 +188,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            $this->createHistoryStatus($dataRequest->id, 1);
+            $this->createHistoryStatus($dataRequest->id, 0);
             DB::commit();
             return redirect()->route('request.index')->with('success', 'Data berhasil ditambahkan');
         } catch (\Throwable $e) {
@@ -187,12 +207,6 @@ class RequestControllers extends Controller
     public function show($id)
     {
         //
-    }
-
-    public function showApi($id)
-    {
-        $data = BackendRequest::where('id', $id)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('jadual')->first();
-        return response()->json($data);
     }
 
     /**
@@ -225,37 +239,39 @@ class RequestControllers extends Controller
                 'tgl_dikerjakan' => 'required',
                 'volume' => 'required',
                 'lokasi_sta' => 'required',
-                'keterangan' => 'required',
             ]);
 
             if ($validator->fails()) {
+                dd($validator->errors());
                 return back()->withErrors($validator)->withInput();
             }
-            if (!$request->file('file_shop_drawing')) {
+            DB::beginTransaction();
+            $dataRequest = BackendRequest::find($id);
+            if ($request->file('file_shop_drawing')) {
                 $file = $request->file('file_shop_drawing');
                 $fileName =  time() . "_" . $file->getClientOriginalName();
+                $dataRequest->file_shopdrawing = $fileName;
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $fileName);
             }
 
-            $dataRequest = BackendRequest::find($id);
-            $dataRequest->jadual_id = $request->jadual_id;
-            $dataRequest->lokasi_sta = $request->lokasi_sta;
-            $dataRequest->tgl_request = $request->tgl_diajukan;
-            $dataRequest->tgl_dikerjakan = $request->tgl_dikerjakan;
-            $dataRequest->status = 0;
-            $dataRequest->volume = $request->volume;
-            $dataRequest->keterangan = $request->keterangan;
-            $dataRequest->file_shopdrawing = $fileName;
+            if ($dataRequest->jadual_id != $request->jadual_id) {
+                $jadualOld = Jadual::find($dataRequest->jadual_id);
+                $jadualOld->volume_terrequest = (float) $jadualOld->volume_terrequest - (float) $dataRequest->volume;
+                $jadualOld->save();
+                $jadual = Jadual::find($request->jadual_id);
+                $jadual->volume_terrequest = (float) $jadual->volume_terrequest + (float) $request->volume;
+                $jadual->save();
+
+            }
+                $dataRequest->jadual_id = $request->jadual_id;
+                $dataRequest->lokasi_sta = $request->lokasi_sta;
+                $dataRequest->tgl_request = $request->tgl_diajukan;
+                $dataRequest->tgl_dikerjakan = $request->tgl_dikerjakan;
+                $dataRequest->status = 0;
+                $dataRequest->volume = $request->volume;
             $dataRequest->save();
-
-            
-
-
-
-
-            
-
-            if (!$request->bahan_material) {
+          
+            if ($request->bahan_material) {
                 $dataBahanMaterial = BahanMaterial::where('request_id', $id)->delete();
                 for ($i = 0; $i < count($request->bahan_material); $i++) {
                     BahanMaterial::create([
@@ -266,7 +282,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if (!$request->bahan_jmf) {
+            if ($request->bahan_jmf) {
                 $dataBahanJMF = BahanJMF::where('request_id', $id)->delete();
                 for ($i = 0; $i < count($request->bahan_jmf); $i++) {
                     BahanJMF::create([
@@ -277,7 +293,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if (!$request->jenis_peralatan) {
+            if ($request->jenis_peralatan) {
                 $dataPeralatan = Peralatan::where('request_id', $id)->delete();
                 for ($i = 0; $i < count($request->jenis_peralatan); $i++) {
                     Peralatan::create([
@@ -288,7 +304,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if (!$request->tenaga_kerja) {
+            if ($request->tenaga_kerja) {
                 $dataTenagaKerja = TenagaKerja::where('request_id', $id)->delete();
                 for ($i = 0; $i < count($request->tenaga_kerja); $i++) {
                     TenagaKerja::create([
@@ -300,11 +316,11 @@ class RequestControllers extends Controller
             }
             $this->createHistoryStatus($dataRequest->id, 1);
             DB::commit();
-            return redirect()->route('request.index')->with('success', 'Data berhasil ditambahkan');
-
             return redirect()->route('request.index')->with('success', 'Data berhasil diubah');
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal menyimpan data')->withInput();
+            DB::rollback();
+            dd($e);
+            return redirect()->route('request.index')->with('error', 'Data gagal diubah');
         }
     }
 
@@ -318,12 +334,12 @@ class RequestControllers extends Controller
     {
     }
 
-    public function approvalDirlap(Request $request, $id)
+    public function approval(Request $request, $id)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'status' => 'required',
-                'keterangan' => 'required',
+                'approval' => 'required',
+                'role' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -331,16 +347,29 @@ class RequestControllers extends Controller
                 return back()->withErrors($validator)->withInput();
             }
             $data = BackendRequest::find($id);
-            if ($request->approval == 1) {
-                $data->status = 2;
-                $data->respon_dirlap = $request->catatan ? $request->catatan : '-';
-                $data->save();
-                $this->createHistoryStatus($id, 2);
-            } else {
-                $data->status = 0;
-                $data->respon_dirlap = $request->catatan;
+            if ($request->approval == 1 && $request->role == 'dirlap') {
+                $data->status = 3;
+                $data->respon_dirlap = $request->catatan ? $request->catatan : 'Tidak ada catatan';
                 $data->save();
                 $this->createHistoryStatus($id, 3);
+            }
+            if ($request->approval == 0 && $request->role == 'dirlap') {
+                $data->status = 2;
+                $data->respon_dirlap = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($id, 4);
+            }
+            if ($request->approval == 1 && $request->role == 'ppk') {
+                $data->status = 5;
+                $data->respon_ppk = $request->catatan ? $request->catatan : 'Tidak ada catatan';
+                $data->save();
+                $this->createHistoryStatus($id, 6);
+            }
+            if ($request->approval == 0 && $request->role == 'ppk') {
+                $data->status = 4;
+                $data->respon_ppk = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($id, 5);
             }
             return back()->with('success', 'Data berhasil diubah');
         } catch (\Throwable $e) {
@@ -348,38 +377,6 @@ class RequestControllers extends Controller
             return back()->with('error', 'Gagal menyimpan data')->withInput();
         }
     }
-
-    public function approvalPPK(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'status' => 'required',
-                'keterangan' => 'required',
-            ]);
-
-            if ($validator->fails()) {
-                dd($validator->errors());
-                return back()->withErrors($validator)->withInput();
-            }
-            $data = BackendRequest::find($request->id);
-            if ($request->approval == 1) {
-                $data->status = 4;
-                $data->respon_ppk = $request->catatan ? $request->catatan : '-';
-                $data->save();
-                $this->createHistoryStatus($request->id, 5);
-            } else {
-                $data->status = 2;
-                $data->respon_ppk = $request->catatan;
-                $data->save();
-                $this->createHistoryStatus($request->id, 3);
-            }
-            return back()->with('success', 'Data berhasil diubah');
-        } catch (\Throwable $e) {
-            dd($e);
-            return back()->with('error', 'Gagal menyimpan data');
-        }
-    }
-
     public function revisi(Request $request)
     {
         try {
@@ -421,30 +418,42 @@ class RequestControllers extends Controller
         return response()->file($file);
     }
 
+    public function sendRequestApi($id)
+    {
+        $data = BackendRequest::find($id);
+        $data->status = 1;
+        $data->save();
+        $this->createHistoryStatus($id, 3);
+        return back()->with('success', 'Data berhasil dikirim');
+    }
+
     private function createHistoryStatus($id, $status)
     {
 
+        if ($status == 0) {
+            $keterangan = 'Request sudah dibuat';
+        }
         if ($status == 1) {
-            $keterangan = 'Request sudah dibuat dan Belum dikirim ke DIRLAP';
+            $keterangan = 'Request dirubah / direvisi';
         }
         if ($status == 2) {
-            $keterangan = 'Request sudah disetujui dan dilanjutkan ke PPK oleh';
+            $keterangan = 'Request dikirim ke DIRLAP';
         }
-
         if ($status == 3) {
-            $keterangan = 'Request ditolak oleh';
+            $keterangan = 'Request dilanjutkan ke PPK';
         }
         if ($status == 4) {
-            $keterangan = 'Request sudah direvisi dan dikirim oleh';
+            $keterangan = 'Request ditolak dan dikembalikan kepada Admin Uptd Oleh DIRLAP';
         }
-
         if ($status == 5) {
-            $keterangan = 'Request sudah disetujui oleh PPK';
+            $keterangan = 'Request ditolak dan dikembalikan kepada Admin Uptd Oleh PPK';
+        }
+        if ($status == 6) {
+            $keterangan = 'Request diterima oleh PPK';
         }
         HistoryStatusRequest::create([
             'user_id' => Auth::user()->id,
             'request_id' => $id,
-            'status' => $status,
             'keterangan' => $keterangan,
         ]);
     }
