@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\DataUmum;
 use App\Models\Backend\Laporan;
+use App\Models\Backend\HistoryStatusLaporan;
 use App\Models\Backend\Request as BackendRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -158,5 +159,44 @@ class LaporanMingguanControllers extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function sendLaporanApi($id)
+    {
+        $data = Laporan::find($id);
+        $data->status = 1;
+        $data->save();
+        $this->createHistoryStatus($id, 3);
+        return back()->with('success', 'Data berhasil dikirim');
+    }
+    private function createHistoryStatus($id, $status)
+    {
+
+        if ($status == 0) {
+            $keterangan = 'Laporan sudah dibuat';
+        }
+        if ($status == 1) {
+            $keterangan = 'Laporan dirubah / direvisi';
+        }
+        if ($status == 2) {
+            $keterangan = 'Laporan dikirim ke DIRLAP';
+        }
+        if ($status == 3) {
+            $keterangan = 'Laporan dilanjutkan ke PPK';
+        }
+        if ($status == 4) {
+            $keterangan = 'Laporan ditolak dan dikembalikan kepada Admin Uptd Oleh DIRLAP';
+        }
+        if ($status == 5) {
+            $keterangan = 'Laporan ditolak dan dikembalikan kepada Admin Uptd Oleh PPK';
+        }
+        if ($status == 6) {
+            $keterangan = 'Laporan diterima oleh PPK';
+        }
+        HistoryStatusLaporan::create([
+            'user_id' => Auth::user()->id,
+            'laporan_id' => $id,
+            'keterangan' => $keterangan,
+        ]);
     }
 }

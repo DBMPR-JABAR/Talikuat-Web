@@ -187,7 +187,9 @@ Route::prefix('admin')->group(function () {
             Route::post('/request-api/{id}', [RequestControllers::class, 'approval'])->name('request.approval');
             Route::resource('laporan', LaporanMingguanControllers::class);
             Route::get('/laporan/create/{id}', [LaporanMingguanControllers::class, 'create'])->name('laporan.create');
-            
+            Route::get('/send-request/{id}', [LaporanMingguanControllers::class, 'sendLaporanApi'])->name('laporan.send');
+            Route::get('/file-laporan/{file_name}', [LaporanMingguanControllers::class, 'file'])->name('laporan.file');
+            Route::post('/laporan-api/{id}', [LaporanMingguanControllers::class, 'approval'])->name('laporan.approval');
             
         });
     });

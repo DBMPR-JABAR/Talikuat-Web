@@ -89,19 +89,144 @@
                                 </span>
                                 @endif
                             </td>
+
                             <td>
+                                <!-- Super Admin -->
+                                @if(Auth::user()->user_detail->rule_user_id ==
+                                1)
                                 <a
-                                    href="/Talikuat-Backend/public/admin/laporan_mingguan/{{$l->id}}/edit"
-                                    class="btn btn-sm btn-primary"
+                                    type="button"
+                                    data-toggle="modal"
+                                    data-target="#modalResponLaporan"
+                                    data-id="{{$l->id}}"
+                                    onclick="rederModalDetail(this)"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-search-web menu-icon"></i
+                                ></a>
+
+                                <a
+                                    type="button"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#modalResponLaporan"
+                                    data-id="{{$l->id}}"
+                                    onclick="rederModalDetail(this)"
                                 >
-                                    <i class="fa fa-edit"></i>
+                                    <i class="mdi mdi-pencil menu-icon"></i>
                                 </a>
                                 <a
-                                    href="/Talikuat-Backend/public/admin/laporan_mingguan/{{$l->id}}/delete"
-                                    class="btn btn-sm btn-danger"
+                                    type="button"
+                                    class="btn btn-sm btn-danger waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#modalResponLaporan"
+                                    data-id="{{$l->id}}"
+                                    onclick="rederModalDetail(this)"
                                 >
-                                    <i class="fa fa-trash"></i>
+                                    <i class="mdi mdi-delete"></i>
                                 </a>
+                                @endif
+                                <!-- Admin Uptd -->
+                                @if(Auth::user()->user_detail->rule_user_id ==3)
+                                <!-- Create -->
+                                @if($l->status == 0)
+                                <a
+                                    type="button"
+                                    href="{{route('laporan.send',$l->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Kirim Laporan"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    data-tooltip="tooltip"
+                                    href="{{route('laporan.edit',$l->id)}}"
+                                    title="Edit Laporan"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    ><i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    href="{{route('laporan.destroy',$l->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Delete Laporan"
+                                    class="btn btn-sm btn-danger waves-effect waves-light"
+                                    ><i class="mdi mdi-delete menu-icon"></i>
+                                </a>
+                                @endif @if($l->status == 1) @endif
+                                <!-- DItolak Dirlap -->
+                                @if($l->status == 2)
+                                <a
+                                    type="button"
+                                    href="{{route('laporan.send',$l->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Kirim Laporan"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    data-tooltip="tooltip"
+                                    href="{{route('laporan.edit',$l->id)}}"
+                                    title="Revisi Laporan"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    ><i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+
+                                @endif @if($l->status == 4)
+                                <a
+                                    type="button"
+                                    href="{{route('laporan.send',$l->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Kirim Laporan"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                <a
+                                    type="button"
+                                    data-tooltip="tooltip"
+                                    href="{{route('laporan.edit',$l->id)}}"
+                                    title="Revisi Laporan"
+                                    class="btn btn-sm btn-warning waves-effect waves-light"
+                                    ><i class="mdi mdi-pencil menu-icon"></i>
+                                </a>
+
+                                @endif @if($l->status == 5) @endif @endif
+                                <!-- DIRLAP -->
+                                @if(Auth::user()->user_detail->rule_user_id ==
+                                14) @if($l->status == 1)
+                                <a
+                                    type="button"
+                                    href="{{route('laporan.send',$l->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Respon Laporan"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#modalResponLaporan"
+                                    data-role="dirlap"
+                                    data-url="{{ route('laporan.approval',$l->id) }}"
+                                    onclick="rederModalDetail(this)"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                @endif @endif
+                                <!-- PPK -->
+                                @if(Auth::user()->user_detail->rule_user_id ==2
+                                || Auth::user()->user_detail->rule_user_id ==15)
+                                @if($l->status == 3)
+                                <a
+                                    type="button"
+                                    href="{{route('laporan.send',$l->id)}}"
+                                    data-tooltip="tooltip"
+                                    title="Respon Laporan"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    data-toggle="modal"
+                                    data-target="#modalResponLaporan"
+                                    data-role="ppk"
+                                    data-url="{{ route('laporan.approval',$l->id) }}"
+                                    onclick="rederModalDetail(this)"
+                                    ><i class="mdi mdi-file-send"></i>
+                                </a>
+                                @endif @endif
                             </td>
                         </tr>
                         @endforeach @endforeach
@@ -115,7 +240,7 @@
 <!-- Modal Approval -->
 <div
     class="modal fade bd-example-modal-lg"
-    id="exampleModalApproval"
+    id="modalResponLaporan"
     tabindex="-1"
     role="dialog"
     aria-labelledby="myLargeModalLabel"
@@ -1184,7 +1309,7 @@
 <!--Modal Foto dan Catatan Dirlap-->
 <div
     class="modal fade"
-    id="exampleModalDetailDirlap"
+    id="modalResponLaporan"
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
@@ -1333,16 +1458,113 @@
 
 <script>
     $(document).ready(() => {
+        $("body").tooltip({ selector: "[data-tooltip=tooltip]" });
         $("table").DataTable({
             responsive: true,
         });
     });
-    $("#exampleModal").on("show.bs.modal", function (event) {
-        var button = $(event.relatedTarget);
-        var recipient = button.data("whatever");
-        var modal = $(this);
-        modal.find(".modal-title").text("New message to " + recipient);
-        modal.find(".modal-body input").val(recipient);
-    });
+    function rederModalDetail(el) {
+        const data = $(el).data("data");
+        $("#modalResponLaporan").find("form").attr("action", $(el).data("url"));
+        const dataRole = $(el).data("role");
+        const bahan = data.detail_bahan;
+        const jmf = data.detail_bahan_j_m_f;
+        const peralatan = data.detail_peralatan;
+        const tenagaKerja = data.detail_tenaga_kerja;
+        console.log(data);
+        $("#role").val(dataRole);
+        $("#kegiatan").val(data.data_umum_detail.data_umum.nm_paket);
+        $("#diajukan_tgl").val(data.tgl_request);
+        $("#lokasi_sta").val(data.lokasi_sta);
+        $("#jenis_pekerjaan").val(data.jadual.nmp + " " + data.jadual.uraian);
+        $("#perkiraan_volume").val(data.volume);
+        $("#pelaksanaan_tgl").val(data.tgl_dikerjakan);
+        $("#shopDrawing").attr(
+            "src",
+            "/admin/file-request/" + data.file_shopdrawing
+        );
+        console.log(data.respon_dirlap);
+        $("#catatan_ppk").val(data.respon_ppk);
+        $("#catatan_dirlap").val(data.respon_dirlap);
+
+        if (bahan) {
+            for (let i = 0; i < bahan.length; i++) {
+                $("#tableBahan")
+                    .find("tbody")
+                    .html(
+                        `<tr>
+                    <td>${bahan[i].bahan_material}</td>
+                    <td>${bahan[i].satuan}</td>
+                    <td>${bahan[i].volume}</td>
+                    `
+                    );
+            }
+        } else {
+            $("#tableBahan")
+                .find("tbody")
+                .html(
+                    "<tr><td colspan='3' class='text-center'>Tidak ada bahan material</td></tr>"
+                );
+        }
+
+        if (jmf) {
+            for (let i = 0; i < jmf.length; i++) {
+                $("#tableJMF")
+                    .find("tbody")
+                    .html(
+                        `<tr>
+                    <td>${jmf[i].bahan_jmf}</td>
+                    <td>${jmf[i].satuan}</td>
+                    <td>${jmf[i].volume}</td>
+                    `
+                    );
+            }
+        } else {
+            $("#tableJmf")
+                .find("tbody")
+                .html(
+                    "<tr><td colspan='3' class='text-center'>Tidak ada bahan material jmf</td></tr>"
+                );
+        }
+
+        if (peralatan) {
+            for (let i = 0; i < peralatan.length; i++) {
+                $("#tablePeralatan")
+                    .find("tbody")
+                    .html(
+                        `<tr>
+                    <td>${peralatan[i].jenis_peralatan}</td>
+                    <td>${peralatan[i].jumlah}</td>
+                    <td>${peralatan[i].satuan}</td>
+                    `
+                    );
+            }
+        } else {
+            $("#tablePeralatan")
+                .find("tbody")
+                .html(
+                    "<tr><td colspan='3' class='text-center'>Tidak ada perlatan</td></tr>"
+                );
+        }
+
+        if (tenagaKerja) {
+            for (let i = 0; i < tenagaKerja.length; i++) {
+                $("#tableTenagaKerja")
+                    .find("tbody")
+                    .html(
+                        `<tr>
+                    <td>${tenagaKerja[i].tenaga_kerja}</td>
+                    <td>${tenagaKerja[i].jumlah}</td>
+                    `
+                    );
+            }
+        } else {
+            $("#tableTenagaKerja")
+                .find("tbody")
+                .html(
+                    "<tr><td colspan='2' class='text-center'>Tidak ada tenaga kerja</td></tr>"
+                );
+        }
+    }
 </script>
 @endsection
