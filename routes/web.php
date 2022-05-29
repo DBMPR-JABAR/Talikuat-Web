@@ -201,3 +201,7 @@ Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('p
 Route::get('/email', function () {
     return view('email_memo');
 });
+
+Route::get('/pembangunan', function () {
+    return view('maps');
+});

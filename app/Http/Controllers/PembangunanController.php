@@ -9,7 +9,7 @@ class PembangunanController extends Controller
 {
     public function getDataPembangunan()
     {
-        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->first();
+        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->get();
         return response()->json([
             'status' => 'success',
             'data' => $data

@@ -49,4 +49,9 @@ class DataUmumDetail extends Model
     {
         return $this->hasMany(DataUmumRuas::class, 'data_umum_detail_id');
     }
+
+    public function ppkDetail()
+    {
+        return $this->belongsTo('App\Models\Backend\UserDetail', 'ppk_id')->with('user');
+    }
 }
