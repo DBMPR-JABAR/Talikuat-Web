@@ -29,14 +29,18 @@
         </style>
     </head>
     <body>
+        <input
+            type="hidden"
+            id="url"
+            value="{{ route('get-data-pembangunan') }}"
+        />
         <div id="viewDiv"></div>
 
         <script>
+            var url = $("#url").val();
             var data;
             $(document).ready(async () => {
-                await $.get(
-                    "http://talikuat.test/api/get-data-pembangunan"
-                ).then(function (response) {
+                await $.get(url).then(function (response) {
                     data = response.data;
                     initMap();
                 });
