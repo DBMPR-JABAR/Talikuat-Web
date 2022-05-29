@@ -5,7 +5,7 @@
             name="viewport"
             content="initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <title>Jalur Lebaran 2022</title>
+        <title>Pembangunan</title>
         <link
             rel="stylesheet"
             href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
