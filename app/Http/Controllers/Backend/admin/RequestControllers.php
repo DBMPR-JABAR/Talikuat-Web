@@ -125,7 +125,6 @@ class RequestControllers extends Controller
             }
 
             if ($validator->fails()) {
-                dd($validator->errors());
                 return back()->withErrors($validator)->withInput();
             }
             
@@ -149,7 +148,7 @@ class RequestControllers extends Controller
             Storage::putFileAs($this->PATH_FILE_DB, $file, $fileName);
 
 
-            if ($request->bahan_material) {
+            if ($request->bahan_material != null) {
                 for ($i = 0; $i < count($request->bahan_material); $i++) {
                     BahanMaterial::create([
                         'request_id' => $dataRequest->id,
@@ -159,7 +158,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if ($request->bahan_jmf) {
+            if ($request->bahan_jmf != null) {
                 for ($i = 0; $i < count($request->bahan_jmf); $i++) {
                     BahanJMF::create([
                         'request_id' => $dataRequest->id,
@@ -169,7 +168,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if ($request->jenis_peralatan) {
+            if ($request->jenis_peralatan != null) {
                 for ($i = 0; $i < count($request->jenis_peralatan); $i++) {
                     Peralatan::create([
                         'request_id' => $dataRequest->id,
@@ -179,7 +178,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if ($request->tenaga_kerja) {
+            if ($request->tenaga_kerja != null) {
                 for ($i = 0; $i < count($request->tenaga_kerja); $i++) {
                     TenagaKerja::create([
                         'request_id' => $dataRequest->id,
@@ -192,7 +191,6 @@ class RequestControllers extends Controller
             DB::commit();
             return redirect()->route('request.index')->with('success', 'Data berhasil ditambahkan');
         } catch (\Throwable $e) {
-            dd($e);
             DB::rollback();
             return back()->with('error', 'Gagal menyimpan data')->withInput();
         }
