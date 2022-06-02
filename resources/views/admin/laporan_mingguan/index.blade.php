@@ -99,6 +99,7 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-id="{{$l->id}}"
+                                    data-data="{{ $l }}"
                                     onclick="rederModalDetail(this)"
                                     class="btn btn-sm btn-success waves-effect waves-light"
                                     ><i class="mdi mdi-search-web menu-icon"></i
@@ -110,6 +111,7 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-id="{{$l->id}}"
+                                    data-data="{{ $l }}"
                                     onclick="rederModalDetail(this)"
                                 >
                                     <i class="mdi mdi-pencil menu-icon"></i>
@@ -120,6 +122,7 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-id="{{$l->id}}"
+                                    data-data="{{ $l }}"
                                     onclick="rederModalDetail(this)"
                                 >
                                     <i class="mdi mdi-delete"></i>
@@ -204,6 +207,7 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-role="dirlap"
+                                    data-data="{{ $l }}"
                                     data-url="{{ route('laporan.approval',$l->id) }}"
                                     onclick="rederModalDetail(this)"
                                     ><i class="mdi mdi-file-send"></i>
@@ -222,6 +226,7 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-role="ppk"
+                                    data-data="{{ $l }}"
                                     data-url="{{ route('laporan.approval',$l->id) }}"
                                     onclick="rederModalDetail(this)"
                                     ><i class="mdi mdi-file-send"></i>
@@ -1465,6 +1470,7 @@
     });
     function rederModalDetail(el) {
         const data = $(el).data("data");
+        console.log(data);
         $("#modalResponLaporan").find("form").attr("action", $(el).data("url"));
         const dataRole = $(el).data("role");
         const bahan = data.detail_bahan;

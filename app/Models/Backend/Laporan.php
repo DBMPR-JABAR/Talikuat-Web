@@ -12,4 +12,9 @@ class Laporan extends Model
     protected $table = 'laporan';
     protected $guarded = [];
 
+    public function dataUmum()
+    {
+        return $this->hasOne('App\Models\Backend\DataUmum', 'id', 'data_umum_id');
+    }
+
 }
