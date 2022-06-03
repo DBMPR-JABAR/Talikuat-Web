@@ -205,3 +205,7 @@ Route::get('/email', function () {
 Route::get('/pembangunan', function () {
     return view('maps');
 });
+
+Route::get('/phpinfo', function () {
+    return phpinfo();
+});')

@@ -116,4 +116,9 @@ class DashboardControllers extends Controller
     {
         //
     }
+
+    public function phpInfo()
+    {
+        phpinfo();
+    }
 }
