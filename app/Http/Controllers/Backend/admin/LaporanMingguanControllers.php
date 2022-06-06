@@ -54,7 +54,6 @@ class LaporanMingguanControllers extends Controller
             $laporan = Laporan::latest()->get();
         }
        
-        dd($laporan);
         return view("admin.laporan_mingguan.index", compact('data'));
     }
 
