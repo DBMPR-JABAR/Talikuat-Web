@@ -226,6 +226,12 @@
                                 @endif @if($request->status == 5)
                                 <a
                                     type="button"
+                                    href="{{route('request.show',$request->id) }}"
+                                    class="btn btn-sm btn-success waves-effect waves-light"
+                                    ><i class="mdi mdi-search-web menu-icon"></i
+                                ></a>
+                                <a
+                                    type="button"
                                     data-tooltip="tooltip"
                                     title="Buat Laporan"
                                     href="{{route('laporan.create',@$request->id) }}"

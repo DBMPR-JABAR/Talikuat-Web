@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 use Maatwebsite\Excel\Facades\Excel;
 use stdClass;
@@ -87,6 +88,7 @@ class JadualControllers extends Controller
     public function store(Request $request)
     {
         try {
+
             $validator = Validator::make($request->all(), [
                 'data_umum_detail_id' => 'required'
             ]);
@@ -98,10 +100,11 @@ class JadualControllers extends Controller
             $file = storage_path('app/' . $this->PATH_FILE_DB . $getFile->file_name);
             $list_jadual = Excel::toCollection(new JadualImport, $file);
             $data_umum = DataUmumDetail::where('id', $request->data_umum_detail_id)->where('is_active', 1)->first();
+            DB::beginTransaction();
             foreach ($list_jadual as $val) {
-
                 $val[0]['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($val[0]['tanggal']));
                 $val[0]['tanggal'] = date('Y-m-d', strtotime($val[0]['tanggal']));
+                
                 $jadual =  Jadual::create([
                     'data_umum_detail_id' => $request->data_umum_detail_id,
                     'nmp' => $val[0]['no_mata_pembayaran'],
@@ -117,19 +120,21 @@ class JadualControllers extends Controller
                         $item['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($item['tanggal']));
                         $item['tanggal'] = date('Y-m-d', strtotime($item['tanggal']));
                     }
-
-                    JadualDetail::create([
-                        'jadual_id' => $jadual->id,
-                        'nmp' => $item['no_mata_pembayaran'],
-                        'uraian' => $item['uraian'],
-                        'tanggal' => $item['tanggal'],
-                        'satuan' => $item['satuan'],
-                        'harga_satuan' => $item['harga_satuan_rp'],
-                        'bobot' => $item['bobot'],
-                        'koefisien' => $item['koefisien'],
-                        'nilai' => $item['nilai'],
-                        'volume' => $item['volume'],
-                    ]);
+                    if ($item['no_mata_pembayaran'] != null) {
+                        JadualDetail::create([
+                            'jadual_id' => $jadual->id,
+                            'nmp' => $item['no_mata_pembayaran'],
+                            'uraian' => $item['uraian'],
+                            'tanggal' => $item['tanggal'],
+                            'satuan' => $item['satuan'],
+                            'harga_satuan' => $item['harga_satuan_rp'],
+                            'bobot' => $item['bobot'],
+                            'koefisien' => $item['koefisien'],
+                            'nilai' => $item['nilai'],
+                            'volume' => $item['volume'],
+                        ]);
+                    }
+                   
                 }
             }
              $data_umum->update([
@@ -138,10 +143,12 @@ class JadualControllers extends Controller
             
             Storage::delete($this->PATH_FILE_DB . $getFile->file_name);
             $getFile->delete();
+            DB::commit();
             return redirect()->route('jadual.index')->with('success', 'Data berhasil diinput');
         } catch (\Throwable $e) {
+            DB::rollback();
             dd($e);
-            return redirect()->back()->withErrors($e->getMessage())->withInput();
+            return redirect()->back()->withErrors($e->getMessage());
         }
     }
 

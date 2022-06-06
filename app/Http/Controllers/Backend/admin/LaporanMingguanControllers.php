@@ -5,6 +5,12 @@ namespace App\Http\Controllers\backend\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\DataUmum;
 use App\Models\Backend\Laporan;
+use App\Models\Backend\LaporanBahanBeton;
+use App\Models\Backend\LaporanBahanHotmix;
+use App\Models\Backend\LaporanBahanMaterial;
+use App\Models\Backend\LaporanCuaca;
+use App\Models\Backend\LaporanPeralatan;
+use App\Models\Backend\LaporanTenagaKerja;
 use App\Models\Backend\HistoryStatusLaporan;
 use App\Models\Backend\Request as BackendRequest;
 use Illuminate\Http\Request;
@@ -53,8 +59,6 @@ class LaporanMingguanControllers extends Controller
             $data = DataUmum::latest()->with('detail')->with('uptd')->get();
             $laporan = Laporan::latest()->get();
         }
-       
-        dd($laporan);
         return view("admin.laporan_mingguan.index", compact('data'));
     }
 
@@ -95,10 +99,56 @@ class LaporanMingguanControllers extends Controller
                 'file_dokumentasi' => 'required',
             ]);
 
+
             if ($validator->fails()) {
-                dd($validator->errors());
                 return redirect()->back()->withErrors($validator)->withInput();
             }
+
+            if ($request->bahan_material[0] != null) {
+                $validator = Validator::make($request->all(), [
+                    'volume_bahan.*' => 'required',
+                    'satuan_bahan.*' => 'required',
+                ]);
+            }
+
+            if ($request->jenis_peralatan[0] != null) {
+                $validator = Validator::make($request->all(), [
+                    'jumlah_peralatan.*' => 'required',
+                ]);
+            }
+
+            if ($request->bahan_hotmix[0] != null) {
+                $validator = Validator::make($request->all(), [
+                    'no_dump_truck.*' => 'required',
+                    'waktu_datang.*' => 'required',
+                    'waktu_hampar.*' => 'required',
+                    'suhu_datang.*' => 'required',
+                    'suhu_hampar.*' => 'required',
+                    'p_m.*' => 'required',
+                    'l_m.*' => 'required',
+                    't_gembur_m.*' => 'required',
+                ]);
+            }
+
+            if ($request->bahan_beton_ready_mix[0] != null) {
+                $validator = Validator::make($request->all(), [
+                    'no_truck_mixer.*' => 'required',
+                    'waktu_curah.*' => 'required',
+                    'slump_test.*' => 'required',
+                    'satuan_beton.*' => 'required',
+                ]);
+            }
+
+            if ($request->tenaga_kerja[0] != null) {
+                $validator = Validator::make($request->all(), [
+                    'jumlah.*' => 'required',
+                ]);
+            }
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+            DB::beginTransaction();
             $dataUmum = DataUmum::where('id', $request->data_umum_id)->first();
             $tgl_spmk = $dataUmum->tgl_spmk;
             $minggu = '+ '.$request->minggu.'weeks';
@@ -121,9 +171,74 @@ class LaporanMingguanControllers extends Controller
                 'tgl_mulai' => $tgl_mulai,
 
             ]);
+
+            if ($request->bahan_material[0] != null) {
+                for ($i=0; $i <count($request->bahan_material) ; $i++) { 
+                    LaporanBahanMaterial::create([
+                        'laporan_id' => $laporan->id,
+                        'bahan_digunakan' => $request->bahan_material[$i],
+                        'volume' => $request->volume_bahan[$i],
+                        'satuan' => $request->satuan_bahan[$i],
+                    ]);
+                } 
+            }
+
+            if ($request->jenis_peralatan[0] != null) {
+                for ($i=0; $i <count($request->jenis_peralatan) ; $i++) { 
+                    LaporanPeralatan::create([
+                        'laporan_id' => $laporan->id,
+                        'jenis_peralatan' => $request->jenis_peralatan[$i],
+                        'jumlah' => $request->jumlah_peralatan[$i],
+                    ]);
+                } 
+            }
+
+            if ($request->bahan_hotmix[0] != null) {
+                for ($i=0; $i <count($request->bahan_hotmix) ; $i++) { 
+                    LaporanBahanHotmix::create([
+                        'laporan_id' => $laporan->id,
+                        'bahan_hotmix' => $request->bahan_hotmix[$i],
+                        'no_dump_truck' => $request->no_dump_truck[$i],
+                        'waktu_datang' => $request->waktu_datang[$i],
+                        'waktu_hampar' => $request->waktu_hampar[$i],
+                        'suhu_datang' => $request->suhu_datang[$i],
+                        'suhu_hampar' => $request->suhu_hampar[$i],
+                        'p_m' => $request->p_m[$i],
+                        'l_m' => $request->l_m[$i],
+                        't_gembur_m' => $request->t_gembur_m[$i],
+                    ]);
+                } 
+            }
+
+            if ($request->bahan_beton_ready_mix[0] != null) {
+                for ($i=0; $i <count($request->bahan_beton_ready_mix) ; $i++) { 
+                    LaporanBahanBeton::create([
+                        'laporan_id' => $laporan->id,
+                        'bahan_beton' => $request->bahan_beton_ready_mix[$i],
+                        'no_truck_mixer' => $request->no_truck_mixer[$i],
+                        'waktu_curah' => $request->waktu_curah[$i],
+                        'slump_test' => $request->slump_test[$i],
+                        'satuan' => $request->satuan_beton[$i],
+                    ]);
+                } 
+            }
+
+            if ($request->tenaga_kerja[0] != null) {
+                for ($i=0; $i <count($request->tenaga_kerja) ; $i++) { 
+                    LaporanTenagaKerja::create([
+                        'laporan_id' => $laporan->id,
+                        'tenaga_kerja' => $request->tenaga_kerja[$i],
+                        'jumlah' => $request->jumlah[$i],
+                    ]);
+                } 
+            }
+            
+
+            DB::commit();
             Storage::putFileAs($this->PATH_FILE_DB, $file, $fileName);
             return redirect()->route('laporan.index')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
+            DB::rollback();
             dd($e);
             return redirect()->back()->with('error', $e->getMessage());
             

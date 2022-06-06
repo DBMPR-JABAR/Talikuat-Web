@@ -184,6 +184,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/request/create/{id}', [RequestControllers::class, 'create'])->name('request.create');
             Route::get('/file-request/{file_name}', [RequestControllers::class, 'file'])->name('request.file');
             Route::get('/send-request/{id}', [RequestControllers::class, 'sendRequestApi'])->name('request.send');
+            Route::get('/request/print/{id}', [RequestControllers::class, 'printReqeust'])->name('request.print');
             Route::post('/request-api/{id}', [RequestControllers::class, 'approval'])->name('request.approval');
             Route::resource('laporan', LaporanMingguanControllers::class);
             Route::get('/laporan/create/{id}', [LaporanMingguanControllers::class, 'create'])->name('laporan.create');
@@ -197,7 +198,6 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('pusat_unduhan.index');
 
-
 Route::get('/email', function () {
     return view('email_memo');
 });
@@ -208,4 +208,4 @@ Route::get('/pembangunan', function () {
 
 Route::get('/phpinfo', function () {
     return phpinfo();
-});')
+});

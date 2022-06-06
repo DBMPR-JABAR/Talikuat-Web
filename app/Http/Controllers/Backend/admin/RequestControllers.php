@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class RequestControllers extends Controller
 {
@@ -94,31 +95,32 @@ class RequestControllers extends Controller
                 'file_shop_drawing' => 'required|file|mimes:jpg,jpeg,png',
             ]);
 
+
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             }
 
-            if ($request->bahan_material) {
+            if ($request->bahan_material[0] != null) {
                 $validator = Validator::make($request->all(), [
                     'volume_material' => 'required',
                     'satuan_material' => 'required',
                 ]);
             }
 
-            if ($request->bahan_jmf) {
+            if ($request->bahan_jmf[0] != null) {
                 $validator = Validator::make($request->all(), [
                     'volume_jmf' => 'required',
                     'satuan_jmf' => 'required',
                 ]);
             }
-            if ($request->jenis_peralatan) {
+            if ($request->jenis_peralatan[0] != null) {
                 $validator = Validator::make($request->all(), [
                     'jumlah_peralatan' => 'required',
                     'satuan_peralatan' => 'required',
                 ]);
             }
 
-            if ($request->tenaga_kerja) {
+            if ($request->tenaga_kerja[0] != null) {
                 $validator = Validator::make($request->all(), [
                     'jumlah_tenaga_kerja' => 'required',
                 ]);
@@ -127,7 +129,6 @@ class RequestControllers extends Controller
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             }
-            
             $file = $request->file('file_shop_drawing');
             $fileName =  time() . "_" . $file->getClientOriginalName();
             DB::beginTransaction();
@@ -148,7 +149,7 @@ class RequestControllers extends Controller
             Storage::putFileAs($this->PATH_FILE_DB, $file, $fileName);
 
 
-            if ($request->bahan_material != null) {
+            if ($request->bahan_material[0] != null) {
                 for ($i = 0; $i < count($request->bahan_material); $i++) {
                     BahanMaterial::create([
                         'request_id' => $dataRequest->id,
@@ -158,7 +159,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if ($request->bahan_jmf != null) {
+            if ($request->bahan_jmf[0] != null) {
                 for ($i = 0; $i < count($request->bahan_jmf); $i++) {
                     BahanJMF::create([
                         'request_id' => $dataRequest->id,
@@ -168,7 +169,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if ($request->jenis_peralatan != null) {
+            if ($request->jenis_peralatan[0] != null) {
                 for ($i = 0; $i < count($request->jenis_peralatan); $i++) {
                     Peralatan::create([
                         'request_id' => $dataRequest->id,
@@ -178,7 +179,7 @@ class RequestControllers extends Controller
                     ]);
                 }
             }
-            if ($request->tenaga_kerja != null) {
+            if ($request->tenaga_kerja[0] != null) {
                 for ($i = 0; $i < count($request->tenaga_kerja); $i++) {
                     TenagaKerja::create([
                         'request_id' => $dataRequest->id,
@@ -204,7 +205,11 @@ class RequestControllers extends Controller
      */
     public function show($id)
     {
-        //
+        $data = BackendRequest::where('id', $id)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('jadual')->with('dataUmumDetail')->first();
+        $jadual = Jadual::where('data_umum_detail_id', $data->dataUmumDetail->id)->get(); 
+        $countRequest = BackendRequest::where('jadual_id', $data->jadual_id)->count();
+       
+        return view('admin.request.show', compact('data', 'jadual', 'countRequest'));
     }
 
     /**
@@ -423,6 +428,17 @@ class RequestControllers extends Controller
         $data->save();
         $this->createHistoryStatus($id, 3);
         return back()->with('success', 'Data berhasil dikirim');
+    }
+
+
+    public function printReqeust($id)
+    {
+        $data = BackendRequest::where('id', $id)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('jadual')->with('dataUmumDetail')->first();
+        $jadual = Jadual::where('data_umum_detail_id', $data->dataUmumDetail->id)->get(); 
+        $pdf = PDF::loadView('admin.request.show', compact('data', 'jadual'));
+        return view('admin.request.print', compact('data', 'jadual'));
+        return $pdf->stream('request.pdf');
+
     }
 
     private function createHistoryStatus($id, $status)
