@@ -53,7 +53,7 @@
                         @foreach($requests as $request)
                         <tr>
                             <td>
-                                FRM-01/SOP/DBMPR-{{$loop->index}}<br />
+                                FRM-01/SOP/DBMPR-{{$request->id}}<br />
                                 {{@$request->tgl_request}}
                             </td>
                             <td>
@@ -128,6 +128,7 @@
                                     data-toggle="modal"
                                     data-target="#exampleModalApproval"
                                     data-id="{{@$request->id}}"
+                                    data-data="{{@$request}}"
                                     data-paket="{{@$request->dataUmumDetail->dataUmum->ppk_kegiatan}}"
                                     onclick="rederModalDetail(this)"
                                     class="btn btn-sm btn-success waves-effect waves-light"

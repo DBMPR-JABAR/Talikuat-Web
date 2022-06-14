@@ -34,6 +34,7 @@ function rederModalCatatan(el) {
 
 function rederModalDetail(el) {
     const data = $(el).data("data");
+    console.log(data);
     $("#exampleModalApproval").find("form").attr("action", $(el).data("url"));
     const dataRole = $(el).data("role");
     const bahan = data.detail_bahan;
