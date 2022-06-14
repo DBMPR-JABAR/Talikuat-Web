@@ -59,10 +59,7 @@ class LaporanMingguanControllers extends Controller
             $data = DataUmum::latest()->with('detail')->with('uptd')->get();
             $laporan = Laporan::latest()->get();
         }
-<<<<<<< HEAD
        
-=======
->>>>>>> 67e7b0ffbb085a4ed84e4a2cc0fd4f36a0e4003a
         return view("admin.laporan_mingguan.index", compact('data'));
     }
 

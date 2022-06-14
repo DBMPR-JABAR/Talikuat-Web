@@ -311,7 +311,7 @@
                                     <label>Panjang KM</label>
                                     <input
                                         type="number"
-                                        step="0.01"
+                                        step="0.0001"
                                         name="panjang_km"
                                         id="panjang_km"
                                         value="{{ old('panjang_km') }}"
