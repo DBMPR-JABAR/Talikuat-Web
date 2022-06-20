@@ -36,6 +36,7 @@ class JadualControllers extends Controller
             
             // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
             $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
+            
         }elseif($role == 2 || $role == 15){
             $data = DataUmum::latest()->whereHas('detail', function($query){
                 $query->where('ppk_id', Auth::user()->user_detail->id);
@@ -64,13 +65,14 @@ class JadualControllers extends Controller
         ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
 
 
-        $file = TempFileJadual::where([[
-            'data_umum_detail_id', $data->detail->$id
-        ]])->first();
+        $file = TempFileJadual::where('data_umum_detail_id', $data->detail->$id)->get();
+
         if ($file) {
-            Storage::delete($this->PATH_FILE_DB . $file->file_name);
-            $file->delete();
+            foreach ($file as $key => $value) {
+                Storage::delete($this->PATH_FILE_DB . $value->file);
+            }
         }
+        
 
         if($data->fileJadual->first() != null){
             return view('admin.input_data.jadual.create', compact('data'));

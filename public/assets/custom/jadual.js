@@ -161,11 +161,9 @@ function getRandomColor() {
 
 function renderDetailJadual(index) {
     const data = dataJadualGlobal[0][index];
-    $("table tbody").empty();
-    $("table .display").DataTable().destroy();
-
+    $("#jadualDetail table").DataTable().destroy();
+    $("#jadualDetail table tbody").empty();
     data.forEach((v, i) => {
-        console.log(data[i].nilai);
         if (v == undefined) {
             $("#jadualDetail").find("tbody").append(`
             <tr>
@@ -188,7 +186,7 @@ function renderDetailJadual(index) {
         `);
         }
     });
-    $("table.display").DataTable().draw();
+    $("#jadualDetail table").DataTable().draw();
 }
 
 function formatRupiah(angka, prefix) {
