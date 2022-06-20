@@ -13,7 +13,7 @@ class DataUmumAdendum extends Controller
         date_default_timezone_set('Asia/Jakarta');
         DB::beginTransaction();
         try {
-            DB::table('data_umum_adendum')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('data_umum_adendum')->where('id', $req->id)->update([
                 "nilai_kontrak" => $req->nilai_kontrak,
                 "tgl_adendum" => $req->tgl_adendum,
                 "panjang_km" => $req->panjang_km,
@@ -22,9 +22,9 @@ class DataUmumAdendum extends Controller
                 "no_kontrak"=>$req->no_kontrak,
                 "updated_at" => \Carbon\Carbon::now()
             ]);
-            DB::table('data_umum_ruas_adendum')->where('id_data_umum_adendum',$req->id)->delete();
+            DB::connection('talikuat_old')->table('data_umum_ruas_adendum')->where('id_data_umum_adendum',$req->id)->delete();
             for ($i = 0; $i < count($req->ruas_jalan); $i++) {
-                DB::table("data_umum_ruas_adendum")->insert([
+                DB::connection('talikuat_old')->table("data_umum_ruas_adendum")->insert([
                     "id_data_umum_adendum" => $req->id,
                     "ruas_jalan" => $req->ruas_jalan[$i],
                     "segment_jalan" => $req->segmen_jalan[$i],
@@ -54,7 +54,7 @@ class DataUmumAdendum extends Controller
     public function getNmpJadual($id)
     {
         return response()->json(
-            DB::table('detail_jadual_adendum')->where('id_jadual', $id)->get()
+            DB::connection('talikuat_old')->table('detail_jadual_adendum')->where('id_jadual', $id)->get()
         );
     }
 }

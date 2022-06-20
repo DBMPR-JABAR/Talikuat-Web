@@ -12,7 +12,7 @@ class PpkController extends Controller
   public function getAllPpk()
   {
 
-    $result = DB::table('master_ppk')->get();
+    $result = DB::connection('talikuat_old')->table('master_ppk')->get();
 
     return response()->json([
       'status' => 'success',
@@ -24,7 +24,7 @@ class PpkController extends Controller
   public function getTotalPpk()
   {
 
-    $result = DB::table('master_ppk')->count();
+    $result = DB::connection('talikuat_old')->table('master_ppk')->count();
 
     return response()->json([
       'status' => 'success',
@@ -36,7 +36,7 @@ class PpkController extends Controller
   public function getLatestPpk()
   {
 
-    $result = DB::table('master_ppk')
+    $result = DB::connection('talikuat_old')->table('master_ppk')
       ->limit(5)
       ->orderBy('id', 'desc')
       ->get();
@@ -51,7 +51,7 @@ class PpkController extends Controller
   public function getPpkById($id)
   {
 
-    $result = DB::table('master_ppk')->where('id', $id)->first();
+    $result = DB::connection('talikuat_old')->table('master_ppk')->where('id', $id)->first();
 
     return response()->json([
       'status' => 'success',
@@ -65,7 +65,7 @@ class PpkController extends Controller
 
     $keyword = $request->query('keyword');
 
-    $result = DB::table('master_ppk')
+    $result = DB::connection('talikuat_old')->table('master_ppk')
       ->where('nama', 'like', '%' . $keyword . '%')
       ->orWhere('alamat', 'like', '%' . $keyword . '%')
       ->paginate(15);
@@ -93,7 +93,7 @@ class PpkController extends Controller
       ], Response::HTTP_BAD_REQUEST);
     }
 
-    $result = DB::table('master_ppk')
+    $result = DB::connection('talikuat_old')->table('master_ppk')
       ->insertGetId([
         "nama" => $request->input("nama"),
         "alamat" => $request->input("alamat"),

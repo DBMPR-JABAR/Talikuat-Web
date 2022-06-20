@@ -15,7 +15,7 @@ class LaporanController extends Controller
 
     public function getAllLaporanHarian(Request $req)
     {
-        $query = DB::table('master_laporan_harian')
+        $query = DB::connection('talikuat_old')->table('master_laporan_harian')
             ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
             ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
             ->where(function ($query) use ($req) {
@@ -56,12 +56,12 @@ class LaporanController extends Controller
             $item->gambar = $item->gambar != null ? Storage::url($item->gambar) : null;
             $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
             $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
-            $item->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_peralatan = DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_material = DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_beton = DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_cuaca = DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_hotmix = DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_pekerja = DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_peralatan = DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->where('no_trans', '=', $item->no_trans)->get();
         }
 
         return response()->json([
@@ -73,7 +73,7 @@ class LaporanController extends Controller
 
     public function getLaporanProgressKegiatanTerbaru()
     {
-        $result = DB::table('master_laporan_harian as master')
+        $result = DB::connection('talikuat_old')->table('master_laporan_harian as master')
             ->select(DB::raw('kegiatan, SUM(volume) as persen'))
             ->groupBy('kegiatan')
             ->limit(5)
@@ -88,7 +88,7 @@ class LaporanController extends Controller
 
     public function getLaporanById($id)
     {
-        $result = DB::table('master_laporan_harian')
+        $result = DB::connection('talikuat_old')->table('master_laporan_harian')
             ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
             ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
             ->where('master_laporan_harian.no_trans', '=', $id)
@@ -97,12 +97,12 @@ class LaporanController extends Controller
         $result->gambar = $result->gambar != null ? Storage::url($result->gambar) : null;
         $result->foto_konsultan = $result->foto_konsultan != null ? Storage::url($result->foto_konsultan) : null;
         $result->foto_ppk = $result->foto_ppk != null ? Storage::url($result->foto_ppk) : null;
-        $result->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $result->no_trans)->get();
-        $result->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $result->no_trans)->get();
-        $result->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $result->no_trans)->get();
-        $result->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $result->no_trans)->get();
-        $result->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $result->no_trans)->get();
-        $result->list_peralatan = DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_bahan_material = DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_bahan_beton = DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_cuaca = DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_bahan_hotmix = DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_pekerja = DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->where('no_trans', '=', $result->no_trans)->get();
+        $result->list_peralatan = DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->where('no_trans', '=', $result->no_trans)->get();
 
         return response()->json([
             'status' => 'success',
@@ -113,7 +113,7 @@ class LaporanController extends Controller
 
     public function getLaporanByRequestId($id, Request $req)
     {
-        $result = DB::table('master_laporan_harian')
+        $result = DB::connection('talikuat_old')->table('master_laporan_harian')
             ->selectRaw('master_laporan_harian.*, detail_laporan_harian_pekerjaan.*')
             ->join('detail_laporan_harian_pekerjaan', 'master_laporan_harian.no_trans', '=', 'detail_laporan_harian_pekerjaan.no_trans')
             ->where('master_laporan_harian.id_request', '=', $id)
@@ -130,12 +130,12 @@ class LaporanController extends Controller
             $item->gambar = $item->gambar != null ? Storage::url($item->gambar) : null;
             $item->foto_konsultan = $item->foto_konsultan != null ? Storage::url($item->foto_konsultan) : null;
             $item->foto_ppk = $item->foto_ppk != null ? Storage::url($item->foto_ppk) : null;
-            $item->list_bahan_material = DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_bahan_beton = DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_cuaca = DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_bahan_hotmix = DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_pekerja = DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
-            $item->list_peralatan = DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_material = DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_beton = DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_cuaca = DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_bahan_hotmix = DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_pekerja = DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->where('no_trans', '=', $item->no_trans)->get();
+            $item->list_peralatan = DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->where('no_trans', '=', $item->no_trans)->get();
         }
 
         return response()->json([
@@ -186,9 +186,9 @@ class LaporanController extends Controller
 
         $file = $req->file('gambar');
         $name = time() . "_" . $file->getClientOriginalName();
-        $request = DB::table('request')->where('id', $req->id_request)->first();
+        $request = DB::connection('talikuat_old')->table('request')->where('id', $req->id_request)->first();
 
-        $idLaporan = DB::table('master_laporan_harian')->insertGetId([
+        $idLaporan = DB::connection('talikuat_old')->table('master_laporan_harian')->insertGetId([
             "real_date" => \Carbon\Carbon::now(),
             "user" => $req->user,
             "kegiatan" => $req->kegiatan,
@@ -214,7 +214,7 @@ class LaporanController extends Controller
 
         Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
 
-        DB::table('detail_laporan_harian_pekerjaan')->insert([
+        DB::connection('talikuat_old')->table('detail_laporan_harian_pekerjaan')->insert([
             "no_trans" => $idLaporan,
             "no_pekerjaan" => $req->nmp,
             "jenis_pekerjaan" => $req->uraian,
@@ -230,7 +230,7 @@ class LaporanController extends Controller
 
         if ($req->list_bahan_material != null) {
             foreach (json_decode($req->list_bahan_material) as $bahan_material) {
-                DB::table('detail_laporan_harian_bahan')->insert([
+                DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->insert([
                     "no_trans" => $idLaporan,
                     "bahan" => $bahan_material->bahan,
                     "volume" => $bahan_material->volume,
@@ -241,7 +241,7 @@ class LaporanController extends Controller
 
         if ($req->list_peralatan != null) {
             foreach (json_decode($req->list_peralatan) as $alat) {
-                DB::table('detail_laporan_harian_peralatan')->insert([
+                DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->insert([
                     "no_trans" => $idLaporan,
                     "jenis_peralatan" => $alat->jenis_peralatan,
                     "jumlah" => $alat->jumlah,
@@ -252,7 +252,7 @@ class LaporanController extends Controller
 
         if ($req->list_bahan_hotmix != null) {
             foreach (json_decode($req->list_bahan_hotmix) as $hotmix) {
-                DB::table('detail_laporan_harian_hotmix')->insert([
+                DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->insert([
                     "no_trans" => $idLaporan,
                     "bahan_hotmix" => $hotmix->bahan_hotmix,
                     "no_dt" => $hotmix->no_dt,
@@ -270,7 +270,7 @@ class LaporanController extends Controller
 
         if ($req->list_bahan_beton != null) {
             foreach (json_decode($req->list_bahan_beton) as $beton) {
-                DB::table('detail_laporan_harian_beton')->insert([
+                DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->insert([
                     "no_trans" => $idLaporan,
                     "bahan_beton" => $beton->bahan_beton,
                     "no_tm" => $beton->no_tm,
@@ -285,7 +285,7 @@ class LaporanController extends Controller
 
         if ($req->list_pekerja != null) {
             foreach (json_decode($req->list_pekerja) as $pekerja) {
-                DB::table('detail_laporan_harian_tkerja')->insert([
+                DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->insert([
                     "no_trans" => $idLaporan,
                     "tenaga_kerja" => $pekerja->tenaga_kerja,
                     "jumlah" => $pekerja->jumlah,
@@ -295,7 +295,7 @@ class LaporanController extends Controller
 
         if ($req->list_cuaca != null) {
             foreach (json_decode($req->list_cuaca) as $cuaca) {
-                DB::table('detail_laporan_harian_cuaca')->insert([
+                DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->insert([
                     "no_trans" => $idLaporan,
                     "cerah" => property_exists($cuaca, 'cerah') ? $cuaca->cerah : null,
                     "hujan_ringan" => property_exists($cuaca, 'hujan_ringan') ? $cuaca->hujan_ringan : null,
@@ -306,7 +306,7 @@ class LaporanController extends Controller
             }
         }
 
-        DB::table('history_laporan')->insert([
+        DB::connection('talikuat_old')->table('history_laporan')->insert([
             "username" => $req->nama_kontraktor,
             "created_at" => \Carbon\Carbon::now(),
             "keterangan" => "Laporan Telah Dibuat Oleh " . $req->nama_kontraktor,
@@ -327,14 +327,14 @@ class LaporanController extends Controller
         date_default_timezone_set('Asia/Jakarta');
         $file = $req->file('soft');
         $name = time() . "_" . $file->getClientOriginalName();
-        $getTeam = DB::table('request')->where('id', $req->permohonan)->first();
-        $countRequest = DB::table('request')->where('id_jadual', $req->id_jadual)->count();
+        $getTeam = DB::connection('talikuat_old')->table('request')->where('id', $req->permohonan)->first();
+        $countRequest = DB::connection('talikuat_old')->table('request')->where('id_jadual', $req->id_jadual)->count();
         DB::beginTransaction();
         try {
-            DB::table('request')->where('id', $req->permohonan)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->permohonan)->update([
                 'volume_terlapor' => (float) $getTeam->volume_terlapor + (float) $req->volume
             ]);
-            $id = DB::table('master_laporan_harian')->insertGetId([
+            $id = DB::connection('talikuat_old')->table('master_laporan_harian')->insertGetId([
                 "real_date" => \Carbon\Carbon::now(),
                 "user" => $req->user,
                 "kegiatan" => $req->kegiatan,
@@ -358,7 +358,7 @@ class LaporanController extends Controller
                 "field_team_konsultan" => $getTeam->field_team_konsultan
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
-            DB::table('detail_laporan_harian_pekerjaan')->insert([
+            DB::connection('talikuat_old')->table('detail_laporan_harian_pekerjaan')->insert([
                 "no_trans" => $id,
                 "no_pekerjaan" => $req->no_pekerjaan,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
@@ -374,7 +374,7 @@ class LaporanController extends Controller
 
             if ($req->bahan[0] != null) {
                 for ($i = 0; $i < count($req->bahan); $i++) {
-                    DB::table('detail_laporan_harian_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->insert([
                         "no_trans" => $id,
                         "bahan" => $req->bahan[$i],
                         "volume" => $req->volume_bahan[$i],
@@ -385,7 +385,7 @@ class LaporanController extends Controller
 
             if ($req->jenis_peralatan[0] != null) {
                 for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-                    DB::table('detail_laporan_harian_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->insert([
                         "no_trans" => $id,
                         "jenis_peralatan" => $req->jenis_peralatan[$i],
                         "jumlah" => $req->jumlah_peralatan[$i],
@@ -396,7 +396,7 @@ class LaporanController extends Controller
 
             if ($req->bahan_hotmix[0] != null) {
                 for ($i = 0; $i < count($req->bahan_hotmix); $i++) {
-                    DB::table('detail_laporan_harian_hotmix')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->insert([
                         "no_trans" => $id,
                         "bahan_hotmix" => $req->bahan_hotmix[$i],
                         "no_dt" => $req->no_dt[$i],
@@ -415,7 +415,7 @@ class LaporanController extends Controller
 
             if ($req->bahan_beton[0] != null) {
                 for ($i = 0; $i < count($req->bahan_beton); $i++) {
-                    DB::table('detail_laporan_harian_beton')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->insert([
                         "no_trans" => $id,
                         "bahan_beton" => $req->bahan_beton[$i],
                         "no_tm" => $req->no_tm[$i],
@@ -431,7 +431,7 @@ class LaporanController extends Controller
 
             if ($req->tenaga_kerja[0] != null) {
                 for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-                    DB::table('detail_laporan_harian_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->insert([
                         "no_trans" => $id,
                         "tenaga_kerja" => $req->tenaga_kerja[$i],
                         "jumlah" => $req->jumlah_tk[$i],
@@ -442,7 +442,7 @@ class LaporanController extends Controller
 
             if ($req->cerah[0] != null) {
                 for ($i = 0; $i < count($req->cerah); $i++) {
-                    DB::table('detail_laporan_harian_cuaca')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->insert([
                         "no_trans" => $id,
                         "cerah" => $req->cerah[$i],
                         "hujan_ringan" => $req->hujan_ringan[$i],
@@ -454,7 +454,7 @@ class LaporanController extends Controller
             }
 
 
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->kontraktor,
                 "created_at" => \Carbon\Carbon::now(),
                 "keterangan" => "Laporan Telah Dibuat Oleh " . $req->kontraktor,
@@ -464,13 +464,13 @@ class LaporanController extends Controller
             ]);
             if ($countRequest < 1) {
                 if ($getTeam->volume_terlapor == ($getTeam->volume + ($getTeam->volume * 10 / 100))) {
-                    DB::table('request')->where('id', $req->permohonan)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->permohonan)->update([
                         'disabled' => 1
                     ]);
                 }
             } else {
                 if ($getTeam->volume_terlapor == $getTeam->volume) {
-                    DB::table('request')->where('id', $req->permohonan)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->permohonan)->update([
                         'disabled' => 1
                     ]);
                 }
@@ -518,9 +518,9 @@ class LaporanController extends Controller
         DB::beginTransaction();
 
         try {
-            $tableRef = DB::table('master_laporan_harian')->where('no_trans', '=', $req->id);
+            $tableRef = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', '=', $req->id);
             $currentReport = $tableRef->first();
-            $request = DB::table('request')->where('id', '=', $currentReport->id_request)->first();
+            $request = DB::connection('talikuat_old')->table('request')->where('id', '=', $currentReport->id_request)->first();
 
             if ($req->file('gambar')) {
                 $file = $req->file('gambar');
@@ -540,7 +540,7 @@ class LaporanController extends Controller
                 "field_team_konsultan" => $request->field_team_konsultan
             ]);
 
-            DB::table('detail_laporan_harian_pekerjaan')
+            DB::connection('talikuat_old')->table('detail_laporan_harian_pekerjaan')
                 ->where('no_trans', '=', $req->id)
                 ->update([
                     "sta_awal" => $req->sta_awal,
@@ -552,10 +552,10 @@ class LaporanController extends Controller
                     "bobot" => floatval($req->bobot),
                 ]);
 
-            DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_bahan_material != null) {
                 foreach (json_decode($req->list_bahan_material) as $bahan_material) {
-                    DB::table('detail_laporan_harian_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->insert([
                         "no_trans" => $req->id,
                         "bahan" => $bahan_material->bahan,
                         "volume" => $bahan_material->volume,
@@ -564,10 +564,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_peralatan != null) {
                 foreach (json_decode($req->list_peralatan) as $alat) {
-                    DB::table('detail_laporan_harian_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->insert([
                         "no_trans" => $req->id,
                         "jenis_peralatan" => $alat->jenis_peralatan,
                         "jumlah" => $alat->jumlah,
@@ -576,10 +576,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_bahan_hotmix != null) {
                 foreach (json_decode($req->list_bahan_hotmix) as $hotmix) {
-                    DB::table('detail_laporan_harian_hotmix')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->insert([
                         "no_trans" => $req->id,
                         "bahan_hotmix" => $hotmix->bahan_hotmix,
                         "no_dt" => $hotmix->no_dt,
@@ -595,10 +595,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_bahan_beton != null) {
                 foreach (json_decode($req->list_bahan_beton) as $beton) {
-                    DB::table('detail_laporan_harian_beton')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->insert([
                         "no_trans" => $req->id,
                         "bahan_beton" => $beton->bahan_beton,
                         "no_tm" => $beton->no_tm,
@@ -611,10 +611,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_pekerja != null) {
                 foreach (json_decode($req->list_pekerja) as $pekerja) {
-                    DB::table('detail_laporan_harian_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->insert([
                         "no_trans" => $req->id,
                         "tenaga_kerja" => $pekerja->tenaga_kerja,
                         "jumlah" => $pekerja->jumlah,
@@ -622,10 +622,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_cuaca != null) {
                 foreach (json_decode($req->list_cuaca) as $cuaca) {
-                    DB::table('detail_laporan_harian_cuaca')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->insert([
                         "no_trans" => $req->id,
                         "cerah" => property_exists($cuaca, 'cerah') ? $cuaca->cerah : null,
                         "hujan_ringan" => property_exists($cuaca, 'hujan_ringan') ? $cuaca->hujan_ringan : null,
@@ -684,9 +684,9 @@ class LaporanController extends Controller
         DB::beginTransaction();
 
         try {
-            $tableRef = DB::table('master_laporan_harian')->where('no_trans', '=', $req->id);
+            $tableRef = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', '=', $req->id);
             $currentReport = $tableRef->first();
-            $request = DB::table('request')->where('id', '=', $currentReport->id_request)->first();
+            $request = DB::connection('talikuat_old')->table('request')->where('id', '=', $currentReport->id_request)->first();
 
             $tableRef->update([
                 "tanggal" => $req->tanggal,
@@ -708,7 +708,7 @@ class LaporanController extends Controller
                 ]);
             }
 
-            DB::table('detail_laporan_harian_pekerjaan')
+            DB::connection('talikuat_old')->table('detail_laporan_harian_pekerjaan')
                 ->where('no_trans', '=', $req->id)
                 ->update([
                     "sta_awal" => $req->sta_awal,
@@ -720,10 +720,10 @@ class LaporanController extends Controller
                     "bobot" => floatval($req->bobot),
                 ]);
 
-            DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_bahan_material != null) {
                 foreach (json_decode($req->list_bahan_material) as $bahan_material) {
-                    DB::table('detail_laporan_harian_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->insert([
                         "no_trans" => $req->id,
                         "bahan" => $bahan_material->bahan,
                         "volume" => $bahan_material->volume,
@@ -732,10 +732,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_peralatan != null) {
                 foreach (json_decode($req->list_peralatan) as $alat) {
-                    DB::table('detail_laporan_harian_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->insert([
                         "no_trans" => $req->id,
                         "jenis_peralatan" => $alat->jenis_peralatan,
                         "jumlah" => $alat->jumlah,
@@ -744,10 +744,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_bahan_hotmix != null) {
                 foreach (json_decode($req->list_bahan_hotmix) as $hotmix) {
-                    DB::table('detail_laporan_harian_hotmix')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->insert([
                         "no_trans" => $req->id,
                         "bahan_hotmix" => $hotmix->bahan_hotmix,
                         "no_dt" => $hotmix->no_dt,
@@ -763,10 +763,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_bahan_beton != null) {
                 foreach (json_decode($req->list_bahan_beton) as $beton) {
-                    DB::table('detail_laporan_harian_beton')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->insert([
                         "no_trans" => $req->id,
                         "bahan_beton" => $beton->bahan_beton,
                         "no_tm" => $beton->no_tm,
@@ -779,10 +779,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_pekerja != null) {
                 foreach (json_decode($req->list_pekerja) as $pekerja) {
-                    DB::table('detail_laporan_harian_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->insert([
                         "no_trans" => $req->id,
                         "tenaga_kerja" => $pekerja->tenaga_kerja,
                         "jumlah" => $pekerja->jumlah,
@@ -790,10 +790,10 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('detail_laporan_harian_cuaca')->where('no_trans', '=', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->where('no_trans', '=', $req->id)->delete();
             if ($req->list_cuaca != null) {
                 foreach (json_decode($req->list_cuaca) as $cuaca) {
-                    DB::table('detail_laporan_harian_cuaca')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->insert([
                         "no_trans" => $req->id,
                         "cerah" => property_exists($cuaca, 'cerah') ? $cuaca->cerah : null,
                         "hujan_ringan" => property_exists($cuaca, 'hujan_ringan') ? $cuaca->hujan_ringan : null,
@@ -804,7 +804,7 @@ class LaporanController extends Controller
                 }
             }
 
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $currentReport->nama_kontraktor,
                 "created_at" => Carbon::now(),
                 "keterangan" => "Laporan Telah Diupdate Oleh " . $currentReport->nama_kontraktor,
@@ -834,27 +834,27 @@ class LaporanController extends Controller
     public function editLaporan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $get_laporan = DB::table('master_laporan_harian')->where('no_trans', $req->lapId)->first();
-        $get_request = DB::table('request')->where('id', $get_laporan->id_request)->first();
+        $get_laporan = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->lapId)->first();
+        $get_request = DB::connection('talikuat_old')->table('request')->where('id', $get_laporan->id_request)->first();
         try {
-            DB::table('request')->where('id', $get_laporan->id_request)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $get_laporan->id_request)->update([
                 "volume_terlapor" => $get_request->volume_terlapor - $req->volume
             ]);
             if ($req->file('soft')) {
                 $file = $req->file('soft');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->lapId)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->lapId)->update([
                     "tanggal" => $req->tanggal,
                     "gambar" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            DB::table('master_laporan_harian')->where('no_trans', $req->lapId)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->lapId)->update([
                 "tanggal" => $req->tanggal,
                 "volume" => $req->volume,
             ]);
 
-            DB::table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->lapId)->update([
+            DB::connection('talikuat_old')->table('detail_laporan_harian_pekerjaan')->where('no_trans', $req->lapId)->update([
                 "no_pekerjaan" => $req->no_pekerjaan,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
                 "sta_awal" => $req->sta_awal,
@@ -865,10 +865,10 @@ class LaporanController extends Controller
                 "ket" => $req->ket,
                 "tgl" => $req->tanggal
             ]);
-            DB::table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->lapId)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->where('no_trans', '=', $req->lapId)->delete();
             if ($req->bahan) {
                 for ($i = 0; $i < count($req->bahan); $i++) {
-                    DB::table('detail_laporan_harian_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_bahan')->insert([
                         "no_trans" => $req->lapId,
                         "bahan" => $req->bahan[$i],
                         "volume" => $req->volume_bahan[$i],
@@ -876,10 +876,10 @@ class LaporanController extends Controller
                     ]);
                 }
             }
-            DB::table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->lapId)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->where('no_trans', '=', $req->lapId)->delete();
             if ($req->jenis_peralatan) {
                 for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-                    DB::table('detail_laporan_harian_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_peralatan')->insert([
                         "no_trans" => $req->lapId,
                         "jenis_peralatan" => $req->jenis_peralatan[$i],
                         "jumlah" => $req->jumlah_peralatan[$i],
@@ -887,10 +887,10 @@ class LaporanController extends Controller
                     ]);
                 }
             }
-            DB::table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->lapId)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->where('no_trans', '=', $req->lapId)->delete();
             if ($req->bahan_hotmix) {
                 for ($i = 0; $i < count($req->bahan_hotmix); $i++) {
-                    DB::table('detail_laporan_harian_hotmix')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_hotmix')->insert([
                         "no_trans" => $req->lapId,
                         "bahan_hotmix" => $req->bahan_hotmix[$i],
                         "no_dt" => $req->no_dt[$i],
@@ -905,10 +905,10 @@ class LaporanController extends Controller
                     ]);
                 }
             }
-            DB::table('detail_laporan_harian_beton')->where('no_trans', '=', $req->lapId)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->where('no_trans', '=', $req->lapId)->delete();
             if ($req->bahan_beton) {
                 for ($i = 0; $i < count($req->bahan_beton); $i++) {
-                    DB::table('detail_laporan_harian_beton')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_beton')->insert([
                         "no_trans" => $req->lapId,
                         "bahan_beton" => $req->bahan_beton[$i],
                         "no_tm" => $req->no_tm[$i],
@@ -920,10 +920,10 @@ class LaporanController extends Controller
                     ]);
                 }
             }
-            DB::table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->lapId)->delete();
+            DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->where('no_trans', '=', $req->lapId)->delete();
             if ($req->tenaga_kerja) {
                 for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-                    DB::table('detail_laporan_harian_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_tkerja')->insert([
                         "no_trans" => $req->lapId,
                         "tenaga_kerja" => $req->tenaga_kerja[$i],
                         "jumlah" => $req->jumlah_tk[$i],
@@ -932,7 +932,7 @@ class LaporanController extends Controller
             }
             if ($req->cerah) {
                 for ($i = 0; $i < count($req->cerah); $i++) {
-                    DB::table('detail_laporan_harian_cuaca')->insert([
+                    DB::connection('talikuat_old')->table('detail_laporan_harian_cuaca')->insert([
                         "no_trans" => $req->lapId,
                         "cerah" => $req->cerah[$i],
                         "hujan_ringan" => $req->hujan_ringan[$i],
@@ -942,7 +942,7 @@ class LaporanController extends Controller
                     ]);
                 }
             }
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->kontraktor,
                 "created_at" => \Carbon\Carbon::now(),
                 "keterangan" => "Laporan Telah Diupdate Oleh " . $req->kontraktor,
@@ -964,14 +964,14 @@ class LaporanController extends Controller
 
     public function sendLaporanFromMobile(Request $req)
     {
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
         if ($get_data->ditolak == 1) {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "status" => 2,
                 "ditolak" => 0,
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->username,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -980,17 +980,17 @@ class LaporanController extends Controller
                 "created_at" => \Carbon\Carbon::now()
             ]);
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Laporan Di Kirim">&nbsp;</span></a>',
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 2
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->username,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -998,7 +998,7 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
@@ -1014,14 +1014,14 @@ class LaporanController extends Controller
     public function sendLaporan(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
         if ($get_data->ditolak == 1) {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "status" => 2,
                 "ditolak" => 0,
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->username,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1029,17 +1029,17 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Laporan Di Kirim">&nbsp;</span></a>',
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 2
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->username,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1047,7 +1047,7 @@ class LaporanController extends Controller
                 "class" => "kirim",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
             }
@@ -1071,15 +1071,15 @@ class LaporanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
         if ($req->laporan == 1) {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
                 "catatan_konsultan" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1090,18 +1090,18 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1110,13 +1110,13 @@ class LaporanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_konsultan" => $req->catatan,
                 "status" => 1,
                 "ditolak" => 1
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1127,13 +1127,13 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1163,16 +1163,16 @@ class LaporanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->isAccepted == "true") {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
                 "catatan_konsultan" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1180,24 +1180,24 @@ class LaporanController extends Controller
                 "keterangan" => "Laporan Telah Disetujui Oleh " . $req->konsultan,
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "foto_konsultan" => null
             ]);
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1206,13 +1206,13 @@ class LaporanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_konsultan" => $req->catatan,
                 "status" => 1,
                 "ditolak" => 1
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1220,18 +1220,18 @@ class LaporanController extends Controller
                 "keterangan" => "Laporan Telah Ditolak Oleh " . $req->konsultan,
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "foto_konsultan" => null
             ]);
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1256,17 +1256,17 @@ class LaporanController extends Controller
             ], 400);
         }
 
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->laporan == 1) {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "status" => 3,
                 "ditolak" => 4,
                 "catatan_ppk" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->nm_ppk,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1277,18 +1277,18 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
@@ -1297,13 +1297,13 @@ class LaporanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_ppk" => $req->catatan,
                 "status" => 2,
                 "ditolak" => 1
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->nm_ppk,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1314,13 +1314,13 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('id', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
@@ -1350,17 +1350,17 @@ class LaporanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->isAccepted == "true") {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "status" => 3,
                 "ditolak" => 4,
                 "catatan_ppk" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->nm_ppk,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1368,24 +1368,24 @@ class LaporanController extends Controller
                 "keterangan" => "Laporan Telah Disetujui Oleh PPK " . $req->nm_ppk,
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "foto_ppk" => null
             ]);
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
@@ -1394,13 +1394,13 @@ class LaporanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_ppk" => $req->catatan,
                 "status" => 2,
                 "ditolak" => 1
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->nm_ppk,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1408,19 +1408,19 @@ class LaporanController extends Controller
                 "keterangan" => "Laporan Telah Ditolak Oleh PPK " . $req->nm_ppk,
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "foto_ppk" => null
             ]);
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_konsultan)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
             }
@@ -1433,17 +1433,17 @@ class LaporanController extends Controller
 
     public function responRevisiKonsultan(Request $req)
     {
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->option == 'PPK') {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
                 "ditolak" => 0,
                 "catatan_konsultan" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1454,13 +1454,13 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1469,14 +1469,14 @@ class LaporanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "status" => 1,
                 "ditolak" => 1,
                 "catatan_konsultan" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1487,13 +1487,13 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1523,17 +1523,17 @@ class LaporanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $get_data = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
 
         if ($req->isAccepted == "true") {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
                 "ditolak" => 0,
                 "catatan_konsultan" => $req->catatan
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1544,13 +1544,13 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1559,13 +1559,13 @@ class LaporanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+            DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_konsultan" => $req->catatan,
                 "status" => 1,
                 "ditolak" => 1
             ]);
-            DB::table('history_laporan')->insert([
+            DB::connection('talikuat_old')->table('history_laporan')->insert([
                 "username" => $req->konsultan,
                 "id_laporan" => $req->id,
                 "user_id" => $req->userId,
@@ -1576,13 +1576,13 @@ class LaporanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+                DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_konsultan, $email->nm_member);
             }
@@ -1605,12 +1605,12 @@ class LaporanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], 400);
         }
-        $getLaporan = DB::table('master_laporan_harian')->where('no_trans', $req->id)->first();
-        $getRequest = DB::table('request')->where('id', $getLaporan->id_request)->first();
-        DB::table('request')->where('id', $getLaporan->id_request)->update([
+        $getLaporan = DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->first();
+        $getRequest = DB::connection('talikuat_old')->table('request')->where('id', $getLaporan->id_request)->first();
+        DB::connection('talikuat_old')->table('request')->where('id', $getLaporan->id_request)->update([
             'volume_terlapor' => $getRequest->volume_terlapor - $getLaporan->volume
         ]);
-        DB::table('master_laporan_harian')->where('no_trans', $req->id)->update([
+        DB::connection('talikuat_old')->table('master_laporan_harian')->where('no_trans', $req->id)->update([
             'reason_delete' => $req->alasan
         ]);
 
@@ -1622,11 +1622,11 @@ class LaporanController extends Controller
     public function pembandingRelasi(Request $req)
     {
 
-        $jadual = DB::table('jadual')->where('id', $req->id)->first();
-        $detail = DB::table('detail_jadual')->where('id_jadual', $jadual->id)->get();
+        $jadual = DB::connection('talikuat_old')->table('jadual')->where('id', $req->id)->first();
+        $detail = DB::connection('talikuat_old')->table('detail_jadual')->where('id_jadual', $jadual->id)->get();
         if ($jadual->tgl_req) {
-            $request = DB::table('request')->where('id_jadual', $jadual->id)->first();
-            $laporan = DB::table('master_laporan_harian')->where([['id_request', $request->id], ['status', 4]])->orderBy('tanggal', 'desc')->get();
+            $request = DB::connection('talikuat_old')->table('request')->where('id_jadual', $jadual->id)->first();
+            $laporan = DB::connection('talikuat_old')->table('master_laporan_harian')->where([['id_request', $request->id], ['status', 4]])->orderBy('tanggal', 'desc')->get();
             if (count($laporan) != 0) {
                 return response()->json([
                     'jadual' => $detail,

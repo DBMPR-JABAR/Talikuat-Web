@@ -12,7 +12,7 @@ class KontraktorController extends Controller
   public function getAllKontraktor()
   {
 
-    $result = DB::table('master_penyedia_jasa')->paginate(15);
+    $result = DB::connection('talikuat_old')->table('master_penyedia_jasa')->paginate(15);
 
     return response()->json([
       'status' => 'success',
@@ -24,7 +24,7 @@ class KontraktorController extends Controller
   public function getTotalKontraktor()
   {
 
-    $result = DB::table('master_penyedia_jasa')->count();
+    $result = DB::connection('talikuat_old')->table('master_penyedia_jasa')->count();
 
     return response()->json([
       'status' => 'success',
@@ -36,7 +36,7 @@ class KontraktorController extends Controller
   public function getLatestKontraktor()
   {
 
-    $result = DB::table('master_penyedia_jasa')
+    $result = DB::connection('talikuat_old')->table('master_penyedia_jasa')
       ->limit(5)
       ->orderBy('id', 'desc')
       ->get();
@@ -51,7 +51,7 @@ class KontraktorController extends Controller
   public function getKontraktorById($id)
   {
 
-    $result = DB::table('master_penyedia_jasa')->where('id', $id)->first();
+    $result = DB::connection('talikuat_old')->table('master_penyedia_jasa')->where('id', $id)->first();
 
     return response()->json([
       'status' => 'success',
@@ -65,7 +65,7 @@ class KontraktorController extends Controller
 
     $keyword = $request->query('keyword');
 
-    $result = DB::table('master_penyedia_jasa')
+    $result = DB::connection('talikuat_old')->table('master_penyedia_jasa')
       ->where('nama', 'like', '%' . $keyword . '%')
       ->orWhere('alamat', 'like', '%' . $keyword . '%')
       ->orWhere('nama_direktur', 'like', '%' . $keyword . '%')
@@ -100,7 +100,7 @@ class KontraktorController extends Controller
       ], Response::HTTP_BAD_REQUEST);
     }
 
-    $result = DB::table('master_penyedia_jasa')
+    $result = DB::connection('talikuat_old')->table('master_penyedia_jasa')
       ->insertGetId([
         "nama" => $request->input("nama"),
         "alamat" => $request->input("alamat"),

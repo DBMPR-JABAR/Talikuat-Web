@@ -11,7 +11,7 @@ class RuasJalanController extends Controller
     {
         $keyword = $request->input("keyword");
 
-        $result = DB::table('master_ruas_jalan')
+        $result = DB::connection('talikuat_old')->table('master_ruas_jalan')
             ->select("id", "id_ruas_jalan", "nama_ruas_jalan", "panjang", "kab_kota", "wil_uptd")
             ->where("nama_ruas_jalan", "like", "%" . $keyword . "%")
             ->orWhere("kab_kota", "like", "%" . $keyword . "%")
@@ -31,7 +31,7 @@ class RuasJalanController extends Controller
         $keyword = $request->input("keyword");
 
         if ($id != 7 && $id != 8) {
-            $result = DB::table('master_ruas_jalan')
+            $result = DB::connection('talikuat_old')->table('master_ruas_jalan')
                 ->select("id", "id_ruas_jalan", "nama_ruas_jalan", "panjang", "kab_kota", "wil_uptd", "uptd_id")
                 ->where("uptd_id", "=", $id)
                 ->where(function ($query) use ($keyword) {
@@ -42,7 +42,7 @@ class RuasJalanController extends Controller
                 })
                 ->paginate();
         } else {
-            $result = DB::table('master_ruas_jalan')
+            $result = DB::connection('talikuat_old')->table('master_ruas_jalan')
                 ->select("id", "id_ruas_jalan", "nama_ruas_jalan", "panjang", "kab_kota", "wil_uptd", "uptd_id")
                 ->where(function ($query) use ($keyword) {
                     $query->where("nama_ruas_jalan", "like", "%" . $keyword . "%")
@@ -64,9 +64,9 @@ class RuasJalanController extends Controller
     {
         if ($id < 7) {
 
-            $get_ruas = DB::table("master_ruas_jalan")->select("id_ruas_jalan", "nama_ruas_jalan", "panjang")->where("uptd_id", $id)->get();
+            $get_ruas = DB::connection('talikuat_old')->table("master_ruas_jalan")->select("id_ruas_jalan", "nama_ruas_jalan", "panjang")->where("uptd_id", $id)->get();
             $result = [];
-            $get_sup = DB::table('utils_sup')->select('*')->where("kantor_id", "=", $id)->get();
+            $get_sup = DB::connection('talikuat_old')->table('utils_sup')->select('*')->where("kantor_id", "=", $id)->get();
             foreach ($get_ruas as $item) {
                 array_push($result, $item->nama_ruas_jalan);
             }
@@ -77,9 +77,9 @@ class RuasJalanController extends Controller
                 "sup" => $get_sup
             ]);
         } else {
-            $get_ruas = DB::table("master_ruas_jalan")->select("nama_ruas_jalan", "id_ruas_jalan", "panjang")->get();
+            $get_ruas = DB::connection('talikuat_old')->table("master_ruas_jalan")->select("nama_ruas_jalan", "id_ruas_jalan", "panjang")->get();
             $result = [];
-            $get_sup = DB::table('utils_sup')->get();
+            $get_sup = DB::connection('talikuat_old')->table('utils_sup')->get();
             foreach ($get_ruas as $item) {
                 array_push($result, $item->nama_ruas_jalan);
             }

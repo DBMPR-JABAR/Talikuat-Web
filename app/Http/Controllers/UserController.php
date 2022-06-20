@@ -38,7 +38,7 @@ class UserController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        DB::table('member')
+        DB::connection('talikuat_old')->table('member')
             ->insertGetId([
                 'nm_member' => $request->input('nm_member'),
                 'nama_lengkap' => $request->input('nama_lengkap'),
@@ -60,7 +60,7 @@ class UserController extends Controller
     public function getAllUser()
     {
 
-        $result = DB::table('member')->get();
+        $result = DB::connection('talikuat_old')->table('member')->get();
 
         return response()->json([
             'status' => 'success',
@@ -72,7 +72,7 @@ class UserController extends Controller
     public function getLatestUser()
     {
 
-        $result = DB::table('member')
+        $result = DB::connection('talikuat_old')->table('member')
             ->limit(5)
             ->orderBy('id_member', 'desc')
             ->get();
@@ -87,7 +87,7 @@ class UserController extends Controller
     public function getUserById($id)
     {
 
-        $result = DB::table('member')->where('id_member', $id)->first();
+        $result = DB::connection('talikuat_old')->table('member')->where('id_member', $id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -99,7 +99,7 @@ class UserController extends Controller
     public function getAccountByUserId($account_id)
     {
 
-        $result = DB::table('member')
+        $result = DB::connection('talikuat_old')->table('member')
             ->join('login', 'login.id_member', '=', 'member.id_member')
             ->where('login.id_member', $account_id)
             ->select('login.*', 'member.*')
@@ -117,7 +117,7 @@ class UserController extends Controller
 
         $keyword = $request->query('keyword');
 
-        $result = DB::table('member')
+        $result = DB::connection('talikuat_old')->table('member')
             ->where('nama_lengkap', 'like', '%' . $keyword . '%')
             ->orWhere('email', 'like', '%' . $keyword . '%')
             ->orWhere('perusahaan', 'like', '%' . $keyword . '%')
@@ -150,7 +150,7 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
-            DB::table('member')->where('id_member', '=', $req->userId)->update([
+            DB::connection('talikuat_old')->table('member')->where('id_member', '=', $req->userId)->update([
                 'nama_lengkap' => $req->nama_lengkap,
                 'alamat_member' => $req->alamat,
                 'telp' => $req->telp,
@@ -161,16 +161,16 @@ class UserController extends Controller
             if ($req->file('photo') != null) {
                 $fileName = time() . '_' . $req->file('photo')->getClientOriginalName();
                 Storage::putFileAs($this->PATH_FILE_PHOTO_PROFILE_DB, $req->file('photo'), $fileName);
-                DB::table('member')->where('id_member', '=', $req->userId)->update(['gambar' => $this->PATH_FILE_PHOTO_PROFILE_DB . '/' . $fileName]);
+                DB::connection('talikuat_old')->table('member')->where('id_member', '=', $req->userId)->update(['gambar' => $this->PATH_FILE_PHOTO_PROFILE_DB . '/' . $fileName]);
             }
 
             $user = User::firstWhere(['id_member' => $req->userId]);
 
-            DB::table('login')->where(['id_member' => $req->userId, 'user' => $user->user])->update(['user' => $req->nik_nip]);
+            DB::connection('talikuat_old')->table('login')->where(['id_member' => $req->userId, 'user' => $user->user])->update(['user' => $req->nik_nip]);
 
-            $user_detail = DB::table('member')->where('id_member', '=', $req->userId)->first();
+            $user_detail = DB::connection('talikuat_old')->table('member')->where('id_member', '=', $req->userId)->first();
 
-            $uptd = DB::table('kantor')->where('nama_lengkap', '=', $user_detail->unit)->first();
+            $uptd = DB::connection('talikuat_old')->table('kantor')->where('nama_lengkap', '=', $user_detail->unit)->first();
 
             $data = [
                 'id_login' => $user->id_login,
@@ -233,7 +233,7 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             if ($role == 'KONSULTAN') {
-                DB::table('member')->insert([
+                DB::connection('talikuat_old')->table('member')->insert([
                     'nm_member' => $req->nm_dpn,
                     'nama_lengkap' => $req->nm_dpn . ' ' . $req->nm_blkg,
                     'akses' => $role,
@@ -247,7 +247,7 @@ class UserController extends Controller
                     'created_at' => \Carbon\Carbon::now()
                 ]);
             } else {
-                DB::table('member')->insert([
+                DB::connection('talikuat_old')->table('member')->insert([
                     'nm_member' => $req->nm_dpn,
                     'nama_lengkap' => $req->nm_dpn . ' ' . $req->nm_blkg,
                     'akses' => $role,
@@ -263,7 +263,7 @@ class UserController extends Controller
 
 
             if ($role == 'KONSULTAN') {
-                $id = DB::table('master_konsultan')->insertGetId([
+                $id = DB::connection('talikuat_old')->table('master_konsultan')->insertGetId([
                     'nama' => $perusahaan,
                     'alamat' => $req->alamat_perusahaan_konsultan,
                     'nama_direktur' => $req->nm_direktur_konsultan,
@@ -271,7 +271,7 @@ class UserController extends Controller
 
                 $count = 1;
                 for ($i = 0; $i < count($req->nm_se); $i++) {
-                    DB::table('team_konsultan')->insert([
+                    DB::connection('talikuat_old')->table('team_konsultan')->insert([
                         'id_konsultan' => $id,
                         'nama' => $req->nm_se[$i],
                         'jabatan' => 'SITE ENGINEERING',
@@ -282,7 +282,7 @@ class UserController extends Controller
                 }
                 $count = 1;
                 for ($i = 0; $i < count($req->nm_ie); $i++) {
-                    DB::table('team_konsultan')->insert([
+                    DB::connection('talikuat_old')->table('team_konsultan')->insert([
                         'id_konsultan' => $id,
                         'nama' => $req->nm_ie[$i],
                         'jabatan' => 'Inspetion Engineer',
@@ -293,7 +293,7 @@ class UserController extends Controller
                 }
             }
             if ($role == 'KONTRAKTOR') {
-                DB::table('master_penyedia_jasa')->insert([
+                DB::connection('talikuat_old')->table('master_penyedia_jasa')->insert([
                     'nama' => $perusahaan,
                     'alamat' => $req->alamat_perusahaan,
                     'nama_direktur' => $req->nm_direktur,
@@ -323,20 +323,20 @@ class UserController extends Controller
 
     public function addTeam(Request $req)
     {
-        $result = DB::table('team_konsultan')->where('id_konsultan', $req->id)->count();
+        $result = DB::connection('talikuat_old')->table('team_konsultan')->where('id_konsultan', $req->id)->count();
         if ($result == 0) {
             $team = 1;
         } else {
             $team = ($result / 2) + 1;
         }
-        DB::table('team_konsultan')->insert([
+        DB::connection('talikuat_old')->table('team_konsultan')->insert([
             'id_konsultan' => $req->id,
             'nama' => $req->nm_se,
             'jabatan' => 'SITE ENGINEERING',
             'team' => 'Field Team ' . $team,
             'aktive' => 0
         ]);
-        DB::table('team_konsultan')->insert([
+        DB::connection('talikuat_old')->table('team_konsultan')->insert([
             'id_konsultan' => $req->id,
             'nama' => $req->nm_ie,
             'jabatan' => 'Inspetion Engineer',
@@ -351,13 +351,13 @@ class UserController extends Controller
 
     public function registerTeamKonsultan(Request $req)
     {
-        $team = DB::table('team_konsultan')->where('id', $req->id)->first();
-        $konsultan = DB::table('master_konsultan')->where('id', $team->id_konsultan)->first();
+        $team = DB::connection('talikuat_old')->table('team_konsultan')->where('id', $req->id)->first();
+        $konsultan = DB::connection('talikuat_old')->table('master_konsultan')->where('id', $team->id_konsultan)->first();
 
         try {
             DB::beginTransaction();
 
-            DB::table('member')->insert([
+            DB::connection('talikuat_old')->table('member')->insert([
                 'nm_member' => $team->nama,
                 'nama_lengkap' => $team->nama,
                 'akses' => 'SITE ENGINEERING',
@@ -371,7 +371,7 @@ class UserController extends Controller
                 'created_at' => \Carbon\Carbon::now()
             ]);
 
-            DB::table('team_konsultan')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('team_konsultan')->where('id', $req->id)->update([
                 'uptd' => $req->unit
             ]);
             DB::commit();
@@ -390,16 +390,16 @@ class UserController extends Controller
 
     public function aktivasiUser($id)
     {
-        $member = DB::table('member')->where('id_member', $id)->first();
-        $team = DB::table('team_konsultan')->where('nama', $member->nm_member)->first();
+        $member = DB::connection('talikuat_old')->table('member')->where('id_member', $id)->first();
+        $team = DB::connection('talikuat_old')->table('team_konsultan')->where('nama', $member->nm_member)->first();
         if ($member->jabatan == 'SITE ENGINEERING') {
             try {
                 DB::beginTransaction();
-                DB::table('team_konsultan')->where('nama', $member->nm_member)->update([
+                DB::connection('talikuat_old')->table('team_konsultan')->where('nama', $member->nm_member)->update([
                     'aktive' => 1,
                     'id_member' => $member->id_member
                 ]);
-                DB::table('login')->insert([
+                DB::connection('talikuat_old')->table('login')->insert([
                     'user' => $member->nik,
                     'pass' => '202cb962ac59075b964b07152d234b70',
                     'id_member' => $member->id_member,
@@ -417,7 +417,7 @@ class UserController extends Controller
 
 
         } else {
-            DB::table('login')->insert([
+            DB::connection('talikuat_old')->table('login')->insert([
                 'user' => $member->nik,
                 'pass' => '202cb962ac59075b964b07152d234b70',
                 'id_member' => $member->id_member,

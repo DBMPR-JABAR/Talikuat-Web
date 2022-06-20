@@ -28,7 +28,7 @@ class UploadController extends Controller
         $file = $req->file('file_dkh');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_dkh')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_dkh')->insertGetId([
             "id_data_umum" => $req->id,
             "dkh" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -66,73 +66,73 @@ class UploadController extends Controller
 
             case "file_dkh":
 
-                $result = DB::table('file_dkh')->selectRaw("id, dkh as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_dkh')->selectRaw("id, dkh as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_kontrak":
 
-                $result = DB::table('file_kontrak')->selectRaw("id, kontrak as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_kontrak')->selectRaw("id, kontrak as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_spmk":
 
-                $result = DB::table('file_spmk')->selectRaw("id, spmk as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_spmk')->selectRaw("id, spmk as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_syarat_umum":
 
-                $result = DB::table('file_syarat_umum')->selectRaw("id, syarat_umum as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_syarat_umum')->selectRaw("id, syarat_umum as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_syarat_khusus":
 
-                $result = DB::table('file_syarat_khusus')->selectRaw("id, syarat_khusus as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_syarat_khusus')->selectRaw("id, syarat_khusus as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_jpp":
 
-                $result = DB::table('file_jpp')->selectRaw("id, jpp as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_jpp')->selectRaw("id, jpp as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_rencana":
 
-                $result = DB::table('file_rencana')->selectRaw("id, rencana as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_rencana')->selectRaw("id, rencana as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_sppbj":
 
-                $result = DB::table('file_sppbj')->selectRaw("id, sppbj as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_sppbj')->selectRaw("id, sppbj as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_spl":
 
-                $result = DB::table('file_spl')->selectRaw("id, spl as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_spl')->selectRaw("id, spl as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_spek_umum":
 
-                $result = DB::table('file_spek_umum')->selectRaw("id, spek_umum as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_spek_umum')->selectRaw("id, spek_umum as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_jaminan":
 
-                $result = DB::table('file_jaminan')->selectRaw("id, jaminan as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_jaminan')->selectRaw("id, jaminan as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
 
             case "file_spkmp":
 
-                $result = DB::table('file_spkmp')->selectRaw("id, spkmp as filename")->where("id_data_umum", "=", $id)->get();
+                $result = DB::connection('talikuat_old')->table('file_spkmp')->selectRaw("id, spkmp as filename")->where("id_data_umum", "=", $id)->get();
 
                 break;
         }
@@ -151,7 +151,7 @@ class UploadController extends Controller
 
     public function DeleteFileDkh($id)
     {
-        $file = DB::table('file_dkh')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_dkh')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -163,7 +163,7 @@ class UploadController extends Controller
 
         Storage::delete($file->dkh);
 
-        DB::table('file_dkh')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_dkh')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -186,7 +186,7 @@ class UploadController extends Controller
         $file = $req->file('file_kontrak');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_kontrak')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_kontrak')->insertGetId([
             "id_data_umum" => $req->id,
             "kontrak" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -210,7 +210,7 @@ class UploadController extends Controller
 
     public function DeleteFilePk($id)
     {
-        $file = DB::table('file_kontrak')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_kontrak')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -222,7 +222,7 @@ class UploadController extends Controller
 
         Storage::delete($file->kontrak);
 
-        DB::table('file_kontrak')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_kontrak')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -245,7 +245,7 @@ class UploadController extends Controller
         $file = $req->file('file_spmk');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_spmk')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_spmk')->insertGetId([
             "id_data_umum" => $req->id,
             "spmk" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -269,7 +269,7 @@ class UploadController extends Controller
 
     public function DeleteFileSpmk($id)
     {
-        $file = DB::table('file_spmk')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_spmk')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -281,7 +281,7 @@ class UploadController extends Controller
 
         Storage::delete($file->spmk);
 
-        DB::table('file_spmk')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_spmk')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -304,7 +304,7 @@ class UploadController extends Controller
         $file = $req->file('file_syarat_umum');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_syarat_umum')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_syarat_umum')->insertGetId([
             "id_data_umum" => $req->id,
             "syarat_umum" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -328,7 +328,7 @@ class UploadController extends Controller
 
     public function DeleteFileSyaratUmum($id)
     {
-        $file = DB::table('file_syarat_umum')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_syarat_umum')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -340,7 +340,7 @@ class UploadController extends Controller
 
         Storage::delete($file->syarat_umum);
 
-        DB::table('file_syarat_umum')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_syarat_umum')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -363,7 +363,7 @@ class UploadController extends Controller
         $file = $req->file('file_syarat_khusus');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_syarat_khusus')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_syarat_khusus')->insertGetId([
             "id_data_umum" => $req->id,
             "syarat_khusus" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -387,7 +387,7 @@ class UploadController extends Controller
 
     public function DeleteFileSyaratKhusus($id)
     {
-        $file = DB::table('file_syarat_khusus')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_syarat_khusus')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -399,7 +399,7 @@ class UploadController extends Controller
 
         Storage::delete($file->syarat_khusus);
 
-        DB::table('file_syarat_khusus')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_syarat_khusus')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -422,7 +422,7 @@ class UploadController extends Controller
         $file = $req->file('file_jpp');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_jpp')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_jpp')->insertGetId([
             "id_data_umum" => $req->id,
             "jpp" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -446,7 +446,7 @@ class UploadController extends Controller
 
     public function DeleteFileJpp($id)
     {
-        $file = DB::table('file_jpp')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_jpp')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -458,7 +458,7 @@ class UploadController extends Controller
 
         Storage::delete($file->jpp);
 
-        DB::table('file_jpp')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_jpp')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -481,7 +481,7 @@ class UploadController extends Controller
         $file = $req->file('file_rencana');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_rencana')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_rencana')->insertGetId([
             "id_data_umum" => $req->id,
             "rencana" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -505,7 +505,7 @@ class UploadController extends Controller
 
     public function DeleteFileRencana($id)
     {
-        $file = DB::table('file_rencana')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_rencana')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -517,7 +517,7 @@ class UploadController extends Controller
 
         Storage::delete($file->rencana);
 
-        DB::table('file_rencana')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_rencana')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -540,7 +540,7 @@ class UploadController extends Controller
         $file = $req->file('file_sppbj');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_sppbj')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_sppbj')->insertGetId([
             "id_data_umum" => $req->id,
             "sppbj" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -564,7 +564,7 @@ class UploadController extends Controller
 
     public function DeleteFileSppbj($id)
     {
-        $file = DB::table('file_sppbj')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_sppbj')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -576,7 +576,7 @@ class UploadController extends Controller
 
         Storage::delete($file->sppbj);
 
-        DB::table('file_sppbj')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_sppbj')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -599,7 +599,7 @@ class UploadController extends Controller
         $file = $req->file('file_spl');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_spl')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_spl')->insertGetId([
             "id_data_umum" => $req->id,
             "spl" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -623,7 +623,7 @@ class UploadController extends Controller
 
     public function DeleteFileSpl($id)
     {
-        $file = DB::table('file_spl')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_spl')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -635,7 +635,7 @@ class UploadController extends Controller
 
         Storage::delete($file->spl);
 
-        DB::table('file_spl')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_spl')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -658,7 +658,7 @@ class UploadController extends Controller
         $file = $req->file('file_spek_umum');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_spek_umum')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_spek_umum')->insertGetId([
             "id_data_umum" => $req->id,
             "spek_umum" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -682,7 +682,7 @@ class UploadController extends Controller
 
     public function DeleteFileSpekUmum($id)
     {
-        $file = DB::table('file_spek_umum')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_spek_umum')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -694,7 +694,7 @@ class UploadController extends Controller
 
         Storage::delete($file->spek_umum);
 
-        DB::table('file_spek_umum')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_spek_umum')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -717,7 +717,7 @@ class UploadController extends Controller
         $file = $req->file('file_jaminan');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_jaminan')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_jaminan')->insertGetId([
             "id_data_umum" => $req->id,
             "jaminan" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -741,7 +741,7 @@ class UploadController extends Controller
 
     public function DeleteFileJaminan($id)
     {
-        $file = DB::table('file_jaminan')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_jaminan')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -753,7 +753,7 @@ class UploadController extends Controller
 
         Storage::delete($file->jaminan);
 
-        DB::table('file_jaminan')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_jaminan')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -776,7 +776,7 @@ class UploadController extends Controller
         $file = $req->file('file_spkmp');
         $name = time() . "_" . $file->getClientOriginalName();
 
-        $insertedId = DB::table('file_spkmp')->insertGetId([
+        $insertedId = DB::connection('talikuat_old')->table('file_spkmp')->insertGetId([
             "id_data_umum" => $req->id,
             "spkmp" => $this->PATH_FILE_DB . $name,
             "created_at" => \Carbon\Carbon::now()
@@ -800,7 +800,7 @@ class UploadController extends Controller
 
     public function DeleteFileSpkmp($id)
     {
-        $file = DB::table('file_spkmp')->where('id', '=', $id)->first();
+        $file = DB::connection('talikuat_old')->table('file_spkmp')->where('id', '=', $id)->first();
 
         if (empty($file)) {
             return response()->json([
@@ -812,7 +812,7 @@ class UploadController extends Controller
 
         Storage::delete($file->spkmp);
 
-        DB::table('file_spkmp')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('file_spkmp')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -822,7 +822,7 @@ class UploadController extends Controller
     }
     public function fileSpekUmum(Request $req)
     {
-      DB::table('file_spek_umum_update')->insert([
+      DB::connection('talikuat_old')->table('file_spek_umum_update')->insert([
         "id_data_umum"=>$req->id,
         "file_spek_umum_update"=>$req->link_umum,
         "created_at"=>\Carbon\Carbon::now()
@@ -836,7 +836,7 @@ class UploadController extends Controller
     }
     public function fileGambarRencana(Request $req)
     {
-      DB::table('file_rencana_link')->insert([
+      DB::connection('talikuat_old')->table('file_rencana_link')->insert([
         "id_data_umum"=>$req->id,
         "file_rencana_link"=>$req->link_rencana,
         "created_at"=>\Carbon\Carbon::now()

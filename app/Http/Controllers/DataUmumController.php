@@ -14,7 +14,7 @@ class DataUmumController extends Controller
 
     public function getLatestDataUmum(Request $request)
     {
-        $query = DB::table('data_umum')
+        $query = DB::connection('talikuat_old')->table('data_umum')
             ->limit(5)
             ->orderByDesc('id');
 
@@ -55,7 +55,7 @@ class DataUmumController extends Controller
     public function getDataUmumByKeyword(Request $request)
     {
         $keyword = $request->query("keyword");
-        $query = DB::table('data_umum')
+        $query = DB::connection('talikuat_old')->table('data_umum')
             ->where(function ($query) use ($keyword) {
                 $query->where('nm_paket', 'like', '%' . $keyword . '%')
                     ->orWhere('unor', 'like', '%' . $keyword . '%');
@@ -88,7 +88,7 @@ class DataUmumController extends Controller
 
     public function getDataUmumById($id)
     {
-        $result = DB::table('data_umum')->where('id', '=', $id)->first();
+        $result = DB::connection('talikuat_old')->table('data_umum')->where('id', '=', $id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -100,7 +100,7 @@ class DataUmumController extends Controller
     public function getAllKategori(Request $request)
     {
 
-        $result = DB::table('kategori_paket')->get();
+        $result = DB::connection('talikuat_old')->table('kategori_paket')->get();
 
         return response()->json([
             'status' => 'success',
@@ -149,7 +149,7 @@ class DataUmumController extends Controller
         }
         $replace = str_replace(',', '.', $request->input('nilai_kontrak'));
 
-        $getSE = DB::table('team_konsultan')->where('id', $request->nama_se)->first();
+        $getSE = DB::connection('talikuat_old')->table('team_konsultan')->where('id', $request->nama_se)->first();
 
         $data = [
             // Data Umum
@@ -178,7 +178,7 @@ class DataUmumController extends Controller
             'field_team_konsultan' => $request->nama_se
         ];
 
-        $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
+        $insertedDataUmumId = DB::connection('talikuat_old')->table('data_umum')->insertGetId($data);
 
         // List Ruas Jalan
         if ($request->list_data_umum_ruas) {
@@ -204,7 +204,7 @@ class DataUmumController extends Controller
 
 
             foreach ($listDataUmumRuas as $dataUmumRuas) {
-                DB::table('data_umum_ruas')->insert([
+                DB::connection('talikuat_old')->table('data_umum_ruas')->insert([
                     "id_data_umum" => $insertedDataUmumId, // diganti sesuai DB
                     "ruas_jalan" => $dataUmumRuas["ruas_jalan"],
                     "segment_jalan" => $dataUmumRuas["segmen_jalan"],
@@ -225,7 +225,7 @@ class DataUmumController extends Controller
             ]);
         } else {
             for ($i = 0; $i < count($request->ruas_jalan); $i++) {
-                DB::table("data_umum_ruas")->insert([
+                DB::connection('talikuat_old')->table("data_umum_ruas")->insert([
                     "id_data_umum" => $insertedDataUmumId,
                     "ruas_jalan" => $request->ruas_jalan[$i],
                     "segment_jalan" => $request->segmen_jalan[$i],
@@ -326,12 +326,12 @@ class DataUmumController extends Controller
             "created_at" => \Carbon\Carbon::now()
         ];
 
-        $insertedDataUmumId = DB::table('data_umum')->insertGetId($data);
+        $insertedDataUmumId = DB::connection('talikuat_old')->table('data_umum')->insertGetId($data);
 
         $data['id'] = $insertedDataUmumId;
 
         foreach ($listDataUmumRuas as $dataUmumRuas) {
-            DB::table('data_umum_ruas')->insert([
+            DB::connection('talikuat_old')->table('data_umum_ruas')->insert([
                 "id_data_umum" => $insertedDataUmumId, // diganti sesuai DB
                 "ruas_jalan" => $dataUmumRuas["ruas_jalan"],
                 "segment_jalan" => $dataUmumRuas["segment_jalan"],
@@ -354,7 +354,7 @@ class DataUmumController extends Controller
     public function getDataUmumRuasByKeyword($id, Request $request)
     {
 
-        $result = DB::table('data_umum_ruas')
+        $result = DB::connection('talikuat_old')->table('data_umum_ruas')
             ->where('id_data_umum', '=', $id)
             ->where(function ($query) use ($request) {
                 $query->where('ruas_jalan', 'like', '%' . $request->input('keyword') . '%')
@@ -376,7 +376,7 @@ class DataUmumController extends Controller
     public function getDataUmumRuas($id)
     {
 
-        $result = DB::table('data_umum_ruas')
+        $result = DB::connection('talikuat_old')->table('data_umum_ruas')
             ->where('id_data_umum', '=', $id)
             ->get();
 
@@ -391,7 +391,7 @@ class DataUmumController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $replace = str_replace(',', '.', $req->input('nilai_kontrak'));
-        $getSE = DB::table('team_konsultan')->where('id', $req->nama_se)->first();
+        $getSE = DB::connection('talikuat_old')->table('team_konsultan')->where('id', $req->nama_se)->first();
         $data = [
             // Data Umum
             'pemda' => $req->input("pemda"),
@@ -416,8 +416,8 @@ class DataUmumController extends Controller
             "is_adendum" => 0,
             "updated_at" => \Carbon\Carbon::now()
         ];
-        DB::table('data_umum')->where('id', $req->id)->update($data);
-        DB::table('jadual')->where('id_data_umum', $req->id)->update([
+        DB::connection('talikuat_old')->table('data_umum')->where('id', $req->id)->update($data);
+        DB::connection('talikuat_old')->table('jadual')->where('id_data_umum', $req->id)->update([
             "nm_paket" => $req->input("nm_paket"),
             "nilai_kontrak" => $replace,
             "panjang_km" => $req->input("panjang_km"),
@@ -427,9 +427,9 @@ class DataUmumController extends Controller
             "nm_ppk" => $req->input("nm_ppk"),
             'field_team_konsultan' => $getSE->id,
         ]);
-        DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
+        DB::connection('talikuat_old')->table('data_umum_ruas')->where('id_data_umum', $req->id)->delete();
         for ($i = 0; $i < count($req->ruas_jalan); $i++) {
-            DB::table("data_umum_ruas")->insert([
+            DB::connection('talikuat_old')->table("data_umum_ruas")->insert([
                 "id_data_umum" => $req->id,
                 "ruas_jalan" => $req->ruas_jalan[$i],
                 "segment_jalan" => $req->segmen_jalan[$i],
@@ -449,7 +449,7 @@ class DataUmumController extends Controller
 
     public function addAdendum(Request $req)
     {
-        $curva = DB::table('jadual')->where('id_data_umum', $req->id)->sum('bobot');
+        $curva = DB::connection('talikuat_old')->table('jadual')->where('id_data_umum', $req->id)->sum('bobot');
         if (number_format($curva, 2, '.', '') != 100.00) {
             return response()->json([
                 'status' => 'failed',
@@ -457,7 +457,7 @@ class DataUmumController extends Controller
                 'message' => 'Data Jadual Belum Selesai ' . $curva
             ], 503);
         }
-        $valid_adendum = DB::table('master_laporan_harian')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
+        $valid_adendum = DB::connection('talikuat_old')->table('master_laporan_harian')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
         if ($valid_adendum != 0) {
             return response()->json([
                 'status' => 'failed',
@@ -465,7 +465,7 @@ class DataUmumController extends Controller
                 'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
             ], 503);
         }
-        $valid = DB::table('master_laporan_harian')->where([['id_data_umum', $req->id], ['ditolak', 1]])->whereNull('reason_delete')->count();
+        $valid = DB::connection('talikuat_old')->table('master_laporan_harian')->where([['id_data_umum', $req->id], ['ditolak', 1]])->whereNull('reason_delete')->count();
         if ($valid != 0) {
             return response()->json([
                 'status' => 'failed',
@@ -476,7 +476,7 @@ class DataUmumController extends Controller
 
         try {
             DB::beginTransaction();
-            $get_data = DB::table('data_umum')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('data_umum')->where('id', $req->id)->first();
             $data = [
                 'id_data_umum' => $req->id,
                 'pemda' => $get_data->pemda,
@@ -501,13 +501,13 @@ class DataUmumController extends Controller
                 "adendum" => "Adendum 1",
                 "created_at" => \Carbon\Carbon::now()
             ];
-            DB::table('data_umum_adendum')->insert($data);
-            DB::table('data_umum')->where("id", $req->id)->update([
+            DB::connection('talikuat_old')->table('data_umum_adendum')->insert($data);
+            DB::connection('talikuat_old')->table('data_umum')->where("id", $req->id)->update([
                 "is_adendum" => 1
             ]);
 
 
-            DB::table('request')->where('nama_kegiatan', $get_data->nm_paket)->update([
+            DB::connection('talikuat_old')->table('request')->where('nama_kegiatan', $get_data->nm_paket)->update([
                 'disabled' => 1
             ]);
 
@@ -527,7 +527,7 @@ class DataUmumController extends Controller
 
     // public function AddNewAdendum(Request $req)
     // {
-    //     $valid_adendum = DB::table('master_laporan_harian_adendum')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
+    //     $valid_adendum = DB::connection('talikuat_old')->table('master_laporan_harian_adendum')->where('id_data_umum', $req->id)->whereNull('reason_delete')->whereNull('ditolak')->count();
     //     if ($valid_adendum != 0) {
     //         return response()->json([
     //             'status' => 'failed',
@@ -535,7 +535,7 @@ class DataUmumController extends Controller
     //             'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
     //         ],503);
     //     }
-    //     $valid = DB::table('master_laporan_harian_adendum')->where([['id_data_umum', $req->id],['ditolak',1]])->whereNull('reason_delete')->count();
+    //     $valid = DB::connection('talikuat_old')->table('master_laporan_harian_adendum')->where([['id_data_umum', $req->id],['ditolak',1]])->whereNull('reason_delete')->count();
     //     if ($valid != 0) {
     //         return response()->json([
     //             'status' => 'failed',
@@ -543,8 +543,8 @@ class DataUmumController extends Controller
     //             'message' => 'Masih Ada Data Laporan Yang Belum Di Approve'
     //         ],503);
     //     }
-    //     $get_data = DB::table('data_umum_adendum')->where('id_data_umum', $req->id)->get();
-    //     DB::table('data_umum_adendum')->where([
+    //     $get_data = DB::connection('talikuat_old')->table('data_umum_adendum')->where('id_data_umum', $req->id)->get();
+    //     DB::connection('talikuat_old')->table('data_umum_adendum')->where([
     //         ["is_adendum", null],
     //         ["id_data_umum", "=", $req->id]
     //     ])->update([
@@ -576,11 +576,11 @@ class DataUmumController extends Controller
     //         "field_team_konsultan"=>$get_data[0]->field_team_konsultan,
     //         "created_at" => \Carbon\Carbon::now()
     //     ];
-    //     DB::table('data_umum_adendum')->insert($data);
-    //     $get_data_ruas = DB::table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
+    //     DB::connection('talikuat_old')->table('data_umum_adendum')->insert($data);
+    //     $get_data_ruas = DB::connection('talikuat_old')->table('data_umum_ruas')->where('id_data_umum', $req->id)->get();
 
     //     foreach ($get_data_ruas as $data) {
-    //         DB::table('data_umum_ruas_adendum')->insert([
+    //         DB::connection('talikuat_old')->table('data_umum_ruas_adendum')->insert([
     //             "id_data_umum_adendum" => $data->id_data_umum,
     //             "ruas_jalan" => $data->ruas_jalan,
     //             "segment_jalan" => $data->segment_jalan,
@@ -612,7 +612,7 @@ class DataUmumController extends Controller
 
             case "file_dkh":
 
-                $result = DB::table('file_dkh_update')
+                $result = DB::connection('talikuat_old')->table('file_dkh_update')
                     ->selectRaw("id, id_data_umum, file_dkh_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -627,7 +627,7 @@ class DataUmumController extends Controller
 
             case "file_kontrak":
 
-                $result = DB::table('file_kontrak_update')
+                $result = DB::connection('talikuat_old')->table('file_kontrak_update')
                     ->selectRaw("id, id_data_umum, file_kontrak_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -642,7 +642,7 @@ class DataUmumController extends Controller
 
             case "file_spmk":
 
-                $result = DB::table('file_spmk_update')
+                $result = DB::connection('talikuat_old')->table('file_spmk_update')
                     ->selectRaw("id, id_data_umum, file_spmk_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -657,7 +657,7 @@ class DataUmumController extends Controller
 
             case "file_syarat_umum":
 
-                $result = DB::table('file_syarat_umum_update')
+                $result = DB::connection('talikuat_old')->table('file_syarat_umum_update')
                     ->selectRaw("id, id_data_umum, file_syarat_umum_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -672,7 +672,7 @@ class DataUmumController extends Controller
 
             case "file_syarat_khusus":
 
-                $result = DB::table('file_syarat_khusus_update')
+                $result = DB::connection('talikuat_old')->table('file_syarat_khusus_update')
                     ->selectRaw("id, id_data_umum, file_syarat_khusus_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -687,7 +687,7 @@ class DataUmumController extends Controller
 
             case "file_jpp":
 
-                $result = DB::table('file_jpp_update')
+                $result = DB::connection('talikuat_old')->table('file_jpp_update')
                     ->selectRaw("id, id_data_umum, file_jpp_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -702,7 +702,7 @@ class DataUmumController extends Controller
 
             case "file_rencana":
 
-                $result = DB::table('file_rencana_update')
+                $result = DB::connection('talikuat_old')->table('file_rencana_update')
                     ->selectRaw("id, id_data_umum, file_rencana_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -717,7 +717,7 @@ class DataUmumController extends Controller
 
             case "file_sppbj":
 
-                $result = DB::table('file_sppbj_update')
+                $result = DB::connection('talikuat_old')->table('file_sppbj_update')
                     ->selectRaw("id, id_data_umum, file_sppbj_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -732,7 +732,7 @@ class DataUmumController extends Controller
 
             case "file_spl":
 
-                $result = DB::table('file_spl_update')
+                $result = DB::connection('talikuat_old')->table('file_spl_update')
                     ->selectRaw("id, id_data_umum, file_spl_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -747,7 +747,7 @@ class DataUmumController extends Controller
 
             case "file_spek_umum":
 
-                $result = DB::table('file_spek_umum_update')
+                $result = DB::connection('talikuat_old')->table('file_spek_umum_update')
                     ->selectRaw("id, id_data_umum, file_spek_umum_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -762,7 +762,7 @@ class DataUmumController extends Controller
 
             case "file_jaminan":
 
-                $result = DB::table('file_jaminan_update')
+                $result = DB::connection('talikuat_old')->table('file_jaminan_update')
                     ->selectRaw("id, id_data_umum, file_jaminan_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -777,7 +777,7 @@ class DataUmumController extends Controller
 
             case "file_spkmp":
 
-                $result = DB::table('file_spkmp_update')
+                $result = DB::connection('talikuat_old')->table('file_spkmp_update')
                     ->selectRaw("id, id_data_umum, file_spkmp_update as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();
@@ -817,7 +817,7 @@ class DataUmumController extends Controller
 
             case "file_dkh":
 
-                $result = DB::table('file_dkh')
+                $result = DB::connection('talikuat_old')->table('file_dkh')
                     ->selectRaw("id, id_data_umum, dkh as file, created_at")
                     ->where('id_data_umum', '=', $id)
                     ->get();

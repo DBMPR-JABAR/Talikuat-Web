@@ -17,19 +17,19 @@ class MergePdf extends Controller
 
             case "file_dkh":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->dkh;
 
-                    DB::table('file_dkh_update')->insert([
+                    DB::connection('talikuat_old')->table('file_dkh_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_dkh_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table('file_dkh')->where('dkh', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table('file_dkh')->where('dkh', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -52,14 +52,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_dkh_update')->insert([
+                    DB::connection('talikuat_old')->table('file_dkh_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_dkh_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table('file_dkh')->where('dkh', "=", $file->dkh)->delete();
+                        DB::connection('talikuat_old')->table('file_dkh')->where('dkh', "=", $file->dkh)->delete();
                         // Storage::delete($file->dkh);
                     }
 
@@ -73,19 +73,19 @@ class MergePdf extends Controller
             //File Kontrak -------------->
             case "file_kontrak":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->kontrak;
 
-                    DB::table('file_kontrak_update')->insert([
+                    DB::connection('talikuat_old')->table('file_kontrak_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_kontrak_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('kontrak', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('kontrak', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -108,14 +108,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_kontrak_update')->insert([
+                    DB::connection('talikuat_old')->table('file_kontrak_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_kontrak_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('kontrak', "=", $file->kontrak)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('kontrak', "=", $file->kontrak)->delete();
                     }
 
                     return response()->json([
@@ -129,19 +129,19 @@ class MergePdf extends Controller
             //<================================================== File SPMK ==================================>
             case "file_spmk":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->spmk;
 
-                    DB::table('file_spmk_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spmk_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spmk_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('spmk', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('spmk', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -164,14 +164,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_spmk_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spmk_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spmk_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('spmk', "=", $file->spmk)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('spmk', "=", $file->spmk)->delete();
                     }
 
                     return response()->json([
@@ -184,19 +184,19 @@ class MergePdf extends Controller
             //<================================ FILE Syarat Umum ==================>
             case "file_syarat_umum":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->syarat_umum;
 
-                    DB::table('file_syarat_umum_update')->insert([
+                    DB::connection('talikuat_old')->table('file_syarat_umum_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_syarat_umum_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('syarat_umum', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('syarat_umum', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -219,14 +219,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_syarat_umum_update')->insert([
+                    DB::connection('talikuat_old')->table('file_syarat_umum_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_syarat_umum_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('syarat_umum', "=", $file->syarat_umum)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('syarat_umum', "=", $file->syarat_umum)->delete();
                     }
 
                     return response()->json([
@@ -238,19 +238,19 @@ class MergePdf extends Controller
             //<=============================FILE SYARAT KHUSUS =============>
             case "file_syarat_khusus":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->syarat_khusus;
 
-                    DB::table('file_syarat_khusus_update')->insert([
+                    DB::connection('talikuat_old')->table('file_syarat_khusus_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_syarat_khusus_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('syarat_khusus', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('syarat_khusus', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -273,14 +273,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_syarat_khusus_update')->insert([
+                    DB::connection('talikuat_old')->table('file_syarat_khusus_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_syarat_khusus_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('syarat_khusus', "=", $file->syarat_khusus)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('syarat_khusus', "=", $file->syarat_khusus)->delete();
                     }
 
                     return response()->json([
@@ -292,19 +292,19 @@ class MergePdf extends Controller
             // <======================================== FILE Jadual Pelaksana ============================>
             case "file_jpp":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->jpp;
 
-                    DB::table('file_jpp_update')->insert([
+                    DB::connection('talikuat_old')->table('file_jpp_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_jpp_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('jpp', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('jpp', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -327,14 +327,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_jpp_update')->insert([
+                    DB::connection('talikuat_old')->table('file_jpp_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_jpp_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('jpp', "=", $file->jpp)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('jpp', "=", $file->jpp)->delete();
                     }
 
                     return response()->json([
@@ -347,19 +347,19 @@ class MergePdf extends Controller
             // <===========================================FILE Gambar Rencana =============================>
             case "file_rencana":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->rencana;
 
-                    DB::table('file_rencana_update')->insert([
+                    DB::connection('talikuat_old')->table('file_rencana_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_rencana_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('rencana', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('rencana', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -382,14 +382,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_rencana_update')->insert([
+                    DB::connection('talikuat_old')->table('file_rencana_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_rencana_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('rencana', "=", $file->rencana)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('rencana', "=", $file->rencana)->delete();
                     }
 
                     return response()->json([
@@ -402,19 +402,19 @@ class MergePdf extends Controller
             //<=======================================================FILE SPPBJ =====================================>
             case "file_sppbj":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->sppbj;
 
-                    DB::table('file_sppbj_update')->insert([
+                    DB::connection('talikuat_old')->table('file_sppbj_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_sppbj_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('sppbj', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('sppbj', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -437,14 +437,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_sppbj_update')->insert([
+                    DB::connection('talikuat_old')->table('file_sppbj_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_sppbj_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('sppbj', "=", $file->sppbj)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('sppbj', "=", $file->sppbj)->delete();
                     }
 
                     return response()->json([
@@ -458,19 +458,19 @@ class MergePdf extends Controller
             //<=======================================================FILE SPL ================================================>
             case "file_spl":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->spl;
 
-                    DB::table('file_spl_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spl_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spl_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('spl', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('spl', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -493,14 +493,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_spl_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spl_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spl_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('spl', "=", $file->spl)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('spl', "=", $file->spl)->delete();
                     }
 
                     return response()->json([
@@ -513,19 +513,19 @@ class MergePdf extends Controller
             //<=========================================================FILE SPEK UMUM=====================================>
             case "file_spek_umum":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->spek_umum;
 
-                    DB::table('file_spek_umum_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spek_umum_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spek_umum_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('spek_umum', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('spek_umum', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -548,14 +548,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_spek_umum_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spek_umum_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spek_umum_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('spek_umum', "=", $file->spek_umum)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('spek_umum', "=", $file->spek_umum)->delete();
                     }
 
                     return response()->json([
@@ -568,19 +568,19 @@ class MergePdf extends Controller
             // <========================================================FILE JAMINAN JAMINAN =====================================>
             case "file_jaminan":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->jaminan;
 
-                    DB::table('file_jaminan_update')->insert([
+                    DB::connection('talikuat_old')->table('file_jaminan_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_jaminan_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('jaminan', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('jaminan', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -603,14 +603,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_jaminan_update')->insert([
+                    DB::connection('talikuat_old')->table('file_jaminan_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_jaminan_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('jaminan', "=", $file->jaminan)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('jaminan', "=", $file->jaminan)->delete();
                     }
 
                     return response()->json([
@@ -623,19 +623,19 @@ class MergePdf extends Controller
             //<==================================================FILE SPKMP =============================================>
             case "file_spkmp":
 
-                $get_file = DB::table($req->file)->where("id_data_umum", "=", $req->id)->get();
+                $get_file = DB::connection('talikuat_old')->table($req->file)->where("id_data_umum", "=", $req->id)->get();
 
                 if (count($get_file) == 1) {
 
                     $nameFile = $get_file[0]->spkmp;
 
-                    DB::table('file_spkmp_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spkmp_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spkmp_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
-                    DB::table($req->file)->where('spkmp', "=", $nameFile)->delete();
+                    DB::connection('talikuat_old')->table($req->file)->where('spkmp', "=", $nameFile)->delete();
 
                     return response()->json([
                         'status' => 'success',
@@ -658,14 +658,14 @@ class MergePdf extends Controller
 
                     $pdf->merge('file', storage_path('app/' . $nameFile));
 
-                    DB::table('file_spkmp_update')->insert([
+                    DB::connection('talikuat_old')->table('file_spkmp_update')->insert([
                         "id_data_umum" => $req->id,
                         "file_spkmp_update" => $nameFile,
                         "created_at" => \Carbon\Carbon::now()
                     ]);
 
                     foreach ($get_file as $file) {
-                        DB::table($req->file)->where('spkmp', "=", $file->spkmp)->delete();
+                        DB::connection('talikuat_old')->table($req->file)->where('spkmp', "=", $file->spkmp)->delete();
                     }
 
                     return response()->json([
@@ -688,19 +688,19 @@ class MergePdf extends Controller
 
     public function getFile($id)
     {
-        $dkh = DB::table('file_dkh_update')->select('id', 'file_dkh_update')->where('id_data_umum', $id)->get();
-        $kontrak = DB::table('file_kontrak_update')->select('id', 'file_kontrak_update')->where('id_data_umum', $id)->get();
-        $spmk = DB::table('file_spmk_update')->select('id', 'file_spmk_update')->where('id_data_umum', $id)->get();
-        $syarat_umum = DB::table('file_syarat_umum_update')->select('id', 'file_syarat_umum_update')->where('id_data_umum', $id)->get();
-        $syarat_khusus = DB::table('file_syarat_khusus_update')->select('id', 'file_syarat_khusus_update')->where('id_data_umum', $id)->get();
-        $jpp = DB::table('file_jpp_update')->select('id', 'file_jpp_update')->where('id_data_umum', $id)->get();
-        $rencana = DB::table('file_rencana_update')->select('id', 'file_rencana_update')->where('id_data_umum', $id)->get();
-        $sppbj = DB::table('file_sppbj_update')->select('id', 'file_sppbj_update')->where('id_data_umum', $id)->get();
-        $spl = DB::table('file_spl_update')->select('id', 'file_spl_update')->where('id_data_umum', $id)->get();
-        $spek_umum = DB::table('file_spek_umum_update')->select('id', 'file_spek_umum_update')->where('id_data_umum', $id)->get();
-        $jaminan = DB::table('file_jaminan_update')->select('id', 'file_jaminan_update')->where('id_data_umum', $id)->get();
-        $spkmp = DB::table('file_spkmp_update')->select('id', 'file_spkmp_update')->where('id_data_umum', $id)->get();
-        $linkGmbr = DB::table('file_rencana_link')->select('id', 'file_rencana_link')->where('id_data_umum', $id)->get();
+        $dkh = DB::connection('talikuat_old')->table('file_dkh_update')->select('id', 'file_dkh_update')->where('id_data_umum', $id)->get();
+        $kontrak = DB::connection('talikuat_old')->table('file_kontrak_update')->select('id', 'file_kontrak_update')->where('id_data_umum', $id)->get();
+        $spmk = DB::connection('talikuat_old')->table('file_spmk_update')->select('id', 'file_spmk_update')->where('id_data_umum', $id)->get();
+        $syarat_umum = DB::connection('talikuat_old')->table('file_syarat_umum_update')->select('id', 'file_syarat_umum_update')->where('id_data_umum', $id)->get();
+        $syarat_khusus = DB::connection('talikuat_old')->table('file_syarat_khusus_update')->select('id', 'file_syarat_khusus_update')->where('id_data_umum', $id)->get();
+        $jpp = DB::connection('talikuat_old')->table('file_jpp_update')->select('id', 'file_jpp_update')->where('id_data_umum', $id)->get();
+        $rencana = DB::connection('talikuat_old')->table('file_rencana_update')->select('id', 'file_rencana_update')->where('id_data_umum', $id)->get();
+        $sppbj = DB::connection('talikuat_old')->table('file_sppbj_update')->select('id', 'file_sppbj_update')->where('id_data_umum', $id)->get();
+        $spl = DB::connection('talikuat_old')->table('file_spl_update')->select('id', 'file_spl_update')->where('id_data_umum', $id)->get();
+        $spek_umum = DB::connection('talikuat_old')->table('file_spek_umum_update')->select('id', 'file_spek_umum_update')->where('id_data_umum', $id)->get();
+        $jaminan = DB::connection('talikuat_old')->table('file_jaminan_update')->select('id', 'file_jaminan_update')->where('id_data_umum', $id)->get();
+        $spkmp = DB::connection('talikuat_old')->table('file_spkmp_update')->select('id', 'file_spkmp_update')->where('id_data_umum', $id)->get();
+        $linkGmbr = DB::connection('talikuat_old')->table('file_rencana_link')->select('id', 'file_rencana_link')->where('id_data_umum', $id)->get();
         $merge_dkh = array();
         $merge_kontrak = array();
         $merge_spmk = array();
@@ -789,18 +789,18 @@ class MergePdf extends Controller
 
         $id = $request->id;
 
-        $dkh = DB::table('file_dkh_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $kontrak = DB::table('file_kontrak_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $spmk = DB::table('file_spmk_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $syarat_umum = DB::table('file_syarat_umum_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $syarat_khusus = DB::table('file_syarat_khusus_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $jpp = DB::table('file_jpp_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $rencana = DB::table('file_rencana_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $sppbj = DB::table('file_sppbj_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $spl = DB::table('file_spl_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $spek_umum = DB::table('file_spek_umum_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $jaminan = DB::table('file_jaminan_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
-        $spkmp = DB::table('file_spkmp_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $dkh = DB::connection('talikuat_old')->table('file_dkh_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $kontrak = DB::connection('talikuat_old')->table('file_kontrak_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spmk = DB::connection('talikuat_old')->table('file_spmk_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $syarat_umum = DB::connection('talikuat_old')->table('file_syarat_umum_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $syarat_khusus = DB::connection('talikuat_old')->table('file_syarat_khusus_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $jpp = DB::connection('talikuat_old')->table('file_jpp_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $rencana = DB::connection('talikuat_old')->table('file_rencana_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $sppbj = DB::connection('talikuat_old')->table('file_sppbj_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spl = DB::connection('talikuat_old')->table('file_spl_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spek_umum = DB::connection('talikuat_old')->table('file_spek_umum_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $jaminan = DB::connection('talikuat_old')->table('file_jaminan_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
+        $spkmp = DB::connection('talikuat_old')->table('file_spkmp_update')->selectRaw('count(*) as file_count')->where('id_data_umum', $id)->get()[0]->file_count;
 
         return response()->json([
             'status' => 'success',
@@ -825,7 +825,7 @@ class MergePdf extends Controller
 
     public function deleteFile(Request $req)
     {
-        DB::table($req->db)->where('id', $req->id)->delete();
+        DB::connection('talikuat_old')->table($req->db)->where('id', $req->id)->delete();
         return response()->json([
             'code' => 200
         ]);

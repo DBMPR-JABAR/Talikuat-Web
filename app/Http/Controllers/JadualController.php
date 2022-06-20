@@ -24,7 +24,7 @@ class JadualController extends Controller
     public function getAllJadual()
     {
 
-        $result = DB::table('jadual')->paginate(15);
+        $result = DB::connection('talikuat_old')->table('jadual')->paginate(15);
 
         return response()->json($result);
     }
@@ -32,7 +32,7 @@ class JadualController extends Controller
     public function getLatestJadual()
     {
 
-        $result = DB::table('jadual')
+        $result = DB::connection('talikuat_old')->table('jadual')
             ->limit(5)
             ->orderBy('id', 'desc')
             ->get();
@@ -46,19 +46,19 @@ class JadualController extends Controller
 
     public function getJadualById($id)
     {
-        $result = DB::table('jadual')
+        $result = DB::connection('talikuat_old')->table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
             ->join('detail_jadual', 'detail_jadual.id_jadual', '=', 'jadual.id')
             ->where('jadual.id', '=', $id)
             ->first();
 
-        $requestedVolume = DB::table('request')
+        $requestedVolume = DB::connection('talikuat_old')->table('request')
             ->selectRaw('SUM(volume) as requested_volume')
             ->where('id_jadual', '=', $id)
             ->whereNull('reason_delete')
             ->first();
 
-        $realizationVolume = DB::table('master_laporan_harian')
+        $realizationVolume = DB::connection('talikuat_old')->table('master_laporan_harian')
             ->selectRaw('SUM(volume) as realization_volume')
             ->where('id_jadual', '=', $id)
             ->whereNull('reason_delete')
@@ -68,7 +68,7 @@ class JadualController extends Controller
         $result->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
 
         try {
-            $lastRequest = DB::table('request')->where('id_jadual', '=', $result->id)->orderByDesc('id')->whereNull('reason_delete')->first();
+            $lastRequest = DB::connection('talikuat_old')->table('request')->where('id_jadual', '=', $result->id)->orderByDesc('id')->whereNull('reason_delete')->first();
 
             $isRequestable = null;
             $percentage = 0;
@@ -76,7 +76,7 @@ class JadualController extends Controller
             if ($lastRequest == null) {
                 $isRequestable = true;
             } else {
-                $totalRequestVolumeRealization = DB::table('master_laporan_harian')
+                $totalRequestVolumeRealization = DB::connection('talikuat_old')->table('master_laporan_harian')
                     ->selectRaw('SUM(master_laporan_harian.volume) as realization_volume')
                     ->whereNull('reason_delete')
                     ->where('id_request', '=', $lastRequest->id)
@@ -101,9 +101,9 @@ class JadualController extends Controller
     public function getDetailJadual($id)
     {
 
-        $jadual = DB::table('jadual')->where('id', $id)->first();
+        $jadual = DB::connection('talikuat_old')->table('jadual')->where('id', $id)->first();
 
-        $detail_jadual = DB::table('detail_jadual')->where('id', $id)->get();
+        $detail_jadual = DB::connection('talikuat_old')->table('detail_jadual')->where('id', $id)->get();
 
         $jadual->detail_jadual = $detail_jadual;
 
@@ -118,7 +118,7 @@ class JadualController extends Controller
     {
         $keyword = $request->query("keyword");
 
-        $result = DB::table("jadual")
+        $result = DB::connection('talikuat_old')->table("jadual")
             ->where("kegiatan", "like", "%" . $keyword . "%")
             ->orWhere("ppk", "like", "%" . $keyword . "%")
             ->orWhere("id", $keyword)
@@ -137,7 +137,7 @@ class JadualController extends Controller
     {
         $keyword = $request->keyword;
 
-        $result = DB::table('detail_jadual_parsed')
+        $result = DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->where('id_data_umum', '=', $idDataUmum)
             ->where(function ($query) use ($keyword) {
                 return $query->where('nmp', 'like', '%' . $keyword . '%')
@@ -157,7 +157,7 @@ class JadualController extends Controller
 
     public function deleteAllTempJadual($id)
     {
-        DB::table('detail_jadual_parsed')
+        DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->where('id_data_umum', '=', $id)
             ->delete();
 
@@ -170,7 +170,7 @@ class JadualController extends Controller
 
     public function getAllTempJadualGroupedByNmp($id)
     {
-        $list_bobot = DB::table('detail_jadual_parsed')
+        $list_bobot = DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->select('bobot')
             ->where('id_data_umum', '=', $id)
             ->groupBy('nmp')
@@ -180,7 +180,7 @@ class JadualController extends Controller
             $total_bobot = $total_bobot + floatval($bobot->bobot);
         }
 
-        $list_volume = DB::table('detail_jadual_parsed')
+        $list_volume = DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->select('volume')
             ->where('id_data_umum', '=', $id)
             ->groupBy('nmp')
@@ -190,7 +190,7 @@ class JadualController extends Controller
             $total_volume = $total_volume + floatval($volume->volume);
         }
 
-        $list_koefisien = DB::table('detail_jadual_parsed')
+        $list_koefisien = DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->select('koefisien')
             ->where('id_data_umum', '=', $id)
             ->groupBy('nmp')
@@ -200,12 +200,12 @@ class JadualController extends Controller
             $total_koefisien = $total_koefisien + $koefisien->koefisien;
         }
 
-        $total_data = DB::table('detail_jadual_parsed')
+        $total_data = DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->selectRaw('COUNT(tgl) as total_hari')
             ->where('id_data_umum', '=', $id)
             ->first();
 
-        $list_nmp = DB::table('detail_jadual_parsed')
+        $list_nmp = DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->selectRaw('nmp, volume, koefisien, bobot')
             ->where('id_data_umum', '=', $id)
             ->groupBy('nmp')
@@ -267,7 +267,7 @@ class JadualController extends Controller
             'ruas_jalan' => $request->ruas_jalan
         ];
 
-        DB::table('detail_jadual_parsed')->insert($data);
+        DB::connection('talikuat_old')->table('detail_jadual_parsed')->insert($data);
 
         return response()->json([
             'status' => 'success',
@@ -278,7 +278,7 @@ class JadualController extends Controller
 
     public function deleteTempJadual($id)
     {
-        DB::table('detail_jadual_parsed')->where('id', '=', $id)->delete();
+        DB::connection('talikuat_old')->table('detail_jadual_parsed')->where('id', '=', $id)->delete();
 
         return response()->json([
             'status' => 'success',
@@ -307,13 +307,13 @@ class JadualController extends Controller
 
         $list_jadual = Excel::toCollection(new JadualImport, $file)[0];
 
-        DB::table('detail_jadual_parsed')
+        DB::connection('talikuat_old')->table('detail_jadual_parsed')
             ->where('nmp', '=', $list_jadual[0]['no_mata_pembayaran'])
             ->where('id_data_umum', '=', $request->id_data_umum)
             ->delete();
 
         foreach ($list_jadual as $jadual) {
-            DB::table('detail_jadual_parsed')->insert([
+            DB::connection('talikuat_old')->table('detail_jadual_parsed')->insert([
                 'id_data_umum' => $request->id_data_umum,
                 'ruas_jalan' => $request->ruas_jalan,
                 'tgl' => Carbon::createFromTimestamp(Date::excelToTimestamp($jadual['tanggal'])),
@@ -366,7 +366,7 @@ class JadualController extends Controller
             $list_temp_nmp = DB::select('SELECT * FROM detail_jadual_parsed WHERE id_data_umum = 34 AND nmp NOT IN (SELECT nmp FROM jadual WHERE id_data_umum = 34) GROUP BY nmp');
 
             foreach ($list_temp_nmp as $temp) {
-                $idJadual = DB::table('jadual')->insertGetId([
+                $idJadual = DB::connection('talikuat_old')->table('jadual')->insertGetId([
                     "id_data_umum" => $req->id_data_umum,
                     "nmp" => $temp->nmp,
                     "user" => $req->user,
@@ -391,13 +391,13 @@ class JadualController extends Controller
                     "id_uptd" => $req->id_uptd
                 ]);
 
-                $list_temp_jadual = DB::table('detail_jadual_parsed')
+                $list_temp_jadual = DB::connection('talikuat_old')->table('detail_jadual_parsed')
                     ->where('id_data_umum', '=', $req->id_data_umum)
                     ->where('nmp', '=', $temp->nmp)
                     ->get();
 
                 foreach ($list_temp_jadual as $jadual) {
-                    DB::table('detail_jadual')->insert([
+                    DB::connection('talikuat_old')->table('detail_jadual')->insert([
                         "id_jadual" => $idJadual,
                         "tgl" => $jadual->tgl,
                         "nmp" => $jadual->nmp,
@@ -414,7 +414,7 @@ class JadualController extends Controller
                 }
             }
 
-            DB::table('detail_jadual_parsed')->where('id_data_umum', '=', $req->id_data_umum)->delete();
+            DB::connection('talikuat_old')->table('detail_jadual_parsed')->where('id_data_umum', '=', $req->id_data_umum)->delete();
 
             DB::commit();
 
@@ -472,7 +472,7 @@ class JadualController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], Response::HTTP_BAD_REQUEST);
         }
-        $getDataumum = DB::table('data_umum')->where('id', $req->id_data_umum)->first();
+        $getDataumum = DB::connection('talikuat_old')->table('data_umum')->where('id', $req->id_data_umum)->first();
 
         $waktu = str_replace(" Hari", "", $req->waktu);
         $panjang = str_replace(" Km", "", $req->panjang);
@@ -482,7 +482,7 @@ class JadualController extends Controller
 
         try {
             DB::beginTransaction();
-            $get_id = DB::table('jadual')->insertGetId([
+            $get_id = DB::connection('talikuat_old')->table('jadual')->insertGetId([
                 "id_data_umum" => $req->id_data_umum,
                 "nmp" => $req->nmp[0],
                 "user" => $req->user_id,
@@ -510,7 +510,7 @@ class JadualController extends Controller
             for ($i = 0; $i < count($req->nmp); $i++) {
                 $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
                 $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
-                DB::table('detail_jadual')->insert(
+                DB::connection('talikuat_old')->table('detail_jadual')->insert(
                     [
                         "id_jadual" => $get_id,
                         "tgl" => $req->tgl[$i],
@@ -561,7 +561,7 @@ class JadualController extends Controller
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             foreach ($list_jadual as $items) {
-                $master_nmp = DB::table('master_jenis_pekerjaan')->where('kd_jenis_pekerjaan', $items[0]['no_mata_pembayaran'])->first();
+                $master_nmp = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')->where('kd_jenis_pekerjaan', $items[0]['no_mata_pembayaran'])->first();
                 if (!$master_nmp) {
                     return response()->json([
                         'status' => 'error',
@@ -595,7 +595,7 @@ class JadualController extends Controller
 
     public function getNmpByid($id)
     {
-        $get = DB::table('master_jenis_pekerjaan')->where('id', '=', $id)->first();
+        $get = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')->where('id', '=', $id)->first();
         return response()->json([
             'status' => 'success',
             'code' => '200',
@@ -606,8 +606,8 @@ class JadualController extends Controller
 
     public function deleteallnmp(Request $req)
     {
-        DB::table('jadual')->where('id', '=', $req->id)->delete();
-        DB::table('detail_jadual')->where([
+        DB::connection('talikuat_old')->table('jadual')->where('id', '=', $req->id)->delete();
+        DB::connection('talikuat_old')->table('detail_jadual')->where([
             ['nmp', '=', $req->nmp],
             ['id_jadual', '=', $req->id]
         ])->delete();
@@ -624,7 +624,7 @@ class JadualController extends Controller
         date_default_timezone_set('Asia/Jakarta');
         $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
         $total = preg_replace('/\./', '', $req->jumlah_harga[0]);
-        DB::table('jadual')->where('id', '=', $req->id_jadual)->update([
+        DB::connection('talikuat_old')->table('jadual')->where('id', '=', $req->id_jadual)->update([
             "uraian" => $req->uraian[0],
             "satuan" => $req->satuan[0],
             "harga_satuan" => str_replace(',', '.', $harga),
@@ -634,7 +634,7 @@ class JadualController extends Controller
             "updated_at" => \Carbon\Carbon::now()
         ]);
         for ($i = 0; $i < count($req->nmp); $i++) {
-            DB::table('detail_jadual')->where([
+            DB::connection('talikuat_old')->table('detail_jadual')->where([
                 ['id_jadual', '=', $req->id_jadual],
                 ['nmp', '=', $req->id_nmp]
             ])->delete();
@@ -642,7 +642,7 @@ class JadualController extends Controller
         for ($i = 0; $i < count($req->nmp); $i++) {
             $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
             $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
-            DB::table('detail_jadual')->insert(
+            DB::connection('talikuat_old')->table('detail_jadual')->insert(
                 [
                     "id_jadual" => $req->id_jadual,
                     "tgl" => $req->tgl[$i],
@@ -666,7 +666,7 @@ class JadualController extends Controller
 
     public function getJadualByDataUmumId($id)
     {
-        $result = DB::table('jadual')
+        $result = DB::connection('talikuat_old')->table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
             ->join('detail_jadual', 'detail_jadual.id_jadual', '=', 'jadual.id')
             ->where('id_data_umum', '=', $id)
@@ -675,13 +675,13 @@ class JadualController extends Controller
 
         foreach ($result as $jadual) {
 
-            $requestedVolume = DB::table('request')
+            $requestedVolume = DB::connection('talikuat_old')->table('request')
                 ->selectRaw('SUM(volume) as requested_volume')
                 ->where('id_jadual', '=', $jadual->id)
                 ->whereNull('reason_delete')
                 ->first();
 
-            $realizationVolume = DB::table('master_laporan_harian')
+            $realizationVolume = DB::connection('talikuat_old')->table('master_laporan_harian')
                 ->selectRaw('SUM(volume) as realization_volume')
                 ->where('id_jadual', '=', $jadual->id)
                 ->whereNull('reason_delete')
@@ -691,7 +691,7 @@ class JadualController extends Controller
             $jadual->realization_volume = $realizationVolume->realization_volume != null ? $realizationVolume->realization_volume : 0;
 
             try {
-                $lastRequest = DB::table('request')->where('id_jadual', '=', $jadual->id)->orderByDesc('id')->whereNull('reason_delete')->first();
+                $lastRequest = DB::connection('talikuat_old')->table('request')->where('id_jadual', '=', $jadual->id)->orderByDesc('id')->whereNull('reason_delete')->first();
 
                 $isRequestable = null;
                 $percentage = 0;
@@ -699,7 +699,7 @@ class JadualController extends Controller
                 if ($lastRequest == null) {
                     $isRequestable = true;
                 } else {
-                    $totalRequestVolumeRealization = DB::table('master_laporan_harian')
+                    $totalRequestVolumeRealization = DB::connection('talikuat_old')->table('master_laporan_harian')
                         ->selectRaw('SUM(master_laporan_harian.volume) as realization_volume')
                         ->whereNull('reason_delete')
                         ->where('id_request', '=', $lastRequest->id)
@@ -724,19 +724,19 @@ class JadualController extends Controller
 
     public function getJadualNotRequested($id)
     {
-        $result = DB::table('jadual')
+        $result = DB::connection('talikuat_old')->table('jadual')
             ->where('id_data_umum', '=', $id)
             ->whereNull('tgl_req')
             ->get();
 
         foreach ($result as $jadual) {
-            $requestedVolume = DB::table('request')
+            $requestedVolume = DB::connection('talikuat_old')->table('request')
                 ->selectRaw('SUM(volume) as requested_volume')
                 ->where('id_jadual', '=', $jadual->id)
                 ->whereNull('reason_delete')
                 ->first();
 
-            $realizationVolume = DB::table('master_laporan_harian')
+            $realizationVolume = DB::connection('talikuat_old')->table('master_laporan_harian')
                 ->selectRaw('SUM(volume) as realization_volume')
                 ->where('id_jadual', '=', $jadual->id)
                 ->whereNull('reason_delete')
@@ -756,7 +756,7 @@ class JadualController extends Controller
 
     public function getJadualByDataUmumIdAndRuasJalan(Request $request)
     {
-        $result = DB::table('jadual')
+        $result = DB::connection('talikuat_old')->table('jadual')
             ->selectRaw('jadual.*, detail_jadual.tgl')
             ->join('detail_jadual', 'detail_jadual.id_jadual', '=', 'jadual.id')
             ->where('id_data_umum', '=', $request->id_data_umum)
@@ -777,7 +777,7 @@ class JadualController extends Controller
         $id_data_umum = $req->input('id_data_umum');
         $nmp = $req->input('nmp');
 
-        $result = DB::table('jadual')
+        $result = DB::connection('talikuat_old')->table('jadual')
             ->where('id_data_umum', '=', $id_data_umum)
             ->where('nmp', '=', $nmp)
             ->first();
@@ -792,7 +792,7 @@ class JadualController extends Controller
     public function getNmpJadual($id)
     {
         return response()->json(
-            DB::table('detail_jadual')->where('id_jadual', $id)->get()
+            DB::connection('talikuat_old')->table('detail_jadual')->where('id_jadual', $id)->get()
         );
     }
 }

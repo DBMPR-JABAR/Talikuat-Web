@@ -14,7 +14,7 @@ class PenilaianController extends Controller
 
     public function getPeriodePenilaian($id)
     {
-        $result = DB::table('penilaian')->where('data_umum_id', '=', $id)->orderByDesc('periode')->first();
+        $result =DB::connection('talikuat_old')->table('penilaian')->where('data_umum_id', '=', $id)->orderByDesc('periode')->first();
 
         return response()->json([
             'status' => 'success',
@@ -25,7 +25,7 @@ class PenilaianController extends Controller
 
     public function getPenilaianMobilisasi(Request $req)
     {
-        $result = DB::table('penilaian')->where('data_umum_id', '=', $req->id)->where('periode', '=', $req->periode)->first();
+        $result =DB::connection('talikuat_old')->table('penilaian')->where('data_umum_id', '=', $req->id)->where('periode', '=', $req->periode)->first();
 
         return response()->json([
             'status' => 'success',
@@ -35,7 +35,7 @@ class PenilaianController extends Controller
     }
 
     public function getListPenilaian($id) {
-        $result = DB::table('penilaian')->where('data_umum_id', '=', $id)->get();
+        $result =DB::connection('talikuat_old')->table('penilaian')->where('data_umum_id', '=', $id)->get();
 
         return response()->json([
             'status' => 'success',
@@ -60,10 +60,10 @@ class PenilaianController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $dataUmum = DB::table('data_umum')->where('id', '=', $req->data_umum_id)->first();
-        $kontraktor = DB::table('master_penyedia_jasa')->where('nama', $dataUmum->penyedia)->first();
+        $dataUmum =DB::connection('talikuat_old')->table('data_umum')->where('id', '=', $req->data_umum_id)->first();
+        $kontraktor =DB::connection('talikuat_old')->table('master_penyedia_jasa')->where('nama', $dataUmum->penyedia)->first();
 
-        DB::table('penilaian')->insert([
+       DB::connection('talikuat_old')->table('penilaian')->insert([
             'kontraktor_id' => $kontraktor->id,
             'data_umum_id' => $req->data_umum_id,
             'bulan' => $req->bulan,
@@ -135,9 +135,9 @@ class PenilaianController extends Controller
         }
         try {
             $bulan = date('m', strtotime("+" . $req->bulan_ke . " months", strtotime($req->tgl_spmk)));
-            $kontraktor = DB::table('master_penyedia_jasa')->where('nama', $req->penyedia_jasa)->first();
+            $kontraktor =DB::connection('talikuat_old')->table('master_penyedia_jasa')->where('nama', $req->penyedia_jasa)->first();
             DB::beginTransaction();
-            DB::table('penilaian')->insert([
+           DB::connection('talikuat_old')->table('penilaian')->insert([
                 'kontraktor_id' => $kontraktor->id,
                 'data_umum_id' => $req->id_data_umum,
                 'bulan' => $bulan,

@@ -10,7 +10,7 @@ class PaketController extends Controller
 
     public function getAllKategoriPaket()
     {
-        $result = DB::table("kategori_paket")->get();
+        $result = DB::connection('talikuat_old')->table("kategori_paket")->get();
 
         return response()->json([
             "status" => "success",
@@ -22,7 +22,7 @@ class PaketController extends Controller
     public function getAllPaket()
     {
 
-        $result = DB::table('data_umum')
+        $result = DB::connection('talikuat_old')->table('data_umum')
             ->join('data_umum_ruas', 'data_umum.id', '=', 'data_umum_ruas.id')
             ->selectRaw('*, GROUP_CONCAT(ruas_jalan) as ruas_jalan')
             ->groupBy('data_umum_ruas.id')
@@ -38,7 +38,7 @@ class PaketController extends Controller
     public function getTotalPaket()
     {
 
-        $result = DB::table('data_umum')
+        $result = DB::connection('talikuat_old')->table('data_umum')
             ->join('data_umum_ruas', 'data_umum.id', '=', 'data_umum_ruas.id')
             ->selectRaw('*, GROUP_CONCAT(ruas_jalan) as ruas_jalan')
             ->groupBy('data_umum_ruas.id')
@@ -54,9 +54,9 @@ class PaketController extends Controller
     public function getPaketById($id)
     {
 
-        $data_umum = DB::table('data_umum')->where('id', $id)->first();
+        $data_umum = DB::connection('talikuat_old')->table('data_umum')->where('id', $id)->first();
 
-        $data_umum_ruas = DB::table('data_umum_ruas')->where('id', $id)->get();
+        $data_umum_ruas = DB::connection('talikuat_old')->table('data_umum_ruas')->where('id', $id)->get();
 
         $data_umum->data_umum_ruas = $data_umum_ruas;
 

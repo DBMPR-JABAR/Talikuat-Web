@@ -12,7 +12,7 @@ class JenisPekerjaanController extends Controller
     public function getAllJenisPekerjaan()
     {
 
-        $result = DB::table('master_jenis_pekerjaan')->get();
+        $result = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')->get();
 
         return response()->json([
             'status' => 'success',
@@ -24,7 +24,7 @@ class JenisPekerjaanController extends Controller
     public function getLatestJenisPekerjaan()
     {
 
-        $result = DB::table('master_jenis_pekerjaan')
+        $result = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')
             ->limit(5)
             ->orderBy('id', 'desc')
             ->get();
@@ -39,7 +39,7 @@ class JenisPekerjaanController extends Controller
     public function getJenisPekerjaanById($id)
     {
 
-        $result = DB::table('master_jenis_pekerjaan')->where('id', $id)->first();
+        $result = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')->where('id', $id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -53,7 +53,7 @@ class JenisPekerjaanController extends Controller
 
         $keyword = $request->query("keyword");
 
-        $result = DB::table('master_jenis_pekerjaan')
+        $result = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')
             ->where('id', 'like', '%' . $keyword . '%')
             ->orWhere('jenis_pekerjaan', 'like', '%' . $keyword . '%')
             ->orWhere('satuan', 'like', '%' . $keyword . '%')
@@ -85,7 +85,7 @@ class JenisPekerjaanController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $result = DB::table('master_jenis_pekerjaan')
+        $result = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')
             ->insertGetId([
                 "id" => $request->input("id"),
                 "jenis_pekerjaan" => $request->input("jenis_pekerjaan"),
@@ -107,7 +107,7 @@ class JenisPekerjaanController extends Controller
     {
         $keyword = $req->input('keyword');
 
-        $result = DB::table('master_jenis_pekerjaan')
+        $result = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')
             ->selectRaw('master_jenis_pekerjaan.id as id, master_jenis_pekerjaan.jenis_pekerjaan as jenis_pekerjaan, master_jenis_pekerjaan.satuan as satuan, master_jenis_pekerjaan.tgl_input as tgl_input, master_jenis_pekerjaan.tgl_update as tgl_update')
             ->join('jadual', 'master_jenis_pekerjaan.id', '=', 'jadual.nmp')
             ->where('jadual.id_data_umum', '=', $id)

@@ -9,7 +9,7 @@ class UnorController extends Controller
 {
     public function getAllUnor()
     {
-        $result = DB::table('kantor')->get();
+        $result = DB::connection('talikuat_old')->table('kantor')->get();
 
         return response()->json([
             'status' => 'success',
@@ -22,7 +22,7 @@ class UnorController extends Controller
     {
         $keyword = $req->keyword;
 
-        $result = DB::table('kantor')
+        $result = DB::connection('talikuat_old')->table('kantor')
             ->where('nama_kantor', 'like', '%' . $keyword . '%')
             ->orWhere('nama_lengkap', 'like', '%' . $keyword . '%')
             ->get();
@@ -38,7 +38,7 @@ class UnorController extends Controller
     {
         $namaLengkap = $request->nama_lengkap;
 
-        $result = DB::table('kantor')
+        $result = DB::connection('talikuat_old')->table('kantor')
             ->where('nama_lengkap', '=', $namaLengkap)
             ->first();
 

@@ -26,12 +26,12 @@ class MKController extends Controller
         }
 
         if ($req->laporan == 1) {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 4
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => 'MK',
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -39,7 +39,7 @@ class MKController extends Controller
                 "keterangan" => "Request Telah Disetujui Oleh MK",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Mengirim",
@@ -52,7 +52,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -69,7 +69,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -86,7 +86,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . "MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -95,13 +95,13 @@ class MKController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_mk" => $req->catatan,
                 "status" => 2,
                 "ditolak" => 1,
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => "MK",
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -109,7 +109,7 @@ class MKController extends Controller
                 "keterangan" => "Request Telah Ditolak Oleh MK ",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Menolak",
@@ -122,7 +122,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -151,17 +151,17 @@ class MKController extends Controller
         }
 
         if ($req->isAccepted == "true") {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 4,
             ]);
             if ($req->catatan != NULL) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_mk" => $req->catatan
                 ]);
             }
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => "MK",
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -169,7 +169,7 @@ class MKController extends Controller
                 "keterangan" => "Request Telah Disetujui Oleh MK",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Menyetujui",
@@ -182,7 +182,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari MK", "Request Pekerjaan Telah Disetujui Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -193,7 +193,7 @@ class MKController extends Controller
                     }
                 }
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari MK", "Request Pekerjaan Telah Disetujui Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -204,7 +204,7 @@ class MKController extends Controller
                     }
                 }
             }
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -221,13 +221,13 @@ class MKController extends Controller
                 "result" => "Response request pekerjaan dari mk berhasil disimpan"
             ], ResponseAlias::HTTP_CREATED);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_mk" => $req->catatan,
                 "status" => 2,
                 "ditolak" => 1,
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => "MK",
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -235,7 +235,7 @@ class MKController extends Controller
                 "keterangan" => "Request Telah Ditolak Oleh MK",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Menolak",
@@ -248,7 +248,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari MK", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -259,7 +259,7 @@ class MKController extends Controller
                     }
                 }
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -296,18 +296,18 @@ class MKController extends Controller
         }
 
         if ($req->isAccepted == "true") {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 4,
                 "ditolak" => 0,
             ]);
             if ($req->catatan != NULL) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_mk" => $req->catatan
                 ]);
             }
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => "MK",
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -315,7 +315,7 @@ class MKController extends Controller
                 "keterangan" => "Request Telah Disetujui Oleh MK",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Menyetujui",
@@ -328,7 +328,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -345,13 +345,13 @@ class MKController extends Controller
                 "result" => "Response request pekerjaan dari mk berhasil disimpan"
             ], ResponseAlias::HTTP_CREATED);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_mk" => $req->catatan,
                 "status" => 2,
                 "ditolak" => 1,
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => "MK",
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -359,7 +359,7 @@ class MKController extends Controller
                 "keterangan" => "Request Telah Ditolak Oleh MK",
                 "created_at" => \Carbon\Carbon::now()
             ]);
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Menolak",
@@ -372,7 +372,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari MK", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -383,7 +383,7 @@ class MKController extends Controller
                     }
                 }
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh MK", $email->nm_member);
                 if ($email->email != null) {
@@ -404,13 +404,13 @@ class MKController extends Controller
 
     public function revisiMk(Request $req)
     {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "mk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Ditolak">&nbsp;</span></a>',
                 "status" => 2,
                 "ditolak" => 1
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -419,7 +419,7 @@ class MKController extends Controller
                 "created_at" => \Carbon\Carbon::now()
             ]);
             
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "MK",
                 "status" => "Menolak",
@@ -432,7 +432,7 @@ class MKController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_direksi, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));

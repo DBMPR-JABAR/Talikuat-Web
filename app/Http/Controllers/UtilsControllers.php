@@ -11,8 +11,8 @@ class UtilsControllers extends Controller
 {
     public function getTeamKonsultan(Request $req)
     {
-        $result = DB::table('master_konsultan')->where('nama', $req->nama)->first();
-        $team = DB::table('team_konsultan')->where([
+        $result = DB::connection('talikuat_old')->table('master_konsultan')->where('nama', $req->nama)->first();
+        $team = DB::connection('talikuat_old')->table('team_konsultan')->where([
             ['id_konsultan', '=', $result->id],
             ['jabatan', '=', 'SITE ENGINEERING']
         ])->get();
@@ -60,7 +60,7 @@ class UtilsControllers extends Controller
 
     public function checkVolume(Request $req)
     {
-        $get_volume = DB::table('data_umum_adendum')->where([['id_data_umum', $req->id], ['adendum', $req->adendum]])->first();
+        $get_volume = DB::connection('talikuat_old')->table('data_umum_adendum')->where([['id_data_umum', $req->id], ['adendum', $req->adendum]])->first();
         if (!$get_volume->volume_adendum) {
             return response()->json([
                 'message' => 'null'
@@ -84,7 +84,7 @@ class UtilsControllers extends Controller
             ], 500);
         }
         try {
-            DB::table('data_umum_adendum')->where([['id_data_umum', $req->id], ['adendum', $req->adendum]])->update([
+            DB::connection('talikuat_old')->table('data_umum_adendum')->where([['id_data_umum', $req->id], ['adendum', $req->adendum]])->update([
                 'volume_adendum' => $req->volume
             ]);
 

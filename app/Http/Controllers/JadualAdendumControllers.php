@@ -48,7 +48,7 @@ class JadualAdendumControllers extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], Response::HTTP_BAD_REQUEST);
         }
-        $getDataumum = DB::table('data_umum_adendum')->where('id', $req->id_data_umum_adendum)->first();
+        $getDataumum = DB::connection('talikuat_old')->table('data_umum_adendum')->where('id', $req->id_data_umum_adendum)->first();
 
         $waktu = str_replace(" Hari", "", $req->waktu);
         $panjang = str_replace(" Km", "", $req->panjang);
@@ -58,7 +58,7 @@ class JadualAdendumControllers extends Controller
 
         try {
             DB::beginTransaction();
-            $get_id = DB::table('jadual_adendum')->insertGetId([
+            $get_id = DB::connection('talikuat_old')->table('jadual_adendum')->insertGetId([
                 "id_data_umum" => $req->id_data_umum,
                 "nmp" => $req->nmp[0],
                 "user" => $req->user_id,
@@ -88,7 +88,7 @@ class JadualAdendumControllers extends Controller
             for ($i = 0; $i < count($req->nmp); $i++) {
                 $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
                 $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
-                DB::table('detail_jadual_adendum')->insert(
+                DB::connection('talikuat_old')->table('detail_jadual_adendum')->insert(
                     [
                         "id_jadual" => $get_id,
                         "tgl" => $req->tgl[$i],
@@ -125,7 +125,7 @@ class JadualAdendumControllers extends Controller
     public function getJadualbyNmp($id)
     {
         return response()->json(
-            DB::table('detail_jadual_adendum')->where('id_jadual', $id)->get()
+            DB::connection('talikuat_old')->table('detail_jadual_adendum')->where('id_jadual', $id)->get()
         );
     }
 
@@ -134,7 +134,7 @@ class JadualAdendumControllers extends Controller
         date_default_timezone_set('Asia/Jakarta');
         $harga = preg_replace('/\./', '', $req->harga_satuan[0]);
         $total = preg_replace('/\./', '', $req->jumlah_harga[0]);
-        DB::table('jadual_adendum')->where('id', '=', $req->id_jadual)->update([
+        DB::connection('talikuat_old')->table('jadual_adendum')->where('id', '=', $req->id_jadual)->update([
             "uraian" => $req->uraian[0],
             "satuan" => $req->satuan[0],
             "harga_satuan" => str_replace(',', '.', $harga),
@@ -144,7 +144,7 @@ class JadualAdendumControllers extends Controller
             "updated_at" => \Carbon\Carbon::now()
         ]);
         for ($i = 0; $i < count($req->nmp); $i++) {
-            DB::table('detail_jadual_adendum')->where([
+            DB::connection('talikuat_old')->table('detail_jadual_adendum')->where([
                 ['id_jadual', '=', $req->id_jadual],
                 ['nmp', '=', $req->id_nmp]
             ])->delete();
@@ -152,7 +152,7 @@ class JadualAdendumControllers extends Controller
         for ($i = 0; $i < count($req->nmp); $i++) {
             $harga = preg_replace('/\./', '', $req->harga_satuan[$i]);
             $total = preg_replace('/\./', '', $req->jumlah_harga[$i]);
-            DB::table('detail_jadual_adendum')->insert(
+            DB::connection('talikuat_old')->table('detail_jadual_adendum')->insert(
                 [
                     "id_jadual" => $req->id_jadual,
                     "tgl" => $req->tgl[$i],
@@ -175,8 +175,8 @@ class JadualAdendumControllers extends Controller
 
     public function deleteJadual(Request $req)
     {
-        DB::table('jadual_adendum')->where('id', '=', $req->id)->delete();
-        DB::table('detail_jadual_adendum')->where([
+        DB::connection('talikuat_old')->table('jadual_adendum')->where('id', '=', $req->id)->delete();
+        DB::connection('talikuat_old')->table('detail_jadual_adendum')->where([
             ['nmp', '=', $req->nmp],
             ['id_jadual', '=', $req->id]
         ])->delete();

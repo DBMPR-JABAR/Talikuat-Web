@@ -111,6 +111,40 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
+        'talikuat_old' => [
+            'url' => env('DATABASE_URL'),
+            'driver'    => env('DB_CONNECTION_OLD'),
+            'host'      => env('DB_HOST_OLD', '127.0.0.1'),
+            'port'      => env('DB_PORT_OLD', '3306'),
+            'database'  => env('DB_DATABASE_OLD', 'forge'),
+            'username'  => env('DB_USERNAME_OLD', 'forge'),
+            'password'  => env('DB_PASSWORD_OLD', ''),
+
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_0900_ai_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'modes' => [
+            //   'ONLY_FULL_GROUP_BY', // Disable this to allow grouping by one column
+            //   'STRICT_TRANS_TABLES',
+            //   'NO_ZERO_IN_DATE',
+            //   'NO_ZERO_DATE',
+            //   'ERROR_FOR_DIVISION_BY_ZERO',
+            //   'NO_AUTO_CREATE_USER',
+            //   'NO_ENGINE_SUBSTITUTION'
+            //   'ONLY_FULL_GROUP_BY',
+                'STRICT_TRANS_TABLES',
+                'NO_ZERO_IN_DATE',
+                'NO_ZERO_DATE',
+                'ERROR_FOR_DIVISION_BY_ZERO',
+                'NO_ENGINE_SUBSTITUTION',
+            ],
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

@@ -34,7 +34,7 @@ class MemoControllers extends Controller
 
     public function getUnreadMemo(Request $req)
     {
-        $query = DB::table('memo');
+        $query = DB::connection('talikuat_old')->table('memo');
 
         switch ($req->type) {
             case 'KONTRAKTOR':
@@ -76,7 +76,7 @@ class MemoControllers extends Controller
 
     public function getAllMemo(Request $req)
     {
-        $query = DB::table('memo')
+        $query = DB::connection('talikuat_old')->table('memo')
             ->selectRaw('memo.*, data_umum.nm_paket')
             ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
             ->where('memo.nomor_memo', 'like', '%' . $req->keyword . '%');
@@ -118,7 +118,7 @@ class MemoControllers extends Controller
 
     public function getAllMemoByIdDataUmum($id, Request $req)
     {
-        $query = DB::table('memo')
+        $query = DB::connection('talikuat_old')->table('memo')
             ->selectRaw('memo.*, data_umum.nm_paket')
             ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
             ->where('id_data_umum', '=', $id);
@@ -160,7 +160,7 @@ class MemoControllers extends Controller
 
     public function getLatestMemo(Request $req)
     {
-        $query = DB::table('memo')
+        $query = DB::connection('talikuat_old')->table('memo')
             ->selectRaw('memo.*, data_umum.nm_paket')
             ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
             ->orderByDesc('id');
@@ -208,7 +208,7 @@ class MemoControllers extends Controller
 
     public function getDetailMemo($id)
     {
-        $result = DB::table('memo')->where('id', '=', $id)
+        $result = DB::connection('talikuat_old')->table('memo')->where('id', '=', $id)
             ->selectRaw('memo.*, data_umum.nm_paket')
             ->join('data_umum', 'memo.id_data_umum', '=', 'data_umum.id')
             ->first();
@@ -245,9 +245,9 @@ class MemoControllers extends Controller
         }
 
         try {
-            $kontrak = DB::table('data_umum')->where('id', '=', $req->id_data_umum)->first();
+            $kontrak = DB::connection('talikuat_old')->table('data_umum')->where('id', '=', $req->id_data_umum)->first();
 
-            $id = DB::table('memo')->insertGetId([
+            $id = DB::connection('talikuat_old')->table('memo')->insertGetId([
                 'nomor_memo' => $req->no_memo,
                 'tgl_memo' => $req->tgl_memo,
                 'nm_pengirim' => $req->nm_pengirim,
@@ -265,14 +265,14 @@ class MemoControllers extends Controller
             ]);
 
             if ($req->tembusan_ppk == 'true') {
-                DB::table('memo')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                     'tembusan_ppk' => 1,
                     'ppk_readed' => 0
                 ]);
             }
 
             if ($req->tembusan_admin_uptd == 'true') {
-                DB::table('memo')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                     'tembusan_admin_uptd' => 1,
                     'admin_readed' => 0
                 ]);
@@ -292,7 +292,7 @@ class MemoControllers extends Controller
                     "tembusan" => $kontrak->nm_ppk . ' (PPK), Admin ' . $kontrak->unor,
                 ];
 
-                $ppk = DB::table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
+                $ppk = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
                 pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $ppk->nm_member);
                 if ($ppk->email != null) {
                     try {
@@ -316,7 +316,7 @@ class MemoControllers extends Controller
                     "tembusan" => $kontrak->nm_ppk . ' (PPK), Admin ' . $kontrak->unor,
                 ];
 
-                $ppk = DB::table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
+                $ppk = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $kontrak->nm_ppk)->first();
                 pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $ppk->nm_member);
                 if ($ppk->email != null) {
                     try {
@@ -328,7 +328,7 @@ class MemoControllers extends Controller
 
             }
 
-            $list_kontraktor = DB::table('member')->where('perusahaan', '=', $kontrak->penyedia)->get();
+            $list_kontraktor = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $kontrak->penyedia)->get();
             foreach ($list_kontraktor as $kontraktor) {
                 pushNotification('Memo', 'Memo kegiatan ' . $kontrak->nm_paket, $kontraktor->nm_member);
                 if ($kontraktor->email != null) {
@@ -357,7 +357,7 @@ class MemoControllers extends Controller
 
     public function responMemoFromMobile(Request $req)
     {
-        DB::table('memo')->where('id', '=', $req->id)->update([
+        DB::connection('talikuat_old')->table('memo')->where('id', '=', $req->id)->update([
             'respon_memo' => $req->memo
         ]);
 
@@ -370,7 +370,7 @@ class MemoControllers extends Controller
 
     public function readMemo($id, Request $req)
     {
-        $query = DB::table('memo')
+        $query = DB::connection('talikuat_old')->table('memo')
             ->where('id', '=', $id);
 
         switch ($req->type) {
@@ -412,11 +412,11 @@ class MemoControllers extends Controller
     public function store(Request $req)
     {
         try {
-            $dt_umum = DB::table('data_umum')->where('id', $req->id_data_umum)->first();
-            $ppk = DB::table('member')->where('nm_member', $dt_umum->nm_ppk)->first();
-            $kontraktor = DB::table('member')->where('perusahaan', $dt_umum->penyedia)->first();
+            $dt_umum = DB::connection('talikuat_old')->table('data_umum')->where('id', $req->id_data_umum)->first();
+            $ppk = DB::connection('talikuat_old')->table('member')->where('nm_member', $dt_umum->nm_ppk)->first();
+            $kontraktor = DB::connection('talikuat_old')->table('member')->where('perusahaan', $dt_umum->penyedia)->first();
 
-            $id = DB::table('memo')->insertGetId([
+            $id = DB::connection('talikuat_old')->table('memo')->insertGetId([
                 'nomor_memo' => $req->nomor_surat,
                 'tgl_memo' => $req->tgl_memo,
                 'nm_pengirim' => $req->pengirim,
@@ -433,7 +433,7 @@ class MemoControllers extends Controller
                 'nm_admin_uptd' => $dt_umum->unor
             ]);
             if ($req->tembusan == 'ppk') {
-                DB::table('memo')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                     'tembusan_ppk' => 1,
                     'ppk_readed' => 0
                 ]);
@@ -452,13 +452,13 @@ class MemoControllers extends Controller
                 Mail::to($kontraktor->email)->send(new MemoMail($bodyEmail));
             }
             if ($req->tembusan == 'admin') {
-                DB::table('memo')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                     'tembusan_admin_uptd' => 1,
                     'admin_readed' => 0,
                 ]);
             }
             if ($req->tembusan == 'all') {
-                DB::table('memo')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                     'tembusan_ppk' => 1,
                     'tembusan_admin_uptd' => 1,
                     'admin_readed' => 0,
@@ -523,20 +523,20 @@ class MemoControllers extends Controller
     {
         $role = $req->role;
         date_default_timezone_set('Asia/Jakarta');
-        $cek = DB::table('memo')->where('id', $id)->first();
+        $cek = DB::connection('talikuat_old')->table('memo')->where('id', $id)->first();
         if ($role == 'PPK') {
-            DB::table('memo')->where('id', $id)->update([
+            DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                 'ppk_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
             ]);
         }
         if ($role == 'ADMIN-UPTD') {
-            DB::table('memo')->where('id', $id)->update([
+            DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                 'admin_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
             ]);
         }
         if ($role == 'KONTRAKTOR') {
             if ($cek->is_readed == 0) {
-                DB::table('memo')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
                     'is_readed' => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
                 ]);
             }
@@ -560,7 +560,7 @@ class MemoControllers extends Controller
 
     public function getTotalMemo(Request $req)
     {
-        $total = DB::table('memo')
+        $total = DB::connection('talikuat_old')->table('memo')
             ->selectRaw('COUNT(*) as total_memo')
             ->groupBy('id_data_umum')
             ->having('id_data_umum', '=', $req->id)
@@ -589,7 +589,7 @@ class MemoControllers extends Controller
                 $role = 'nm_admin_uptd';
                 break;
         }
-        $cek = DB::table('memo')->where($role, $req->nm)->get();
+        $cek = DB::connection('talikuat_old')->table('memo')->where($role, $req->nm)->get();
         foreach ($cek as $memo) {
             if ($req->role == 'PPK') {
                 if ($memo->ppk_readed == 0) {
@@ -632,7 +632,7 @@ class MemoControllers extends Controller
 
     public function cekMemoKonsultan(Request $req)
     {
-        $cek = DB::table('memo')->where('nm_pengirim', $req->nm)->get();
+        $cek = DB::connection('talikuat_old')->table('memo')->where('nm_pengirim', $req->nm)->get();
         foreach ($cek as $c) {
             if ($c->respon_memo != null && $c->konsultan_readed == null) {
                 return response()->json([
@@ -650,7 +650,7 @@ class MemoControllers extends Controller
 
     public function readKonsultan(Request $req)
     {
-        DB::table('memo')->where('respon_memo', $req->text)->update([
+        DB::connection('talikuat_old')->table('memo')->where('respon_memo', $req->text)->update([
             "konsultan_readed" => 'Telah Dibaca Pada ' . \Carbon\Carbon::now()
         ]);
 
@@ -659,7 +659,7 @@ class MemoControllers extends Controller
     public function responMemo(Request $req, $id)
     {
 
-        DB::table('memo')->where('id', $id)->update([
+        DB::connection('talikuat_old')->table('memo')->where('id', $id)->update([
             'respon_memo' => $req->respon
         ]);
         return response()->json([

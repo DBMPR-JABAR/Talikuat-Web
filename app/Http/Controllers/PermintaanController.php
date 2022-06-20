@@ -18,7 +18,7 @@ class PermintaanController extends Controller
 
     public function getAllPermintaan(Request $request)
     {
-        $query = DB::table('request')
+        $query = DB::connection('talikuat_old')->table('request')
             ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
             ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
             ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
@@ -33,7 +33,7 @@ class PermintaanController extends Controller
             })
             ->groupBy('request.id');
 
-        //        $query = DB::table('request');
+        //        $query = DB::connection('talikuat_old')->table('request');
 
         switch ($request->type) {
             case 'KONTRAKTOR':
@@ -69,7 +69,7 @@ class PermintaanController extends Controller
             $item->checklist = $item->checklist != null ? Storage::url($item->checklist) : null;
 
             $sqlIsActive = DB::select("SELECT NOT EXISTS(SELECT id FROM request WHERE id_jadual = " . $item->id_jadual . " AND id > " . $item->id . ") as is_active");
-            $sqlSumRealizationRequestVolume = DB::table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $item->id)->first();
+            $sqlSumRealizationRequestVolume = DB::connection('talikuat_old')->table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $item->id)->first();
 
             if ($sqlIsActive[0]->is_active && $sqlSumRealizationRequestVolume->realization_volume < $item->volume) {
                 $item->is_active = true;
@@ -77,10 +77,10 @@ class PermintaanController extends Controller
                 $item->is_active = false;
             }
 
-            $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
-            $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
-            $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
-            $pekerja = DB::table('detail_request_tkerja')->where('id_request', '=', $item->id)->get();
+            $bahan = DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
+            $campuran = DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
+            $peralatan = DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
+            $pekerja = DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', '=', $item->id)->get();
 
             foreach ($bahan as $index => $item_bahan) {
                 $item_bahan->id = $index + 1;
@@ -113,7 +113,7 @@ class PermintaanController extends Controller
 
     public function getLatestPermintaan(Request $request)
     {
-        $query = DB::table('request')
+        $query = DB::connection('talikuat_old')->table('request')
             ->limit(5)
             ->orderBy('id', 'desc')
             ->whereNull('reason_delete');
@@ -156,7 +156,7 @@ class PermintaanController extends Controller
 
         $keyword = $request->query("keyword");
 
-        $result = DB::table("request")
+        $result = DB::connection('talikuat_old')->table("request")
             ->whereNull('reason_delete')
             ->where("nama_kegiatan", "like", "%" . $keyword . "%")
             ->orWhere("id", $keyword)
@@ -176,7 +176,7 @@ class PermintaanController extends Controller
     public function getPermintaanDetailById($id)
     {
         try {
-            $result = DB::table('request')
+            $result = DB::connection('talikuat_old')->table('request')
                 ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
                 ->leftJoin('jadual', 'request.id_jadual', '=', 'jadual.id')
                 ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
@@ -184,7 +184,7 @@ class PermintaanController extends Controller
                 ->first();
 
             $sqlIsActive = DB::select("SELECT NOT EXISTS(SELECT id FROM request WHERE id_jadual = " . $result->id_jadual . " AND id > " . $result->id . ") as is_active");
-            $sqlSumRealizationRequestVolume = DB::table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $result->id)->first();
+            $sqlSumRealizationRequestVolume = DB::connection('talikuat_old')->table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $result->id)->first();
 
             if ($sqlIsActive[0]->is_active && $sqlSumRealizationRequestVolume->realization_volume < $result->volume) {
                 $result->is_active = true;
@@ -198,10 +198,10 @@ class PermintaanController extends Controller
             $result->foto_ppk = $result->foto_ppk != null ? Storage::url($result->foto_ppk) : null;
             $result->checklist = $result->checklist != null ? Storage::url($result->checklist) : null;
 
-            $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $result->id)->get();
-            $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $result->id)->get();
-            $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $result->id)->get();
-            $pekerja = DB::table('detail_request_tkerja')->where('id_request', '=', $result->id)->get();
+            $bahan = DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', '=', $result->id)->get();
+            $campuran = DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', '=', $result->id)->get();
+            $peralatan = DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', '=', $result->id)->get();
+            $pekerja = DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', '=', $result->id)->get();
 
             foreach ($bahan as $index => $item_bahan) {
                 $item_bahan->id = $index + 1;
@@ -240,7 +240,7 @@ class PermintaanController extends Controller
 
     public function getPermintaanByDataUmumId($id)
     {
-        $result = DB::table('request')
+        $result = DB::connection('talikuat_old')->table('request')
             ->selectRaw('request.*, jadual.ruas_jalan, SUM(master_laporan_harian.volume) as total_realisasi_volume')
             ->join('jadual', 'request.id_jadual', '=', 'jadual.id')
             ->leftJoin('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
@@ -259,7 +259,7 @@ class PermintaanController extends Controller
             $item->checklist = $item->checklist != null ? Storage::url($item->checklist) : null;
 
             $sqlIsActive = DB::select("SELECT NOT EXISTS(SELECT id FROM request WHERE id_jadual = " . $item->id_jadual . " AND id > " . $item->id . ") as is_active");
-            $sqlSumRealizationRequestVolume = DB::table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $item->id)->first();
+            $sqlSumRealizationRequestVolume = DB::connection('talikuat_old')->table('master_laporan_harian')->selectRaw("SUM(volume) as realization_volume")->where('id_request', '=', $item->id)->first();
 
             if ($sqlIsActive[0]->is_active && $sqlSumRealizationRequestVolume->realization_volume < $item->volume) {
                 $item->is_active = true;
@@ -267,10 +267,10 @@ class PermintaanController extends Controller
                 $item->is_active = false;
             }
 
-            $bahan = DB::table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
-            $campuran = DB::table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
-            $peralatan = DB::table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
-            $pekerja = DB::table('detail_request_tkerja')->where('id_request', '=', $item->id)->get();
+            $bahan = DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', '=', $item->id)->get();
+            $campuran = DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', '=', $item->id)->get();
+            $peralatan = DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', '=', $item->id)->get();
+            $pekerja = DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', '=', $item->id)->get();
 
             foreach ($bahan as $index => $item_bahan) {
                 $item_bahan->id = $index + 1;
@@ -303,7 +303,7 @@ class PermintaanController extends Controller
 
     public function getLatestPermintaanByKonsultan(Request $request)
     {
-        $result = DB::table('request')
+        $result = DB::connection('talikuat_old')->table('request')
             ->where('nama_direksi', '=', $request->konsultan)
             ->limit(5)
             ->orderByDesc('tgl_input')
@@ -324,7 +324,7 @@ class PermintaanController extends Controller
 
     public function getPermintaanByKonsultan(Request $request)
     {
-        $result = DB::table('request')
+        $result = DB::connection('talikuat_old')->table('request')
             ->where('nama_direksi', '=', $request->konsultan)
             ->orderByDesc('tgl_input')
             ->orderByDesc('tgl_update')
@@ -375,11 +375,11 @@ class PermintaanController extends Controller
         DB::beginTransaction();
 
         try {
-            $jadual = DB::table('jadual')->where('id', '=', $req->id_jadual)->first();
+            $jadual = DB::connection('talikuat_old')->table('jadual')->where('id', '=', $req->id_jadual)->first();
 
             $newJadualVolume = $jadual != null ? $jadual->volume + $req->volume : $req->volume;
 
-            DB::table('jadual')->where('id', $req->id_jadual)->update([
+            DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->update([
                 "tgl_req" => \Carbon\Carbon::now(),
                 "volume_request" => $newJadualVolume
             ]);
@@ -387,7 +387,7 @@ class PermintaanController extends Controller
             $file = $req->file('sketsa');
             $name = time() . "_" . $file->getClientOriginalName();
 
-            $id = DB::table('request')->insertGetId([
+            $id = DB::connection('talikuat_old')->table('request')->insertGetId([
                 "user_id" => $req->input('user_id'),
                 "nama_kegiatan" => $req->input('nama_kegiatan'),
                 "status" => 1,
@@ -412,7 +412,7 @@ class PermintaanController extends Controller
 
             if ($req->input('bahan') != null && $req->input('bahan') != 'null') {
                 foreach (json_decode($req->input('bahan')) as $item_bahan) {
-                    DB::table('detail_request_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                         'id_request' => $id,
                         'bahan' => $item_bahan->bahan,
                         'volume' => $item_bahan->volume,
@@ -423,7 +423,7 @@ class PermintaanController extends Controller
 
             if ($req->input('alat') != null && $req->input('alat') != 'null') {
                 foreach (json_decode($req->input('alat')) as $item_alat) {
-                    DB::table('detail_request_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                         'id_request' => $id,
                         'jenis_peralatan' => $item_alat->jenis_peralatan,
                         'jumlah' => $item_alat->jumlah,
@@ -434,7 +434,7 @@ class PermintaanController extends Controller
 
             if ($req->input('pekerja') != null && $req->input('pekerja') != 'null') {
                 foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
-                    DB::table('detail_request_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                         'id_request' => $id,
                         'tenaga_kerja' => $item_pekerja->tenaga_kerja,
                         'jumlah' => $item_pekerja->jumlah
@@ -444,7 +444,7 @@ class PermintaanController extends Controller
 
             if ($req->input('campuran') != null && $req->input('campuran') != 'null') {
                 foreach (json_decode($req->input('campuran')) as $item_campuran) {
-                    DB::table('detail_request_jmf')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                         'id_request' => $id,
                         'bahan_jmf' => $item_campuran->bahan_jmf,
                         'volume' => $item_campuran->volume,
@@ -457,7 +457,7 @@ class PermintaanController extends Controller
                 $file = $req->file('metode_kerja');
                 $name = time() . "_" . $file->getClientOriginalName();
 
-                DB::table('request')->where('id', $id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $id)->update([
                     "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
                 ]);
 
@@ -507,11 +507,11 @@ class PermintaanController extends Controller
 
         try {
 
-            $tableRef = DB::table('request')->where('id', '=', $req->id_request);
+            $tableRef = DB::connection('talikuat_old')->table('request')->where('id', '=', $req->id_request);
 
             $currentRequest = $tableRef->first();
 
-            $jadual = DB::table('jadual')->where('id_jadual', '=', $tableRef->id_jadual)->first();
+            $jadual = DB::connection('talikuat_old')->table('jadual')->where('id_jadual', '=', $tableRef->id_jadual)->first();
 
             $newJadualVolume = ($jadual->volume_request - $tableRef->volume) + $req->volume;
 
@@ -549,10 +549,10 @@ class PermintaanController extends Controller
                 Storage::delete($currentRequest->metode_kerja);
             }
 
-            DB::table('detail_request_bahan')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('bahan') != null && $req->input('bahan') != 'null') {
                 foreach (json_decode($req->input('bahan')) as $item_bahan) {
-                    DB::table('detail_request_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                         'id_request' => $req->id_request,
                         'bahan' => $item_bahan->bahan,
                         'volume' => $item_bahan->volume,
@@ -561,10 +561,10 @@ class PermintaanController extends Controller
                 }
             }
 
-            DB::table('detail_request_peralatan')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('alat') != null && $req->input('alat') != 'null') {
                 foreach (json_decode($req->input('alat')) as $item_alat) {
-                    DB::table('detail_request_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                         'id_request' => $req->id_request,
                         'jenis_peralatan' => $item_alat->jenis_peralatan,
                         'jumlah' => $item_alat->jumlah,
@@ -573,10 +573,10 @@ class PermintaanController extends Controller
                 }
             }
 
-            DB::table('detail_request_tkerja')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('pekerja') != null && $req->input('pekerja') != 'null') {
                 foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
-                    DB::table('detail_request_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                         'id_request' => $req->id_request,
                         'tenaga_kerja' => $item_pekerja->tenaga_kerja,
                         'jumlah' => $item_pekerja->jumlah
@@ -584,10 +584,10 @@ class PermintaanController extends Controller
                 }
             }
 
-            DB::table('detail_request_jmf')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('campuran') != null && $req->input('campuran') != 'null') {
                 foreach (json_decode($req->input('campuran')) as $item_campuran) {
-                    DB::table('detail_request_jmf')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                         'id_request' => $req->id_request,
                         'bahan_jmf' => $item_campuran->bahan_jmf,
                         'volume' => $item_campuran->volume,
@@ -636,22 +636,22 @@ class PermintaanController extends Controller
             ], 400);
         }
         if ($req->adendum == null) {
-            $getTeam = DB::table('jadual')->where('id', $req->id_jadual)->first();
+            $getTeam = DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->first();
         } else {
-            $getTeam = DB::table('jadual_adendum')->where('id', $req->id_jadual)->first();
+            $getTeam = DB::connection('talikuat_old')->table('jadual_adendum')->where('id', $req->id_jadual)->first();
         }
         DB::beginTransaction();
         try {
             if ($req->adendum == null) {
-                $getJadual = DB::table('jadual')->where('id', $req->id_jadual)->first();
+                $getJadual = DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->first();
                 if (!$getJadual->volume_request) {
                     $volume = $getJadual->volume_request + $req->perkiraan_volume;
-                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                    DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->update([
                         "tgl_req" => $req->pelaksanaan_tgl,
                         "volume_request" => $volume
                     ]);
                 } else {
-                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                    DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->update([
                         "tgl_req" => $req->pelaksanaan_tgl,
                         "volume_request" => $getJadual->volume - $req->perkiraan_volume
                     ]);
@@ -659,7 +659,7 @@ class PermintaanController extends Controller
 
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
-                $id = DB::table('request')->insertGetId([
+                $id = DB::connection('talikuat_old')->table('request')->insertGetId([
                     "user_id" => $req->userId,
                     "nama_kegiatan" => $req->kegiatan,
                     "unor" => $req->unor,
@@ -683,7 +683,7 @@ class PermintaanController extends Controller
 
                 if ($req->jenis_peralatan) {
                     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-                        DB::table('detail_request_peralatan')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                             "id_request" => $id,
                             "jenis_peralatan" => $req->jenis_peralatan[$i],
                             "jumlah" => $req->jumlah_peralatan[$i],
@@ -693,7 +693,7 @@ class PermintaanController extends Controller
                 }
                 if ($req->bahan) {
                     for ($i = 0; $i < count($req->bahan); $i++) {
-                        DB::table('detail_request_bahan')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                             "id_request" => $id,
                             "bahan" => $req->bahan[$i],
                             "volume" => $req->volume_bahan[$i],
@@ -703,7 +703,7 @@ class PermintaanController extends Controller
                 }
                 if ($req->tenaga_kerja) {
                     for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-                        DB::table('detail_request_tkerja')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                             "id_request" => $id,
                             "tenaga_kerja" => $req->tenaga_kerja[$i],
                             "jumlah" => $req->jumlah_tk[$i],
@@ -712,7 +712,7 @@ class PermintaanController extends Controller
                 }
                 if ($req->bahan_jmf) {
                     for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-                        DB::table('detail_request_jmf')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                             "id_request" => $id,
                             "bahan_jmf" => $req->bahan_jmf[$i],
                             "volume" => $req->volume_jmf[$i],
@@ -724,28 +724,28 @@ class PermintaanController extends Controller
                 if ($req->file('metode_kerja')) {
                     $file = $req->file('metode_kerja');
                     $name = time() . "_" . $file->getClientOriginalName();
-                    DB::table('request')->where('id', $id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $id)->update([
                         "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
             } else {
-                $getJadual = DB::table('jadual_adendum')->where('id', $req->id_jadual)->first();
+                $getJadual = DB::connection('talikuat_old')->table('jadual_adendum')->where('id', $req->id_jadual)->first();
                 if (!$getJadual->volume_request) {
                     $volume = $getJadual->volume_request + $req->perkiraan_volume;
-                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                    DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->update([
                         "tgl_req" => $req->pelaksanaan_tgl,
                         "volume_request" => $volume
                     ]);
                 } else {
-                    DB::table('jadual')->where('id', $req->id_jadual)->update([
+                    DB::connection('talikuat_old')->table('jadual')->where('id', $req->id_jadual)->update([
                         "tgl_req" => $req->pelaksanaan_tgl,
                         "volume_request" => $getJadual->volume - $req->perkiraan_volume
                     ]);
                 }
                 $file = $req->file('sketsa');
                 $name = time() . "_" . $file->getClientOriginalName();
-                $id = DB::table('request')->insertGetId([
+                $id = DB::connection('talikuat_old')->table('request')->insertGetId([
                     "user_id" => $req->userId,
                     "nama_kegiatan" => $req->kegiatan,
                     "unor" => $req->unor,
@@ -771,7 +771,7 @@ class PermintaanController extends Controller
 
                 if ($req->jenis_peralatan) {
                     for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-                        DB::table('detail_request_peralatan')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                             "id_request" => $id,
                             "jenis_peralatan" => $req->jenis_peralatan[$i],
                             "jumlah" => $req->jumlah_peralatan[$i],
@@ -781,7 +781,7 @@ class PermintaanController extends Controller
                 }
                 if ($req->bahan) {
                     for ($i = 0; $i < count($req->bahan); $i++) {
-                        DB::table('detail_request_bahan')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                             "id_request" => $id,
                             "bahan" => $req->bahan[$i],
                             "volume" => $req->volume_bahan[$i],
@@ -791,7 +791,7 @@ class PermintaanController extends Controller
                 }
                 if ($req->tenaga_kerja) {
                     for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-                        DB::table('detail_request_tkerja')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                             "id_request" => $id,
                             "tenaga_kerja" => $req->tenaga_kerja[$i],
                             "jumlah" => $req->jumlah_tk[$i],
@@ -800,7 +800,7 @@ class PermintaanController extends Controller
                 }
                 if ($req->bahan_jmf) {
                     for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-                        DB::table('detail_request_jmf')->insert([
+                        DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                             "id_request" => $id,
                             "bahan_jmf" => $req->bahan_jmf[$i],
                             "volume" => $req->volume_jmf[$i],
@@ -812,7 +812,7 @@ class PermintaanController extends Controller
                 if ($req->file('metode_kerja')) {
                     $file = $req->file('metode_kerja');
                     $name = time() . "_" . $file->getClientOriginalName();
-                    DB::table('request')->where('id', $id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $id)->update([
                         "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -837,7 +837,7 @@ class PermintaanController extends Controller
         if ($req->file('sketsa')) {
             $file = $req->file('sketsa');
             $name = time() . "_" . $file->getClientOriginalName();
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "nama_kegiatan" => $req->kegiatan,
                 "unor" => $req->unor,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
@@ -856,7 +856,7 @@ class PermintaanController extends Controller
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "nama_kegiatan" => $req->kegiatan,
                 "unor" => $req->unor,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
@@ -874,19 +874,19 @@ class PermintaanController extends Controller
             ]);
         }
         for ($i = 0; $i < count($req->bahan); $i++) {
-            DB::table('detail_request_bahan')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-            DB::table('detail_request_peralatan')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-            DB::table('detail_request_tkerja')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-            DB::table('detail_request_jmf')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-            DB::table('detail_request_peralatan')->insert([
+            DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                 "id_request" => $req->id,
                 "jenis_peralatan" => $req->jenis_peralatan[$i],
                 "jumlah" => $req->jumlah_peralatan[$i],
@@ -894,7 +894,7 @@ class PermintaanController extends Controller
             ]);
         }
         for ($i = 0; $i < count($req->bahan); $i++) {
-            DB::table('detail_request_bahan')->insert([
+            DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                 "id_request" => $req->id,
                 "bahan" => $req->bahan[$i],
                 "volume" => $req->volume_bahan[$i],
@@ -902,14 +902,14 @@ class PermintaanController extends Controller
             ]);
         }
         for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-            DB::table('detail_request_tkerja')->insert([
+            DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                 "id_request" => $req->id,
                 "tenaga_kerja" => $req->tenaga_kerja[$i],
                 "jumlah" => $req->jumlah_tk[$i],
             ]);
         }
         for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-            DB::table('detail_request_jmf')->insert([
+            DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                 "id_request" => $req->id,
                 "bahan_jmf" => $req->bahan_jmf[$i],
                 "volume" => $req->volume_jmf[$i],
@@ -921,13 +921,13 @@ class PermintaanController extends Controller
         if ($req->file('metode_kerja')) {
             $file = $req->file('metode_kerja');
             $name = time() . "_" . $file->getClientOriginalName();
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
         }
-        $get_request = DB::table('request')->where('id', $req->id)->first();
-        DB::table('jadual')->where('id', $get_request->id_jadual)->update([
+        $get_request = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
+        DB::connection('talikuat_old')->table('jadual')->where('id', $get_request->id_jadual)->update([
             'volume_request' => $req->perkiraan_volume
         ]);
 
@@ -938,16 +938,16 @@ class PermintaanController extends Controller
 
     public function sendRequestPekerjaanFromMobile(Request $req)
     {
-        $get_data = DB::table('request')->where('id', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
 
         if ($get_data->ditolak == 1) {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "status" => 2,
                 "ditolak" => 0,
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "tgl_kirim_to_konsultan" => \Carbon\Carbon::now()
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->username,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -967,18 +967,18 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => "konsultan"
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 2
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->username,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -998,7 +998,7 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => "konsultan"
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1015,15 +1015,15 @@ class PermintaanController extends Controller
     public function sendReq(Request $req)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $get_data = DB::table('request')->where('id', $req->id)->first();
+        $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
         if ($get_data->ditolak == 1) {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "status" => 2,
                 "ditolak" => 0,
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "tgl_kirim_to_konsultan" => \Carbon\Carbon::now()
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->username,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1043,18 +1043,18 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => "konsultan"
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "kontraktor" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px" title="Request Di Kirim">&nbsp;</span></a>',
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 2
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->username,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1074,7 +1074,7 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => "konsultan"
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_kontraktor, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1094,7 +1094,7 @@ class PermintaanController extends Controller
             $file = $req->file('sketsa');
             $name = time() . "_" . $file->getClientOriginalName();
 
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "nama_kegiatan" => $req->kegiatan,
                 "unor" => $req->unor,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
@@ -1113,7 +1113,7 @@ class PermintaanController extends Controller
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "nama_kegiatan" => $req->kegiatan,
                 "unor" => $req->unor,
                 "jenis_pekerjaan" => $req->jenis_pekerjaan,
@@ -1131,19 +1131,19 @@ class PermintaanController extends Controller
             ]);
         }
         for ($i = 0; $i < count($req->bahan); $i++) {
-            DB::table('detail_request_bahan')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-            DB::table('detail_request_peralatan')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-            DB::table('detail_request_tkerja')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-            DB::table('detail_request_jmf')->where('id_request', $req->id)->delete();
+            DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', $req->id)->delete();
         }
         for ($i = 0; $i < count($req->jenis_peralatan); $i++) {
-            DB::table('detail_request_peralatan')->insert([
+            DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                 "id_request" => $req->id,
                 "jenis_peralatan" => $req->jenis_peralatan[$i],
                 "jumlah" => $req->jumlah_peralatan[$i],
@@ -1151,7 +1151,7 @@ class PermintaanController extends Controller
             ]);
         }
         for ($i = 0; $i < count($req->bahan); $i++) {
-            DB::table('detail_request_bahan')->insert([
+            DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                 "id_request" => $req->id,
                 "bahan" => $req->bahan[$i],
                 "volume" => $req->volume_bahan[$i],
@@ -1159,13 +1159,13 @@ class PermintaanController extends Controller
             ]);
         }
         for ($i = 0; $i < count($req->tenaga_kerja); $i++) {
-            DB::table('detail_request_tkerja')->insert([
+            DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                 "id_request" => $req->id,
                 "tenaga_kerja" => $req->tenaga_kerja[$i],
                 "jumlah" => $req->jumlah_tk[$i],
             ]);
         }
-        DB::table('history_request')->insert([
+        DB::connection('talikuat_old')->table('history_request')->insert([
             "username" => $req->konsultan,
             "id_request" => $req->id,
             "user_id" => $req->userId,
@@ -1175,7 +1175,7 @@ class PermintaanController extends Controller
         ]);
         if ($req->bahan_jmf) {
             for ($i = 0; $i < count($req->bahan_jmf); $i++) {
-                DB::table('detail_request_jmf')->insert([
+                DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                     "id_request" => $req->id,
                     "bahan_jmf" => $req->bahan_jmf[$i],
                     "volume" => $req->volume_jmf[$i],
@@ -1187,7 +1187,7 @@ class PermintaanController extends Controller
         if ($req->file('metode_kerja')) {
             $file = $req->file('metode_kerja');
             $name = time() . "_" . $file->getClientOriginalName();
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "metode_kerja" => $this->PATH_FILE_DB . "/" . $name
             ]);
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -1223,7 +1223,7 @@ class PermintaanController extends Controller
 
         try {
 
-            $tableRef = DB::table('request')->where('id', '=', $req->id_request);
+            $tableRef = DB::connection('talikuat_old')->table('request')->where('id', '=', $req->id_request);
 
             $currentRequest = $tableRef->first();
 
@@ -1239,7 +1239,7 @@ class PermintaanController extends Controller
                 "tgl_update" => Carbon::now()
             ]);
 
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $currentRequest->nama_kontraktor,
                 "id_request" => $req->id_request,
                 "user_id" => $currentRequest->user_id,
@@ -1268,10 +1268,10 @@ class PermintaanController extends Controller
                 Storage::delete($currentRequest->metode_kerja);
             }
 
-            DB::table('detail_request_bahan')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_bahan')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('bahan') != null && $req->input('bahan') != 'null') {
                 foreach (json_decode($req->input('bahan')) as $item_bahan) {
-                    DB::table('detail_request_bahan')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_bahan')->insert([
                         'id_request' => $req->id_request,
                         'bahan' => $item_bahan->bahan,
                         'volume' => $item_bahan->volume,
@@ -1280,10 +1280,10 @@ class PermintaanController extends Controller
                 }
             }
 
-            DB::table('detail_request_peralatan')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_peralatan')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('alat') != null && $req->input('alat') != 'null') {
                 foreach (json_decode($req->input('alat')) as $item_alat) {
-                    DB::table('detail_request_peralatan')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_peralatan')->insert([
                         'id_request' => $req->id_request,
                         'jenis_peralatan' => $item_alat->jenis_peralatan,
                         'jumlah' => $item_alat->jumlah,
@@ -1292,10 +1292,10 @@ class PermintaanController extends Controller
                 }
             }
 
-            DB::table('detail_request_tkerja')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_tkerja')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('pekerja') != null && $req->input('pekerja') != 'null') {
                 foreach (json_decode($req->input('pekerja')) as $item_pekerja) {
-                    DB::table('detail_request_tkerja')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_tkerja')->insert([
                         'id_request' => $req->id_request,
                         'tenaga_kerja' => $item_pekerja->tenaga_kerja,
                         'jumlah' => $item_pekerja->jumlah
@@ -1303,10 +1303,10 @@ class PermintaanController extends Controller
                 }
             }
 
-            DB::table('detail_request_jmf')->where('id_request', '=', $req->id_request)->delete();
+            DB::connection('talikuat_old')->table('detail_request_jmf')->where('id_request', '=', $req->id_request)->delete();
             if ($req->input('campuran') != null && $req->input('campuran') != 'null') {
                 foreach (json_decode($req->input('campuran')) as $item_campuran) {
-                    DB::table('detail_request_jmf')->insert([
+                    DB::connection('talikuat_old')->table('detail_request_jmf')->insert([
                         'id_request' => $req->id_request,
                         'bahan_jmf' => $item_campuran->bahan_jmf,
                         'volume' => $item_campuran->volume,
@@ -1353,7 +1353,7 @@ class PermintaanController extends Controller
         }
 
         if ($req->isAccepted == "true") {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "foto_konsultan" => null,
@@ -1362,12 +1362,12 @@ class PermintaanController extends Controller
             ]);
 
             if ($req->catatan != null) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_konsultan" => $req->catatan
                 ]);
             }
 
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1379,7 +1379,7 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -1388,13 +1388,13 @@ class PermintaanController extends Controller
             if ($req->file('checklist')) {
                 $file = $req->file('checklist');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "checklist" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "Konsultan",
                 "status" => "Menyetujui",
@@ -1408,7 +1408,7 @@ class PermintaanController extends Controller
                 "note" => ""
             ];
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_direksi, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1427,7 +1427,7 @@ class PermintaanController extends Controller
                 "note" => ""
             ];
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_direksi, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1439,7 +1439,7 @@ class PermintaanController extends Controller
                 "result" => "Response request pekerjaan dari konsultan berhasil disimpan"
             ], ResponseAlias::HTTP_CREATED);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_konsultan" => $req->catatan,
                 "status" => 1,
@@ -1449,7 +1449,7 @@ class PermintaanController extends Controller
                 "rekomendasi" => $req->rekomendasi
             ]);
 
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1461,7 +1461,7 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -1470,13 +1470,13 @@ class PermintaanController extends Controller
             if ($req->file('checklist')) {
                 $file = $req->file('checklist');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "checklist" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "Konsultan",
                 "status" => "Menolak",
@@ -1490,7 +1490,7 @@ class PermintaanController extends Controller
                 "note" => ""
             ];
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_direksi, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1522,27 +1522,27 @@ class PermintaanController extends Controller
             }
 
             if ($req->laporan == 1) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                     "mk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                     "status" => 3
                 ]);
                 if ($req->catatan != NULL) {
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "catatan_konsultan" => $req->catatan
                     ]);
                 }
                 if ($req->rekomendasi == 'with') {
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "rekomendasi" => $req->rekomendasi,
                         "catatan_rekomendasi" => $req->catatan_rekomendasi
                     ]);
                 } else {
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "rekomendasi" => $req->rekomendasi,
                     ]);
                 }
-                DB::table('history_request')->insert([
+                DB::connection('talikuat_old')->table('history_request')->insert([
                     "username" => $req->konsultan,
                     "id_request" => $req->id,
                     "user_id" => $req->userId,
@@ -1553,7 +1553,7 @@ class PermintaanController extends Controller
                 if ($req->file('dokumentasi')) {
                     $file = $req->file('dokumentasi');
                     $name = time() . "_" . $file->getClientOriginalName();
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -1561,12 +1561,12 @@ class PermintaanController extends Controller
                 if ($req->file('checklist')) {
                     $file = $req->file('checklist');
                     $name = time() . "_" . $file->getClientOriginalName();
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "checklist" => $this->PATH_FILE_DB . "/" . $name
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
-                $get_data = DB::table('request')->where('id', $req->id)->first();
+                $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
                 $bodyEmail = [
                     "role" => "Konsultan",
                     "status" => "Menyetujui",
@@ -1579,7 +1579,7 @@ class PermintaanController extends Controller
                     "volume" => $get_data->volume,
                     "note" => ""
                 ];
-                $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+                $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
                 foreach ($mailto as $email) {
                     pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_direksi, $email->nm_member);
                     Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1596,7 +1596,7 @@ class PermintaanController extends Controller
                     "volume" => $get_data->volume,
                     "note" => ""
                 ];
-                $mailto = DB::table('member')->where('akses', 'MK')->get();
+                $mailto = DB::connection('talikuat_old')->table('member')->where('akses', 'MK')->get();
                 foreach ($mailto as $email) {
                     pushNotification("Request Pekerjaan", "Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_direksi, $email->nm_member);
                     Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1605,14 +1605,14 @@ class PermintaanController extends Controller
                     "code" => 200
                 ], 200);
             } else {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                     "catatan_konsultan" => $req->catatan,
                     "status" => 1,
                     "ditolak" => 1,
                     "rekomendasi" => $req->rekomendasi
                 ]);
-                DB::table('history_request')->insert([
+                DB::connection('talikuat_old')->table('history_request')->insert([
                     "username" => $req->konsultan,
                     "id_request" => $req->id,
                     "user_id" => $req->userId,
@@ -1623,7 +1623,7 @@ class PermintaanController extends Controller
                 if ($req->file('dokumentasi')) {
                     $file = $req->file('dokumentasi');
                     $name = time() . "_" . $file->getClientOriginalName();
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -1631,12 +1631,12 @@ class PermintaanController extends Controller
                 if ($req->file('checklist')) {
                     $file = $req->file('checklist');
                     $name = time() . "_" . $file->getClientOriginalName();
-                    DB::table('request')->where('id', $req->id)->update([
+                    DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                         "checklist" => $this->PATH_FILE_DB . "/" . $name
                     ]);
                     Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
                 }
-                $get_data = DB::table('request')->where('id', $req->id)->first();
+                $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
                 $bodyEmail = [
                     "role" => "Konsultan",
                     "status" => "Menolak",
@@ -1649,7 +1649,7 @@ class PermintaanController extends Controller
                     "volume" => $get_data->volume,
                     "note" => ""
                 ];
-                $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+                $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
                 foreach ($mailto as $email) {
                     pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_direksi, $email->nm_member);
                     Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1687,7 +1687,7 @@ class PermintaanController extends Controller
         }
 
         if ($req->isAccepted == "true") {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "foto_ppk" => null,
@@ -1696,11 +1696,11 @@ class PermintaanController extends Controller
                 "rekomendasi" => $req->rekomendasi
             ]);
             if ($req->catatan != NULL) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_ppk" => $req->catatan
                 ]);
             }
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->nm_ppk,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1711,12 +1711,12 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "PPK",
                 "status" => "Menyetujui",
@@ -1729,12 +1729,12 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1745,7 +1745,7 @@ class PermintaanController extends Controller
                 "result" => "Response request pekerjaan dari ppk berhasil disimpan"
             ], ResponseAlias::HTTP_CREATED);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_ppk" => $req->catatan,
                 "foto_ppk" => null,
@@ -1753,7 +1753,7 @@ class PermintaanController extends Controller
                 "ditolak" => 1,
                 "rekomendasi" => $req->rekomendasi
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->nm_ppk,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1764,12 +1764,12 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "PPK",
                 "status" => "Menolak",
@@ -1782,12 +1782,12 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1817,7 +1817,7 @@ class PermintaanController extends Controller
 
 
         if ($req->laporan == 1) {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "status" => 4,
@@ -1826,16 +1826,16 @@ class PermintaanController extends Controller
 
             ]);
             if ($req->catatan_rekomendasi) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_rekomendasi" => $req->catatan_rekomendasi
                 ]);
             }
             if ($req->catatan != NULL) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_ppk" => $req->catatan
                 ]);
             }
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->nm_ppk,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1846,12 +1846,12 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "PPK",
                 "status" => "Menyetujui",
@@ -1864,12 +1864,12 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Disetujui Oleh " . $get_data->nama_ppk, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1878,14 +1878,14 @@ class PermintaanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_ppk" => $req->catatan,
                 "status" => 3,
                 "ditolak" => 1,
                 'rekomendasi' => $req->rekomendasi,
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->nm_ppk,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1896,12 +1896,12 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_ppk" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "PPK",
                 "status" => "Menolak",
@@ -1914,17 +1914,17 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 ////pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_direksi)->get();
             foreach ($mailto as $email) {
                 ////pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
             }
-            $mailto = DB::table('member')->where('akses', 'MK')->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('akses', 'MK')->get();
             foreach ($mailto as $email) {
                 ////pushNotification("Response Request Pekerjaan dari PPK", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_ppk, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1938,13 +1938,13 @@ class PermintaanController extends Controller
     public function revisiRequestKonsultan(Request $req)
     {
         if ($req->option == 'MK') {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
                 "ditolak" => 0
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -1955,7 +1955,7 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -1963,12 +1963,12 @@ class PermintaanController extends Controller
             if ($req->file('checklist')) {
                 $file = $req->file('checklist');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "checklist" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "Konsultan",
                 "status" => "Mengirim",
@@ -1981,7 +1981,7 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_direksi, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -1990,13 +1990,13 @@ class PermintaanController extends Controller
                 "code" => 200
             ], 200);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "status" => 1,
                 "ditolak" => 1
             ]);
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -2007,7 +2007,7 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -2015,12 +2015,12 @@ class PermintaanController extends Controller
             if ($req->file('checklist')) {
                 $file = $req->file('checklist');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "checklist" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "Konsultan",
                 "status" => "Mengirim",
@@ -2033,7 +2033,7 @@ class PermintaanController extends Controller
                 "volume" => $get_data->volume,
                 "note" => ""
             ];
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_direksi, $email->nm_member);
                 Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -2063,7 +2063,7 @@ class PermintaanController extends Controller
         }
 
         if ($req->isAccepted == "true") {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:green;font-size:18px"  title="Disetujui">&nbsp;</span></a>',
                 "ppk" => '<a href="#"><span class="fas fa-check-square" style="color:yellow;font-size:18px"  title="Menunggu Persetujuan">&nbsp;</span></a>',
                 "status" => 3,
@@ -2071,12 +2071,12 @@ class PermintaanController extends Controller
             ]);
 
             if ($req->catatan != null) {
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "catatan_konsultan" => $req->catatan
                 ]);
             }
 
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -2088,7 +2088,7 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -2097,13 +2097,13 @@ class PermintaanController extends Controller
             if ($req->file('checklist')) {
                 $file = $req->file('checklist');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "checklist" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "Konsultan",
                 "status" => "Mengirim",
@@ -2117,7 +2117,7 @@ class PermintaanController extends Controller
                 "note" => ""
             ];
 
-            $mailto = DB::table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('nama_lengkap', '=', $get_data->nama_ppk)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Revisi Request Pekerjaan", "Revisi Request Pekerjaan Telah Dikirim Oleh " . $get_data->nama_direksi, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -2129,14 +2129,14 @@ class PermintaanController extends Controller
                 "result" => "Response request pekerjaan dari konsultan berhasil disimpan"
             ], ResponseAlias::HTTP_CREATED);
         } else {
-            DB::table('request')->where('id', $req->id)->update([
+            DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                 "konsultan" => '<a href="#"><span class="fas fa-check-square" style="color:red;font-size:18px"  title="Di Tolak">&nbsp;</span></a>',
                 "catatan_konsultan" => $req->catatan,
                 "status" => 1,
                 "ditolak" => 1
             ]);
 
-            DB::table('history_request')->insert([
+            DB::connection('talikuat_old')->table('history_request')->insert([
                 "username" => $req->konsultan,
                 "id_request" => $req->id,
                 "user_id" => $req->userId,
@@ -2148,7 +2148,7 @@ class PermintaanController extends Controller
             if ($req->file('dokumentasi')) {
                 $file = $req->file('dokumentasi');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "foto_konsultan" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
@@ -2157,13 +2157,13 @@ class PermintaanController extends Controller
             if ($req->file('checklist')) {
                 $file = $req->file('checklist');
                 $name = time() . "_" . $file->getClientOriginalName();
-                DB::table('request')->where('id', $req->id)->update([
+                DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
                     "checklist" => $this->PATH_FILE_DB . "/" . $name
                 ]);
                 Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
             }
 
-            $get_data = DB::table('request')->where('id', $req->id)->first();
+            $get_data = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
             $bodyEmail = [
                 "role" => "Konsultan",
                 "status" => "Menolak",
@@ -2177,7 +2177,7 @@ class PermintaanController extends Controller
                 "note" => ""
             ];
 
-            $mailto = DB::table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
+            $mailto = DB::connection('talikuat_old')->table('member')->where('perusahaan', '=', $get_data->nama_kontraktor)->get();
             foreach ($mailto as $email) {
                 //pushNotification("Response Request Pekerjaan dari Konsultan", "Request Pekerjaan Telah Ditolak Oleh " . $get_data->nama_direksi, $email->nm_member);
                 if ($email->email != null) Mail::to($email->email)->send(new TestEmail($bodyEmail));
@@ -2195,9 +2195,9 @@ class PermintaanController extends Controller
     {
 
         if ($req->adendum == null) {
-            $res = DB::table('jadual')->where([['nmp', $req->id], ['id_data_umum', $req->id_data_umum]])->first();
+            $res = DB::connection('talikuat_old')->table('jadual')->where([['nmp', $req->id], ['id_data_umum', $req->id_data_umum]])->first();
         } else {
-            $res = DB::table('jadual_adendum')->where([['nmp', $req->id], ['id_data_umum', $req->id_data_umum]])->first();
+            $res = DB::connection('talikuat_old')->table('jadual_adendum')->where([['nmp', $req->id], ['id_data_umum', $req->id_data_umum]])->first();
         }
         return response()->json(
             $res
@@ -2208,7 +2208,7 @@ class PermintaanController extends Controller
     {
 
         return response()->json(
-            DB::table('detail_jadual')->where([
+            DB::connection('talikuat_old')->table('detail_jadual')->where([
                 ['id_jadual', "=", $req->id],
                 ['nmp', '=', $req->nmp]
             ])->first()
@@ -2227,13 +2227,13 @@ class PermintaanController extends Controller
                 'error' => $validator->getMessageBag()->getMessages()
             ], Response::HTTP_BAD_REQUEST);
         }
-        DB::table('request')->where('id', $req->id)->update([
+        DB::connection('talikuat_old')->table('request')->where('id', $req->id)->update([
             'reason_delete' => $req->alasan
         ]);
-        $getReq = DB::table('request')->where('id', $req->id)->first();
+        $getReq = DB::connection('talikuat_old')->table('request')->where('id', $req->id)->first();
 
-        $getJadual = DB::table('jadual')->where('id', $getReq->id_jadual)->first();
-        DB::table('jadual')->where('id', $getReq->id_jadual)->update([
+        $getJadual = DB::connection('talikuat_old')->table('jadual')->where('id', $getReq->id_jadual)->first();
+        DB::connection('talikuat_old')->table('jadual')->where('id', $getReq->id_jadual)->update([
             'tgl_req' => NULL,
             'volume_request' => $getJadual->volume_request - $getReq->volume
         ]);
@@ -2247,13 +2247,13 @@ class PermintaanController extends Controller
         return response()->json([
             "status" => "success",
             "code" => 200,
-            "result" => DB::table('history_request')->where('id_request', $id)->get()
+            "result" => DB::connection('talikuat_old')->table('history_request')->where('id_request', $id)->get()
         ]);
     }
 
     public function getTotalRealisasiVolume($id)
     {
-        $total = DB::table('request')
+        $total = DB::connection('talikuat_old')->table('request')
             ->selectRaw("request.volume as request_volume, SUM(master_laporan_harian.volume) as total_harian_volume")
             ->join('master_laporan_harian', 'request.id', '=', 'master_laporan_harian.id_request')
             ->where('request.id', '=', $id)
