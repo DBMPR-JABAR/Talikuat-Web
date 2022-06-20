@@ -551,7 +551,6 @@ class JadualController extends Controller
             $file = $request->file('jadual_excel_file');
             $list_jadual = Excel::toCollection(new JadualImport, $file);
             $data_umum = DataUmum::where('id', $request->id)->with('detail')->first();
-
             $name = time() . "_" . $file->getClientOriginalName();
 
 
@@ -559,9 +558,11 @@ class JadualController extends Controller
                 'data_umum_detail_id' => $request->id,
                 'file_name' => $name,
             ]);
+            
             Storage::putFileAs($this->PATH_FILE_DB, $file, $name);
+
             foreach ($list_jadual as $items) {
-                $master_nmp = DB::connection('talikuat_old')->table('master_jenis_pekerjaan')->where('kd_jenis_pekerjaan', $items[0]['no_mata_pembayaran'])->first();
+                $master_nmp = DB::table('master_jenis_pekerjaan')->where('kd_jenis_pekerjaan', $items[0]['no_mata_pembayaran'])->first();
                 if (!$master_nmp) {
                     return response()->json([
                         'status' => 'error',
@@ -584,6 +585,7 @@ class JadualController extends Controller
                 'curva' => $list_jadual
             ]);
         } catch (\Throwable $e) {
+            dd($e);
             return response()->json([
                 'status' => 'failed',
                 'code' => '500',
