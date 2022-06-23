@@ -48,6 +48,7 @@
                     </thead>
                     <tbody>
                         @foreach($data as $d) @foreach($d->laporan as $l)
+
                         <tr>
                             <td>
                                 {{$l->tgl_mulai}} -
@@ -99,7 +100,10 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-id="{{$l->id}}"
-                                    data-data="{{ $l }}"
+                                    data-laporan="{{ $l }}"
+                                    data-data="{{ $d }}"
+                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
+                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
                                     onclick="rederModalDetail(this)"
                                     class="btn btn-sm btn-success waves-effect waves-light"
                                     ><i class="mdi mdi-search-web menu-icon"></i
@@ -111,7 +115,10 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-id="{{$l->id}}"
-                                    data-data="{{ $l }}"
+                                    data-laporan="{{ $l }}"
+                                    data-data="{{ $d }}"
+                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
+                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
                                     onclick="rederModalDetail(this)"
                                 >
                                     <i class="mdi mdi-pencil menu-icon"></i>
@@ -122,7 +129,10 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-id="{{$l->id}}"
-                                    data-data="{{ $l }}"
+                                    data-laporan="{{ $l }}"
+                                    data-data="{{ $d }}"
+                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
+                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
                                     onclick="rederModalDetail(this)"
                                 >
                                     <i class="mdi mdi-delete"></i>
@@ -207,8 +217,12 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-role="dirlap"
-                                    data-data="{{ $l }}"
+                                    data-laporan="{{ $l }}"
+                                    data-data="{{ $d }}"
+                                    data-id="{{$l->id}}"
                                     data-url="{{ route('laporan.approval',$l->id) }}"
+                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
+                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
                                     onclick="rederModalDetail(this)"
                                     ><i class="mdi mdi-file-send"></i>
                                 </a>
@@ -226,8 +240,12 @@
                                     data-toggle="modal"
                                     data-target="#modalResponLaporan"
                                     data-role="ppk"
-                                    data-data="{{ $l }}"
+                                    data-laporan="{{ $l }}"
+                                    data-data="{{ $d }}"
+                                    data-id="{{$l->id}}"
                                     data-url="{{ route('laporan.approval',$l->id) }}"
+                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
+                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
                                     onclick="rederModalDetail(this)"
                                     ><i class="mdi mdi-file-send"></i>
                                 </a>
@@ -267,1045 +285,624 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="card card-danger">
-                        <div class="card-header bg-secondary">
-                            <h3 class="card-title">Data</h3>
-                        </div>
-                        <div class="card-body" style="display: block">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Kegiatan / Paket</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="kegiatan"
-                                        name="kegiatan"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Ruas Jalan</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="ruas_jalan"
-                                        name="ruas_jalan"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Segmen Jalan</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="segmen_jalan"
-                                        name="segmen_jalan"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Tanggal</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="tanggal"
-                                        name="tanggal"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Nomor Request</label
-                                >
-                                <div class="col-sm-10">
-                                    <div class="input-group mb-3">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="no_request"
-                                            name="no_request"
-                                            value=""
-                                            required="required"
-                                            readonly=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Penyedia Jasa</label
-                                >
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="foto"
-                                        name="foto"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Direksi Lapangan
-                                </label>
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="foto"
-                                        name="foto"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Pejabat Pembuat <br />
-                                    Komitmen (PPK)
-                                </label>
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="foto"
-                                        name="foto"
-                                        value=""
-                                        required="required"
-                                        readonly=""
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Shop Drawing / Foto Dokumentasi</label
-                                >
-                                <div class="col-sm-10">
-                                    <img
-                                        src=""
-                                        style="border: 1px solid black"
-                                        width="25%"
-                                    />
-                                </div>
-                            </div>
-
-                            <!--Jenis Pekerjaan-->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Jenis Pekerjaan</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>No Pekerjaan</th>
-                                                    <th>Jenis Pekerjaan</th>
-                                                    <th>STA Awal</th>
-                                                    <th>STA Akhir</th>
-                                                    <th>Ki / Ka</th>
-                                                    <th>Volume</th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 10%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 10%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 10%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 10%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- Bahan Material -->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Bahan / Material</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>Volume</th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 40%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- Peralatan -->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Peralatan</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>Volume</th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 40%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- Bahan Hotmix Asphalt -->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">
-                                        Bahan Hotmix Asphalt
-                                    </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>No. Dump Truck</th>
-                                                    <th>
-                                                        Waktu <br />
-                                                        Datang
-                                                    </th>
-                                                    <th>
-                                                        Waktu <br />
-                                                        Hampar
-                                                    </th>
-                                                    <th>
-                                                        Suhu <br />
-                                                        Datang
-                                                    </th>
-                                                    <th>
-                                                        Suhu<br />
-                                                        Hampar
-                                                    </th>
-                                                    <th>P(M)</th>
-                                                    <th>L(M)</th>
-                                                    <th>T.Gembur(M)</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 30%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Bahan Beton Ready Mix-->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">
-                                        Bahan Beton Ready Mix
-                                    </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Bahan Digunakan</th>
-                                                    <th>No. Truck Mixer</th>
-                                                    <th>
-                                                        Waktu <br />
-                                                        Datang
-                                                    </th>
-                                                    <th>
-                                                        Waktu <br />
-                                                        Curah
-                                                    </th>
-                                                    <th>
-                                                        Slump <br />
-                                                        Test
-                                                    </th>
-                                                    <th>Satuan</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 30%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 15%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Tenaga Kerja-->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Tenaga Kerja</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Tenaga Kerja</th>
-                                                    <th>Jumlah</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 30%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 30%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Laporan Cuaca-->
-                            <div class="card mb-3">
-                                <div class="card-header bg-secondary">
-                                    <h3 class="card-title">Laporan Cuaca</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <table
-                                                class="table table-bordered table-striped"
-                                                id="invoiceItem1"
-                                            >
-                                                <thead>
-                                                    <th>Cerah</th>
-                                                    <th>Hujan Ringan</th>
-                                                    <th>Hujan Lebat</th>
-                                                    <th>Bencana Alam</th>
-                                                    <th>Lain-lain</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="
-                                                                width: 20%;
-                                                                padding: 10px;
-                                                            "
-                                                        >
-                                                            <div class="col">
-                                                                <input
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    placeholder="Default input"
-                                                                    aria-label="default input example"
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    >Shop Drawing</label
-                                >
-                                <div class="col-sm-10">
-                                    <div class="container mt-5">
-                                        <img
-                                            src=""
-                                            style="border: 1px solid black"
-                                            width="80%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label
-                                    for="inputExperience"
-                                    class="col-sm-2 col-form-label"
-                                    >Catatan Direksi Lapangan</label
-                                >
-                                <div class="col-sm-10">
-                                    <textarea
-                                        class="form-control"
-                                        id="catatan"
-                                        name="catatan"
-                                        placeholder=""
-                                        readonly=""
-                                    ></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label
-                                    for="inputExperience"
-                                    class="col-sm-2 col-form-label"
-                                    >Catatan Pejabat Pembuat Komitmen
-                                    (PPK)</label
-                                >
-                                <div class="col-sm-10">
-                                    <textarea
-                                        class="form-control"
-                                        id="catatan"
-                                        name="catatan"
-                                        placeholder=""
-                                        readonly=""
-                                    ></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer" style="display: block"></div>
-                        <!-- /.card-footer-->
+                <div class="card card-danger">
+                    <div class="card-header bg-secondary">
+                        <h3 class="card-title">Data</h3>
                     </div>
-
-                    <div class="card">
-                        <div class="card-header bg-secondary">
-                            <h3 class="card-title">Approval</h3>
+                    <div class="card-body" style="display: block">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Kegiatan / Paket</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="kegiatan"
+                                    name="kegiatan"
+                                    value=""
+                                    required="required"
+                                    readonly=""
+                                />
+                            </div>
                         </div>
-                        <form action="" method="post">
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Ruas Jalan</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="ruas_jalan"
+                                    name="ruas_jalan"
+                                    value=""
+                                    required="required"
+                                    readonly=""
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Segmen Jalan</label
+                            >
+                            <div class="col-sm-10" id="segmen_jalan"></div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Tanggal</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="tanggal"
+                                    name="tanggal"
+                                    value=""
+                                    required="required"
+                                    readonly=""
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Nomor Request</label
+                            >
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="no_request"
+                                        name="no_request"
+                                        value=""
+                                        required="required"
+                                        readonly=""
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"
+                                >Shop Drawing / Foto Dokumentasi</label
+                            >
+                            <div class="col-sm-10">
+                                <img
+                                    id="shop_drawing"
+                                    src=""
+                                    style="border: 1px solid black"
+                                    width="25%"
+                                />
+                            </div>
+                        </div>
+
+                        <!--Jenis Pekerjaan-->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Jenis Pekerjaan</h3>
+                            </div>
                             <div class="card-body">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label"
-                                        >Approval</label
-                                    >
-                                    <div class="col-sm-10">
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input
-                                                    type="radio"
-                                                    class="form-check-input"
-                                                    name="approval"
-                                                    value="1"
-                                                    checked />
-                                                Disetujui
-                                                <i class="input-helper"></i
-                                            ></label>
-                                        </div>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input
-                                                    type="radio"
-                                                    class="form-check-input"
-                                                    name="approval"
-                                                    value="0" />
-                                                Ditolak
-                                                <i class="input-helper"></i
-                                            ></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label"
-                                        >Catatan</label
-                                    >
-                                    <div class="col-sm-10">
-                                        <textarea
-                                            id="catatan"
-                                            name="catatan"
-                                            class="form-control"
-                                            placeholder="Catatan "
-                                            rows="5"
-                                        ></textarea>
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="invoiceItem1"
+                                        >
+                                            <thead>
+                                                <th>No Pekerjaan</th>
+                                                <th>Jenis Pekerjaan</th>
+                                                <th>STA Awal</th>
+                                                <th>STA Akhir</th>
+                                                <th>Ki / Ka</th>
+                                                <th>Volume</th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button
-                                    type="button"
-                                    class="btn btn-success"
-                                    data-dismiss="modal"
-                                >
-                                    Sumbit
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-dark"
-                                    data-dismiss="modal"
-                                >
-                                    Kembali
-                                </button>
+                        </div>
+                        <!-- /.card -->
+
+                        <!-- Bahan Material -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Bahan / Material</h3>
                             </div>
-                        </form>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="bahanMaterial"
+                                        >
+                                            <thead>
+                                                <th>Bahan Digunakan</th>
+                                                <th>Volume</th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td
+                                                        style="
+                                                            width: 40%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                        <!-- Peralatan -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Peralatan</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="tablePeralatan"
+                                        >
+                                            <thead>
+                                                <th>Bahan Digunakan</th>
+                                                <th>Volume</th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td
+                                                        style="
+                                                            width: 40%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                        <!-- Bahan Hotmix Asphalt -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Bahan Hotmix Asphalt</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="bahanHotmix"
+                                        >
+                                            <thead>
+                                                <th>Bahan Digunakan</th>
+                                                <th>No. Dump Truck</th>
+                                                <th>
+                                                    Waktu <br />
+                                                    Datang
+                                                </th>
+                                                <th>
+                                                    Waktu <br />
+                                                    Hampar
+                                                </th>
+                                                <th>
+                                                    Suhu <br />
+                                                    Datang
+                                                </th>
+                                                <th>
+                                                    Suhu<br />
+                                                    Hampar
+                                                </th>
+                                                <th>P(M)</th>
+                                                <th>L(M)</th>
+                                                <th>T.Gembur(M)</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Bahan Beton Ready Mix-->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">
+                                    Bahan Beton Ready Mix
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="betonMix"
+                                        >
+                                            <thead>
+                                                <th>Bahan Digunakan</th>
+                                                <th>No. Truck Mixer</th>
+                                                <th>
+                                                    Waktu <br />
+                                                    Datang
+                                                </th>
+                                                <th>
+                                                    Waktu <br />
+                                                    Curah
+                                                </th>
+                                                <th>
+                                                    Slump <br />
+                                                    Test
+                                                </th>
+                                                <th>Satuan</th>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Tenaga Kerja-->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Tenaga Kerja</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="tenagaKerja"
+                                        >
+                                            <thead>
+                                                <th>Tenaga Kerja</th>
+                                                <th>Jumlah</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td
+                                                        style="
+                                                            width: 30%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 30%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Laporan Cuaca-->
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h3 class="card-title">Laporan Cuaca</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table table-bordered table-striped"
+                                            id="cuaca"
+                                        >
+                                            <thead>
+                                                <th>Cerah</th>
+                                                <th>Hujan Ringan</th>
+                                                <th>Hujan Lebat</th>
+                                                <th>Bencana Alam</th>
+                                                <th>Lain-lain</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style="
+                                                            width: 20%;
+                                                            padding: 10px;
+                                                        "
+                                                    >
+                                                        <div class="col">
+                                                            <input
+                                                                class="form-control"
+                                                                type="text"
+                                                                placeholder="Default input"
+                                                                aria-label="default input example"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label
+                                for="inputExperience"
+                                class="col-sm-2 col-form-label"
+                                >Catatan Direksi Lapangan</label
+                            >
+                            <div class="col-sm-10">
+                                <textarea
+                                    class="form-control"
+                                    id="catatan"
+                                    name="catatan"
+                                    placeholder=""
+                                    readonly=""
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label
+                                for="inputExperience"
+                                class="col-sm-2 col-form-label"
+                                >Catatan Pejabat Pembuat Komitmen (PPK)</label
+                            >
+                            <div class="col-sm-10">
+                                <textarea
+                                    class="form-control"
+                                    id="catatan"
+                                    name="catatan"
+                                    placeholder=""
+                                    readonly=""
+                                ></textarea>
+                            </div>
+                        </div>
                     </div>
-                </form>
+
+                    <div class="card-footer" style="display: block"></div>
+                    <!-- /.card-footer-->
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-secondary">
+                        <h3 class="card-title">Approval</h3>
+                    </div>
+                    <form action="" method="post" id="formApproval">
+                        @csrf
+                        <input type="hidden" name="role" id="role" />
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"
+                                    >Approval</label
+                                >
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input
+                                                type="radio"
+                                                class="form-check-input"
+                                                name="approval"
+                                                value="1"
+                                                onclick="checkCatatan()"
+                                                checked />
+                                            Disetujui
+                                            <i class="input-helper"></i
+                                        ></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input
+                                                type="radio"
+                                                class="form-check-input"
+                                                name="approval"
+                                                onclick="checkCatatan()"
+                                                value="0" />
+                                            Ditolak
+                                            <i class="input-helper"></i
+                                        ></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"
+                                    >Catatan</label
+                                >
+                                <div class="col-sm-10">
+                                    <textarea
+                                        id="catatan"
+                                        name="catatan"
+                                        class="form-control"
+                                        placeholder="Catatan "
+                                        rows="5"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">
+                                Sumbit
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-dark"
+                                data-dismiss="modal"
+                            >
+                                Kembali
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -1464,72 +1061,187 @@
 <script>
     $(document).ready(() => {
         $("body").tooltip({ selector: "[data-tooltip=tooltip]" });
-        $("table").DataTable({
+        $("#laporanmingguan").DataTable({
             responsive: true,
         });
     });
+    function checkCatatan() {
+        const val = $('input[type="radio"]:checked').val();
+        if (val == "1") {
+            $("#catatan").removeAttr("required");
+        } else {
+            $("#catatan").attr("required", "required");
+        }
+    }
     function rederModalDetail(el) {
         const data = $(el).data("data");
-        console.log(data);
-        $("#modalResponLaporan").find("form").attr("action", $(el).data("url"));
+        $("#formApproval").attr("action", $(el).data("url"));
         const dataRole = $(el).data("role");
-        const bahan = data.detail_bahan;
-        const jmf = data.detail_bahan_j_m_f;
-        const peralatan = data.detail_peralatan;
-        const tenagaKerja = data.detail_tenaga_kerja;
-        console.log(data);
-        $("#role").val(dataRole);
-        $("#kegiatan").val(data.data_umum_detail.data_umum.nm_paket);
-        $("#diajukan_tgl").val(data.tgl_request);
-        $("#lokasi_sta").val(data.lokasi_sta);
-        $("#jenis_pekerjaan").val(data.jadual.nmp + " " + data.jadual.uraian);
-        $("#perkiraan_volume").val(data.volume);
-        $("#pelaksanaan_tgl").val(data.tgl_dikerjakan);
-        $("#shopDrawing").attr(
-            "src",
-            "/admin/file-request/" + data.file_shopdrawing
+        const laporan = $(el).data("laporan");
+        const tgl = $(el).data("tgl");
+        const laporanCuaca = data.laporan_cuaca;
+        const bahanBeton = data.laporan_bahan_beton;
+        const bahanHotmix = data.laporan_bahan_hotmix;
+        const bahanMaterial = data.laporan_bahan_material;
+        const peralatan = data.laporan_peralatan;
+        const tenagaKerja = data.laporan_tenaga_kerja;
+        const idx = laporan.jenis_pekerjaan.indexOf("-");
+        const nmp = laporan.jenis_pekerjaan.slice(0, idx);
+        const uraian = laporan.jenis_pekerjaan.slice(
+            idx + 1,
+            laporan.jenis_pekerjaan.length
         );
-        console.log(data.respon_dirlap);
+        $("#role").val(dataRole);
+        $("#kegiatan").val(data.nm_paket);
+        $("#ruas_jalan").val(data.detail.ruas[0].id_ruas_jalan);
+        $("#segmen_jalan").empty();
+        $.each(data.detail.ruas, function (i, v) {
+            $("#segmen_jalan").append(`<input
+                                           type="text"
+                                           class="form-control mb-2"
+                                           value="${v.segment_jalan}"
+                                           required="required"
+                                           readonly=""
+                                       />`);
+        });
+        $("#tanggal").val(tgl);
+        $("#no_request").val("FRM-01/SOP/DBMPR-" + $(el).data("id"));
+        $("#shop_drawing").attr(
+            "src",
+            "/admin/file-laporan/" + laporan.file_dokumentasi
+        );
         $("#catatan_ppk").val(data.respon_ppk);
         $("#catatan_dirlap").val(data.respon_dirlap);
 
-        if (bahan) {
-            for (let i = 0; i < bahan.length; i++) {
-                $("#tableBahan")
+        $("#invoiceItem1")
+            .find("tbody")
+            .html(
+                ` <tr>
+        <td
+            style="
+                width: 10%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${nmp}"
+                    readonly
+                />
+            </div>
+        </td>
+        <td
+            style="
+                width: 20%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${uraian}"
+                    readonly
+                />
+            </div>
+        </td>
+        <td
+            style="
+                width: 15%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${laporan.sta_awal}"
+                    readonly
+                />
+            </div>
+        </td>
+        <td
+            style="
+                width: 15%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${laporan.sta_akhir}"
+                    readonly
+                />
+            </div>
+        </td>
+        <td
+            style="
+                width: 10%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${laporan.ki_ka}"
+                    readonly
+                />
+            </div>
+        </td>
+        <td
+            style="
+                width: 10%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${laporan.volume}"
+                    readonly
+                />
+            </div>
+        </td>
+        <td
+            style="
+                width: 10%;
+                padding: 10px;
+            "
+        >
+            <div class="col">
+                <input
+                    class="form-control"
+                    type="text"
+                    value="${laporan.satuan}"
+                    readonly
+                />
+            </div>
+        </td>
+    </tr>`
+            );
+
+        if (bahanMaterial) {
+            for (let i = 0; i < bahanMaterial.length; i++) {
+                $("#bahanMaterial")
                     .find("tbody")
                     .html(
                         `<tr>
-                    <td>${bahan[i].bahan_material}</td>
-                    <td>${bahan[i].satuan}</td>
-                    <td>${bahan[i].volume}</td>
-                    `
+                       <td>${bahanMaterial[i].bahan_material}</td>
+                       <td>${bahanMaterial[i].satuan}</td>
+                       <td>${bahanMaterial[i].volume}</td>
+                       `
                     );
             }
         } else {
-            $("#tableBahan")
+            $("#bahanMaterial")
                 .find("tbody")
                 .html(
                     "<tr><td colspan='3' class='text-center'>Tidak ada bahan material</td></tr>"
-                );
-        }
-
-        if (jmf) {
-            for (let i = 0; i < jmf.length; i++) {
-                $("#tableJMF")
-                    .find("tbody")
-                    .html(
-                        `<tr>
-                    <td>${jmf[i].bahan_jmf}</td>
-                    <td>${jmf[i].satuan}</td>
-                    <td>${jmf[i].volume}</td>
-                    `
-                    );
-            }
-        } else {
-            $("#tableJmf")
-                .find("tbody")
-                .html(
-                    "<tr><td colspan='3' class='text-center'>Tidak ada bahan material jmf</td></tr>"
                 );
         }
 
@@ -1539,10 +1251,10 @@
                     .find("tbody")
                     .html(
                         `<tr>
-                    <td>${peralatan[i].jenis_peralatan}</td>
-                    <td>${peralatan[i].jumlah}</td>
-                    <td>${peralatan[i].satuan}</td>
-                    `
+                       <td>${peralatan[i].jenis_peralatan}</td>
+                       <td>${peralatan[i].jumlah}</td>
+                       <td>${peralatan[i].satuan}</td>
+                       `
                     );
             }
         } else {
@@ -1553,22 +1265,88 @@
                 );
         }
 
-        if (tenagaKerja) {
-            for (let i = 0; i < tenagaKerja.length; i++) {
-                $("#tableTenagaKerja")
+        if (bahanHotmix) {
+            for (let i = 0; i < bahanHotmix.length; i++) {
+                $("#bahanHotmix")
                     .find("tbody")
                     .html(
                         `<tr>
-                    <td>${tenagaKerja[i].tenaga_kerja}</td>
-                    <td>${tenagaKerja[i].jumlah}</td>
-                    `
+                       <td>${bahanHotmix[i].bahan_hotmix}</td>
+                       <td>${bahanHotmix[i].no_dump_truck}</td>
+                       <td>${bahanHotmix[i].waktu_datang}</td>
+                          <td>${bahanHotmix[i].waktu_hampar}</td>
+                          <td>${bahanHotmix[i].suhu_hampar}</td>
+                          <td>${bahanHotmix[i].suhu_datang}</td>
+                          <td>${bahanHotmix[i].p_m}</td>
+                          <td>${bahanHotmix[i].l_m}</td>
+                          <td>${bahanHotmix[i].t_gembur_m}</td>
+                       </tr>`
                     );
             }
         } else {
-            $("#tableTenagaKerja")
+            $("#bahanHotmix")
+                .find("tbody")
+                .html(
+                    "<tr><td colspan='9' class='text-center'>Tidak ada bahan Hotmix</td></tr>"
+                );
+        }
+
+        if (tenagaKerja) {
+            for (let i = 0; i < tenagaKerja.length; i++) {
+                $("#tenagaKerja")
+                    .find("tbody")
+                    .html(
+                        `<tr>
+                       <td>${tenagaKerja[i].tenaga_kerja}</td>
+                       <td>${tenagaKerja[i].jumlah}</td>
+                       `
+                    );
+            }
+        } else {
+            $("#tenagaKerja")
                 .find("tbody")
                 .html(
                     "<tr><td colspan='2' class='text-center'>Tidak ada tenaga kerja</td></tr>"
+                );
+        }
+        if (bahanBeton) {
+            for (let i = 0; i < bahanBeton.length; i++) {
+                $("#betonMix").find("tbody").html(`
+                <tr>
+                       <td>${bahanBeton[i].bahan_beton}</td>
+                       <td>${bahanBeton[i].no_truck_mixer}</td>
+                          <td>${bahanBeton[i].waktu_datang}</td>
+                            <td>${bahanBeton[i].waktu_curah}</td>
+                            <td>${bahanBeton[i].slump_test}</td>
+                            <td>${bahanBeton[i].satuan}</td>
+                </tr>
+                `);
+            }
+        } else {
+            $("#betonMix")
+                .find("tbody")
+                .html(
+                    `<tr><td colspan='6' class='text-center'>Tidak ada bahan beton</td></tr>`
+                );
+        }
+        if (laporanCuaca) {
+            for (let i = 0; i < laporanCuaca.length; i++) {
+                $("#cuaca").find("tbody").html(`
+                <tr>
+                       <td>${laporanCuaca[i].cerah}</td>
+                       <td>${laporanCuaca[i].hujan_ringan}</td>
+                       <td>${laporanCuaca[i].hujan_lebat}</td>
+                       <td>${laporanCuaca[i].bencana_alam}</td>
+                       <td>${laporanCuaca[i].lain_lain}</td>
+                      
+                </tr>
+                `);
+            }
+        } else {
+            $("#cuaca")
+                .find("tbody")
+                .html(
+                    `<tr><td colspan='5' class='text-center'>Tidak ada laporan cuaca</td></tr>`
                 );
         }
     }

@@ -34,31 +34,31 @@ class LaporanMingguanControllers extends Controller
         $list =[];
         if ($role == 3) {
             // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
-            $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->with('laporan')->get();
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->with('uptd','laporan','detail')->get();
             foreach($data as $d){
                 array_push($list, $d->id);
             }
-            $laporan = Laporan::whereIn('data_umum_id', $list)->get();
+            
         }elseif($role == 2 || $role == 15){
             $data = DataUmum::latest()->whereHas('detail', function($query){
                 $query->where('ppk_id', Auth::user()->user_detail->id);
-            })->with('detail')->with('uptd')->get();
+            })->with('uptd','laporan','detail')->with('uptd')->get();
             foreach($data as $d){
                 array_push($list, $d->id);
             }
-            $laporan = Laporan::whereIn('data_umum_id', $list)->get();
+            
         }elseif($role == 14){
             $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
                 $query->where('dirlap_id', Auth::user()->user_detail->id);
-            })->with('uptd')->get();   
+            })->with('uptd','laporan','detail')->get();   
             foreach($data as $d){
                 array_push($list, $d->id);
             }
-            $laporan = Laporan::whereIn('data_umum_id', $list)->get();
+            
         } else {
-            $data = DataUmum::latest()->with('detail')->with('uptd')->get();
-            $laporan = Laporan::latest()->get();
+            $data = DataUmum::latest()->with('uptd','laporan','detail')->get();
         }
+   
        
         return view("admin.laporan_mingguan.index", compact('data'));
     }
@@ -290,6 +290,15 @@ class LaporanMingguanControllers extends Controller
     {
         //
     }
+    public function file($file_name)
+    {
+        $path = 'app/' . $this->PATH_FILE_DB . $file_name;
+        $file = storage_path($path);
+        if (!file_exists($file)) {
+            abort(404);
+        }
+        return response()->file($file);
+    }
 
     public function sendLaporanApi($id)
     {
@@ -299,6 +308,51 @@ class LaporanMingguanControllers extends Controller
         $this->createHistoryStatus($id, 3);
         return back()->with('success', 'Data berhasil dikirim');
     }
+
+    public function approval(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'approval' => 'required',
+                'role' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                dd($validator->errors());
+                return back()->withErrors($validator)->withInput();
+            }
+            $data = Laporan::find($id);
+            if ($request->approval == 1 && $request->role == 'dirlap') {
+                $data->status = 3;
+                $data->respon_dirlap = $request->catatan ? $request->catatan : 'Tidak ada catatan';
+                $data->save();
+                $this->createHistoryStatus($id, 3);
+            }
+            if ($request->approval == 0 && $request->role == 'dirlap') {
+                $data->status = 2;
+                $data->respon_dirlap = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($id, 4);
+            }
+            if ($request->approval == 1 && $request->role == 'ppk') {
+                $data->status = 5;
+                $data->respon_ppk = $request->catatan ? $request->catatan : 'Tidak ada catatan';
+                $data->save();
+                $this->createHistoryStatus($id, 6);
+            }
+            if ($request->approval == 0 && $request->role == 'ppk') {
+                $data->status = 4;
+                $data->respon_ppk = $request->catatan;
+                $data->save();
+                $this->createHistoryStatus($id, 5);
+            }
+            return back()->with('success', 'Data berhasil diubah');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal menyimpan data')->withInput();
+        }
+    }
+
+
     private function createHistoryStatus($id, $status)
     {
 

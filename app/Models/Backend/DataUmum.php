@@ -25,7 +25,7 @@ class DataUmum extends Model
 
     public function laporan()
     {
-        return $this->hasMany('App\Models\Backend\Laporan', 'data_umum_id');
+        return $this->hasMany('App\Models\Backend\Laporan', 'data_umum_id')->with('LaporanBahanBeton', 'LaporanBahanHotmix', 'LaporanBahanMaterial', 'LaporanCuaca', 'LaporanPeralatan', 'LaporanTenagaKerja','historyStatusLaporan');
     }
 
     public function laporanApproved()

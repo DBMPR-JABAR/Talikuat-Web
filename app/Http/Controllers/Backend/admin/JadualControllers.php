@@ -65,14 +65,7 @@ class JadualControllers extends Controller
         ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
 
 
-        $file = TempFileJadual::where('data_umum_detail_id', $data->detail->$id)->get();
-
-        if ($file) {
-            foreach ($file as $key => $value) {
-                Storage::delete($this->PATH_FILE_DB . $value->file);
-            }
-        }
-        
+        $file = TempFileJadual::where('data_umum_detail_id', $data->detail->$id)->get();        
 
         if($data->fileJadual->first() != null){
             return view('admin.input_data.jadual.create', compact('data'));

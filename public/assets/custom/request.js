@@ -41,7 +41,6 @@ function rederModalDetail(el) {
     const jmf = data.detail_bahan_j_m_f;
     const peralatan = data.detail_peralatan;
     const tenagaKerja = data.detail_tenaga_kerja;
-    console.log(data);
     $("#role").val(dataRole);
     $("#kegiatan").val(data.data_umum_detail.data_umum.nm_paket);
     $("#diajukan_tgl").val(data.tgl_request);
