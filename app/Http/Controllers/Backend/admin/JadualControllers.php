@@ -64,7 +64,6 @@ class JadualControllers extends Controller
             'id', $id
         ]])->with('kategori_paket')->with('uptd')->with('detail')->first();
 
-
         $file = TempFileJadual::where('data_umum_detail_id', $data->detail->$id)->get();        
 
         if($data->fileJadual->first() != null){
@@ -95,6 +94,11 @@ class JadualControllers extends Controller
             $file = storage_path('app/' . $this->PATH_FILE_DB . $getFile->file_name);
             $list_jadual = Excel::toCollection(new JadualImport, $file);
             $data_umum = DataUmumDetail::where('id', $request->data_umum_detail_id)->where('is_active', 1)->first();
+
+            $volume = $this->sumBobot($list_jadual);
+            if($volume < 99 || $volume > 101){
+                return redirect()->back()->withErrors('Volume tidak sesuai');
+            }
             DB::beginTransaction();
             foreach ($list_jadual as $val) {
                 $val[0]['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($val[0]['tanggal']));
@@ -142,8 +146,7 @@ class JadualControllers extends Controller
             return redirect()->route('jadual.index')->with('success', 'Data berhasil diinput');
         } catch (\Throwable $e) {
             DB::rollback();
-            dd($e);
-            return redirect()->back()->withErrors($e->getMessage());
+            return back()->with('error', 'Data gagal diinput');
         }
     }
 
@@ -177,8 +180,12 @@ class JadualControllers extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    {   
+        $data = DataUmum::where(
+            'id',
+            $id
+        )->with('kategori_paket')->with('uptd')->with('detail')->first();
+        return view('admin.input_data.jadual.edit', compact('data'));
     }
 
     /**
@@ -190,7 +197,79 @@ class JadualControllers extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'data_umum_detail_id' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+            $getFile = TempFileJadual::where('data_umum_detail_id', $request->data_umum_detail_id)->first();
+            $file = storage_path('app/' . $this->PATH_FILE_DB . $getFile->file_name);
+            $list_jadual = Excel::toCollection(new JadualImport, $file);
+            $data_umum = DataUmumDetail::where('id', $request->data_umum_detail_id)->where('is_active', 1)->first();
+            $jadual =  Jadual::where('data_umum_detail_id', $request->data_umum_detail_id)->get();
+
+            $volume = $this->sumBobot($list_jadual);
+            if($volume < 99 || $volume > 101){
+                return back()->with('error','Volume tidak sesuai');
+            }
+            
+
+            DB::beginTransaction();
+            foreach ($jadual as $val) {
+                JadualDetail::where('jadual_id', $val->id)->delete();
+            }
+            Jadual::where('data_umum_detail_id', $request->data_umum_detail_id)->delete();
+            foreach ($list_jadual as $val) {
+                $val[0]['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($val[0]['tanggal']));
+                $val[0]['tanggal'] = date('Y-m-d', strtotime($val[0]['tanggal']));
+                $jadual =  Jadual::create([
+                    'data_umum_detail_id' => $request->data_umum_detail_id,
+                    'nmp' => $val[0]['no_mata_pembayaran'],
+                    'uraian' => $val[0]['uraian'],
+                    'satuan' => $val[0]['satuan'],
+                    'total_harga' => $val[0]['jumlah_harga_rp'],
+                    'bobot' => $val[0]['bobot'],
+                    'koefisien' => $val[0]['koefisien'],
+                    'total_volume' => number_format($val[0]['volume'], 2, '.', '')
+                ]);
+                foreach ($val as $item) {
+                    if (!is_string($item['tanggal'])) {
+                        $item['tanggal'] = Carbon::createFromTimestamp(Date::excelToTimestamp($item['tanggal']));
+                        $item['tanggal'] = date('Y-m-d', strtotime($item['tanggal']));
+                    }
+                    if ($item['no_mata_pembayaran'] != null) {
+                        JadualDetail::create([
+                            'jadual_id' => $jadual->id,
+                            'nmp' => $item['no_mata_pembayaran'],
+                            'uraian' => $item['uraian'],
+                            'tanggal' => $item['tanggal'],
+                            'satuan' => $item['satuan'],
+                            'harga_satuan' => $item['harga_satuan_rp'],
+                            'bobot' => $item['bobot'],
+                            'koefisien' => $item['koefisien'],
+                            'nilai' => $item['nilai'],
+                            'volume' => $item['volume'],
+                        ]);
+                    }
+                   
+                }
+            }
+             $data_umum->update([
+                 'jadual' => 'Jadual Sudah Diinput'
+             ]);
+            
+            Storage::delete($this->PATH_FILE_DB . $getFile->file_name);
+            $getFile->delete();
+            DB::commit();
+            return redirect()->route('jadual.index')->with('success', 'Data berhasil diinput');
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return back()->with('error', 'Data gagal diinput');
+        }
+        
     }
 
     /**
@@ -210,5 +289,16 @@ class JadualControllers extends Controller
         Storage::delete($this->PATH_FILE_DB . $data->file_name);
         $data->delete();
         return redirect()->route('jadual.create', $id);
+    }
+
+    private function sumBobot($list)
+    {
+        $sum = 0;
+        foreach ($list as $val) {
+            foreach ($val as $item) {
+                $sum += $item['nilai'];
+            }
+        }
+        return $sum;
     }
 }

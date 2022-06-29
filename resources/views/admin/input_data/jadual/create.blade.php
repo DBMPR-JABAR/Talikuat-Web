@@ -1,6 +1,4 @@
 @extends('layout.index') @section('title','Jadual') @section('header')
-
-
 @endsection @section('page-header')
 <div class="page-header">
     <h3 class="page-title">
@@ -277,7 +275,7 @@
                             </div>
                         </div>
                     </div>
-{{--
+                    {{--
                     <div class="row justify-content-center">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -291,7 +289,7 @@
                                     readonly
                                 />
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>General Superintendent</label>
@@ -305,7 +303,8 @@
                                 />
                             </div>
                         </div>
-                    </div>--}}
+                    </div>
+                    --}}
                 </div>
             </div>
         </div>
@@ -328,16 +327,17 @@
                     </ul>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="card-block">
-                    <div class="row">
-                        <canvas id="chartCurva"></canvas>
-                    </div>
+            <form action="{{ route('jadual.store') }}" method="post">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div class="row">
+                            <canvas id="chartCurva"></canvas>
+                        </div>
 
-                    <div class="contianer text-center">
-                        <div class="row" id="dataJadual"></div>
-                    </div>
-                    <form action="{{ route('jadual.store') }}" method="post">
+                        <div class="contianer text-center">
+                            <div class="row" id="dataJadual"></div>
+                        </div>
+
                         @csrf
                         <div class="row" id="upload">
                             <div class="col-md-6 p-2">
@@ -388,113 +388,106 @@
                                 >
                             </div>
                         </div>
-                   
+                    </div>
                 </div>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-icon-text">
-                    <i class="mdi mdi-file-check btn-icon-prepend"></i> Simpan
-                </button>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-icon-text">
+                        <i class="mdi mdi-file-check btn-icon-prepend"></i>
+                        Simpan
+                    </button>
+                </div>
             </form>
-            </div>
-            
-            
         </div>
     </div>
-     </form>
-    @endsection @section('script')
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
-        integrity="sha512-VMsZqo0ar06BMtg0tPsdgRADvl0kDHpTbugCBBrL55KmucH6hP9zWdLIWY//OTfMnzz6xWQRxQqsUFefwHuHyg=="
-        crossorigin="anonymous"
-    ></script>
-    <script src="{{ asset('assets/custom/jadual.js') }}"></script>
-    <script>
-        $(document).ready(() => {
-            $(".card-footer").hide();
-            $(".progress").hide();
-            $("#fileJadual").change((e) => {
-                e.preventDefault();
-                $(".col-md-6").removeClass("border border-danger");
-                $(".text-danger").hide();
-            });
-
+</div>
+@endsection @section('script')
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
+    integrity="sha512-VMsZqo0ar06BMtg0tPsdgRADvl0kDHpTbugCBBrL55KmucH6hP9zWdLIWY//OTfMnzz6xWQRxQqsUFefwHuHyg=="
+    crossorigin="anonymous"
+></script>
+<script src="{{ asset('assets/custom/jadual.js') }}"></script>
+<script>
+    $(document).ready(() => {
+        $(".card-footer").hide();
+        $(".progress").hide();
+        $("#fileJadual").change((e) => {
+            e.preventDefault();
+            $(".col-md-6").removeClass("border border-danger");
             $(".text-danger").hide();
-            $(".btn-success").click((e) => {
-                e.preventDefault();
-                const file = $("#fileJadual").val();
-                if (file == "") {
-                    $(".col-md-6").addClass("border border-danger");
-                    $(".text-danger").text("Format File Salah");
-                    $(".text-danger").show();
-                    return false;
-                }
-                if (file.replace(/^.*\./, "") != "xlsx") {
-                    $(".col-md-6").addClass("border border-danger");
-                    $(".text-danger").text("Format File Salah");
-                    $(".text-danger").show();
-                    return false;
-                }
+        });
 
-                const formData = new FormData();
-                formData.append(
-                    "jadual_excel_file",
-                    $("#fileJadual")[0].files[0]
-                );
-                formData.append("id", "{{$data->id}}");
-                formData.append("_token", "{{ csrf_token() }}");
-                $.ajax({
-                    url: "{{ route('jadual.exceltodata') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    xhr: () => {
-                        const xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener(
-                            "progress",
-                            function (e) {
-                                $(".progress").show();
-                                const file1Size =
-                                    $("#fileJadual")[0].files[0].size;
-                                let percent = Math.round(
-                                    (e.loaded / file1Size) * 100
-                                );
-                                if (e.loaded <= file1Size) {
-                                    $("#progressUpload")
-                                        .width(percent + "%")
-                                        .html(percent + "%");
-                                }
+        $(".text-danger").hide();
+        $(".btn-success").click((e) => {
+            e.preventDefault();
+            const file = $("#fileJadual").val();
+            if (file == "") {
+                $(".col-md-6").addClass("border border-danger");
+                $(".text-danger").text("Format File Salah");
+                $(".text-danger").show();
+                return false;
+            }
+            if (file.replace(/^.*\./, "") != "xlsx") {
+                $(".col-md-6").addClass("border border-danger");
+                $(".text-danger").text("Format File Salah");
+                $(".text-danger").show();
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append("jadual_excel_file", $("#fileJadual")[0].files[0]);
+            formData.append("id", "{{$data->id}}");
+            formData.append("_token", "{{ csrf_token() }}");
+            $.ajax({
+                url: "{{ route('jadual.exceltodata') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: () => {
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener(
+                        "progress",
+                        function (e) {
+                            $(".progress").show();
+                            const file1Size = $("#fileJadual")[0].files[0].size;
+                            let percent = Math.round(
+                                (e.loaded / file1Size) * 100
+                            );
+                            if (e.loaded <= file1Size) {
                                 $("#progressUpload")
                                     .width(percent + "%")
                                     .html(percent + "%");
-                            },
-                            false
-                        );
-                        return xhr;
-                    },
-                    success: (res) => {
-                        $(".progress").hide();
-                        nonAdendum(res);
-                        $("#upload").hide();
-                        $(".card-footer").show();
-                    },
-                    error: (error) => {
-                        $(".progress").hide();
-                        console.log(
-                            $(".text-danger").text(error.responseJSON.message)
-                        );
-                        $(".col-md-6").addClass("border border-danger");
-                        $(".text-danger").text(error.responseJSON.message);
-                        $(".text-danger").show();
-                    },
-                });
+                            }
+                            $("#progressUpload")
+                                .width(percent + "%")
+                                .html(percent + "%");
+                        },
+                        false
+                    );
+                    return xhr;
+                },
+                success: (res) => {
+                    $(".progress").hide();
+                    nonAdendum(res);
+                    $("#upload").hide();
+                    $(".card-footer").show();
+                },
+                error: (error) => {
+                    $(".progress").hide();
+                    console.log(
+                        $(".text-danger").text(error.responseJSON.message)
+                    );
+                    $(".col-md-6").addClass("border border-danger");
+                    $(".text-danger").text(error.responseJSON.message);
+                    $(".text-danger").show();
+                },
             });
         });
-        $(".btn-warning").click(() => {
-            location.reload();
-        });
-    </script>
+    });
+    $(".btn-warning").click(() => {
+        location.reload();
+    });
+</script>
 
-    @endsection
-</div>
+@endsection
