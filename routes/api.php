@@ -467,7 +467,7 @@ Route::prefix('memo')->group(function () {
 });
 
 Route::get('get-data-pembangunan',[PembangunanController::class, 'getDataPembangunan'])->name('get-data-pembangunan');
-
+Route::get('get-data-pembangunan/{uptd}',[PembangunanController::class, 'getDataPembangunanbyUptd']);
 Route::prefix('notif')->group(function () {
     Route::post('post-notification', function (Request $req) {
         pushNotification($req->title, $req->desc, $req->username);

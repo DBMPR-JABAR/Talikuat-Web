@@ -24,6 +24,22 @@ class DashboardControllers extends Controller
              return redirect(url('admin/profile/edit', Auth::user()->id))->with(['warning' => 'Lengkapi Data Terlebih Dahulu']);
          }
 
+        $role = Auth::user()->user_detail->rule_user_id;
+        $uptd = Auth::user()->user_detail->uptd_id;
+        if ($role == 3) {
+            // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
+        }elseif($role == 2 || $role == 15){
+            $data = DataUmum::latest()->whereHas('detail', function($query){
+                $query->where('ppk_id', Auth::user()->user_detail->id);
+            })->with('detail')->with('uptd')->get();
+        }elseif($role == 14){
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+                $query->where('dirlap_id', Auth::user()->user_detail->id);
+            })->with('uptd')->get();   
+        } else {
+            $data = DataUmum::latest()->get();
+        }
 
          $peyedia = DB::table('master_kontraktor')->whereNull('is_delete')->count();
          $konsultan = DB::table('master_konsultan')->whereNull('is_delete')->count();
@@ -34,7 +50,8 @@ class DashboardControllers extends Controller
              'penyedia' => $peyedia,
              'konsultan' => $konsultan,
              'dataUmum' => $dataUmum,
-             'ppk' => $ppk
+             'ppk' => $ppk,
+             'data' => $data,
          ]);
 
         // $uptd1 = DataUmum::where('id_uptd', 1)->with('laporanApproved')->get();

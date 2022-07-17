@@ -45,6 +45,11 @@ class DataUmumDetail extends Model
     {
         return $this->hasMany('App\Models\Backend\Jadual', 'data_umum_detail_id');
     }
+    public function jadualItemsDetails()
+    {
+        return $this->hasMany('App\Models\Backend\Jadual', 'data_umum_detail_id')->with('detail');
+    }
+
     public function ruas()
     {
         return $this->hasMany(DataUmumRuas::class, 'data_umum_detail_id');

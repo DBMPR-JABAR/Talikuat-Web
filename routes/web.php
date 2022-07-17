@@ -172,6 +172,7 @@ Route::prefix('admin')->group(function () {
                 Route::post('/store_file/{id}', [DataUmumController::class, 'store_file'])->name('store.file.dataumum');
                 Route::get('/file/{id}/{file}', [DataUmumController::class, 'show_file'])->name('show.file.dataumum');
                 Route::get('/addendum/{id}', [DataUmumAddendumControllers::class, 'create'])->name('create.addendum');
+                Route::get('/curva/{id}', [CurvaController::class, 'index'])->name('curva.index');
             });
             Route::get('activity/{id}', [LogControllers::class, 'getLogUser'])->name('log.user.index');
             Route::prefix('log')->group(function () {
@@ -195,8 +196,9 @@ Route::prefix('admin')->group(function () {
         });
     });
 });
-
+Route::get('/curva-iframe/{id}', [CurvaController::class, 'show'])->name('curva.iframe');
 Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('pusat_unduhan.index');
+Route::get('/progress-pekerjaan', [ProgressControllers::class, 'index'])->name('progress.pekerjaan');
 
 Route::get('/email', function () {
     return view('email_memo');

@@ -23,6 +23,14 @@ class DataUmum extends Model
         return $detail->with('jadualItems');
     }
 
+    public function jadualDetails()
+    {
+        $detail = $this->hasOne('App\Models\Backend\DataUmumDetail', 'data_umum_id')->where('is_active', 1);
+        return $detail->with('jadualItemsDetails');
+    }
+
+
+
     public function laporan()
     {
         return $this->hasMany('App\Models\Backend\Laporan', 'data_umum_id')->with('LaporanBahanBeton', 'LaporanBahanHotmix', 'LaporanBahanMaterial', 'LaporanCuaca', 'LaporanPeralatan', 'LaporanTenagaKerja','historyStatusLaporan');

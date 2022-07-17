@@ -137,24 +137,14 @@
         <div class="card">
             <div class="card-body">
                 <div class="owl-carousel owl-theme">
-                    <!-- <div class="item border p-2">
+                    @foreach ($data as $dataUmumId)
+                    <div class="item border p-2">
                         <iframe
-                            src="https://tk.temanjabar.net/curva/index.php?data=1"
+                            src="{{ route('curva.iframe', $dataUmumId->id) }}"
                             frameborder="0"
                         ></iframe>
                     </div>
-                    <div class="item border p-2">
-                        <iframe
-                            src="https://tk.temanjabar.net/curva/index.php?data=2"
-                            frameborder="0"
-                        ></iframe>
-                    </div>
-                    <div class="item border p-2">
-                        <iframe
-                            src="https://tk.temanjabar.net/curva/index.php?data=3"
-                            frameborder="0"
-                        ></iframe>
-                    </div> -->
+                    @endforeach
                 </div>
             </div>
         </div>
