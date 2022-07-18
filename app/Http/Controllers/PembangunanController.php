@@ -16,11 +16,11 @@ class PembangunanController extends Controller
             'data' => $data
         ]);
     }
-    public function getDataPembangunanbyUptd($uptd)
+    public function getDataPembangunanbyUptd(Request $request)
     {   
-        $uptd = str_replace('uptd', '', $uptd);
-        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->where('id_uptd',$uptd)->get();
-     
+
+        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->whereIn('id_uptd',$request->uptd)->get();
+        
         return response()->json([
             'status' => 'success',
             'data' => $data
