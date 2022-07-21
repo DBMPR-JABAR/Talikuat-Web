@@ -110,15 +110,24 @@
                 <div
                     class="text-center sidebar-brand-wrapper d-flex align-items-center mb-5"
                 >
-                    <a class="sidebar-brand brand-logo text-center" style="margin-left: 60px;" href="/">
+                    <a
+                        class="sidebar-brand brand-logo text-center"
+                        style="margin-left: 60px"
+                        href="/"
+                    >
                         <img
                             src="{{
                                 asset('assets/images/logo_tali_strong.png')
                             }}"
-                            style="width: auto ; object-fit: cover ;  margin-left: auto;
-                            margin-right: auto;"
+                            style="
+                                width: auto;
+                                object-fit: cover;
+                                margin-left: auto;
+                                margin-right: auto;
+                            "
                             class="img-fluid"
-                            alt="Dinas Bina Marga Provinsi Jawa Barat"/>
+                            alt="Dinas Bina Marga Provinsi Jawa Barat"
+                        />
                     </a>
                     <a class="sidebar-brand brand-logo-mini pl-4 pt-3" href="/"
                         ><img
@@ -349,6 +358,15 @@
                                         class="nav-link"
                                         href="{{ route('laporan.index') }}"
                                         >Laporan Mingguan</a
+                                    >
+                                </li>
+                                @endcan
+                                @can('viewLaporanMingguanKonsultan',Auth::user())
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link"
+                                        href="{{ route('laporan.index') }}"
+                                        >Laporan Mingguan Konsultan</a
                                     >
                                 </li>
                                 @endcan

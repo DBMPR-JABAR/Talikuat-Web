@@ -21,6 +21,7 @@ class PembangunanController extends Controller
 
         $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->whereIn('id_uptd',$request->uptd)->get();
         
+        
         return response()->json([
             'status' => 'success',
             'data' => $data

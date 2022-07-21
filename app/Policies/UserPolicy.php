@@ -514,6 +514,32 @@ class UserPolicy
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-mingguan.restore');
     }
 
+    //feature laporan Mingguan Konsultan
+    public function viewLaporanMingguanKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-konsultan.index');
+    }
+    public function showLaporanMingguanKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-konsultan.show');
+    }
+    public function createLaporanMingguanKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-konsultan.create');
+    }
+    public function editLaporanMingguanKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-konsultan.edit');
+    }
+    public function deleteLaporanMingguanKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-konsultan.delete');
+    }
+    public function restoreLaporanMingguanKonsultan()
+    {
+        return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('laporan-konsultan.restore');
+    }
+
     //feature Pusat Unduhan
     public function viewPusatUnduhan()
     {
@@ -565,4 +591,6 @@ class UserPolicy
     {
         return Auth::user()->user_detail->role->permissions()->pluck('name')->contains('log.restore');
     }
+
+
 }
