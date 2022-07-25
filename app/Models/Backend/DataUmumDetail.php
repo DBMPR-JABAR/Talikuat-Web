@@ -59,4 +59,9 @@ class DataUmumDetail extends Model
     {
         return $this->belongsTo('App\Models\Backend\UserDetail', 'ppk_id')->with('user');
     }
+
+    public function tenagaAhli()
+    {
+        return $this->hasMany(TenagaAhli::class, 'data_umum_detail_id');
+    }
 }

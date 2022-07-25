@@ -127,7 +127,6 @@
             <div class="card-body">
                 <div class="owl-carousel owl-theme">
                     @foreach ($data as $dataUmumId)
-
                     <div class="item border p-2">
                         <iframe
                             src="{{ route('curva', $dataUmumId->id) }}"
@@ -153,6 +152,29 @@
             loop: true,
             margin: 30,
             nav: true,
+            navText: [
+                "<i class='mdi mdi-arrow-left-bold-circle'></i>",
+                "<i class='mdi mdi-arrow-right-bold-circle'></i>",
+            ],
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                600: {
+                    items: 1,
+                },
+                1000: {
+                    items: 1,
+                },
+            },
+            navContainer: ".owl-carousel",
+            navContainerClass: "owl-carousel",
+            navClass: ["owl-prev", "owl-next"],
+            lazyLoad: true,
         });
     });
 </script>

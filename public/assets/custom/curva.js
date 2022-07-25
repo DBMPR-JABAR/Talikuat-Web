@@ -43,28 +43,24 @@ function render(
             data: sumJadual,
             fill: false,
             borderColor: "#005eff",
-            tension: 0.1,
         },
         {
             label: "Realisasi",
             data: laporan,
             fill: false,
             borderColor: "#ff0000",
-            tension: 0.1,
         },
         {
             label: "Rencana Konsultan",
             data: rencanaKonsultan,
             fill: false,
-            borderColor: "#fff30a",
-            tension: 0.1,
+            borderColor: "#fbff00",
         },
         {
             label: "Realisasi Konsultan",
             data: realisasiKonsultan,
             fill: false,
-            borderColor: "#0aff43",
-            tension: 0.1,
+            borderColor: "#09ff00",
         },
     ];
 

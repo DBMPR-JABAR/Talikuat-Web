@@ -24,6 +24,11 @@
     </head>
 
     <body class="loading">
+        <input
+            type="hidden"
+            id="api-url"
+            value="{{ route('get-data-pembangunan-by-uptd') }}"
+        />
         <div class="container mt-5">
             <div class="input-group center">
                 <label class="input-group-text" for="inputGroupSelect01"
@@ -35,6 +40,7 @@
                         {{ $item->nama }}
                     </option>
                     @endforeach
+                    <option value="all">Semua UPTD</option>
                 </select>
             </div>
             <div class="input-group center mt-3">
@@ -52,7 +58,6 @@
             BARAT
             <br />
             TAHUN ANGGARAN
-            <?php echo date("Y"); ?>
         </div>
         <div class="d-flex">
             <span id="unor"></span>
@@ -62,7 +67,7 @@
             <thead>
                 <th rowspan="4">NO</th>
                 <th rowspan="4">NAMA KEGIATAN</th>
-                <th rowspan="4">FIELD TEAM</th>
+                <th rowspan="4">TENAGA AHLI</th>
                 <th rowspan="4">PANJANG PENANGANAN ( KM )</th>
                 <th colspan="2">DATA KONTRAK</th>
                 <th rowspan="2">WAKTU PELAKSANAAN</th>
@@ -104,6 +109,9 @@
             integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ"
             crossorigin="anonymous"
         ></script>
+        <script>
+            const apiUrl = $("#api-url").val();
+        </script>
         <script src="{{ asset('assets/custom/laporan_progress.js') }}"></script>
     </body>
 </html>

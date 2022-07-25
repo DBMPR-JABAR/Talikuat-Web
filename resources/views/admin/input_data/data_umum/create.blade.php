@@ -612,6 +612,7 @@
                                     >
                                         <option value="">Pilih Dirlap</option>
                                         @foreach($dirlaps as $dirlap)
+
                                         <option value="{{ $dirlap->id }}">
                                             {{ $dirlap->user->name}}
                                         </option>

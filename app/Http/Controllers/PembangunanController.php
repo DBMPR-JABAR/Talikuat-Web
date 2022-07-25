@@ -10,7 +10,7 @@ class PembangunanController extends Controller
 {   
     public function getDataPembangunan()
     {   
-        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->get();
+        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('laporanKonsultan')->get();
         return response()->json([
             'status' => 'success',
             'data' => $data
@@ -18,8 +18,12 @@ class PembangunanController extends Controller
     }
     public function getDataPembangunanbyUptd(Request $request)
     {   
-
-        $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->whereIn('id_uptd',$request->uptd)->get();
+        if ($request->uptd == 'all') {
+            $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('laporanKonsultan')->get();
+           
+        }else{
+            $data = DataUmum::with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('laporanKonsultan')->where('id_uptd',$request->uptd)->get();
+        }
         
         
         return response()->json([

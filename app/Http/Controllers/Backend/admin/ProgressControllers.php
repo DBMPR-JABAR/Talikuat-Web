@@ -86,4 +86,10 @@ class ProgressControllers extends Controller
     {
         //
     }
+
+    public function getData(Request $request)
+    {
+        $data = DataUmum::where('id_uptd', $request->id_uptd)->get();
+        return response()->json($data);
+    }
 }
