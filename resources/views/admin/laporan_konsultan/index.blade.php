@@ -18,7 +18,7 @@
 </style>
 @endsection @section('page-header')
 <div class="page-header">
-    <h4 class="page-title">Laporan Mingguan</h4>
+    <h4 class="page-title">Laporan Mingguan Konsultan</h4>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">
@@ -33,228 +33,66 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <table
-                    class="display nowrap"
-                    id="laporanmingguan"
-                    style="width: 100%"
-                >
-                    <thead>
-                        <th>Tanggal</th>
-                        <th>Nama Kegiatan / Paket</th>
-                        <th>Kode dan Nama Jenis Pekerjaan</th>
-                        <th>Volume</th>
-                        <th>Status Dokumen</th>
-                        <th style="width: 5%">Aksi</th>
-                    </thead>
-                    <tbody>
-                        @foreach($data as $d) @foreach($d->laporan as $l)
+                <div class="col">
+                    <table
+                        class="display nowrap"
+                        id="laporanmingguan"
+                        style="width: 100%"
+                    >
+                        <thead>
+                            <th>Priode</th>
+                            <th>Nama Kegiatan / Paket</th>
+                            <th>Rencana</th>
+                            <th>Realisasi</th>
+                            <th>Deviasi</th>
 
-                        <tr>
-                            <td>
-                                {{$l->tgl_mulai}} -
-                                {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}
-                            </td>
-                            <td>
-                                {{$d->nm_paket}}
-                            </td>
-                            <td>
-                                {{$l->jenis_pekerjaan}}
-                            </td>
-                            <td>
-                                {{$l->volume.' '.$l->satuan    }}
-                            </td>
-                            <td>
-                                @if($l->status == '0')
-                                <span class="badge badge-dark">
-                                    Belum Dikirim
-                                </span>
-                                @endif @if($l->status == '1')
-                                <span class="badge badge-warning">
-                                    Menunggu Approval DIRLAP
-                                </span>
-                                @endif @if($l->status == '2')
-                                <span class="badge badge-danger">
-                                    Ditolak Oleh DIRLAP
-                                </span>
-                                @endif @if($l->status == '3')
-                                <span class="badge badge-warning">
-                                    Menunggu Approval PPK
-                                </span>
-                                @endif @if($l->status == '4')
-                                <span class="badge badge-danger">
-                                    Ditolak Oleh PPK
-                                </span>
-                                @endif @if($l->status == '5')
-                                <span class="badge badge-success">
-                                    Disetujui Oleh PPK
-                                </span>
-                                @endif
-                            </td>
+                            <th style="width: 5%">Aksi</th>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $d) @foreach($d->laporanKonsultan
+                            as $laporan)
 
-                            <td>
-                                <!-- Super Admin -->
-                                @if(Auth::user()->user_detail->rule_user_id ==
-                                1)
-                                <a
-                                    type="button"
-                                    data-toggle="modal"
-                                    data-target="#modalResponLaporan"
-                                    data-id="{{$l->id}}"
-                                    data-laporan="{{ $l }}"
-                                    data-data="{{ $d }}"
-                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
-                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
-                                    onclick="rederModalDetail(this)"
-                                    class="btn btn-sm btn-success waves-effect waves-light"
-                                    ><i class="mdi mdi-search-web menu-icon"></i
-                                ></a>
+                            <tr>
+                                <td>
+                                    {{$laporan->priode}}
+                                </td>
+                                <td>
+                                    {{$d->nm_paket}}
+                                </td>
+                                <td>
+                                    {{$laporan->rencana}}
+                                </td>
+                                <td>
+                                    {{$laporan->realisasi }}
+                                </td>
+                                <td>{{$laporan->deviasi}}</td>
 
-                                <a
-                                    type="button"
-                                    class="btn btn-sm btn-warning waves-effect waves-light"
-                                    data-toggle="modal"
-                                    data-target="#modalResponLaporan"
-                                    data-id="{{$l->id}}"
-                                    data-laporan="{{ $l }}"
-                                    data-data="{{ $d }}"
-                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
-                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
-                                    onclick="rederModalDetail(this)"
-                                >
-                                    <i class="mdi mdi-pencil menu-icon"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    class="btn btn-sm btn-danger waves-effect waves-light"
-                                    data-toggle="modal"
-                                    data-target="#modalResponLaporan"
-                                    data-id="{{$l->id}}"
-                                    data-laporan="{{ $l }}"
-                                    data-data="{{ $d }}"
-                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
-                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
-                                    onclick="rederModalDetail(this)"
-                                >
-                                    <i class="mdi mdi-delete"></i>
-                                </a>
-                                @endif
-                                <!-- Admin Uptd -->
-                                @if(Auth::user()->user_detail->rule_user_id ==3)
-                                <!-- Create -->
-                                @if($l->status == 0)
-                                <a
-                                    type="button"
-                                    href="{{route('laporan.send',$l->id)}}"
-                                    data-tooltip="tooltip"
-                                    title="Kirim Laporan"
-                                    class="btn btn-sm btn-success waves-effect waves-light"
-                                    ><i class="mdi mdi-file-send"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    data-tooltip="tooltip"
-                                    href="{{route('laporan.edit',$l->id)}}"
-                                    title="Edit Laporan"
-                                    class="btn btn-sm btn-warning waves-effect waves-light"
-                                    ><i class="mdi mdi-pencil menu-icon"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    href="{{route('laporan.destroy',$l->id)}}"
-                                    data-tooltip="tooltip"
-                                    title="Delete Laporan"
-                                    class="btn btn-sm btn-danger waves-effect waves-light"
-                                    ><i class="mdi mdi-delete menu-icon"></i>
-                                </a>
-                                @endif @if($l->status == 1) @endif
-                                <!-- DItolak Dirlap -->
-                                @if($l->status == 2)
-                                <a
-                                    type="button"
-                                    href="{{route('laporan.send',$l->id)}}"
-                                    data-tooltip="tooltip"
-                                    title="Kirim Laporan"
-                                    class="btn btn-sm btn-success waves-effect waves-light"
-                                    ><i class="mdi mdi-file-send"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    data-tooltip="tooltip"
-                                    href="{{route('laporan.edit',$l->id)}}"
-                                    title="Revisi Laporan"
-                                    class="btn btn-sm btn-warning waves-effect waves-light"
-                                    ><i class="mdi mdi-pencil menu-icon"></i>
-                                </a>
+                                <td>
+                                    <a
+                                        type="button"
+                                        href="{{route('laporan-minggguan-konsultan.showFile',$laporan->file_path) }}"
+                                        class="btn btn-sm btn-dark waves-effect waves-light"
+                                        title="File Laporan"
+                                        target="_blank"
+                                        ><i class="mdi mdi-file-document"></i
+                                    ></a>
 
-                                @endif @if($l->status == 4)
-                                <a
-                                    type="button"
-                                    href="{{route('laporan.send',$l->id)}}"
-                                    data-tooltip="tooltip"
-                                    title="Kirim Laporan"
-                                    class="btn btn-sm btn-success waves-effect waves-light"
-                                    ><i class="mdi mdi-file-send"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    data-tooltip="tooltip"
-                                    href="{{route('laporan.edit',$l->id)}}"
-                                    title="Revisi Laporan"
-                                    class="btn btn-sm btn-warning waves-effect waves-light"
-                                    ><i class="mdi mdi-pencil menu-icon"></i>
-                                </a>
-
-                                @endif @if($l->status == 5) @endif @endif
-                                <!-- DIRLAP -->
-                                @if(Auth::user()->user_detail->rule_user_id ==
-                                14) @if($l->status == 1)
-                                <a
-                                    type="button"
-                                    href="{{route('laporan.send',$l->id)}}"
-                                    data-tooltip="tooltip"
-                                    title="Respon Laporan"
-                                    class="btn btn-sm btn-success waves-effect waves-light"
-                                    data-toggle="modal"
-                                    data-target="#modalResponLaporan"
-                                    data-role="dirlap"
-                                    data-laporan="{{ $l }}"
-                                    data-data="{{ $d }}"
-                                    data-id="{{$l->id}}"
-                                    data-url="{{ route('laporan.approval',$l->id) }}"
-                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
-                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
-                                    onclick="rederModalDetail(this)"
-                                    ><i class="mdi mdi-file-send"></i>
-                                </a>
-                                @endif @endif
-                                <!-- PPK -->
-                                @if(Auth::user()->user_detail->rule_user_id ==2
-                                || Auth::user()->user_detail->rule_user_id ==15)
-                                @if($l->status == 3)
-                                <a
-                                    type="button"
-                                    href="{{route('laporan.send',$l->id)}}"
-                                    data-tooltip="tooltip"
-                                    title="Respon Laporan"
-                                    class="btn btn-sm btn-success waves-effect waves-light"
-                                    data-toggle="modal"
-                                    data-target="#modalResponLaporan"
-                                    data-role="ppk"
-                                    data-laporan="{{ $l }}"
-                                    data-data="{{ $d }}"
-                                    data-id="{{$l->id}}"
-                                    data-url="{{ route('laporan.approval',$l->id) }}"
-                                    data-tgl=" {{$l->tgl_mulai}} - {{date('Y-m-d', strtotime($l->tgl_mulai.'+ 7 days' )) .' ( Minggu '. $l->minggu_ke.' )' }}"
-                                    data-url="{{route('laporan.approval',$l->id)}}')}}"
-                                    onclick="rederModalDetail(this)"
-                                    ><i class="mdi mdi-file-send"></i>
-                                </a>
-                                @endif @endif
-                            </td>
-                        </tr>
-                        @endforeach @endforeach
-                    </tbody>
-                </table>
+                                    @if(strtotime('+2hours',strtotime($laporan->created_at))
+                                    > time())
+                                    <a
+                                        type="button"
+                                        href="{{route('laporan-minggguan-konsultan.edit',$laporan->id) }}"
+                                        class="btn btn-sm btn-warning waves-effect waves-light"
+                                        title="Edit"
+                                        ><i class="mdi mdi-grease-pencil"></i
+                                    ></a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

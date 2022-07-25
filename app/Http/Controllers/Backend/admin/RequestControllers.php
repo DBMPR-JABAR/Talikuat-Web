@@ -56,6 +56,16 @@ class RequestControllers extends Controller
                 array_push($list, $item->detail->id);
             }
             $requests = BackendRequest::whereIn('data_umum_detail_id', $list)->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+        }elseif($role == 5||$role == 7|| $role == 8 || $role==9){
+            $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+                $query->where('konsultan_id', Auth::user()->user_detail->konsultan_id);
+            })->with('uptd')->get();
+   
+            foreach ($data as $item) {
+                array_push($list, $item->detail->id);
+            }
+            $requests = BackendRequest::whereIn('data_umum_detail_id', $list)->latest()->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();
+
         } else {
             $data = DataUmum::latest()->with('detail')->with('uptd')->get();
             $requests = BackendRequest::latest()->with('historyStatus')->with('historyRequest')->with('detailBahan')->with('detailPeralatan')->with('detailTenagaKerja')->with('detailBahanJMF')->with('dataUmumDetail')->with('jadual')->get();

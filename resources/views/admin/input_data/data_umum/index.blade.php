@@ -57,8 +57,9 @@
                             >
                                 <thead>
                                     <tr>
-                                        <th>No Kontrak</th>
                                         <th>Nama Kegiatan</th>
+                                        <th>No Kontrak</th>
+
                                         <th>Unor</th>
                                         <th>Kategori</th>
                                         <th>Kode / Nama Ruas</th>
@@ -70,8 +71,9 @@
                                 <tbody>
                                     @foreach ($data as $no => $item)
                                     <tr>
-                                        <td>{!! $item->no_kontrak !!}</td>
                                         <td>{!! $item->nm_paket !!}</td>
+                                        <td>{!! $item->no_kontrak !!}</td>
+
                                         <td>{!! $item->uptd->nama !!}</td>
                                         <td>
                                             {!!
@@ -94,6 +96,7 @@
                                             {!! @$item->detail->ppk->user->name
                                             !!}
                                         </td>
+                                        </a>
                                         <td>
                                             <a
                                                 type="button"
@@ -103,7 +106,17 @@
                                                     class="mdi mdi-search-web menu-icon"
                                                 ></i
                                             ></a>
-                                            @if (Request::segment(3) != 'trash')
+                                            @if(Auth::user()->user_detail->rule_user_id== 5||Auth::user()->user_detail->rule_user_id== 7||Auth::user()->user_detail->rule_user_id==8 ||Auth::user()->user_detail->rule_user_id==9||Auth::user()->user_detail->rule_user_id==1)
+                                            <a
+                                                type="button"
+                                                href="{{route('laporan-minggguan-konsultan.create',$item->id) }}"
+                                                class="btn btn-sm btn-dark waves-effect waves-light"
+                                                ><i
+                                                    class="mdi mdi-file-document"
+                                                ></i
+                                            ></a>
+                                            @endif @if (Request::segment(3) !=
+                                            'trash')
                                             @if(Auth::user()->user_detail->rule_user_id
                                             == 1
                                             ||Auth::user()->user_detail->rule_user_id

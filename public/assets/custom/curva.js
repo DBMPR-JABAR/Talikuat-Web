@@ -1,6 +1,5 @@
 let massPopChart;
 async function nonAdendum(res) {
-    console.log(res);
     const dataUmum = res;
     const spmk = new Date(dataUmum.tgl_spmk);
     const weeks = sortDateAsWeek(getTermin(dataUmum.detail.lama_waktu), spmk);
@@ -9,11 +8,29 @@ async function nonAdendum(res) {
         weeks
     );
     const laporan = sortLaporan(dataUmum.laporan_approved, weeks.length);
-    render(jadualAwal, laporan, "", weeks);
+    const rencanaKonsultan = dataUmum.laporan_konsultan.map((v) => v.rencana);
+    const realisasiKonsultan = dataUmum.laporan_konsultan.map(
+        (v) => v.realisasi
+    );
+    render(
+        jadualAwal,
+        laporan,
+        "",
+        weeks,
+        rencanaKonsultan,
+        realisasiKonsultan
+    );
 }
 var dataJadualGlobal = [];
 
-function render(sumJadual, laporan, jadualAdendum, jmlMinggu) {
+function render(
+    sumJadual,
+    laporan,
+    jadualAdendum,
+    jmlMinggu,
+    rencanaKonsultan,
+    realisasiKonsultan
+) {
     $("body").removeClass("loading");
     const minggu = [];
     for (let i = 0; i < jmlMinggu.length; i++) {
@@ -33,6 +50,20 @@ function render(sumJadual, laporan, jadualAdendum, jmlMinggu) {
             data: laporan,
             fill: false,
             borderColor: "#ff0000",
+            tension: 0.1,
+        },
+        {
+            label: "Rencana Konsultan",
+            data: rencanaKonsultan,
+            fill: false,
+            borderColor: "#fff30a",
+            tension: 0.1,
+        },
+        {
+            label: "Realisasi Konsultan",
+            data: realisasiKonsultan,
+            fill: false,
+            borderColor: "#0aff43",
             tension: 0.1,
         },
     ];

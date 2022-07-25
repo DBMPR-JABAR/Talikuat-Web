@@ -390,13 +390,15 @@
 
                                             <div class="col-md-3 col-sm-3">
                                                 <p>
-                                                    {{-- <input
+                                                    {{--
+                                                    <input
                                                         type="button"
                                                         class="btn btn-primary btn-mini waves-effect waves-light"
                                                         data-toggle="tooltip"
                                                         title="Tambah Ruas"
                                                         value="Tambah Ruas"
-                                                    /> --}}
+                                                    />
+                                                    --}}
                                                 </p>
                                             </div>
                                         </div>
@@ -416,7 +418,6 @@
                                                     <th>
                                                         Koordinat Akhir Long
                                                     </th>
-                                                 
                                                 </tr>
                                             </thead>
 
@@ -496,8 +497,6 @@
                                                             readonly
                                                         />
                                                     </td>
-
-                                                    
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -517,18 +516,21 @@
                                         class="form-control"
                                         required
                                         disabled
-
                                     >
                                         <option selected disabled>
                                             Pilih kontraktor
                                         </option>
                                         @foreach($kontraktors as $item)
+                                        @if(@$data->detail->kontraktor->id ==
+                                        $item->id)
 
-                                        <option value="{{ $item->id }}" @if(@$data->detail->kontraktor->id == $item->id) selected @endif>
+                                        <option
+                                            value="{{ $item->id }}"
+                                            selected
+                                        >
                                             {{ $item->nama }}
                                         </option>
-
-                                        @endforeach
+                                        @endif @endforeach
                                     </select>
                                     @error('konsultan_id')
                                     <div
@@ -586,17 +588,18 @@
                                         required
                                         disabled
                                     >
-                                        {{-- <option value="">
-                                            Pilih Dirlap
-                                        </option> --}}
-                                        @foreach($dirlaps as $dirlap)
+                                        {{--
+                                        <option value="">Pilih Dirlap</option>
+                                        --}} @foreach($dirlaps as $dirlap)
+                                        @if(@$data->detail->dirlap->id ==
+                                        $dirlap->id)
                                         <option
                                             value="{{ $dirlap->id }}"
-                                            @if(@$data->detail->dirlap->id == $dirlap->id) selected @endif
+                                            selected
                                         >
                                             {{ $dirlap->user->name }}
                                         </option>
-                                        @endforeach
+                                        @endif @endforeach
                                     </select>
                                     @error('dirlap_id')
                                     <div
@@ -617,14 +620,13 @@
                                         class="form-control"
                                         required
                                         disabled
-                                        
                                     >
-                                    @foreach($ppks as $ppk)
-                                    <option value="{{ $ppk->id }}" @if(@$data->detail->ppk->id == $ppk->id) selected @endif>
-                                        {{ $ppk->user->name }}
-                                    </option>
-                                    @endforeach
-
+                                        @foreach($ppks as $ppk)
+                                        @if(@$data->detail->ppk->id == $ppk->id)
+                                        <option value="{{ $ppk->id }}" selected>
+                                            {{ $ppk->user->name }}
+                                        </option>
+                                        @endif @endforeach
                                     </select>
 
                                     @error('ppk')
@@ -647,26 +649,34 @@
                                         value="{{ old('ppk_kegiatan',@$data->ppk_kegiatan) }}"
                                         class="form-control"
                                         required
-                                        autocomplete="off" readonly
+                                        autocomplete="off"
+                                        readonly
                                     />
                                     @error('ppk_kegiatan')
-                                    <div class="invalid-feedback" style="display: block; color: red" >
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ route('dataumum.index') }}" class="btn btn-responsive btn-primary">
+                        <a
+                            href="{{ route('dataumum.index') }}"
+                            class="btn btn-responsive btn-primary"
+                        >
                             <i class="mdi mdi-reload"></i> Kembali
-                        
                         </a>
-                        {{-- <button
+                        {{--
+                        <button
                             type="button"
                             class="btn btn-responsive btn-primary"
                         >
                             <i class="mdi mdi-reload"></i> Kembali
-                        </button> --}}
+                        </button>
+                        --}}
                     </form>
                 </div>
             </div>

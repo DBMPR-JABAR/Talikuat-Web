@@ -41,6 +41,11 @@ class DataUmum extends Model
         return $this->hasMany('App\Models\Backend\Laporan', 'data_umum_id')->where('status', 5);
     }
 
+    public function laporanKonsultan()
+    {
+        return $this->hasMany('App\Models\Backend\LaporanKonsultan', 'data_umum_id');
+    }
+
     public function list_details()
     {
         return $this->hasMany('App\Models\Backend\DataUmumDetail', 'data_umum_id');

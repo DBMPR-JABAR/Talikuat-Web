@@ -539,7 +539,7 @@
                             </div>
                         </div>
                         <div class="row align-items-start">
-                            <div class="col-md-3">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Kontraktor</label>
                                     <select
@@ -569,7 +569,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Konsultan Supervisi</label>
                                     <select
@@ -600,7 +600,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Direksi Lapangan</label>
                                     <select
@@ -627,7 +627,8 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-3">
+
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>PPK</label>
                                     <select
@@ -645,6 +646,27 @@
                                     </select>
 
                                     @error('ppk')
+                                    <div
+                                        class="invalid-feedback"
+                                        style="display: block; color: red"
+                                    >
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>PPK Kegiatan</label>
+                                    <input
+                                        type="text"
+                                        name="ppk_user_id"
+                                        id="ppk"
+                                        class="form-control"
+                                        required
+                                    />
+
+                                    @error('ppk_kegiatan')
                                     <div
                                         class="invalid-feedback"
                                         style="display: block; color: red"

@@ -15,7 +15,8 @@ class CurvaController extends Controller
      */
     public function index()
     {
-        $data = DataUmum::where('id',$id)->with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('jadualDetails')->first();
+        $data = DataUmum::where('id',$id)->with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('jadualDetails')->with('laporanKonsultan')->first();
+
       
  
         return view('admin.curva.index', compact('data'));
@@ -50,10 +51,10 @@ class CurvaController extends Controller
      */
     public function show($id)
     {
-        $data = DataUmum::where('id',$id)->with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('jadualDetails')->first();
+        $data = DataUmum::where('id',$id)->with('kategori_paket')->with('uptd')->with('detail')->with('laporanApproved')->with('jadualDetails')->with('laporanKonsultan')->first();
       
         
-        return view('admin.curva.iframe', compact('data'));
+        return view('admin.curva.index', compact('data'));
     }
 
     /**

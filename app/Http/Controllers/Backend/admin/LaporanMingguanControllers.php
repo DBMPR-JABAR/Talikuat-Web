@@ -55,6 +55,9 @@ class LaporanMingguanControllers extends Controller
                 array_push($list, $d->id);
             }
             
+        }elseif($role == 5||$role == 7|| $role == 8 || $role==9){   $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+            $query->where('konsultan_id', Auth::user()->user_detail->konsultan_id);
+        })->with('uptd','laporan','detail')->get();  
         } else {
             $data = DataUmum::latest()->with('uptd','laporan','detail')->get();
         }

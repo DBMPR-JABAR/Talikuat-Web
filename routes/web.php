@@ -193,10 +193,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/file-laporan/{file_name}', [LaporanMingguanControllers::class, 'file'])->name('laporan.file');
             Route::post('/laporan-api/{id}', [LaporanMingguanControllers::class, 'approval'])->name('laporan.approval');
             
+           
+            Route::resource('/laporan-minggguan-konsultan',LaporanKonsultanControllers::class);
+            Route::get('/laporan-minggguan-konsultan/create/{id}',[LaporanKonsultanControllers::class,'create'])->name('laporan-minggguan-konsultan.create');
+            Route::get('/laporan-minggguan-konsultan/file/{path}',[LaporanKonsultanControllers::class,'showFile'])->name('laporan-minggguan-konsultan.showFile');
+            
         });
     });
 });
-Route::get('/curva-iframe/{id}', [CurvaController::class, 'show'])->name('curva.iframe');
+Route::get('/curva/{id}', [CurvaController::class, 'show'])->name('curva');
 Route::get('/pusat-unduhan', [PusatUnduhanControllers::class, 'index'])->name('pusat_unduhan.index');
 Route::get('/progress-pekerjaan', [ProgressControllers::class, 'index'])->name('progress.pekerjaan');
 

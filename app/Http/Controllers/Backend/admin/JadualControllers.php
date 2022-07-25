@@ -45,6 +45,9 @@ class JadualControllers extends Controller
             $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
                 $query->where('dirlap_id', Auth::user()->user_detail->id);
             })->with('uptd')->get();   
+        }elseif($role == 5||$role == 7|| $role == 8 || $role==9){   $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+            $query->where('konsultan_id', Auth::user()->user_detail->konsultan_id);
+        })->with('uptd')->get();  
         } else {
             $data = DataUmum::latest()->with('detail')->with('uptd')->get();
         }

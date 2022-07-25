@@ -36,6 +36,7 @@ class DataUmumController extends Controller
         //14 dirlap
         $role = Auth::user()->user_detail->rule_user_id;
         $uptd = Auth::user()->user_detail->uptd_id;
+        
         if ($role == 3) {
             // $data = DataUmum::orderBy('unor','ASC')->orderBy('created_at','ASC')->get();
             $data = DataUmum::where('id_uptd', $uptd)->latest()->with('detail')->with('uptd')->get();
@@ -47,7 +48,10 @@ class DataUmumController extends Controller
             $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
                 $query->where('dirlap_id', Auth::user()->user_detail->id);
             })->with('uptd')->get();   
-        } else {
+        }elseif($role == 5||$role == 7|| $role == 8 || $role==9){   $data = DataUmum::where('id_uptd', $uptd)->latest()->whereHas('detail', function($query){
+            $query->where('konsultan_id', Auth::user()->user_detail->konsultan_id);
+        })->with('uptd','laporan','detail')->get();  
+        }  else {
             $data = DataUmum::latest()->with('detail')->with('uptd')->get();
         }
 
@@ -79,9 +83,6 @@ class DataUmumController extends Controller
     }
     public function store(Request $request)
     {
-        $ppk = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->where('id',$request->input('ppk_user_id'))->first();
-        $ppk_kegiatan = $ppk->ppkKegiatan->ppk_kegiatan;
-        
         
         try {
             $validator = Validator::make($request->all(), [
@@ -111,6 +112,7 @@ class DataUmumController extends Controller
                 'lama_waktu' => 'required',
                 'dirlap_id' => 'required',
                 'id_ruas_jalan' => 'required',
+                'ppk_kegiatan' => 'required',
 
             ]);
             if ($validator->fails()) {
@@ -118,7 +120,8 @@ class DataUmumController extends Controller
                 return back()->withInput()->with(['error' => $validator->getMessageBag()->first()]);
             }
           
-
+            // $ppk = UserDetail::wherenull('is_delete')->where('rule_user_id',2)->where('id',$request->input('ppk_user_id'))->first();
+            // $ppk_kegiatan = $ppk->ppkKegiatan->ppk_kegiatan; 
             $temp = ([
                 'pemda' => $request->input('pemda'),
                 'opd' => $request->input('opd'),
@@ -129,7 +132,7 @@ class DataUmumController extends Controller
                 'tgl_kontrak' => $request->input('tgl_kontrak'),
                 'no_spmk' => $request->input('no_spmk'),
                 'tgl_spmk' => $request->input('tgl_spmk'),
-                'ppk_kegiatan' => $ppk_kegiatan,
+                'ppk_kegiatan' => $request->input('ppk_kegiatan'),
                 'created_by' => Auth::user()->id,
             ]);
             DB::beginTransaction();

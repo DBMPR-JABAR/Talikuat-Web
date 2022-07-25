@@ -127,12 +127,14 @@
             <div class="card-body">
                 <div class="owl-carousel owl-theme">
                     @foreach ($data as $dataUmumId)
+
                     <div class="item border p-2">
                         <iframe
-                            src="{{ route('curva.iframe', $dataUmumId->id) }}"
+                            src="{{ route('curva', $dataUmumId->id) }}"
                             frameborder="0"
                         ></iframe>
                     </div>
+
                     @endforeach
                 </div>
             </div>

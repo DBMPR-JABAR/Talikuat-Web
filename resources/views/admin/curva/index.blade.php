@@ -1,391 +1,68 @@
-@extends('layout.index') @section('title','Jadual') @section('header')
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            Progress Pekerjaan {{$data->nm_paket}}
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-block">
+                            <div class="row">
+                                <canvas id="chartCurva"></canvas>
+                            </div>
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css"
-/>
-@endsection @section('page-header')
-<div class="page-header">
-    <h3 class="page-title">
-        @if(Request::segment(3) == 'create') Create @elseif(Request::segment(3)
-        == 'edit') Edit @else Progress @endif Pekerjaan
-    </h3>
-</div>
-@endsection @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Data Umum</h4>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        {{--
-                        <li><i class="feather icon-maximize full-card"></i></li>
-                        --}}
-                        <li>
-                            <i class="feather icon-minus minimize-card"></i>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="card-block">
-                    <div class="row align-items-start">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Pemda</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ @$data->pemda ? : 'PEMERINTAH PROVINSI JAWA BARAT' }}"
-                                    class="form-control"
-                                    readonly
-                                />
+                            <div class="contianer text-center">
+                                <div class="row m-3">
+                                    <div class="col">Jadual</div>
+                                </div>
+                                <div class="row" id="dataJadual"></div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>OPD</label>
-                                <input
-                                    type="text"
-                                    name="opd"
-                                    id="opd"
-                                    value="{{ @$data->opd ? : 'DINAS BINA MARGA DAN PENATAAN RUANG' }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Kategori Paket Kegiatan</label>
-                                <input
-                                    type="text"
-                                    name="opd"
-                                    id="opd"
-                                    value="{{ $data->kategori_paket->nama_kategori }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Nama Kegiatan / Paket</label>
-                                <input
-                                    type="text"
-                                    name="opd"
-                                    id="opd"
-                                    value="{{ $data->nm_paket }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row align-items-start">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Unor</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->uptd->nama }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>No. Kontrak</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->no_kontrak }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tanggal Kontrak</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->tgl_kontrak }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Nilai Kontrak</label>
-                                <input
-                                    type="text"
-                                    value="{{ $data->detail->nilai_kontrak }}"
-                                    class="form-control"
-                                    readonly
-                                />
+                            <div class="contianer text-center">
+                                <div class="row m-3">
+                                    <div class="col">Realisasi</div>
+                                </div>
+                                <div class="row" id="dataRealisasi"></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row align-items-start">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>No. SPMK</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->no_spmk }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tanggal SPMK</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->tgl_spmk }}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Panjang KM</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->detail->panjang_km}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Waktu Pelaksanaan</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->detail->lama_waktu}} Hari"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row align-items-start">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>PPK Kegiatan</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{ $data->ppk_kegiatan}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>PPK</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{@$data->detail->ppk->nama}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Konsultan Supervisi</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{$data->detail->konsultan->nama}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Penyedia Jasa</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value="{{$data->detail->kontraktor->nama}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    {{--
-                    <div class="row justify-content-center">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Field Team</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value=" {{$data->detail->ft->nama}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>General Superintendent</label>
-                                <input
-                                    type="text"
-                                    name="pemda"
-                                    id="pemda"
-                                    value=" {{$data->detail->gs->nama}}"
-                                    class="form-control"
-                                    readonly
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    --}}
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Progress Pekerjaan</h4>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        {{--
-                        <li><i class="feather icon-maximize full-card"></i></li>
-                        --}}
-                        <li>
-                            <i class="feather icon-minus minimize-card"></i>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="card-block">
-                    <div class="row">
-                        <canvas id="chartCurva"></canvas>
-                    </div>
-
-                    <div class="contianer text-center">
-                        <div class="row m-3"><div class="col">Jadual</div></div>
-                        <div class="row" id="dataJadual"></div>
-                    </div>
-
-                    <div class="contianer text-center">
-                        <div class="row m-3">
-                            <div class="col">Realisasi</div>
-                        </div>
-                        <div class="row" id="dataRealisasi"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <a href="{{ route('jadual.index') }}">
-                    <button type="button" class="btn btn-dark">
-                        Kembali
-                    </button></a
-                >
-            </div>
-        </div>
-    </div>
-    <div
-        class="modal fade"
-        id="jadualDetail"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-    >
-        <div
-            class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered"
-        >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="labelJadual"></h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table-bordered display">
-                        <thead>
-                            <th>Tanggal</th>
-                            <th>No Mata Pembayaran</th>
-                            <th>Harga Satuan</th>
-                            <th>Volume</th>
-                            <th>Satuan</th>
-                            <th>Bobot</th>
-                            <th>Koefisien</th>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-dark"
-                        data-dismiss="modal"
-                    >
-                        Kembali
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endsection @section('script')
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
-        integrity="sha512-VMsZqo0ar06BMtg0tPsdgRADvl0kDHpTbugCBBrL55KmucH6hP9zWdLIWY//OTfMnzz6xWQRxQqsUFefwHuHyg=="
-        crossorigin="anonymous"
-    ></script>
-    <script src="{{ asset('assets/custom/curva.js') }}"></script>
-    <script>
-        const data = {!! json_encode($data) !!}
-        nonAdendum(data);
-    </script>
-    @endsection
-</div>
+        <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
+            integrity="sha512-VMsZqo0ar06BMtg0tPsdgRADvl0kDHpTbugCBBrL55KmucH6hP9zWdLIWY//OTfMnzz6xWQRxQqsUFefwHuHyg=="
+            crossorigin="anonymous"
+        ></script>
+        <script src="{{ asset('assets/custom/curva.js') }}"></script>
+        <script>
+            const data = {!! json_encode($data) !!}
+            nonAdendum(data);
+        </script>
+    </body>
+</html>
